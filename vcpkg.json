@@ -1,0 +1,13 @@
+{
+  "name": "e3mail",
+  "version-semver": "0.1.0",
+  "description": "Dependencies for Windows builds; Linux and macOS use system packages.",
+  "dependencies": [
+    "botan",
+    "json-c",
+    "zlib",
+    "bzip2",
+    { "name": "sqlite3", "features": ["fts5"] },
+    "qtkeychain-qt6"
+  ]
+}

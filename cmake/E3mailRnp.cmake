@@ -1,0 +1,28 @@
+# RNP's exported CMake package names its private dependencies as imported
+# targets (JSON-C::JSON-C, Botan::Botan) without creating them, so a shared
+# RNP install cannot be consumed without them. Provide them from pkg-config
+# when the platform's own packages have not.
+find_package(PkgConfig QUIET)
+if(NOT TARGET JSON-C::JSON-C)
+    find_package(json-c CONFIG QUIET)
+    if(TARGET json-c::json-c)
+        add_library(JSON-C::JSON-C INTERFACE IMPORTED)
+        target_link_libraries(JSON-C::JSON-C INTERFACE json-c::json-c)
+    elseif(PKG_CONFIG_FOUND)
+        pkg_check_modules(E3_JSONC IMPORTED_TARGET json-c)
+        if(E3_JSONC_FOUND)
+            add_library(JSON-C::JSON-C INTERFACE IMPORTED)
+            target_link_libraries(JSON-C::JSON-C INTERFACE PkgConfig::E3_JSONC)
+        endif()
+    endif()
+endif()
+if(NOT TARGET Botan::Botan AND PKG_CONFIG_FOUND)
+    pkg_check_modules(E3_BOTAN IMPORTED_TARGET botan-3)
+    if(E3_BOTAN_FOUND)
+        add_library(Botan::Botan INTERFACE IMPORTED)
+        target_link_libraries(Botan::Botan INTERFACE PkgConfig::E3_BOTAN)
+    endif()
+endif()
+find_package(ZLIB QUIET)
+find_package(BZip2 QUIET)
+find_package(rnp CONFIG REQUIRED)
