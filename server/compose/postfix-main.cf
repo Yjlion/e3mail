@@ -1,0 +1,19 @@
+compatibility_level = 3.6
+myhostname = mail.e3.test
+mydestination = localhost
+mynetworks = 127.0.0.0/8
+inet_interfaces = all
+inet_protocols = ipv4
+maillog_file = /dev/stdout
+
+virtual_mailbox_domains = e3.test
+virtual_transport = lmtp:unix:private/dovecot-lmtp
+
+smtpd_tls_cert_file = /etc/ssl/e3/cert.pem
+smtpd_tls_key_file = /etc/ssl/e3/key.pem
+smtpd_tls_security_level = may
+smtpd_sasl_type = dovecot
+smtpd_sasl_path = private/auth
+smtpd_sasl_auth_enable = no
+smtpd_relay_restrictions = permit_mynetworks, permit_sasl_authenticated, reject_unauth_destination
+message_size_limit = 52428800
