@@ -1,0 +1,43 @@
+# The composer's whitelist emitter, separate so tests can reach it.
+add_library(e3richtext STATIC controllers/RichText.cpp controllers/RichText.h)
+target_include_directories(e3richtext PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/controllers)
+target_link_libraries(e3richtext PUBLIC e3core Qt6::Gui)
+e3mail_set_warnings(e3richtext)
+
+qt_add_executable(e3mail WIN32 MACOSX_BUNDLE
+    main.cpp
+    NetworkBarrier.cpp NetworkBarrier.h
+)
+
+file(GLOB E3_QML_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} CONFIGURE_DEPENDS
+    qml/*.qml qml/components/*.qml)
+file(GLOB E3_ICONS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} CONFIGURE_DEPENDS qml/icons/*.svg)
+set_source_files_properties(qml/Theme.qml PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
+
+qt_add_qml_module(e3mail
+    URI E3mail
+    VERSION 1.0
+    QML_FILES ${E3_QML_FILES}
+    RESOURCES ${E3_ICONS}
+    SOURCES
+        controllers/MailApp.cpp controllers/MailApp.h
+        controllers/Composer.cpp controllers/Composer.h
+        controllers/SetupController.cpp controllers/SetupController.h
+        models/MessageListModel.cpp models/MessageListModel.h
+)
+
+target_include_directories(e3mail PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/controllers ${CMAKE_CURRENT_SOURCE_DIR}/models)
+target_link_libraries(e3mail PRIVATE
+    e3core e3richtext Qt6::Gui Qt6::Qml Qt6::Quick Qt6::QuickControls2 Qt6::Svg)
+e3mail_set_warnings(e3mail)
+
+set_target_properties(e3mail PROPERTIES
+    MACOSX_BUNDLE_GUI_IDENTIFIER org.e3mail.e3mail
+    MACOSX_BUNDLE_BUNDLE_NAME e3mail
+    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION})
+
+install(TARGETS e3mail
+    BUNDLE DESTINATION .
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})

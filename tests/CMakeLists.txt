@@ -18,6 +18,9 @@ function(e3_add_test name)
 endfunction()
 
 file(GLOB E3_TEST_SOURCES CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/tst_*.cpp)
+if(NOT E3MAIL_BUILD_APP)
+    list(FILTER E3_TEST_SOURCES EXCLUDE REGEX "tst_richtext")
+endif()
 foreach(src ${E3_TEST_SOURCES})
     get_filename_component(stem ${src} NAME_WE)
     string(REPLACE "tst_" "" name ${stem})
@@ -27,3 +30,19 @@ foreach(src ${E3_TEST_SOURCES})
         e3_add_test(${name})
     endif()
 endforeach()
+
+# Not a test: builds the demonstration mailbox used for screenshots.
+add_executable(e3mail-fixtures make_fixtures.cpp)
+target_link_libraries(e3mail-fixtures PRIVATE e3core e3testsupport)
+e3mail_set_warnings(e3mail-fixtures)
+
+if(E3MAIL_BUILD_APP)
+    target_link_libraries(tst_richtext PRIVATE e3richtext Qt6::Gui)
+    # Boots the real QML application offscreen against an empty data
+    # directory: every QML file must load and every type must resolve.
+    add_test(NAME app_smoke
+        COMMAND e3mail --smoke-test --data-dir ${CMAKE_CURRENT_BINARY_DIR}/smoke-data)
+    set_tests_properties(app_smoke PROPERTIES
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen;E3MAIL_NO_KEYCHAIN=1"
+        FAIL_REGULAR_EXPRESSION "qml: |\\.qml:[0-9]+|ReferenceError|TypeError|Cannot assign|is not a type")
+endif()

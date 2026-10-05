@@ -124,6 +124,8 @@ QString Ingest::makePreview(const QString &text)
         const QString t = line.trimmed();
         if (t.startsWith(u'>') || t == QLatin1String("--"))
             continue;
+        if (t.endsWith(QLatin1String("wrote:")))
+            break; // the attribution line of a quoted reply
         if (!t.isEmpty())
             kept.append(t);
         if (kept.join(u' ').size() > 240)

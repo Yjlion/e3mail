@@ -4,6 +4,7 @@
 #include "MailWorker.h"
 #include "mail/Types.h"
 
+#include <QFuture>
 #include <QObject>
 #include <QPointer>
 
@@ -60,9 +61,9 @@ public:
     Settings settings() const;
     MailWorker::Credentials credentials() const;
 
-    // Tries both servers with these settings, off the UI thread. Emits
-    // verified() with an empty error on success.
-    void verify(const Settings &s);
+    // Tries both servers with these settings on a pool thread. The future's
+    // result is empty on success, or what went wrong.
+    static QFuture<QString> check(const Settings &s);
 
     void start();
     void stop();
@@ -79,7 +80,6 @@ Q_SIGNALS:
     void mailChanged();
     void newMail(qint64 msgId);
     void statusChanged();
-    void verified(const QString &error);
 
 private:
     int m_id;

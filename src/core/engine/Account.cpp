@@ -137,10 +137,10 @@ MailWorker::Credentials Account::credentials() const
     return credentialsFrom(settings());
 }
 
-void Account::verify(const Settings &s)
+QFuture<QString> Account::check(const Settings &s)
 {
     const MailWorker::Credentials c = credentialsFrom(s);
-    auto future = QtConcurrent::run([c]() -> QString {
+    return QtConcurrent::run([c]() -> QString {
         try {
             if (c.protocol == QLatin1String("pop3")) {
                 net::Pop3Client pop;
@@ -160,12 +160,6 @@ void Account::verify(const Settings &s)
             return QString::fromUtf8(e.what());
         }
     });
-    auto *watcher = new QFutureWatcher<QString>(this);
-    connect(watcher, &QFutureWatcher<QString>::finished, this, [this, watcher] {
-        Q_EMIT verified(watcher->result());
-        watcher->deleteLater();
-    });
-    watcher->setFuture(future);
 }
 
 void Account::start()

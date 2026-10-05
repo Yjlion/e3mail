@@ -38,6 +38,7 @@ else()
 endif()
 find_package(Qt6Keychain CONFIG QUIET)
 
+include(GNUInstallDirs)
 include(E3mailCompilerFlags)
 
 add_subdirectory(src/core)
