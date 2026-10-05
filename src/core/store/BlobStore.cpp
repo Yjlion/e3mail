@@ -4,7 +4,9 @@
 #include "util/Log.h"
 
 #include <QCryptographicHash>
+#include <QDateTime>
 #include <QDir>
+#include <QFileInfo>
 #include <QFile>
 #include <QSaveFile>
 
@@ -67,9 +69,14 @@ bool BlobStore::remove(const QString &name)
 int BlobStore::collectGarbage(const QSet<QString> &referenced)
 {
     int removed = 0;
-    const QStringList names = QDir(m_dir).entryList(QDir::Files);
-    for (const QString &name : names) {
-        if (isValidName(name) && !referenced.contains(name) && QFile::remove(path(name)))
+    // A blob is written before the row that references it commits, possibly
+    // on another thread; anything this young may still be on its way in.
+    const QDateTime cutoff = QDateTime::currentDateTimeUtc().addSecs(-3600);
+    const QFileInfoList files = QDir(m_dir).entryInfoList(QDir::Files);
+    for (const QFileInfo &fi : files) {
+        const QString name = fi.fileName();
+        if (isValidName(name) && !referenced.contains(name) && fi.lastModified().toUTC() < cutoff
+            && QFile::remove(fi.absoluteFilePath()))
             ++removed;
     }
     if (removed)

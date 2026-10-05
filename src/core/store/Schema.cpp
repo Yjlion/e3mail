@@ -190,6 +190,10 @@ CREATE TABLE ops (
     UNIQUE (device, seq)
 );
 
+-- Archive is a reserved label; Trash and Unverified have tables of their own
+-- because they carry deadlines.
+INSERT INTO labels(name, name_norm, system) VALUES ('Archive', 'archive', 1);
+
 CREATE VIRTUAL TABLE msg_fts USING fts5(
     subject, body, people,
     tokenize = 'unicode61 remove_diacritics 2'

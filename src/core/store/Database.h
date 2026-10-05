@@ -14,6 +14,12 @@ struct sqlite3_stmt;
 
 namespace e3 {
 
+// For nullable text columns: empty means NULL.
+inline std::optional<QString> nullIfEmpty(const QString &s)
+{
+    return s.isEmpty() ? std::nullopt : std::optional<QString>(s);
+}
+
 class DbError : public std::runtime_error
 {
 public:
@@ -38,7 +44,7 @@ public:
     Statement &bind(int idx, int v) { return bind(idx, qint64(v)); }
     Statement &bind(int idx, bool v) { return bind(idx, qint64(v ? 1 : 0)); }
     Statement &bind(int idx, double v);
-    Statement &bind(int idx, const QString &v);
+    Statement &bind(int idx, const QString &v);   // always TEXT, even when null
     Statement &bind(int idx, const QByteArray &v); // as BLOB
     Statement &bind(int idx, const char *v) { return bind(idx, QString::fromUtf8(v)); }
     Statement &bind(int idx, const QVariant &v);

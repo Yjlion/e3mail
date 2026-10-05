@@ -36,11 +36,8 @@ Statement &Statement::bind(int idx, double v)
 
 Statement &Statement::bind(int idx, const QString &v)
 {
-    if (v.isNull()) {
-        // A null QString is "no value"; an empty one is the empty string.
-        sqlite3_bind_null(m_stmt, idx);
-        return *this;
-    }
+    // Always text, never NULL: a QString that happens to be null is still a
+    // string. Bind std::optional<QString> or nullptr to mean SQL NULL.
     const QByteArray utf8 = v.toUtf8();
     sqlite3_bind_text(m_stmt, idx, utf8.constData(), int(utf8.size()), SQLITE_TRANSIENT);
     return *this;
