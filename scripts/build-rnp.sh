@@ -13,15 +13,17 @@ WORK=${RNP_WORK:-$(mktemp -d)}
 
 git clone --depth 1 --branch "$RNP_VERSION" --recurse-submodules --shallow-submodules \
     https://github.com/rnpgp/rnp.git "$WORK/rnp"
-CXXFLAGS_EXTRA=""
+EXTRA=()
 if [[ "$(uname -s)" == Linux* ]]; then
-    # Newer GCC no longer pulls these in transitively.
-    CXXFLAGS_EXTRA="-include cstring -include cstdint"
+    # Newer GCC no longer pulls these in transitively. Only here: setting
+    # CMAKE_CXX_FLAGS replaces the platform defaults, which on MSVC include
+    # /EHsc, and RNP throws.
+    EXTRA+=("-DCMAKE_CXX_FLAGS=-include cstring -include cstdint")
 fi
 cmake -S "$WORK/rnp" -B "$WORK/build" \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX="$PREFIX" \
-    -DCMAKE_CXX_FLAGS="$CXXFLAGS_EXTRA" \
+    "${EXTRA[@]}" \
     -DBUILD_SHARED_LIBS=ON -DBUILD_TESTING=OFF -DENABLE_DOC=OFF \
     -DENABLE_SM2=OFF -DENABLE_IDEA=OFF -DCRYPTO_BACKEND="${RNP_CRYPTO_BACKEND:-botan3}" \
     "$@"
