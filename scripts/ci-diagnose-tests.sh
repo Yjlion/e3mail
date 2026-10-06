@@ -7,10 +7,12 @@
 for exe in "$@"; do
     echo "== $exe"
     for fn in $("$exe" -functions 2>/dev/null | tr -d '\r' | sed 's/()$//'); do
-        out=$("$exe" "$fn" -o -,txt 2>&1)
+        log=$(mktemp)
+        "$exe" "$fn" > "$log" 2>&1
         code=$?
         printf '%-40s exit=%d (0x%X)\n' "$fn" "$code" "$code"
-        [[ $code -ne 0 ]] && printf '%s\n' "$out" | tail -20
+        [[ $code -ne 0 ]] && tail -30 "$log"
+        rm -f "$log"
     done
 done
 exit 0

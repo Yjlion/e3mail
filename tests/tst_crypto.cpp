@@ -2,6 +2,7 @@
 #include "crypto/Autocrypt.h"
 #include "crypto/Pgp.h"
 
+#include <QDir>
 #include <QProcess>
 #include <QStandardPaths>
 #include <QTemporaryDir>
@@ -83,15 +84,21 @@ private Q_SLOTS:
         if (gpg.isEmpty())
             QSKIP("gpg not installed");
         QTemporaryDir home;
+        // Our keys are unprotected, so no passphrase options: an empty
+        // argument does not survive the argument handling of every gpg build
+        // (Git for Windows ships an MSYS one).
         auto run = [&](const QStringList &args, const QByteArray &input = {}) {
             QProcess p;
-            p.start(gpg, QStringList{QStringLiteral("--homedir"), home.path(), QStringLiteral("--batch"),
-                                     QStringLiteral("--pinentry-mode"), QStringLiteral("loopback"),
-                                     QStringLiteral("--passphrase"), QString()} + args);
+            p.start(gpg, QStringList{QStringLiteral("--homedir"), QDir::toNativeSeparators(home.path()),
+                                     QStringLiteral("--batch"), QStringLiteral("--yes")}
+                        + args);
             p.write(input);
             p.closeWriteChannel();
             p.waitForFinished(60000);
-            return std::make_pair(p.exitCode(), p.readAllStandardOutput() + p.readAllStandardError());
+            const QByteArray out = p.readAllStandardOutput() + p.readAllStandardError();
+            if (p.exitCode() != 0)
+                qWarning("gpg %s exited %d: %s", qPrintable(args.join(u' ')), p.exitCode(), out.constData());
+            return std::make_pair(p.exitCode(), out);
         };
         Pgp us, them;
         const QString ours = us.generate(QStringLiteral("<us@x.test>"));
