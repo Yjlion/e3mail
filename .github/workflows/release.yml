@@ -98,7 +98,7 @@ jobs:
           mkdir -p dist
           (cd portable && 7z a ../dist/e3mail-windows-x64-portable.zip e3mail)
           (cd dist && sha256sum e3mail-windows-x64-portable.zip > e3mail-windows-x64-portable.zip.sha256)
-          mv build/release/*.exe* dist/
+          mv build/release/*-win64.exe* dist/  # the installer, not the built programs
 
       - uses: actions/upload-artifact@v4
         with:
