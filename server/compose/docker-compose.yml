@@ -1,0 +1,24 @@
+# docker compose up -d --build
+# Users alice, bob, carol, dana @e3.test, password "pw". Self-signed TLS:
+# clients must be told to accept it (e3mail-cli add --insecure).
+# An explicit project name: without it Compose names the project after this
+# directory ("compose"), and any other checkout with a server/compose/ of its
+# own would be treated as the same project and have its containers replaced.
+name: e3mail-test
+
+services:
+  mail:
+    build: .
+    image: e3mail/test-mail:latest
+    container_name: e3mail-test-mail
+    hostname: mail.e3.test
+    environment:
+      E3_USERS: "alice bob carol dana"
+      E3_PASSWORD: "pw"
+    ports:
+      - "127.0.0.1:1465:465"   # SMTP, implicit TLS
+      - "127.0.0.1:1587:587"   # SMTP submission, STARTTLS
+      - "127.0.0.1:1993:993"   # IMAP, implicit TLS
+      - "127.0.0.1:1143:143"   # IMAP, STARTTLS
+      - "127.0.0.1:1995:995"   # POP3, implicit TLS
+      - "127.0.0.1:1110:110"   # POP3, STARTTLS

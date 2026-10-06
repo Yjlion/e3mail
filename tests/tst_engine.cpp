@@ -1,0 +1,263 @@
+// SPDX-License-Identifier: MPL-2.0
+#include "FakeMailServer.h"
+#include "engine/AccountManager.h"
+#include "mail/Compose.h"
+#include "mail/Contacts.h"
+#include "mail/Organize.h"
+#include "mail/Policy.h"
+#include "mail/Search.h"
+#include "store/Config.h"
+#include "store/Database.h"
+
+#include <QTemporaryDir>
+#include <QtTest>
+
+using namespace e3;
+
+// Drives two (or three) real accounts through the real engine against the
+// in-process mail system: setup, gating, the Autocrypt bootstrap, an
+// encrypted reply, threading, server retention, Bcc.
+class TestEngine : public QObject
+{
+    Q_OBJECT
+
+    std::unique_ptr<QTemporaryDir> m_dir;
+    std::unique_ptr<FakeMailServer> m_srv;
+    std::unique_ptr<AccountManager> m_mgr;
+
+    Account *makeAccount(const QString &addr, const QString &protocol)
+    {
+        m_srv->addUser(addr, QStringLiteral("pw"));
+        Account *a = m_mgr->create();
+        Account::Settings s;
+        s.addr = addr;
+        s.displayName = addr.section(u'@', 0, 0);
+        s.protocol = protocol;
+        s.inHost = s.smtpHost = QStringLiteral("127.0.0.1");
+        s.inPort = protocol == QLatin1String("pop3") ? m_srv->pop3Port() : m_srv->imapPort();
+        s.inSecurity = s.smtpSecurity = QStringLiteral("plain");
+        s.smtpPort = m_srv->smtpPort();
+        s.inPassword = QStringLiteral("pw");
+        a->configure(s);
+        return a;
+    }
+
+    static void sync(Account *a) { MailWorker::runOnce(a->dir(), a->credentials()); }
+
+    static Draft draft(const QString &to, const QString &subject, const QString &text)
+    {
+        Draft d;
+        d.to = {{QString(), to}};
+        d.subject = subject;
+        d.text = text;
+        return d;
+    }
+
+private Q_SLOTS:
+    void init()
+    {
+        qputenv("E3MAIL_NO_KEYCHAIN", "1");
+        m_dir = std::make_unique<QTemporaryDir>();
+        m_srv = std::make_unique<FakeMailServer>();
+        m_mgr = std::make_unique<AccountManager>(m_dir->path());
+    }
+
+    void cleanup()
+    {
+        m_mgr.reset();
+        m_srv.reset();
+        m_dir.reset();
+    }
+
+    void conversation()
+    {
+        Account *alice = makeAccount(QStringLiteral("alice@x.test"), QStringLiteral("imap"));
+        Account *bob = makeAccount(QStringLiteral("bob@x.test"), QStringLiteral("pop3"));
+        makeAccount(QStringLiteral("carol@x.test"), QStringLiteral("imap"));
+
+        // Something already on Bob's server before e3mail first looks is never
+        // deleted: retention is not retroactive.
+        m_srv->deliver(QStringLiteral("bob@x.test"),
+                       "From: old@x.test\r\nSubject: old\r\nMessage-ID: <old@x.test>\r\n\r\nold\r\n");
+        sync(alice);
+        sync(bob);
+        QCOMPARE(m_srv->mailbox(QStringLiteral("bob@x.test")).size(), 1);
+
+        // 1. Alice writes first. She has no key for Bob, so it goes cleartext,
+        //    carrying her Autocrypt header.
+        Draft first = draft(QStringLiteral("bob@x.test"), QStringLiteral("Thursday's numbers"),
+                            QStringLiteral("Hi Bob,\nnumbers attached."));
+        first.cc = {{QStringLiteral("Carol"), QStringLiteral("carol@x.test")}};
+        first.attachments = {{QStringLiteral("q3.csv"), QStringLiteral("text/csv"), "a,b\n1,2\n"}};
+        first.importance = 1;
+        const auto readiness = mail::Policy::evaluate(alice->ctx(), {QStringLiteral("bob@x.test")}, SendEncryption::Auto);
+        QVERIFY(!readiness.willEncrypt);
+        QCOMPARE(readiness.missingKeys, QStringList{QStringLiteral("bob@x.test")});
+        const qint64 sentId = mail::Compose::queue(alice->ctx(), first);
+        sync(alice);
+        QCOMPARE(mail::Search::detail(alice->ctx(), sentId)->state, MessageState::Sent);
+        QCOMPARE(mail::Search::count(alice->ctx(), tag::Sent, false), 1);
+        QVERIFY(m_srv->envelopes().last().data.contains("Autocrypt: addr=alice@x.test"));
+
+        // 2. Bob is a stranger to Alice's address, so it waits in Unverified,
+        //    readable, with Alice's key learned but not verified.
+        sync(bob);
+        // (the old message is from a stranger too)
+        QCOMPARE(mail::Search::count(bob->ctx(), tag::Unverified, false), 2);
+        QCOMPARE(mail::Search::count(bob->ctx(), tag::Inbox, false), 0);
+        const auto held = mail::Search::list(bob->ctx(), SearchQuery::forTag(tag::Unverified));
+        qint64 heldId = 0;
+        for (const auto &h : held) {
+            if (h.from.addr == QLatin1String("alice@x.test"))
+                heldId = h.id;
+        }
+        const auto msg = *mail::Search::detail(bob->ctx(), heldId);
+        QCOMPARE(msg.subject, QStringLiteral("Thursday's numbers"));
+        QCOMPARE(msg.cc.value(0).addr, QStringLiteral("carol@x.test"));
+        QCOMPARE(msg.importance, 1);
+        QCOMPARE(msg.attachments.size(), 1);
+        QCOMPARE(msg.attachments[0].filename, QStringLiteral("q3.csv"));
+        QVERIFY(!msg.encrypted);
+        QVERIFY(msg.held);
+        const auto aliceContact = mail::Contacts::get(bob->ctx(), QStringLiteral("alice@x.test"));
+        QVERIFY(!aliceContact->fingerprint.isEmpty());
+        QVERIFY(!aliceContact->verified);
+        // Delete-after-download removed it from the server; the old one stays.
+        QCOMPARE(m_srv->mailbox(QStringLiteral("bob@x.test")).size(), 1);
+
+        // 3. Accepting Alice releases her mail into the Inbox.
+        QCOMPARE(mail::Organize::accept(bob->ctx(), QStringLiteral("alice@x.test")), 1);
+        QCOMPARE(mail::Search::count(bob->ctx(), tag::Unverified, false), 1);
+        QCOMPARE(mail::Search::count(bob->ctx(), tag::Inbox, false), 1);
+
+        // 4. Bob replies. Reply addresses Alice, not Bob's own address, and is
+        //    encrypted because Alice's key is now known.
+        Draft reply = mail::Compose::reply(bob->ctx(), msg.id, false);
+        QCOMPARE(reply.to.value(0).addr, QStringLiteral("alice@x.test"));
+        QCOMPARE(reply.subject, QStringLiteral("Re: Thursday's numbers"));
+        reply.text = QStringLiteral("The second column is off by one.") + reply.text;
+        const qint64 replyId = mail::Compose::queue(bob->ctx(), reply);
+        QVERIFY(mail::Search::detail(bob->ctx(), replyId)->encrypted);
+        sync(bob);
+        const QByteArray wire = m_srv->envelopes().last().data;
+        QVERIFY(wire.contains("multipart/encrypted"));
+        QVERIFY(!wire.contains("off by one"));
+        QVERIFY(!wire.contains("Thursday"));      // protected subject
+        QVERIFY(wire.contains("Subject: ..."));
+
+        // 5. Alice wrote to Bob, so he is known: straight to her Inbox,
+        //    decrypted, signed, threaded onto her original.
+        sync(alice);
+        const auto inbox = mail::Search::list(alice->ctx(), SearchQuery::forTag(tag::Inbox));
+        QCOMPARE(inbox.size(), 1);
+        const auto got = *mail::Search::detail(alice->ctx(), inbox.first().id);
+        QCOMPARE(got.subject, QStringLiteral("Re: Thursday's numbers"));
+        QVERIFY(got.bodyText.startsWith(QStringLiteral("The second column is off by one.")));
+        QVERIFY(got.encrypted);
+        QVERIFY(got.signedBySender);
+        QVERIFY(!got.verified);
+        QCOMPARE(got.threadId, mail::Search::detail(alice->ctx(), sentId)->threadId);
+        QCOMPARE(mail::Search::thread(alice->ctx(), got.id), (QList<qint64>{sentId, got.id}));
+
+        // 6. Full-text search finds the decrypted body.
+        SearchQuery q;
+        q.tag = tag::All;
+        q.text = QStringLiteral("column");
+        QCOMPARE(mail::Search::list(alice->ctx(), q).size(), 1);
+
+        // 7. Bcc reaches the envelope, never a header.
+        Draft secret = draft(QStringLiteral("bob@x.test"), QStringLiteral("bcc test"), QStringLiteral("x"));
+        secret.bcc = {{QString(), QStringLiteral("carol@x.test")}};
+        mail::Compose::queue(alice->ctx(), secret);
+        sync(alice);
+        const auto env = m_srv->envelopes().last();
+        QVERIFY(env.rcpts.contains(QStringLiteral("carol@x.test")));
+        QVERIFY(!env.data.contains("carol@x.test"));
+    }
+
+    void strictRefusesWithoutKey()
+    {
+        Account *alice = makeAccount(QStringLiteral("alice@x.test"), QStringLiteral("imap"));
+        alice->ctx().config.setInt(cfg::EncryptionMode, int(EncryptionMode::Strict));
+        QVERIFY_THROWS_EXCEPTION(mail::ComposeError,
+                                 mail::Compose::queue(alice->ctx(), draft(QStringLiteral("x@y.test"), QStringLiteral("s"),
+                                                                          QStringLiteral("t"))));
+        // And the padlock cannot ask for cleartext under strict.
+        const auto r = mail::Policy::evaluate(alice->ctx(), {QStringLiteral("x@y.test")}, SendEncryption::Plaintext);
+        QVERIFY(!r.canSend);
+        QVERIFY(r.padlockLocked);
+    }
+
+    void blocklistTrashesOnArrival()
+    {
+        Account *bob = makeAccount(QStringLiteral("bob@x.test"), QStringLiteral("imap"));
+        sync(bob);
+        mail::Contacts::block(bob->ctx(), QStringLiteral("@spam.test"));
+        m_srv->deliver(QStringLiteral("bob@x.test"), "From: a@spam.test\r\nSubject: buy\r\n\r\nnow\r\n");
+        m_srv->deliver(QStringLiteral("bob@x.test"), "From: a@mail.spam.test\r\nSubject: sub\r\n\r\nx\r\n");
+        sync(bob);
+        QCOMPARE(mail::Search::count(bob->ctx(), tag::Trash, false), 1);
+        // a subdomain is not the domain
+        QCOMPARE(mail::Search::count(bob->ctx(), tag::Unverified, false), 1);
+        const auto trashed = mail::Search::list(bob->ctx(), SearchQuery::forTag(tag::Trash));
+        QCOMPARE(mail::Search::detail(bob->ctx(), trashed.first().id)->trashReason, TrashReason::Blocked);
+    }
+
+    void deadlines()
+    {
+        Account *bob = makeAccount(QStringLiteral("bob@x.test"), QStringLiteral("imap"));
+        sync(bob);
+        m_srv->deliver(QStringLiteral("bob@x.test"), "From: stranger@z.test\r\nSubject: hi\r\n\r\nx\r\n");
+        sync(bob);
+        auto &ctx = bob->ctx();
+        const qint64 id = mail::Search::list(ctx, SearchQuery::forTag(tag::Unverified)).first().id;
+
+        // 0 days in Unverified means never sweep.
+        ctx.config.setInt(cfg::UnverifiedTrashDays, 0);
+        ctx.db.run("UPDATE held SET held_at = 0");
+        mail::Organize::housekeeping(ctx);
+        QCOMPARE(mail::Search::count(ctx, tag::Unverified, false), 1);
+
+        // Past the window it goes to Trash, recoverably.
+        ctx.config.setInt(cfg::UnverifiedTrashDays, 30);
+        mail::Organize::housekeeping(ctx);
+        QCOMPARE(mail::Search::count(ctx, tag::Trash, false), 1);
+        QCOMPARE(mail::Search::detail(ctx, id)->trashReason, TrashReason::Unaccepted);
+
+        // Restoring unaccepted mail accepts its sender.
+        mail::Organize::restore(ctx, id);
+        QCOMPARE(mail::Search::count(ctx, tag::Inbox, false), 1);
+        QVERIFY(mail::Contacts::isTrusted(ctx, QStringLiteral("stranger@z.test")));
+
+        // Trash with a 0 day window destroys at the next housekeeping.
+        ctx.config.setInt(cfg::TrashPurgeDays, 0);
+        mail::Organize::trash(ctx, id, TrashReason::User);
+        mail::Organize::housekeeping(ctx);
+        QVERIFY(!mail::Search::detail(ctx, id).has_value());
+    }
+
+    void labelsAndArchive()
+    {
+        Account *bob = makeAccount(QStringLiteral("bob@x.test"), QStringLiteral("imap"));
+        sync(bob);
+        mail::Organize::accept(bob->ctx(), QStringLiteral("friend@z.test"));
+        m_srv->deliver(QStringLiteral("bob@x.test"), "From: friend@z.test\r\nSubject: hi\r\n\r\nx\r\n");
+        sync(bob);
+        auto &ctx = bob->ctx();
+        const qint64 id = mail::Search::list(ctx, SearchQuery::forTag(tag::Inbox)).first().id;
+        const qint64 label = mail::Organize::createLabel(ctx, QStringLiteral("Reading list"), QStringLiteral("#2b8a3e"));
+        QCOMPARE(mail::Organize::createLabel(ctx, QStringLiteral("reading LIST"), QString()), label);
+        mail::Organize::setLabel(ctx, id, label, true);
+        mail::Organize::archive(ctx, id, true);
+        QCOMPARE(mail::Search::count(ctx, tag::Inbox, false), 0);
+        QCOMPARE(mail::Search::count(ctx, tag::Archive, false), 1);
+        SearchQuery byLabel;
+        byLabel.labelId = label;
+        QCOMPARE(mail::Search::list(ctx, byLabel).size(), 1);
+        QCOMPARE(mail::Search::list(ctx, byLabel).first().labels.value(0).name, QStringLiteral("Reading list"));
+        QVERIFY(ctx.db.queryInt("SELECT count(*) FROM ops WHERE kind='label.add'").value_or(0) >= 2);
+    }
+};
+
+QTEST_GUILESS_MAIN(TestEngine)
+#include "tst_engine.moc"

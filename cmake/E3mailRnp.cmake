@@ -1,0 +1,63 @@
+# RNP's exported CMake package names its private dependencies as imported
+# targets (JSON-C::JSON-C, Botan::Botan) without creating them, so a shared
+# RNP install cannot be consumed without them. Provide them from pkg-config
+# when the platform's own packages have not.
+find_package(PkgConfig QUIET)
+if(NOT TARGET JSON-C::JSON-C)
+    find_package(json-c CONFIG QUIET)
+    if(TARGET json-c::json-c)
+        add_library(JSON-C::JSON-C INTERFACE IMPORTED)
+        target_link_libraries(JSON-C::JSON-C INTERFACE json-c::json-c)
+    elseif(PKG_CONFIG_FOUND)
+        pkg_check_modules(E3_JSONC IMPORTED_TARGET json-c)
+        if(E3_JSONC_FOUND)
+            add_library(JSON-C::JSON-C INTERFACE IMPORTED)
+            target_link_libraries(JSON-C::JSON-C INTERFACE PkgConfig::E3_JSONC)
+        endif()
+    endif()
+endif()
+if(NOT TARGET Botan::Botan AND PKG_CONFIG_FOUND)
+    # Botan 3 where available; Ubuntu 24.04's RNP is built against Botan 2.
+    pkg_check_modules(E3_BOTAN IMPORTED_TARGET botan-3)
+    if(NOT E3_BOTAN_FOUND)
+        pkg_check_modules(E3_BOTAN IMPORTED_TARGET botan-2)
+    endif()
+    if(E3_BOTAN_FOUND)
+        add_library(Botan::Botan INTERFACE IMPORTED)
+        target_link_libraries(Botan::Botan INTERFACE PkgConfig::E3_BOTAN)
+    endif()
+endif()
+# No pkg-config (Windows): Botan's own CMake package, or find it by hand.
+if(NOT TARGET Botan::Botan)
+    find_package(Botan CONFIG QUIET)
+endif()
+if(NOT TARGET Botan::Botan)
+    find_path(E3_BOTAN_INCLUDE botan/version.h PATH_SUFFIXES botan-3 botan-2)
+    find_library(E3_BOTAN_LIBRARY NAMES botan-3 botan-2 botan)
+    if(E3_BOTAN_INCLUDE AND E3_BOTAN_LIBRARY)
+        add_library(Botan::Botan UNKNOWN IMPORTED)
+        set_target_properties(Botan::Botan PROPERTIES
+            IMPORTED_LOCATION "${E3_BOTAN_LIBRARY}"
+            INTERFACE_INCLUDE_DIRECTORIES "${E3_BOTAN_INCLUDE}")
+    endif()
+endif()
+# Packages built against Botan 2 (Ubuntu 24.04's) name it Botan2::Botan2.
+if(TARGET Botan::Botan AND NOT TARGET Botan2::Botan2)
+    add_library(Botan2::Botan2 INTERFACE IMPORTED)
+    target_link_libraries(Botan2::Botan2 INTERFACE Botan::Botan)
+endif()
+find_package(ZLIB QUIET)
+find_package(BZip2 QUIET)
+find_package(rnp CONFIG QUIET)
+if(NOT TARGET rnp::librnp)
+    # Distribution packages often ship only a pkg-config file.
+    if(PKG_CONFIG_FOUND)
+        pkg_check_modules(E3_RNP IMPORTED_TARGET librnp)
+    endif()
+    if(NOT E3_RNP_FOUND)
+        message(FATAL_ERROR "RNP not found. Install librnp (with headers), or build it with scripts/build-rnp.sh "
+                            "and pass -DCMAKE_PREFIX_PATH=<its prefix>.")
+    endif()
+    add_library(rnp::librnp INTERFACE IMPORTED)
+    target_link_libraries(rnp::librnp INTERFACE PkgConfig::E3_RNP)
+endif()

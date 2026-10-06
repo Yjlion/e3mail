@@ -1,0 +1,1 @@
+This file makes e3mail keep its data in the data/ folder beside it.

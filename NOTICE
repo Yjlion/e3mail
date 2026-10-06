@@ -1,0 +1,18 @@
+e3mail
+Copyright the e3mail contributors.
+
+e3mail is licensed under the Mozilla Public License 2.0 (see LICENSE). It is a
+ground-up reimplementation of the ideas of eeemail
+(https://github.com/Yjlion/eeemail, MPL-2.0); it contains no code from
+Delta Chat's chatmail/core.
+
+Binary distributions include or link these components, under their own licenses:
+
+  Qt 6                   LGPL-3.0 (dynamically linked)   https://www.qt.io
+  RNP                    BSD-2-Clause                    https://www.rnpgp.org
+  Botan                  BSD-2-Clause                    https://botan.randombit.net
+  json-c                 MIT                             https://github.com/json-c/json-c
+  SQLite                 Public domain                   https://sqlite.org
+  QtKeychain             BSD-3-Clause                    https://github.com/frankosterfeld/qtkeychain
+  zlib                   zlib                            https://zlib.net
+  bzip2                  bzip2 license                   https://sourceware.org/bzip2

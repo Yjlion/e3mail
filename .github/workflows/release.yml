@@ -1,0 +1,117 @@
+name: Release
+
+# Builds the installers and portable archives for a tag and publishes them,
+# each with a SHA-256 checksum. Nothing is code-signed.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  QT_VERSION: "6.8.3"
+  RNP_VERSION: "v0.18.1"
+
+jobs:
+  package:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { name: Linux, os: ubuntu-22.04 }   # the oldest glibc we target, for the AppImage
+          - { name: Windows, os: windows-2022 }
+          - { name: macOS, os: macos-14 }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ env.QT_VERSION }}
+          cache: true
+
+      - name: Dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build pkg-config libsqlite3-dev libgl1-mesa-dev libxkbcommon-dev \
+              libjson-c-dev libbotan-2-dev zlib1g-dev libbz2-dev libfuse2 file
+          RNP_CRYPTO_BACKEND=botan scripts/build-rnp.sh "$HOME/deps"
+          echo "CMAKE_PREFIX_PATH=$HOME/deps" >> "$GITHUB_ENV"
+          echo "LD_LIBRARY_PATH=$HOME/deps/lib:$LD_LIBRARY_PATH" >> "$GITHUB_ENV"
+      - name: Dependencies (macOS)
+        if: runner.os == 'macOS'
+        run: brew install ninja rnp sqlite pkg-config
+      - uses: ilammy/msvc-dev-cmd@v1
+        if: runner.os == 'Windows'
+      - name: Dependencies (Windows)
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          VCPKG="$VCPKG_INSTALLATION_ROOT"
+          # Manifest mode: installs what vcpkg.json lists into ./vcpkg_installed.
+          "$VCPKG/vcpkg" install --triplet x64-windows
+          INSTALLED="$GITHUB_WORKSPACE/vcpkg_installed"
+          TOOLCHAIN="$VCPKG/scripts/buildsystems/vcpkg.cmake"
+          # RNP's own tree has no manifest: point it at the packages just installed.
+          scripts/build-rnp.sh "$GITHUB_WORKSPACE/deps" -G Ninja \
+              -DCMAKE_TOOLCHAIN_FILE="$TOOLCHAIN" -DVCPKG_TARGET_TRIPLET=x64-windows \
+              -DVCPKG_MANIFEST_MODE=OFF -DVCPKG_INSTALLED_DIR="$INSTALLED"
+          echo "E3_CMAKE_ARGS=-DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN -DVCPKG_TARGET_TRIPLET=x64-windows -DVCPKG_INSTALLED_DIR=$INSTALLED -DE3MAIL_BUNDLE_DLLS_FROM=$GITHUB_WORKSPACE/deps/bin;$INSTALLED/x64-windows/bin" >> "$GITHUB_ENV"
+          echo "CMAKE_PREFIX_PATH=$GITHUB_WORKSPACE/deps" >> "$GITHUB_ENV"
+          echo "$GITHUB_WORKSPACE/deps/bin" >> "$GITHUB_PATH"
+
+      - name: Build
+        shell: bash
+        run: |
+          read -r -a E3_ARGS <<< "${E3_CMAKE_ARGS:-}"
+          cmake --preset release -DE3MAIL_DEPLOY_QT=${{ runner.os != 'Linux' && 'ON' || 'OFF' }} "${E3_ARGS[@]}"
+          cmake --build --preset release
+
+      - name: Package (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          (cd build/release && cpack -G "DEB;TGZ")
+          packaging/linux/build-appimage.sh build/release
+          mkdir -p dist && mv build/release/*.deb* build/release/*.tar.gz* *.AppImage* dist/
+
+      - name: Package (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          (cd build/release && cpack -G DragNDrop)
+          mkdir -p dist && mv build/release/*.dmg* dist/
+
+      - name: Package (Windows)
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          (cd build/release && cpack -G NSIS)
+          # The portable archive: the install tree plus portable.txt, so the
+          # app keeps its data beside itself and leaves nothing on the machine.
+          cmake --install build/release --prefix portable/e3mail
+          cp packaging/windows/portable.txt portable/e3mail/bin/
+          mkdir -p dist
+          (cd portable && 7z a ../dist/e3mail-windows-x64-portable.zip e3mail)
+          (cd dist && sha256sum e3mail-windows-x64-portable.zip > e3mail-windows-x64-portable.zip.sha256)
+          mv build/release/*.exe* dist/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: e3mail-${{ matrix.name }}
+          path: dist/*
+
+  publish:
+    needs: package
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          prerelease: true
