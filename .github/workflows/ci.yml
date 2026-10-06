@@ -100,4 +100,13 @@ jobs:
         shell: bash
         # On failure, run the failed tests again verbosely so their output is
         # in the log whatever ctest decided to show.
-        run: ctest --preset ci || { ctest --preset ci --rerun-failed -V; exit 1; }
+        run: |
+          ctest --preset ci && exit 0
+          ctest --preset ci --rerun-failed -V
+          # A suite that crashes loses its buffered output: run it function by function.
+          failed=$(cut -d: -f2 build/ci/Testing/Temporary/LastTestsFailed.log 2>/dev/null)
+          for t in $failed; do
+            exe=$(ls build/ci/tst_$t* build/ci/tests/tst_$t* 2>/dev/null | head -1)
+            [[ -n "$exe" ]] && scripts/ci-diagnose-tests.sh "$exe"
+          done
+          exit 1
