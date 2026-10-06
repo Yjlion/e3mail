@@ -17,6 +17,7 @@ public:
     {
         qint64 msgId = 0;
         bool duplicate = false;
+        bool purged = false; // a tombstone keeps it out; msgId is 0
         bool held = false;
         bool trashed = false;
     };
