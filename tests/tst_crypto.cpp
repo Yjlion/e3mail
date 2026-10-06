@@ -2,7 +2,6 @@
 #include "crypto/Autocrypt.h"
 #include "crypto/Pgp.h"
 
-#include <QDir>
 #include <QProcess>
 #include <QStandardPaths>
 #include <QTemporaryDir>
@@ -84,13 +83,14 @@ private Q_SLOTS:
         if (gpg.isEmpty())
             QSKIP("gpg not installed");
         QTemporaryDir home;
-        // Our keys are unprotected, so no passphrase options: an empty
-        // argument does not survive the argument handling of every gpg build
-        // (Git for Windows ships an MSYS one).
+        // Our keys are unprotected, so no passphrase options. The home
+        // directory is given relative to gpg's working directory: the MSYS
+        // gpg that Git for Windows ships reads "C:\..." as a relative path.
         auto run = [&](const QStringList &args, const QByteArray &input = {}) {
             QProcess p;
-            p.start(gpg, QStringList{QStringLiteral("--homedir"), QDir::toNativeSeparators(home.path()),
-                                     QStringLiteral("--batch"), QStringLiteral("--yes")}
+            p.setWorkingDirectory(home.path());
+            p.start(gpg, QStringList{QStringLiteral("--homedir"), QStringLiteral("."), QStringLiteral("--batch"),
+                                     QStringLiteral("--yes")}
                         + args);
             p.write(input);
             p.closeWriteChannel();
