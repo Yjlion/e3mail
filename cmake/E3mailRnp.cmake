@@ -27,6 +27,20 @@ if(NOT TARGET Botan::Botan AND PKG_CONFIG_FOUND)
         target_link_libraries(Botan::Botan INTERFACE PkgConfig::E3_BOTAN)
     endif()
 endif()
+# No pkg-config (Windows): Botan's own CMake package, or find it by hand.
+if(NOT TARGET Botan::Botan)
+    find_package(Botan CONFIG QUIET)
+endif()
+if(NOT TARGET Botan::Botan)
+    find_path(E3_BOTAN_INCLUDE botan/version.h PATH_SUFFIXES botan-3 botan-2)
+    find_library(E3_BOTAN_LIBRARY NAMES botan-3 botan-2 botan)
+    if(E3_BOTAN_INCLUDE AND E3_BOTAN_LIBRARY)
+        add_library(Botan::Botan UNKNOWN IMPORTED)
+        set_target_properties(Botan::Botan PROPERTIES
+            IMPORTED_LOCATION "${E3_BOTAN_LIBRARY}"
+            INTERFACE_INCLUDE_DIRECTORIES "${E3_BOTAN_INCLUDE}")
+    endif()
+endif()
 # Packages built against Botan 2 (Ubuntu 24.04's) name it Botan2::Botan2.
 if(TARGET Botan::Botan AND NOT TARGET Botan2::Botan2)
     add_library(Botan2::Botan2 INTERFACE IMPORTED)
