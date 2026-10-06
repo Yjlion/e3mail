@@ -1,7 +1,9 @@
 # Shared warning flags, applied per target with e3mail_set_warnings().
 function(e3mail_set_warnings target)
     if(MSVC)
-        target_compile_options(${target} PRIVATE /W4 /permissive- /utf-8)
+        # C4244/C4267: integer narrowing, which Qt's int and qsizetype APIs make
+        # routine; GCC and clang are not asked for it either.
+        target_compile_options(${target} PRIVATE /W4 /permissive- /utf-8 /wd4244 /wd4267)
         if(E3MAIL_WARNINGS_AS_ERRORS)
             target_compile_options(${target} PRIVATE /WX)
         endif()
