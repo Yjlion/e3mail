@@ -7,6 +7,11 @@ on:
 permissions:
   contents: read
 
+# A new push supersedes the runs still building the old one.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   QT_VERSION: "6.8.3"
   RNP_VERSION: "v0.18.1"
