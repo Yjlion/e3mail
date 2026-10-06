@@ -57,19 +57,33 @@ jobs:
         if: runner.os == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1
 
+      # Botan and RNP take most of a Windows run to build; keep them between
+      # runs, keyed on everything that decides what gets built.
+      - name: Cache dependencies (Windows)
+        if: runner.os == 'Windows'
+        id: windeps
+        uses: actions/cache@v4
+        with:
+          path: |
+            vcpkg_installed
+            deps
+          key: windeps-${{ env.RNP_VERSION }}-${{ hashFiles('vcpkg.json', 'scripts/build-rnp.sh') }}
+
       - name: Dependencies (Windows)
         if: runner.os == 'Windows'
         shell: bash
         run: |
           VCPKG="$VCPKG_INSTALLATION_ROOT"
-          # Manifest mode: installs what vcpkg.json lists into ./vcpkg_installed.
-          "$VCPKG/vcpkg" install --triplet x64-windows
           INSTALLED="$GITHUB_WORKSPACE/vcpkg_installed"
           TOOLCHAIN="$VCPKG/scripts/buildsystems/vcpkg.cmake"
-          # RNP's own tree has no manifest: point it at the packages just installed.
-          scripts/build-rnp.sh "$GITHUB_WORKSPACE/deps" -G Ninja \
-              -DCMAKE_TOOLCHAIN_FILE="$TOOLCHAIN" -DVCPKG_TARGET_TRIPLET=x64-windows \
-              -DVCPKG_MANIFEST_MODE=OFF -DVCPKG_INSTALLED_DIR="$INSTALLED"
+          if [[ "${{ steps.windeps.outputs.cache-hit }}" != "true" ]]; then
+            # Manifest mode: installs what vcpkg.json lists into ./vcpkg_installed.
+            "$VCPKG/vcpkg" install --triplet x64-windows
+            # RNP's own tree has no manifest: point it at the packages just installed.
+            scripts/build-rnp.sh "$GITHUB_WORKSPACE/deps" -G Ninja \
+                -DCMAKE_TOOLCHAIN_FILE="$TOOLCHAIN" -DVCPKG_TARGET_TRIPLET=x64-windows \
+                -DVCPKG_MANIFEST_MODE=OFF -DVCPKG_INSTALLED_DIR="$INSTALLED"
+          fi
           echo "E3_CMAKE_ARGS=-DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN -DVCPKG_TARGET_TRIPLET=x64-windows -DVCPKG_INSTALLED_DIR=$INSTALLED" >> "$GITHUB_ENV"
           echo "CMAKE_PREFIX_PATH=$GITHUB_WORKSPACE/deps" >> "$GITHUB_ENV"
           echo "$GITHUB_WORKSPACE/deps/bin" >> "$GITHUB_PATH"
@@ -83,4 +97,7 @@ jobs:
         run: cmake --build --preset ci
 
       - name: Test
-        run: ctest --preset ci
+        shell: bash
+        # On failure, run the failed tests again verbosely so their output is
+        # in the log whatever ctest decided to show.
+        run: ctest --preset ci || { ctest --preset ci --rerun-failed -V; exit 1; }
