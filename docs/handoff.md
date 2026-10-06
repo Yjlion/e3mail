@@ -81,11 +81,13 @@ ICU is linked by the core, and the interface is in eleven languages
   Unverified card; Russian the composer. A live switch from English to Hebrew
   and German was watched by a temporary hook, not by a test.
 
-**Not verified:** CI with ICU on any platform (Ubuntu's `libicu-dev`,
-Homebrew's keg-only `icu4c` through `ICU_ROOT`, vcpkg's `icu`, which builds
-for a long time on the first run). The packages carrying ICU, by the same
-reasoning that already carries RNP. Any of it on a real display, or by a
-native speaker.
+**Verified by CI** (run 37497307631): Linux, macOS and Windows build with ICU
+and pass every test, translations and the right-to-left boot included.
+Windows took 40 minutes, almost all of it vcpkg building ICU; the dependency
+cache holds it from then on.
+
+**Not verified:** the packages carrying ICU (the release workflow has still
+never run), any of it on a real display, or by a native speaker.
 
 ## Known gaps
 
