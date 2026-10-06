@@ -9,11 +9,11 @@ Phases 0–7 of [DESIGN.md](DESIGN.md) are done: the engine, the desktop app, th
 CLI and packaging.
 
 **Verified here (Arch Linux, Qt 6.11, RNP 0.18.1, GCC 16):**
-- `ctest --preset dev`: 6 suites, all passing. They cover MIME, the
+- `ctest --preset dev`: 7 suites, all passing. They cover MIME, the
   sanitizer, the protocols against the fake mail system, crypto (including
   GnuPG decrypting and verifying our output), an engine end-to-end
-  conversation over IMAP and POP3, the composer's whitelist, and a boot of the
-  real QML app.
+  conversation over IMAP and POP3, two devices of one account syncing, the
+  composer's whitelist, and a boot of the real QML app.
 - `scripts/e2e.py` against `server/compose`, all green:
   - real TLS on every port, implicit and STARTTLS;
   - alice on IMAP, bob on POP3, carol on IMAP with STARTTLS, dana on POP3 with
@@ -37,6 +37,34 @@ suites, including the GnuPG interop test against Git for Windows' gpg.
 - No interop with Delta Chat, Thunderbird, Gmail or any mainstream provider.
   OAuth2 is not supported, so Gmail and Outlook need app passwords.
 
+## P8 in progress: the sync core (2026-10-06)
+
+The transport-independent half of multi-client is in, without Iroh: this
+machine has no Rust toolchain, and the merge rules had to be right before
+bytes move. [ADR 0013](adr/0013-op-merge-rules.md) has the rules.
+
+- Migration 2: merge keys on `ops`, `tombstones`, `devices`, `server_acks`.
+- `src/core/sync/`: `OpApply` (merge, tombstones, deferred ops),
+  `SyncSession` (anti-entropy over a `DeviceTransport`), `DeviceTransport`
+  (the interface Iroh will sit behind).
+- `mail::Preferences::set` is now the way to change a setting; synced ones
+  are recorded. The app and the CLI use it.
+- Server deletion waits for a `server.ack` from every paired device.
+- `tst_sync` runs two devices of one account against the fake server over
+  `tests/LoopbackTransport`. Each mechanism (replay, LWW, the device wait,
+  gap refill) was broken on purpose once to see the suite fail.
+
+**Not verified:** `scripts/e2e.py` was not run for this change. The e3mail
+test server was down and this user could not reach the Docker socket. The
+single-device retention path is covered by `tst_engine` and by the last step
+of `tst_sync::serverDeletionWaitsForEveryDevice`, both against the fake
+server only.
+
+**Not built yet:** the Rust crate and Corrosion, pairing (QR and the
+encrypted snapshot; tests clone the account directory instead), the mailbox
+fallback, any UI, and wiring a `SyncSession` into `Account`. Nothing in the
+app syncs yet.
+
 ## Known gaps
 
 - **Signed-only mail** (`multipart/signed` without encryption) is shown, but
@@ -55,6 +83,11 @@ suites, including the GnuPG interop test against Git for Windows' gpg.
 - **Replies** quote the plain-text body, even of HTML mail.
 - **Charsets** beyond UTF-8, Latin-1 and Windows-1252 rely on the Qt build
   having ICU.
+- **Sync**: a message another device sent while it was still pending in that
+  device's outbox arrives as Sent. Mail whose raw copy expired under
+  raw-message retention never reaches a new device unless the server still
+  has it, and sent mail then never does. A label renamed on one device comes
+  back if another tags with the old name first (ADR 0013).
 - **No translations**, and plurals are hand-written English.
 - **Passwords fall back to the database in cleartext** when there is no OS
   keyring, and Settings says so (ADR 0012). The database has no passphrase
@@ -107,10 +140,26 @@ uses QtTest's file logger, because its stdout arrived empty.
 creating them. `cmake/E3mailRnp.cmake` provides them, and falls back to
 pkg-config.
 
+**10. Clocks do not fit in JSON numbers.** An HLC is 64 bits and JSON numbers
+are doubles, exact only to 2^53. On the wire the clock is a string.
+
+**11. Placement on arrival must not be recorded.** Auto-trash (blocked,
+cleartext under strict) used to record `msg.trash`. Replayed on another
+device, that machine decision got a fresh clock and overwrote a Restore the
+person had made elsewhere. Only what a person or a timer does is an op.
+
+**12. Two connections write ops.** The UI and the worker each have an
+`OpLog`. Sequence numbers are taken inside the insert, and the clock observes
+the log's highest value before every op. Otherwise the worker's frequent
+`server.ack` ops race the UI's on `UNIQUE(device, seq)`.
+
 ## Next
 
-1. Get CI green on Windows and macOS (P7 follow-through).
-2. P8 multi-client over Iroh, per [ADR 0010](adr/0010-multi-client-over-iroh.md).
-3. P9 SecureJoin, then an interop pass against Delta Chat's released
+1. P8, slice 2: install Rust, build `src/p2p/` (Iroh, `iroh-blobs`) with
+   Corrosion behind `DeviceTransport`, add the toolchain to CI on all three
+   platforms, and wire `SyncSession` into `Account`.
+2. P8, slice 3: QR pairing with the encrypted snapshot; the mailbox fallback.
+3. Run the release workflow once (`workflow_dispatch`); it has never run.
+4. P9 SecureJoin, then an interop pass against Delta Chat's released
    `deltachat-rpc-server`, as eeemail's `scripts/interop-pass.py` does.
 4. Verify signed-only mail; desktop notifications.
