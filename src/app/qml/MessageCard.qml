@@ -46,7 +46,7 @@ Rectangle {
                     color: Theme.warn
                     font.pixelSize: Theme.fontSmall + 1
                     text: card.m.heldDaysLeft >= 0
-                          ? qsTr("You have not accepted this sender. Unless you do, this moves to Trash in %1.").arg(Theme.days(card.m.heldDaysLeft))
+                          ? qsTr("You have not accepted this sender. Unless you do, this moves to Trash in %n day(s).", "", card.m.heldDaysLeft)
                           : qsTr("You have not accepted this sender.")
                 }
                 Button { text: qsTr("Accept"); onClicked: MailApp.accept(card.m.fromAddr) }
@@ -66,7 +66,7 @@ Rectangle {
                 wrapMode: Text.Wrap
                 color: Theme.bad
                 font.pixelSize: Theme.fontSmall + 1
-                text: card.m.trashReason + " " + qsTr("It will be destroyed in %1 unless restored.").arg(Theme.days(card.m.purgeDays))
+                text: card.m.trashReason + " " + qsTr("It will be destroyed in %n day(s) unless restored.", "", card.m.purgeDays)
             }
         }
 
@@ -89,7 +89,9 @@ Rectangle {
                 Layout.fillWidth: true
                 spacing: 1
                 Text {
+                    // At the start edge whatever its script: see ReadingPane.
                     Layout.fillWidth: true
+                    Layout.maximumWidth: implicitWidth + 1
                     text: card.m.from + (card.m.from !== card.m.fromAddr ? "  <" + card.m.fromAddr + ">" : "")
                     color: Theme.text
                     font.pixelSize: Theme.fontBody
@@ -170,7 +172,7 @@ Rectangle {
         Text {
             Layout.fillWidth: true
             visible: card.expanded && card.m.remoteBlocked > 0
-            text: (card.m.remoteBlocked === 1 ? qsTr("1 remote image or style was not loaded.") : qsTr("%1 remote images or styles were not loaded.").arg(card.m.remoteBlocked)) + " " + qsTr("e3mail never loads remote content.")
+            text: qsTr("%n remote image(s) or style(s) not loaded.", "", card.m.remoteBlocked) + " " + qsTr("e3mail never loads remote content.")
             color: Theme.muted
             font.pixelSize: Theme.fontSmall
             wrapMode: Text.Wrap

@@ -46,6 +46,9 @@ class MailApp : public QObject
     Q_PROPERTY(QVariantMap counts READ counts NOTIFY countsChanged)
     Q_PROPERTY(qint64 selectedMessageId READ selectedMessageId NOTIFY selectionChanged)
     Q_PROPERTY(QVariantList thread READ thread NOTIFY selectionChanged)
+    // The chosen interface language; empty follows the system.
+    Q_PROPERTY(QString language READ language WRITE setLanguage NOTIFY languageChanged)
+    Q_PROPERTY(QVariantList languages READ languages CONSTANT)
 
 public:
     explicit MailApp(e3::AccountManager *manager, QObject *parent = nullptr);
@@ -119,6 +122,10 @@ public:
     Q_INVOKABLE void setSetting(const QString &key, const QVariant &value);
     Q_INVOKABLE QString signature() const;
 
+    QString language() const;
+    void setLanguage(const QString &code);
+    QVariantList languages() const;
+
 Q_SIGNALS:
     void firstRunChanged();
     void accountsChanged();
@@ -130,6 +137,8 @@ Q_SIGNALS:
     void selectionChanged();
     void notify(const QString &message);
     void newMailArrived(const QString &from, const QString &subject);
+    // Translators were replaced: the QML engine must retranslate.
+    void languageChanged();
 
 private:
     void switchAccount();

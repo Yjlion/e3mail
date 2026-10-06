@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MPL-2.0
 #include "MessageListModel.h"
 
+#include "util/LocalePatterns.h"
+
 #include <QLocale>
 
 int MessageListModel::rowCount(const QModelIndex &parent) const
@@ -16,7 +18,7 @@ QString MessageListModel::formatDate(const QDateTime &dt)
     if (local.date() == today)
         return loc.toString(local.time(), QLocale::ShortFormat);
     if (local.date().year() == today.year())
-        return loc.toString(local.date(), QStringLiteral("d MMM"));
+        return loc.toString(local.date(), e3::LocalePatterns::monthDay(loc));
     return loc.toString(local.date(), QLocale::ShortFormat);
 }
 

@@ -37,13 +37,15 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y ninja-build pkg-config libsqlite3-dev libgl1-mesa-dev libxkbcommon-dev \
-              libjson-c-dev libbotan-2-dev zlib1g-dev libbz2-dev libfuse2 file
+              libjson-c-dev libbotan-2-dev zlib1g-dev libbz2-dev libicu-dev libfuse2 file
           RNP_CRYPTO_BACKEND=botan scripts/build-rnp.sh "$HOME/deps"
           echo "CMAKE_PREFIX_PATH=$HOME/deps" >> "$GITHUB_ENV"
           echo "LD_LIBRARY_PATH=$HOME/deps/lib:$LD_LIBRARY_PATH" >> "$GITHUB_ENV"
       - name: Dependencies (macOS)
         if: runner.os == 'macOS'
-        run: brew install ninja rnp sqlite pkg-config
+        run: |
+          brew install ninja rnp sqlite pkg-config icu4c
+          echo "ICU_ROOT=$(brew --prefix icu4c)" >> "$GITHUB_ENV"
       - uses: ilammy/msvc-dev-cmd@v1
         if: runner.os == 'Windows'
       - name: Dependencies (Windows)

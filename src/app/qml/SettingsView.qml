@@ -39,12 +39,29 @@ Rectangle {
 
         ColumnLayout {
             id: col
-            x: 32; y: 24
+            // Mirrored by hand: x is not.
+            x: LayoutMirroring.enabled ? parent.width - width - 32 : 32
+            y: 24
             width: Math.min(parent.width - 64, 640)
             spacing: 6
 
             Text { text: qsTr("Settings"); color: Theme.text; font.pixelSize: 24; font.weight: Font.DemiBold }
             Note { text: view.s.addr || "" }
+
+            Heading { text: qsTr("Language") }
+            ComboBox {
+                id: languageBox
+                Layout.preferredWidth: 300
+                textRole: "name"
+                valueRole: "code"
+                model: [{ code: "", name: qsTr("Same as the system") }].concat(MailApp.languages)
+                // Retranslating rebuilds the model; keep the choice shown.
+                function showChoice() { currentIndex = indexOfValue(MailApp.language) }
+                Component.onCompleted: showChoice()
+                onModelChanged: Qt.callLater(showChoice)
+                onActivated: MailApp.language = currentValue
+            }
+            Note { text: qsTr("Translations other than English were made by machine and await review by native speakers.") }
 
             Heading { text: qsTr("You") }
             Label { text: qsTr("Name"); color: Theme.muted }
@@ -65,12 +82,12 @@ Rectangle {
             }
 
             Heading { text: qsTr("Encryption") }
-            ComboBox {
-                Layout.preferredWidth: 470
+            ChoiceBox {
+                Layout.fillWidth: true
                 model: [qsTr("Lenient — encrypt when everyone asks for it"),
                         qsTr("Opportunistic — encrypt whenever every recipient has a key"),
                         qsTr("Strict — end-to-end only, refuse otherwise")]
-                currentIndex: view.s.encryptionMode !== undefined ? view.s.encryptionMode : 1
+                selected: view.s.encryptionMode !== undefined ? view.s.encryptionMode : 1
                 onActivated: (i) => MailApp.setSetting("encryptionMode", i)
             }
             Note {
@@ -98,13 +115,13 @@ Rectangle {
             Note { text: qsTr("Trash is the only place e3mail destroys mail on a timer. Unaccepted and blocked mail goes there first.") }
 
             Heading { text: qsTr("Server") }
-            ComboBox {
-                Layout.preferredWidth: 470
+            ChoiceBox {
+                Layout.fillWidth: true
                 model: [{ v: "delete", t: qsTr("Remove mail from the server after downloading") },
                         { v: "keep", t: qsTr("Keep mail on the server for some days") },
                         { v: "never", t: qsTr("Never remove mail from the server") }]
                 textRole: "t"; valueRole: "v"
-                currentIndex: ["delete", "keep", "never"].indexOf(view.s.serverRetention || "delete")
+                selected: ["delete", "keep", "never"].indexOf(view.s.serverRetention || "delete")
                 onActivated: { MailApp.setSetting("serverRetention", currentValue); view.reload() }
             }
             RowLayout {

@@ -26,6 +26,11 @@ ApplicationWindow {
     Shortcut { sequence: "F5"; onActivated: MailApp.syncNow() }
     Shortcut { sequence: StandardKey.Find; onActivated: { page = "mail"; messageList.focusSearch() } }
 
+    // Arabic, Hebrew and Yiddish read right to left: rows, anchors and
+    // alignments mirror. Controls mirror by their locale on their own.
+    LayoutMirroring.enabled: Qt.application.layoutDirection === Qt.RightToLeft
+    LayoutMirroring.childrenInherit: true
+
     RowLayout {
         anchors.fill: parent
         spacing: 0

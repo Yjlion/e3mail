@@ -41,7 +41,10 @@ Rectangle {
                     font.weight: Font.Bold
                 }
                 Badge {
-                    text: "PREVIEW"
+                    // Gives way before the row overflows the sidebar.
+                    Layout.fillWidth: true
+                    Layout.maximumWidth: implicitWidth
+                    text: qsTr("PREVIEW")
                     fg: Theme.warn
                     bg: Theme.warnBg
                     ToolTip.visible: previewHover.hovered

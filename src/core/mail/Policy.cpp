@@ -6,6 +6,8 @@
 #include "crypto/Pgp.h"
 #include "store/Config.h"
 
+#include <QCoreApplication>
+
 namespace e3::mail {
 
 Policy::Readiness Policy::evaluate(MailContext &ctx, const QStringList &recipients, SendEncryption padlock)
@@ -39,15 +41,15 @@ Policy::Readiness Policy::evaluate(MailContext &ctx, const QStringList &recipien
         r.willEncrypt = true;
         if (!allKeys) {
             r.canSend = false;
-            r.refusal = seen.isEmpty() ? QStringLiteral("Add a recipient.")
-                                       : QStringLiteral("No key for %1.").arg(r.missingKeys.join(QStringLiteral(", ")));
+            r.refusal = seen.isEmpty() ? QCoreApplication::translate("Policy", "Add a recipient.")
+                                       : QCoreApplication::translate("Policy", "No key for %1.").arg(r.missingKeys.join(QStringLiteral(", ")));
         }
         break;
     case SendEncryption::Plaintext:
         if (mode == EncryptionMode::Strict) {
             r.canSend = false;
             r.willEncrypt = true;
-            r.refusal = QStringLiteral("Encryption is required for these recipients.");
+            r.refusal = QCoreApplication::translate("Policy", "Encryption is required for these recipients.");
         }
         break;
     case SendEncryption::Auto:
@@ -55,8 +57,8 @@ Policy::Readiness Policy::evaluate(MailContext &ctx, const QStringList &recipien
             r.willEncrypt = true;
             if (!allKeys) {
                 r.canSend = false;
-                r.refusal = seen.isEmpty() ? QStringLiteral("Add a recipient.")
-                                           : QStringLiteral("Encryption is required, and there is no key for %1.")
+                r.refusal = seen.isEmpty() ? QCoreApplication::translate("Policy", "Add a recipient.")
+                                           : QCoreApplication::translate("Policy", "Encryption is required, and there is no key for %1.")
                                                  .arg(r.missingKeys.join(QStringLiteral(", ")));
             }
         } else if (mode == EncryptionMode::Opportunistic) {

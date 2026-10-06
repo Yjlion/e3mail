@@ -4,9 +4,13 @@
 #include <QStringDecoder>
 #include <QUrl>
 
+#include <unicode/ucnv.h>
+
 #include <array>
 #include <cctype>
 #include <cstring>
+#include <memory>
+#include <optional>
 
 namespace e3::mime {
 
@@ -50,6 +54,26 @@ bool isValidUtf8(const QByteArray &bytes)
     QStringDecoder dec(QStringDecoder::Utf8, QStringDecoder::Flag::Stateless);
     const QString s = dec(bytes);
     return !dec.hasError();
+}
+
+// Any charset ICU knows, by any of its aliases. With `strict`, invalid input
+// is a failure rather than U+FFFD, so a mislabelled message can be retried.
+std::optional<QString> icuDecode(const QByteArray &bytes, const char *charset, bool strict)
+{
+    UErrorCode err = U_ZERO_ERROR;
+    std::unique_ptr<UConverter, decltype(&ucnv_close)> conv(ucnv_open(charset, &err), ucnv_close);
+    if (U_FAILURE(err) || !conv)
+        return std::nullopt;
+    if (strict)
+        ucnv_setToUCallBack(conv.get(), UCNV_TO_U_CALLBACK_STOP, nullptr, nullptr, nullptr, &err);
+    // No charset yields more than two UTF-16 units per input byte.
+    QString out(bytes.size() * 2 + 1, Qt::Uninitialized);
+    const int32_t n = ucnv_toUChars(conv.get(), reinterpret_cast<UChar *>(out.data()), int32_t(out.size()),
+                                    bytes.constData(), int32_t(bytes.size()), &err);
+    if (U_FAILURE(err))
+        return std::nullopt;
+    out.truncate(n);
+    return out;
 }
 
 bool isTSpecial(char c)
@@ -183,13 +207,15 @@ QString decodeCharset(const QByteArray &bytes, const QByteArray &charset)
     }
     if (cs == "iso-8859-1" || cs == "latin1" || cs == "windows-1252" || cs == "cp1252")
         return decodeCp1252(bytes); // senders that say latin1 mean cp1252
-    QStringDecoder dec(cs.constData());
-    if (dec.isValid()) {
-        const QString s = dec(bytes);
-        if (!dec.hasError())
-            return s;
-    }
-    return isValidUtf8(bytes) ? QString::fromUtf8(bytes) : decodeCp1252(bytes);
+    if (const auto s = icuDecode(bytes, cs.constData(), true))
+        return *s;
+    // Mislabelled: often UTF-8 in truth. Otherwise the declared charset with
+    // replacement characters beats guessing a Western one.
+    if (isValidUtf8(bytes))
+        return QString::fromUtf8(bytes);
+    if (const auto s = icuDecode(bytes, cs.constData(), false))
+        return *s;
+    return decodeCp1252(bytes);
 }
 
 QString decodeHeader(const QByteArray &raw)

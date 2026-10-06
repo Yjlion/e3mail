@@ -1,12 +1,13 @@
 {
   "name": "e3mail",
   "version-semver": "0.1.0",
-  "description": "Windows dependencies (RNP itself is built by scripts/build-rnp.sh; getopt and dirent are for RNP's command-line tools, which it always builds). QtKeychain is left out: its port builds a second Qt.",
+  "description": "Windows dependencies (ICU for charsets and date patterns; RNP itself is built by scripts/build-rnp.sh; getopt and dirent are for RNP's command-line tools, which it always builds). QtKeychain is left out: its port builds a second Qt.",
   "dependencies": [
     "botan",
     "json-c",
     "zlib",
     "bzip2",
+    "icu",
     {
       "name": "sqlite3",
       "features": [

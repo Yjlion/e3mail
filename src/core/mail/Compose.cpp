@@ -18,6 +18,7 @@
 #include "store/OpLog.h"
 #include "util/Log.h"
 
+#include <QCoreApplication>
 #include <QJsonObject>
 #include <QLocale>
 #include <QTimeZone>
@@ -165,7 +166,7 @@ qint64 Compose::queue(MailContext &ctx, const Draft &draft)
 {
     const QStringList rcpts = allAddrs(draft);
     if (rcpts.isEmpty())
-        throw ComposeError(QStringLiteral("Add a recipient."));
+        throw ComposeError(QCoreApplication::translate("Policy", "Add a recipient."));
     const Policy::Readiness ready = Policy::evaluate(ctx, rcpts, draft.encryption);
     if (!ready.canSend)
         throw ComposeError(ready.refusal);
@@ -287,8 +288,13 @@ Draft Compose::reply(MailContext &ctx, qint64 msgId, bool all)
     for (const QString &line : m->bodyText.split(u'\n'))
         quoted += (line.startsWith(u'>') ? QStringLiteral(">") : QStringLiteral("> ")) + line + u'\n';
     const QString who = m->from.name.isEmpty() ? m->from.addr : m->from.name;
-    d.text = QStringLiteral("\n\nOn %1, %2 wrote:\n%3")
-                 .arg(QLocale::c().toString(m->date.toLocalTime(), QStringLiteral("ddd, d MMM yyyy HH:mm")), who,
+    // In the writer's language, as other clients do. "Re:" stays as it is:
+    // a translated prefix breaks threading in the recipient's client.
+    const QDateTime when = m->date.toLocalTime();
+    d.text = QStringLiteral("\n\n%1\n%2")
+                 .arg(QCoreApplication::translate("Compose", "On %1 at %2, %3 wrote:")
+                          .arg(QLocale().toString(when.date(), QLocale::LongFormat),
+                               QLocale().toString(when.time(), QLocale::ShortFormat), who),
                       quoted);
     // A reply to encrypted mail asks for encryption.
     d.encryption = m->encrypted ? SendEncryption::Required : SendEncryption::Auto;
@@ -305,9 +311,11 @@ Draft Compose::forward(MailContext &ctx, qint64 msgId)
     QStringList toList;
     for (const mime::Address &a : m->to)
         toList.append(a.display());
-    d.text = QStringLiteral("\n\n---------- Forwarded message ----------\nFrom: %1\nDate: %2\nSubject: %3\nTo: %4\n\n%5")
-                 .arg(m->from.display(), QLocale::c().toString(m->date.toLocalTime(), QStringLiteral("ddd, d MMM yyyy HH:mm")),
-                      m->subject, toList.join(QStringLiteral(", ")), m->bodyText);
+    d.text = QCoreApplication::translate("Compose", "\n\n---------- Forwarded message ----------\nFrom: %1\nDate: %2\n"
+                                                    "Subject: %3\nTo: %4\n\n")
+                 .arg(m->from.display(), QLocale().toString(m->date.toLocalTime(), QLocale::LongFormat), m->subject,
+                      toList.join(QStringLiteral(", ")))
+        + m->bodyText;
     for (const AttachmentInfo &a : m->attachments)
         d.attachments.append({a.filename, a.mimeType, ctx.blobs.get(a.blob)});
     return d;
