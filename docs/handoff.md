@@ -24,10 +24,14 @@ CLI and packaging.
   `dpkg-shlibdeps`).
 - Every view rendered and inspected (`scripts/screenshots.sh`).
 
+**Verified by CI (GitHub Actions, PR #1):** Linux (Ubuntu 24.04, distribution
+RNP on Botan 2), macOS 14 (Homebrew RNP, clang) and Windows (MSVC 2022, vcpkg,
+RNP built from source) all build with warnings as errors and pass all six
+suites, including the GnuPG interop test against Git for Windows' gpg.
+
 **Not verified:**
-- The Windows and macOS CI and release jobs have never run. Expect them to need
-  fixes. The Windows RNP build in particular (`scripts/build-rnp.sh` with
-  vcpkg's Botan, MSVC) is untested.
+- The release workflow (installers, portable zip, `.dmg`) has never run. Expect
+  it to need fixes like the CI did.
 - The app has not been used interactively on a real display. Offscreen
   rendering and the smoke test are all there is.
 - No interop with Delta Chat, Thunderbird, Gmail or any mainstream provider.
@@ -88,7 +92,18 @@ silently under `QT_QPA_PLATFORM=offscreen`.
 **7. `QLatin1String` with non-ASCII text** (like `•`) compares garbage, and
 makes a passing test fail. Use `QStringLiteral`.
 
-**8. RNP's CMake package** names `JSON-C::JSON-C` and `Botan::Botan` without
+**8. Getting CI green on Windows took nine rounds**, each a trap of its own:
+vcpkg's manifest mode refuses per-package installs; RNP always builds its CLI
+tools, which need `getopt-win32` and `dirent`; setting `CMAKE_CXX_FLAGS`
+replaces MSVC's defaults, `/EHsc` among them (RNP was briefly built without
+exception unwinding); there is no pkg-config, so Botan is found by hand; Qt's
+headers trip C4702 under `/WX`; and Git for Windows' MSYS gpg reads `C:\...` as
+a relative path. `actions/cache` saves only after a successful job, so the
+dependency cache did not exist until the first green run. When a Windows test
+dies with no output, `scripts/ci-diagnose-tests.sh` (run by CI on failure)
+uses QtTest's file logger, because its stdout arrived empty.
+
+**9. RNP's CMake package** names `JSON-C::JSON-C` and `Botan::Botan` without
 creating them. `cmake/E3mailRnp.cmake` provides them, and falls back to
 pkg-config.
 

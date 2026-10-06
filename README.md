@@ -78,12 +78,12 @@ over TLS in [`scripts/e2e.py`](scripts/e2e.py).
 | Threads, system tags, user tags, Unverified, Trash, blocklist, importance | ✅ |
 | Desktop app: list, threaded reading, composer, setup, contacts, settings | ✅ |
 | Several accounts in one window, all fetching | ✅ |
-| `.deb`, AppImage, Windows installer + portable zip, macOS `.dmg` | ✅ built by CI |
+| CI builds and tests on Linux, Windows and macOS | ✅ |
+| `.deb`, AppImage, Windows installer + portable zip, macOS `.dmg` | ⏳ release workflow not yet run; AppImage built locally |
 | Interop with GnuPG (our PGP/MIME decrypts and verifies) | ✅ |
 | Multi-device sync over Iroh | ⏳ designed, Phase 8 |
 | SecureJoin QR verification (Delta Chat compatible) | ⏳ Phase 9 |
 | At-rest encryption, encrypted backup, read receipts, structured email | ⏳ later phases |
-| Windows and macOS builds actually run | ❌ CI written, not yet run |
 | Interop with Thunderbird, Delta Chat or a mainstream provider | ❌ |
 | Code signing | ❌ |
 

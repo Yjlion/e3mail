@@ -144,7 +144,7 @@ in terms of "stored here", which is trivially "every device" with one device.
 | P4 | Crypto: RNP, Autocrypt, PGP/MIME, protected headers, policy, padlock | ✅ |
 | P5 | Organisation: threads, tags, search, Unverified, Trash, blocklist, importance | ✅ |
 | P6 | Desktop app (QML) | ✅ |
-| P7 | Packaging: `.deb`, AppImage, NSIS, portable zip, `.dmg` | ✅ Linux verified; Windows/macOS untested |
+| P7 | Packaging and CI: `.deb`, AppImage, NSIS, portable zip, `.dmg` | ✅ CI green on all three; release workflow not yet run |
 | P8 | Multi-client over Iroh | designed |
 | P9 | SecureJoin and QR (Delta Chat compatible) | |
 | P10 | Address book: details, phones, categories | |
