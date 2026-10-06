@@ -16,6 +16,7 @@
 #include "util/Log.h"
 
 #include <QElapsedTimer>
+#include <QJsonObject>
 #include <QEventLoop>
 #include <QTimer>
 
@@ -89,8 +90,14 @@ public:
     qint64 ingest(const QString &key, const QByteArray &raw, bool preexisting, MailWorker *w)
     {
         const mail::Ingest::Result r = mail::Ingest::process(ctx, raw);
+        Transaction tx(db);
         db.run("INSERT OR IGNORE INTO server_msgs(remote_key, first_seen, msg_id, preexisting) VALUES(?, ?, ?, ?)",
                key, QDateTime::currentMSecsSinceEpoch(), r.msgId, preexisting);
+        // Tells the other devices this one has it, so whichever deletes it
+        // from the server knows when everyone has (ADR 0013).
+        if (db.changes())
+            ops.record(op::ServerAck, {{QStringLiteral("key"), key}});
+        tx.commit();
         if (w && !r.duplicate) {
             Q_EMIT w->mailChanged();
             if (!r.held && !r.trashed)
@@ -102,8 +109,8 @@ public:
     // Which of the given server keys retention says to delete now. Mail that
     // was already on the server before e3mail first looked is never deleted:
     // retention is not retroactive. With several devices (multi-client), a
-    // message is deleted only once every paired device has it; with one device
-    // that is satisfied as soon as it is stored here.
+    // message is deleted only once every paired device has acknowledged it;
+    // with one device that is satisfied as soon as it is stored here.
     QStringList dueForDeletion(const QStringList &present)
     {
         const QString policy = config.get(cfg::ServerRetention);
@@ -113,8 +120,9 @@ public:
         const qint64 keepMs = policy == QLatin1String("keep") ? qint64(config.getInt(cfg::ServerKeepDays)) * kDayMs : 0;
         QStringList out;
         for (const QString &key : present) {
-            Statement st(db, "SELECT first_seen FROM server_msgs WHERE remote_key=? AND preexisting=0 AND deleted=0 "
-                             "AND msg_id IS NOT NULL");
+            Statement st(db, "SELECT first_seen FROM server_msgs s WHERE remote_key=? AND preexisting=0 AND deleted=0 "
+                             "AND msg_id IS NOT NULL AND NOT EXISTS (SELECT 1 FROM devices d WHERE NOT EXISTS "
+                             "(SELECT 1 FROM server_acks a WHERE a.remote_key = s.remote_key AND a.device = d.id))");
             st.bind(1, key);
             if (st.step() && st.int64(0) + keepMs <= now)
                 out.append(key);

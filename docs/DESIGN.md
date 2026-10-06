@@ -130,8 +130,8 @@ when devices are never online together:
 5. **A mailbox fallback**: when no peer is reachable, ops are also mailed to
    self, encrypted and hidden, and kept on the server by rule 4.
 
-The op-log and the device id exist now. The worker's deletion rule is written
-in terms of "stored here", which is trivially "every device" with one device.
+The op-log, its merge rules ([ADR 0013](adr/0013-op-merge-rules.md)) and the
+deletion rule are in place and tested over a loopback transport; Iroh is next.
 
 ## Phases
 
@@ -145,7 +145,7 @@ in terms of "stored here", which is trivially "every device" with one device.
 | P5 | Organisation: threads, tags, search, Unverified, Trash, blocklist, importance | ✅ |
 | P6 | Desktop app (QML) | ✅ |
 | P7 | Packaging and CI: `.deb`, AppImage, NSIS, portable zip, `.dmg` | ✅ CI green on all three; release workflow not yet run |
-| P8 | Multi-client over Iroh | designed |
+| P8 | Multi-client over Iroh | sync core done; transport next |
 | P9 | SecureJoin and QR (Delta Chat compatible) | |
 | P10 | Address book: details, phones, categories | |
 | P11 | At rest: SQLCipher passphrase, blob encryption, encrypted backup | |

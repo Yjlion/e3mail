@@ -14,6 +14,7 @@
 #include "store/Config.h"
 #include "store/Database.h"
 #include "store/OpLog.h"
+#include "sync/OpApply.h"
 #include "util/Log.h"
 
 #include <QCryptographicHash>
@@ -182,6 +183,12 @@ Ingest::Result Ingest::process(MailContext &ctx, const QByteArray &raw)
         result.duplicate = true;
         return result;
     }
+    // Purged here or on another device: it stays gone.
+    if (sync::OpApply::isTombstoned(ctx.db, messageId)) {
+        result.duplicate = true;
+        result.purged = true;
+        return result;
+    }
 
     const QList<mime::Address> fromList = mime::parseAddressList(headers.raw("From"));
     const mime::Address from = fromList.value(0);
@@ -325,6 +332,8 @@ Ingest::Result Ingest::process(MailContext &ctx, const QByteArray &raw)
         }
     }
     ctx.ops.record(op::MessageAdded, {{QStringLiteral("mid"), messageId}, {QStringLiteral("raw"), rawBlob}});
+    // What other devices already did to it, if their ops came first.
+    sync::OpApply::replayFor(ctx, messageId);
     tx.commit();
     qCInfo(lcMail) << "stored message" << id << (encrypted ? "encrypted" : "cleartext") << "from" << from.addr
                    << (result.held ? "(held)" : "") << (result.trashed ? "(trashed)" : "");

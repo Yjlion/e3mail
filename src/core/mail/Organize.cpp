@@ -50,7 +50,12 @@ void Organize::trash(MailContext &ctx, qint64 msgId, TrashReason reason)
     const qint64 now = nowMs();
     ctx.db.run("INSERT OR IGNORE INTO trashed(msg_id, trashed_at, purge_at, reason) VALUES(?, ?, ?, ?)", msgId, now,
                now + qMax<qint64>(0, days) * kDayMs, int(reason));
-    if (ctx.db.changes()) {
+    // Placement by rule (blocked, cleartext under strict, never accepted) is
+    // derived from replicated state, so every device reaches it alone; only
+    // what a person or a timer did travels (ADR 0013).
+    const bool derived =
+        reason == TrashReason::Blocked || reason == TrashReason::Cleartext || reason == TrashReason::Unaccepted;
+    if (ctx.db.changes() && !derived) {
         QJsonObject p = msgRef(ctx, msgId);
         p.insert(QStringLiteral("reason"), int(reason));
         ctx.ops.record(op::Trash, p);
@@ -75,7 +80,10 @@ void Organize::restore(MailContext &ctx, qint64 msgId)
 
 void Organize::purge(MailContext &ctx, qint64 msgId)
 {
-    ctx.ops.record(op::Purge, msgRef(ctx, msgId));
+    const QString mid = messageIdOf(ctx, msgId);
+    ctx.ops.record(op::Purge, {{QStringLiteral("mid"), mid}});
+    // A tombstone, so neither another device nor the server brings it back.
+    ctx.db.run("INSERT OR IGNORE INTO tombstones(message_id, purged_at) VALUES(?, ?)", mid, nowMs());
     ctx.db.run("DELETE FROM msg_fts WHERE rowid=?", msgId);
     ctx.db.run("DELETE FROM messages WHERE id=?", msgId);
 }
@@ -153,9 +161,14 @@ bool Organize::renameLabel(MailContext &ctx, qint64 labelId, const QString &name
     const QString trimmed = name.trimmed();
     if (trimmed.isEmpty())
         return false;
+    const auto old = ctx.db.queryText("SELECT name FROM labels WHERE id=? AND system=0", labelId);
+    if (!old)
+        return false;
     ctx.db.run("UPDATE labels SET name=?, name_norm=?, color=? WHERE id=? AND system=0", trimmed, trimmed.toLower(),
                color, labelId);
-    return ctx.db.changes() > 0;
+    ctx.ops.record(op::LabelRename,
+                   {{QStringLiteral("name"), *old}, {QStringLiteral("to"), trimmed}, {QStringLiteral("color"), color}});
+    return true;
 }
 
 bool Organize::deleteLabel(MailContext &ctx, qint64 labelId)

@@ -5,6 +5,7 @@
 #include "engine/AccountManager.h"
 #include "mail/Contacts.h"
 #include "mail/Organize.h"
+#include "mail/Preferences.h"
 #include "mail/Search.h"
 #include "mime/Html.h"
 #include "mime/Part.h"
@@ -636,13 +637,9 @@ void MailApp::setSetting(const QString &key, const QVariant &value)
     if (!k || !account())
         return;
     const QString v = value.typeId() == QMetaType::Bool ? QString::number(value.toBool() ? 1 : 0) : value.toString();
-    account()->ctx().config.set(k, v);
+    mail::Preferences::set(account()->ctx(), k, v);
     if (key == QLatin1String("displayName"))
         Q_EMIT accountChanged();
-    if (key == QLatin1String("gating") && !value.toBool()) {
-        // Turning gating off releases everything waiting.
-        account()->ctx().db.run("DELETE FROM held");
-    }
     account()->notifyChanged();
 }
 

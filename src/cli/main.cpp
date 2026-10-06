@@ -10,6 +10,7 @@
 #include "mail/Compose.h"
 #include "mail/Contacts.h"
 #include "mail/Organize.h"
+#include "mail/Preferences.h"
 #include "mail/Search.h"
 #include "store/BlobStore.h"
 #include "store/Config.h"
@@ -281,7 +282,7 @@ int main(int argc, char **argv)
             if (key.contains("password"))
                 fail(QStringLiteral("passwords are not shown or set here"));
             if (args.size() > 2)
-                ctx.config.set(key.constData(), args.value(2));
+                mail::Preferences::set(ctx, key.constData(), args.value(2));
             print(QJsonObject{{QString::fromUtf8(key), ctx.config.get(key.constData())}});
         } else if (cmd == QLatin1String("housekeeping")) {
             const auto r = mail::Organize::housekeeping(ctx);
