@@ -107,9 +107,9 @@ happens for tags.
 **Not verified:**
 - Nothing has been installed or started on Windows or macOS.
 - The narrowed Windows installer glob was checked locally, not in a run.
-- Nothing has been published yet. The v0.1.0 and v0.1.1 tags point at
-  commits without these fixes, and the project version is still 0.1.0, so
-  packages built from any tag are named 0.1.0.
+- Nothing has been published yet. The project version is now 0.1.1, but the
+  v0.1.0 and v0.1.1 tags point at commits without these fixes (and with
+  version 0.1.0).
 
 ## Known gaps
 
@@ -240,8 +240,9 @@ install rules.
    Corrosion behind `DeviceTransport`, add the toolchain to CI on all three
    platforms, and wire `SyncSession` into `Account`.
 2. P8, slice 3: QR pairing with the encrypted snapshot; the mailbox fallback.
-3. Publish a release: set the project version, tag a commit that has the
-   release fixes, then install each package on its own platform.
+3. Publish v0.1.1: move its tag to a commit that has the release fixes
+   (nothing was published under it), then install each package on its own
+   platform.
 4. P9 SecureJoin, then an interop pass against Delta Chat's released
    `deltachat-rpc-server`, as eeemail's `scripts/interop-pass.py` does.
 4. Verify signed-only mail; desktop notifications.
