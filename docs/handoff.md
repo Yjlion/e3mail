@@ -31,8 +31,8 @@ RNP built from source) all build with warnings as errors and pass all six
 suites, including the GnuPG interop test against Git for Windows' gpg.
 
 **Not verified:**
-- The release workflow (installers, portable zip, `.dmg`) has never run. Expect
-  it to need fixes like the CI did.
+- The release packages have been built (see "Release packages" below), but
+  none has been installed and run on its own platform.
 - The app has not been used interactively on a real display. Offscreen
   rendering and the smoke test are all there is.
 - No interop with Delta Chat, Thunderbird, Gmail or any mainstream provider.
@@ -86,8 +86,30 @@ and pass every test, translations and the right-to-left boot included.
 Windows took 40 minutes, almost all of it vcpkg building ICU; the dependency
 cache holds it from then on.
 
-**Not verified:** the packages carrying ICU (the release workflow has still
-never run), any of it on a real display, or by a native speaker.
+**Not verified:** any of it on a real display, or by a native speaker.
+
+## Release packages
+
+The release workflow failed for both v0.1.0 and v0.1.1 and had never
+succeeded. Three fixes (traps 17–19) made it green on all three platforms
+through `workflow_dispatch` on `fix/release` (run 37527412735). That run
+builds the packages but does not publish them, because publishing only
+happens for tags.
+
+**Verified:**
+- The AppImage passes its checksum.
+- It carries the xcb, Wayland and offscreen plugins, the Wayland shell
+  integrations, and ICU.
+- It boots offscreen in Arabic.
+- The Windows portable zip carries RNP, Botan, ICU, SQLite, json-c,
+  `qt.conf`, `portable.txt` and `qwindows.dll`.
+
+**Not verified:**
+- Nothing has been installed or started on Windows or macOS.
+- The narrowed Windows installer glob was checked locally, not in a run.
+- Nothing has been published yet. The project version is now 0.1.1, but the
+  v0.1.0 and v0.1.1 tags point at commits without these fixes (and with
+  version 0.1.0).
 
 ## Known gaps
 
@@ -145,6 +167,8 @@ the script sets `NO_STRIP=1`. Only `xcb` is deployed by default, so `wayland`
 and `offscreen` are added explicitly. Without `offscreen` the AppImage aborts
 silently under `QT_QPA_PLATFORM=offscreen`.
 
+The Wayland plugin's file name depends on the Qt version (trap 17).
+
 **7. `QLatin1String` with non-ASCII text** (like `•`) compares garbage, and
 makes a passing test fail. Use `QStringLiteral`.
 
@@ -197,13 +221,28 @@ mirrored row places it.
 the sidebar wider than the window allowed. Badges elide now; keep such
 translations short.
 
+**17. The Wayland platform plugin was renamed.** Since Qt 6.10 it is
+`libqwayland.so`; Qt 6.8 (the release pin) has `libqwayland-generic.so` and
+`libqwayland-egl.so`. Naming the new file built the AppImage here (Qt 6.11)
+and failed on CI. The script now asks qmake which of them exist.
+
+**18. Native Windows paths are not CMake paths.** `D:\a\...` passed in
+`E3MAIL_BUNDLE_DLLS_FROM` was copied into `cmake_install.cmake`, where `\a`
+is an invalid escape. Turn backslashes into slashes before using them in
+install rules.
+
+**19. Qt's deploy step needs an absolute install prefix**, because it writes
+`qt.conf` there. In Git Bash use `$(pwd -W)`, which gives `D:/...`.
+
 ## Next
 
 1. P8, slice 2: install Rust, build `src/p2p/` (Iroh, `iroh-blobs`) with
    Corrosion behind `DeviceTransport`, add the toolchain to CI on all three
    platforms, and wire `SyncSession` into `Account`.
 2. P8, slice 3: QR pairing with the encrypted snapshot; the mailbox fallback.
-3. Run the release workflow once (`workflow_dispatch`); it has never run.
+3. Publish v0.1.1: move its tag to a commit that has the release fixes
+   (nothing was published under it), then install each package on its own
+   platform.
 4. P9 SecureJoin, then an interop pass against Delta Chat's released
    `deltachat-rpc-server`, as eeemail's `scripts/interop-pass.py` does.
 4. Verify signed-only mail; desktop notifications.

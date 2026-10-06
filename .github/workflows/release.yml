@@ -92,12 +92,13 @@ jobs:
           (cd build/release && cpack -G NSIS)
           # The portable archive: the install tree plus portable.txt, so the
           # app keeps its data beside itself and leaves nothing on the machine.
-          cmake --install build/release --prefix portable/e3mail
+          # Qt's deploy step needs an absolute prefix.
+          cmake --install build/release --prefix "$(pwd -W)/portable/e3mail"
           cp packaging/windows/portable.txt portable/e3mail/bin/
           mkdir -p dist
           (cd portable && 7z a ../dist/e3mail-windows-x64-portable.zip e3mail)
           (cd dist && sha256sum e3mail-windows-x64-portable.zip > e3mail-windows-x64-portable.zip.sha256)
-          mv build/release/*.exe* dist/
+          mv build/release/*-win64.exe* dist/  # the installer, not the built programs
 
       - uses: actions/upload-artifact@v4
         with:
