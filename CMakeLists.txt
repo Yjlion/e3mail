@@ -20,15 +20,20 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 set(E3MAIL_QT_COMPONENTS Core Network Concurrent)
 if(E3MAIL_BUILD_APP)
-    list(APPEND E3MAIL_QT_COMPONENTS Gui Qml Quick QuickControls2 Svg)
+    list(APPEND E3MAIL_QT_COMPONENTS Gui Qml Quick QuickControls2 Svg LinguistTools)
 endif()
 if(E3MAIL_BUILD_TESTS)
     list(APPEND E3MAIL_QT_COMPONENTS Test)
 endif()
 find_package(Qt6 6.8 REQUIRED COMPONENTS ${E3MAIL_QT_COMPONENTS})
-qt_standard_project_setup(REQUIRES 6.8)
+qt_standard_project_setup(REQUIRES 6.8
+    I18N_SOURCE_LANGUAGE en
+    I18N_TRANSLATED_LANGUAGES de fr es zh_CN ja ru pl ar he yi)
 
 include(E3mailRnp)
+# Charsets (every one ICU knows, whatever the Qt build) and locale-aware date
+# patterns. See ADR 0014.
+find_package(ICU 60 REQUIRED COMPONENTS uc i18n data)
 find_package(SQLite3 REQUIRED)
 # CMake 4 renamed the imported target; accept either.
 if(TARGET SQLite3::SQLite3)

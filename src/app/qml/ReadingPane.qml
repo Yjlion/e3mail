@@ -32,8 +32,12 @@ Rectangle {
             Layout.fillWidth: true
             Layout.margins: 8
             spacing: 2
+            // A subject aligns by its own script, so an English subject in a
+            // right-to-left interface would sit at the far edge. As wide as
+            // its text, it goes where the row puts it: the start edge.
             Text {
                 Layout.fillWidth: true
+                Layout.maximumWidth: implicitWidth + 1
                 Layout.leftMargin: 10
                 text: pane.last ? pane.last.subject : ""
                 color: Theme.text
@@ -41,6 +45,7 @@ Rectangle {
                 font.weight: Font.DemiBold
                 elide: Text.ElideRight
             }
+            Item { Layout.fillWidth: true }
             IconButton {
                 iconName: "reply"; tip: qsTr("Reply")
                 visible: pane.last && pane.last.state !== 10

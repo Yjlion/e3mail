@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 #include "NetworkBarrier.h"
+#include "controllers/Languages.h"
 #include "controllers/MailApp.h"
 #include "engine/AccountManager.h"
 #include "util/Paths.h"
@@ -36,10 +37,14 @@ int main(int argc, char *argv[])
                                   QStringLiteral("mail|compose|contacts|settings"));
     const QCommandLineOption open(QStringLiteral("open"), QStringLiteral("Open the newest message in a tag (for screenshots)."),
                                   QStringLiteral("tag"));
-    p.addOptions({dataDir, smoke, grab, offline, page, open});
+    const QCommandLineOption lang(QStringLiteral("lang"),
+                                  QStringLiteral("Show the interface in this language, without saving it."),
+                                  QStringLiteral("code"));
+    p.addOptions({dataDir, smoke, grab, offline, page, open, lang});
     p.process(app);
     if (p.isSet(dataDir))
         e3::Paths::setDataDir(p.value(dataDir));
+    Languages::install(p.isSet(lang) ? p.value(lang) : Languages::saved());
 
     QQuickStyle::setStyle(QStringLiteral("Basic"));
 
@@ -52,6 +57,7 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     NetworkBarrierFactory barrier;
     engine.setNetworkAccessManagerFactory(&barrier);
+    QObject::connect(&mailApp, &MailApp::languageChanged, &engine, &QQmlEngine::retranslate);
     QObject::connect(
         &engine, &QQmlApplicationEngine::objectCreationFailed, &app, [] { QCoreApplication::exit(1); },
         Qt::QueuedConnection);

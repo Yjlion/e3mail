@@ -21,10 +21,22 @@ qt_add_qml_module(e3mail
     RESOURCES ${E3_ICONS}
     SOURCES
         controllers/MailApp.cpp controllers/MailApp.h
+        controllers/Languages.cpp controllers/Languages.h
         controllers/Composer.cpp controllers/Composer.h
         controllers/SetupController.cpp controllers/SetupController.h
         models/MessageListModel.cpp models/MessageListModel.h
 )
+
+# Translations: src/app/translations/e3mail_<lang>.ts, one per language in
+# I18N_TRANSLATED_LANGUAGES, plus e3mail_en.ts for English plurals. Refresh
+# them from the sources with `cmake --build --preset dev --target
+# update_translations`. Compiled into the binary under :/i18n.
+qt_add_translations(TARGETS e3mail
+    SOURCE_TARGETS e3mail e3core
+    TS_FILE_DIR translations
+    PLURALS_TS_FILE translations/e3mail_en.ts
+    RESOURCE_PREFIX /i18n
+    LUPDATE_OPTIONS -no-obsolete -locations none)
 
 target_include_directories(e3mail PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/controllers ${CMAKE_CURRENT_SOURCE_DIR}/models)

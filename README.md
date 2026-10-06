@@ -92,10 +92,17 @@ what is not.
 
 ## Build
 
-You need Qt 6.8 or newer, CMake 3.21+, a C++20 compiler, SQLite with FTS5, and
-RNP with Botan. On Arch, `pacman -S qt6-base qt6-declarative qt6-svg botan
-json-c sqlite`, then [`scripts/build-rnp.sh`](scripts/build-rnp.sh) for RNP.
-On Debian or Ubuntu use `librnp-dev`; on macOS, `brew install rnp`.
+You need Qt 6.8 or newer (with Qt Linguist's tools), CMake 3.21+, a C++20
+compiler, SQLite with FTS5, ICU, and RNP with Botan. On Arch, `pacman -S
+qt6-base qt6-declarative qt6-svg qt6-tools icu botan json-c sqlite`, then
+[`scripts/build-rnp.sh`](scripts/build-rnp.sh) for RNP. On Debian or Ubuntu
+add `libicu-dev` and use `librnp-dev`; on macOS, `brew install rnp icu4c` and
+set `ICU_ROOT=$(brew --prefix icu4c)`.
+
+The interface is in English, German, French, Spanish, Simplified Chinese,
+Japanese, Russian, Polish, Arabic, Hebrew and Yiddish. Everything but English
+was translated by machine and awaits native review; see
+[`src/app/translations/`](src/app/translations/README.md).
 
 ```sh
 cmake --preset dev

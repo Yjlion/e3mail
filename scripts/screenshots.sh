@@ -21,4 +21,10 @@ shot unverified --open unverified
 shot composer --page compose
 shot contacts --page contacts
 shot settings --page settings
+# Other languages: right to left, CJK, and a long-worded one. CJK needs a
+# CJK font installed (e.g. noto-fonts-cjk or wqy-microhei).
+shot inbox-ar --lang ar
+shot reading-ja --open inbox:0 --lang ja
+shot settings-de --page settings --lang de
+shot unverified-he --open unverified --lang he
 "$APP" --data-dir "$EMPTY" --grab "$OUT/first-run.png"; echo "$OUT/first-run.png"

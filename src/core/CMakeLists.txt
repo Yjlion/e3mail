@@ -6,7 +6,7 @@ add_library(e3core STATIC ${E3CORE_SOURCES})
 target_include_directories(e3core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(e3core
     PUBLIC Qt6::Core Qt6::Network Qt6::Concurrent
-    PRIVATE rnp::librnp ${E3MAIL_SQLITE_TARGET})
+    PRIVATE rnp::librnp ${E3MAIL_SQLITE_TARGET} ICU::uc ICU::i18n ICU::data)
 if(TARGET Qt6Keychain::Qt6Keychain)
     target_link_libraries(e3core PRIVATE Qt6Keychain::Qt6Keychain)
     target_compile_definitions(e3core PRIVATE E3MAIL_HAVE_KEYCHAIN=1)

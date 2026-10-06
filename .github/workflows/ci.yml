@@ -41,7 +41,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y ninja-build pkg-config libsqlite3-dev gnupg \
-              libgl1-mesa-dev libxkbcommon-dev libjson-c-dev libbotan-2-dev zlib1g-dev libbz2-dev
+              libgl1-mesa-dev libxkbcommon-dev libjson-c-dev libbotan-2-dev zlib1g-dev libbz2-dev libicu-dev
           # Distribution RNP where available; otherwise build it.
           if ! sudo apt-get install -y librnp-dev; then
             RNP_CRYPTO_BACKEND=botan scripts/build-rnp.sh "$HOME/deps"
@@ -51,7 +51,10 @@ jobs:
 
       - name: Dependencies (macOS)
         if: runner.os == 'macOS'
-        run: brew install ninja rnp sqlite pkg-config gnupg
+        run: |
+          brew install ninja rnp sqlite pkg-config gnupg icu4c
+          # icu4c is keg-only: tell find_package(ICU) where it is.
+          echo "ICU_ROOT=$(brew --prefix icu4c)" >> "$GITHUB_ENV"
 
       - name: MSVC environment (Windows)
         if: runner.os == 'Windows'

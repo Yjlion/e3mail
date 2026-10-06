@@ -20,6 +20,9 @@ Rectangle {
     Text {
         id: label
         anchors.centerIn: parent
+        // Elides when squeezed, as a long translation can be.
+        width: Math.min(implicitWidth, badge.width - 12)
+        elide: Text.ElideRight
         text: badge.text
         color: badge.fg
         font.pixelSize: Theme.fontSmall

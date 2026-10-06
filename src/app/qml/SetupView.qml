@@ -93,22 +93,22 @@ Rectangle {
                 Field { Layout.fillWidth: true; text: setup.inHost; onTextChanged: setup.inHost = text; placeholderText: qsTr("server") }
                 Field { Layout.preferredWidth: 70; text: setup.inPort; onTextChanged: setup.inPort = parseInt(text) || 0; validator: IntValidator { bottom: 1; top: 65535 } }
                 Item {}
-                ComboBox {
+                ChoiceBox {
                     Layout.columnSpan: 2
                     model: [{ v: "ssl", t: qsTr("TLS") }, { v: "starttls", t: "STARTTLS" }, { v: "plain", t: qsTr("None (insecure)") }]
                     textRole: "t"; valueRole: "v"
-                    currentIndex: ["ssl", "starttls", "plain"].indexOf(setup.inSecurity)
+                    selected: ["ssl", "starttls", "plain"].indexOf(setup.inSecurity)
                     onActivated: setup.inSecurity = currentValue
                 }
                 Label { text: "SMTP"; color: Theme.muted }
                 Field { Layout.fillWidth: true; text: setup.smtpHost; onTextChanged: setup.smtpHost = text; placeholderText: qsTr("server") }
                 Field { Layout.preferredWidth: 70; text: setup.smtpPort; onTextChanged: setup.smtpPort = parseInt(text) || 0; validator: IntValidator { bottom: 1; top: 65535 } }
                 Item {}
-                ComboBox {
+                ChoiceBox {
                     Layout.columnSpan: 2
                     model: [{ v: "ssl", t: qsTr("TLS") }, { v: "starttls", t: "STARTTLS" }, { v: "plain", t: qsTr("None (insecure)") }]
                     textRole: "t"; valueRole: "v"
-                    currentIndex: ["ssl", "starttls", "plain"].indexOf(setup.smtpSecurity)
+                    selected: ["ssl", "starttls", "plain"].indexOf(setup.smtpSecurity)
                     onActivated: setup.smtpSecurity = currentValue
                 }
             }

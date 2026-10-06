@@ -17,6 +17,7 @@
 #include "sync/OpApply.h"
 #include "util/Log.h"
 
+#include <QCoreApplication>
 #include <QCryptographicHash>
 #include <QJsonObject>
 
@@ -121,12 +122,20 @@ int Ingest::importanceOf(const mime::HeaderList &h)
 QString Ingest::makePreview(const QString &text)
 {
     QStringList kept;
-    for (const QString &line : text.split(u'\n')) {
-        const QString t = line.trimmed();
+    const QStringList lines = text.split(u'\n');
+    for (qsizetype i = 0; i < lines.size(); ++i) {
+        const QString t = lines[i].trimmed();
         if (t.startsWith(u'>') || t == QLatin1String("--"))
             continue;
-        if (t.endsWith(QLatin1String("wrote:")))
-            break; // the attribution line of a quoted reply
+        // The attribution line of a quoted reply, in any language: it ends
+        // with a colon and the quote follows.
+        if (t.endsWith(u':') || t.endsWith(u'\uFF1A')) {
+            qsizetype j = i + 1;
+            while (j < lines.size() && lines[j].trimmed().isEmpty())
+                ++j;
+            if (j < lines.size() && lines[j].trimmed().startsWith(u'>'))
+                break;
+        }
         if (!t.isEmpty())
             kept.append(t);
         if (kept.join(u' ').size() > 240)
@@ -206,7 +215,7 @@ Ingest::Result Ingest::process(MailContext &ctx, const QByteArray &raw)
     Content body = extract(content);
     if (!decryptError.isEmpty()) {
         body = Content();
-        body.text = QStringLiteral("This message is encrypted and could not be decrypted on this device.\n\n%1")
+        body.text = QCoreApplication::translate("Ingest", "This message is encrypted and could not be decrypted on this device.\n\n%1")
                         .arg(decryptError);
         encrypted = true;
     }

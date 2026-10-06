@@ -81,7 +81,8 @@ Rectangle {
             }
             ColumnLayout {
                 visible: !!view.current.id
-                x: 32; y: 28
+                x: LayoutMirroring.enabled ? parent.width - width - 32 : 32
+                y: 28
                 width: Math.min(parent.width - 64, 560)
                 spacing: 8
                 Field {
@@ -110,10 +111,10 @@ Rectangle {
                     wrapMode: Text.WrapAnywhere
                 }
                 Label { Layout.topMargin: 12; text: qsTr("Encryption with this contact"); color: Theme.muted }
-                ComboBox {
+                ChoiceBox {
                     Layout.preferredWidth: 320
                     model: [qsTr("Use the account setting"), qsTr("Lenient"), qsTr("Opportunistic"), qsTr("Strict — never unencrypted")]
-                    currentIndex: (view.current.encryption !== undefined ? view.current.encryption : -1) + 1
+                    selected: (view.current.encryption !== undefined ? view.current.encryption : -1) + 1
                     onActivated: (i) => MailApp.setContactEncryption(view.current.id, i - 1)
                 }
                 RowLayout {

@@ -36,6 +36,5 @@ QtObject {
     readonly property real fontBody: 13
     readonly property real fontTitle: 17
 
-    function days(n) { return n === 1 ? qsTr("1 day") : qsTr("%1 days").arg(n) }
     function icon(name) { return Qt.resolvedUrl("icons/" + name + ".svg") }
 }

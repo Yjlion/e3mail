@@ -39,12 +39,24 @@ target_link_libraries(e3mail-fixtures PRIVATE e3core e3testsupport)
 e3mail_set_warnings(e3mail-fixtures)
 
 if(E3MAIL_BUILD_APP)
+    # Every translation complete, with its placeholders intact.
+    find_package(Python3 COMPONENTS Interpreter)
+    if(Python3_FOUND)
+        add_test(NAME translations
+            COMMAND Python3::Interpreter ${PROJECT_SOURCE_DIR}/scripts/check-translations.py)
+    endif()
     target_link_libraries(tst_richtext PRIVATE e3richtext Qt6::Gui)
     # Boots the real QML application offscreen against an empty data
     # directory: every QML file must load and every type must resolve.
     add_test(NAME app_smoke
         COMMAND e3mail --smoke-test --data-dir ${CMAKE_CURRENT_BINARY_DIR}/smoke-data)
     set_tests_properties(app_smoke PROPERTIES
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen;E3MAIL_NO_KEYCHAIN=1"
+        FAIL_REGULAR_EXPRESSION "qml: |\\.qml:[0-9]+|ReferenceError|TypeError|Cannot assign|is not a type")
+    # The same, laid out right to left.
+    add_test(NAME app_smoke_rtl
+        COMMAND e3mail --smoke-test --lang ar --data-dir ${CMAKE_CURRENT_BINARY_DIR}/smoke-data-rtl)
+    set_tests_properties(app_smoke_rtl PROPERTIES
         ENVIRONMENT "QT_QPA_PLATFORM=offscreen;E3MAIL_NO_KEYCHAIN=1"
         FAIL_REGULAR_EXPRESSION "qml: |\\.qml:[0-9]+|ReferenceError|TypeError|Cannot assign|is not a type")
 endif()

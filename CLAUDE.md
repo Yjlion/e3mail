@@ -32,8 +32,15 @@ which is usually the whole suite (about two seconds). Changes to QML: run
 proves the QML loads. Changes to transports or TLS: run `scripts/e2e.py`
 against `server/compose`.
 
-Dependencies on Arch: `qt6-base qt6-declarative qt6-svg botan json-c sqlite`,
-plus RNP from `scripts/build-rnp.sh /usr/local` (it is not packaged).
+Dependencies on Arch: `qt6-base qt6-declarative qt6-svg qt6-tools icu botan
+json-c sqlite`, plus RNP from `scripts/build-rnp.sh /usr/local` (it is not
+packaged). Screenshots in Chinese and Japanese need a CJK font.
+
+User-visible strings go through `qsTr`/`tr` (in the core,
+`QCoreApplication::translate`), with `%n` for anything counted. After changing
+them, run `cmake --build --preset dev --target update_translations` and
+translate the new entries; the `translations` test fails on anything
+unfinished. Changes to layout: look at an Arabic screenshot too.
 
 ## Rules
 

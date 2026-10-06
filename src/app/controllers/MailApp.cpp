@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 #include "MailApp.h"
+#include "Languages.h"
 
 #include "crypto/Pgp.h"
 #include "engine/AccountManager.h"
@@ -340,7 +341,8 @@ QVariantMap MailApp::messageMap(qint64 id) const
         {QStringLiteral("cc"), addrList(d->cc)},
         {QStringLiteral("bcc"), addrList(d->bcc)},
         {QStringLiteral("subject"), d->subject.isEmpty() ? tr("(no subject)") : d->subject},
-        {QStringLiteral("date"), QLocale().toString(d->date.toLocalTime(), QLocale::LongFormat)},
+        {QStringLiteral("date"), QLocale().toString(d->date.toLocalTime().date(), QLocale::LongFormat) + u' '
+                                     + QLocale().toString(d->date.toLocalTime().time(), QLocale::ShortFormat)},
         {QStringLiteral("shortDate"), MessageListModel::formatDate(d->date)},
         {QStringLiteral("html"), d->bodyHtml},
         {QStringLiteral("text"), d->bodyText},
@@ -424,8 +426,7 @@ void MailApp::accept(const QString &addr)
 {
     int released = 0;
     WITH_ACCOUNT(released = mail::Organize::accept(ctx, addr));
-    Q_EMIT notify(released == 1 ? tr("Accepted %1. 1 message moved to the Inbox.").arg(addr)
-                                : tr("Accepted %1. %2 messages moved to the Inbox.").arg(addr).arg(released));
+    Q_EMIT notify(tr("Accepted %1. %n message(s) moved to the Inbox.", "", released).arg(addr));
 }
 
 void MailApp::block(const QString &pattern)
@@ -616,6 +617,31 @@ QVariantMap MailApp::settings() const
                  return f;
              }()},
             {QStringLiteral("dataDir"), Paths::dataDir()}};
+}
+
+QString MailApp::language() const
+{
+    return Languages::saved();
+}
+
+void MailApp::setLanguage(const QString &code)
+{
+    if (code == Languages::saved())
+        return;
+    Languages::save(code);
+    Languages::install(code);
+    Q_EMIT languageChanged();
+    // Dates in the list are formatted here, in the new locale.
+    reloadMessages();
+    reloadThread();
+}
+
+QVariantList MailApp::languages() const
+{
+    QVariantList out;
+    for (const Languages::Entry &e : Languages::available())
+        out.append(QVariantMap{{QStringLiteral("code"), e.code}, {QStringLiteral("name"), e.name}});
+    return out;
 }
 
 void MailApp::setSetting(const QString &key, const QVariant &value)

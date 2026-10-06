@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: MPL-2.0
+#include "mail/Ingest.h"
 #include "mime/Builder.h"
 #include "mime/Encoding.h"
 #include "mime/Headers.h"
 #include "mime/Html.h"
 #include "mime/Part.h"
+#include "util/LocalePatterns.h"
 
 #include <QtTest>
 
@@ -24,6 +26,85 @@ private Q_SLOTS:
         QCOMPARE(decodeHeader("=?utf-8?q?a_b?="), QStringLiteral("a b"));
         // raw UTF-8 in a header
         QCOMPARE(decodeHeader(QStringLiteral("Café").toUtf8()), QStringLiteral("Café"));
+    }
+
+    // Every charset ICU knows decodes, whatever the Qt build (ADR 0014).
+    void charsets_data()
+    {
+        QTest::addColumn<QByteArray>("charset");
+        QTest::addColumn<QByteArray>("bytes");
+        QTest::addColumn<QString>("text");
+        QTest::newRow("iso-2022-jp") << QByteArray("iso-2022-jp") << QByteArray("\x1b\x24\x42\x46\x7c\x4b\x5c\x38\x6c\x24\x4e\x25\x61\x21\x3c\x25\x6b\x1b\x28\x42") << QStringLiteral("日本語のメール");
+        QTest::newRow("shift_jis") << QByteArray("shift_jis") << QByteArray("\x93\xfa\x96\x7b\x8c\xea\x82\xcc\x83\x81\x81\x5b\x83\x8b") << QStringLiteral("日本語のメール");
+        QTest::newRow("euc-jp") << QByteArray("euc-jp") << QByteArray("\xc6\xfc\xcb\xdc\xb8\xec") << QStringLiteral("日本語");
+        QTest::newRow("gb2312") << QByteArray("gb2312") << QByteArray("\xbc\xf2\xcc\xe5\xd6\xd0\xce\xc4\xd3\xca\xbc\xfe") << QStringLiteral("简体中文邮件");
+        QTest::newRow("gbk") << QByteArray("gbk") << QByteArray("\xbc\xf2\xcc\xe5\xd6\xd0\xce\xc4\xd3\xca\xbc\xfe") << QStringLiteral("简体中文邮件");
+        QTest::newRow("gb18030") << QByteArray("gb18030") << QByteArray("\xbc\xf2\xcc\xe5\xd6\xd0\xce\xc4\xd3\xca\xbc\xfe") << QStringLiteral("简体中文邮件");
+        QTest::newRow("big5") << QByteArray("big5") << QByteArray("\xc1\x63\xc5\xe9\xa4\xa4\xa4\xe5") << QStringLiteral("繁體中文");
+        QTest::newRow("euc-kr") << QByteArray("euc-kr") << QByteArray("\xc7\xd1\xb1\xb9\xbe\xee") << QStringLiteral("한국어");
+        QTest::newRow("koi8-r") << QByteArray("koi8-r") << QByteArray("\xf2\xd5\xd3\xd3\xcb\xcf\xc5\x20\xd0\xc9\xd3\xd8\xcd\xcf") << QStringLiteral("Русское письмо");
+        QTest::newRow("windows-1251") << QByteArray("windows-1251") << QByteArray("\xd0\xf3\xf1\xf1\xea\xee\xe5\x20\xef\xe8\xf1\xfc\xec\xee") << QStringLiteral("Русское письмо");
+        QTest::newRow("iso-8859-2") << QByteArray("iso-8859-2") << QByteArray("\x5a\x61\xbf\xf3\xb3\xe6\x20\x67\xea\xb6\x6c\xb1\x20\x6a\x61\xbc\xf1") << QStringLiteral("Zażółć gęślą jaźń");
+        QTest::newRow("windows-1250") << QByteArray("windows-1250") << QByteArray("\x5a\x61\xbf\xf3\xb3\xe6\x20\x67\xea\x9c\x6c\xb9\x20\x6a\x61\x9f\xf1") << QStringLiteral("Zażółć gęślą jaźń");
+        QTest::newRow("iso-8859-8") << QByteArray("iso-8859-8") << QByteArray("\xf9\xec\xe5\xed") << QStringLiteral("שלום");
+        QTest::newRow("windows-1255") << QByteArray("windows-1255") << QByteArray("\xf9\xec\xe5\xed") << QStringLiteral("שלום");
+        QTest::newRow("windows-1256") << QByteArray("windows-1256") << QByteArray("\xe3\xd1\xcd\xc8\xc7") << QStringLiteral("مرحبا");
+        QTest::newRow("iso-8859-6") << QByteArray("iso-8859-6") << QByteArray("\xe5\xd1\xcd\xc8\xc7") << QStringLiteral("مرحبا");
+        QTest::newRow("iso-8859-15") << QByteArray("iso-8859-15") << QByteArray("\x50\x72\x69\x78\x20\x3a\x20\x35\x20\xa4") << QStringLiteral("Prix : 5 €");
+    }
+
+    void charsets()
+    {
+        QFETCH(QByteArray, charset);
+        QFETCH(QByteArray, bytes);
+        QFETCH(QString, text);
+        QCOMPARE(decodeCharset(bytes, charset), text);
+        QCOMPARE(decodeCharset(bytes, charset.toUpper()), text);
+    }
+
+    void mislabelledCharsets()
+    {
+        const QByteArray utf8 = QStringLiteral("日本語").toUtf8();
+        // Declared Shift_JIS, sent as UTF-8.
+        QCOMPARE(decodeCharset(utf8, "shift_jis"), QStringLiteral("日本語"));
+        // A charset nobody knows.
+        QCOMPARE(decodeCharset(utf8, "x-no-such-charset"), QStringLiteral("日本語"));
+        // A stateful encoding in an encoded word.
+        QCOMPARE(decodeHeader("=?ISO-2022-JP?B?GyRCRnxLXDhsJE43b0w+GyhC?="), QStringLiteral("日本語の件名"));
+    }
+
+    void monthDayFollowsLocale()
+    {
+        const QDate d(2026, 10, 6);
+        auto fmt = [&d](const char *name) {
+            const QLocale l(QString::fromLatin1(name));
+            return l.toString(d, e3::LocalePatterns::monthDay(l));
+        };
+        QCOMPARE(fmt("en_GB"), QStringLiteral("6 Oct"));
+        QCOMPARE(fmt("ja_JP"), QStringLiteral("10月6日"));
+        QCOMPARE(fmt("zh_CN"), QStringLiteral("10月6日"));
+        QVERIFY(fmt("de_DE").startsWith(QStringLiteral("6. Okt")));
+    }
+
+    // A reply's preview stops at the attribution line, whatever language the
+    // replier's client wrote it in.
+    void previewSkipsQuoteInAnyLanguage_data()
+    {
+        QTest::addColumn<QString>("attribution");
+        QTest::newRow("en") << QStringLiteral("On 6 Oct 2026 at 14:03, Bob wrote:");
+        QTest::newRow("de") << QStringLiteral("Am 6. Oktober 2026 um 14:03 schrieb Bob:");
+        QTest::newRow("ja") << QStringLiteral("2026年10月6日 14:03、Bob さんは書きました:");
+        QTest::newRow("zh") << QStringLiteral("Bob 于 2026年10月6日 14:03 写道\uFF1A");
+        QTest::newRow("he") << QStringLiteral("ב־6 באוקטובר 2026 בשעה 14:03, Bob כתב:");
+    }
+
+    void previewSkipsQuoteInAnyLanguage()
+    {
+        QFETCH(QString, attribution);
+        const QString body = QStringLiteral("Sounds good.\n\n") + attribution + QStringLiteral("\n> the plan\n> is set\n");
+        QCOMPARE(e3::mail::Ingest::makePreview(body), QStringLiteral("Sounds good."));
+        // A colon that does not introduce a quote is text.
+        QCOMPARE(e3::mail::Ingest::makePreview(QStringLiteral("Agenda:\n1. keys")), QStringLiteral("Agenda: 1. keys"));
     }
 
     void encodeHeaderRoundTrip()
