@@ -199,6 +199,50 @@ CREATE VIRTUAL TABLE msg_fts USING fts5(
     tokenize = 'unicode61 remove_diacritics 2'
 );
 )sql",
+
+    // 2 — merging ops from other devices (ADR 0013).
+    R"sql(
+-- What an op competes with: ops with the same key are last-writer-wins by
+-- (hlc, device). NULL for ops that only ever add. See OpLog::mergeKey.
+ALTER TABLE ops ADD COLUMN mkey TEXT;
+UPDATE ops SET mkey = CASE kind
+    WHEN 'msg.read'     THEN 'read:' || json_extract(payload, '$.mid')
+    WHEN 'msg.trash'    THEN 'trash:' || json_extract(payload, '$.mid')
+    WHEN 'msg.restore'  THEN 'trash:' || json_extract(payload, '$.mid')
+    WHEN 'label.add'    THEN 'label:' || json_extract(payload, '$.mid') || ':' || lower(json_extract(payload, '$.label'))
+    WHEN 'label.remove' THEN 'label:' || json_extract(payload, '$.mid') || ':' || lower(json_extract(payload, '$.label'))
+    WHEN 'label.define' THEN 'labeldef:' || lower(json_extract(payload, '$.name'))
+    WHEN 'label.delete' THEN 'labeldef:' || lower(json_extract(payload, '$.name'))
+    WHEN 'block.add'    THEN 'block:' || json_extract(payload, '$.pattern')
+    WHEN 'block.remove' THEN 'block:' || json_extract(payload, '$.pattern')
+    WHEN 'contact.edit' THEN 'cname:' || json_extract(payload, '$.addr')
+END;
+CREATE INDEX ops_mkey ON ops(mkey, hlc);
+CREATE INDEX ops_hlc ON ops(hlc);
+
+-- Message-IDs purged here or on another device. A tombstone outranks every
+-- later op and every re-download.
+CREATE TABLE tombstones (
+    message_id TEXT PRIMARY KEY,
+    purged_at  INTEGER NOT NULL
+);
+
+-- The other devices paired with this one. Empty is the single-device case.
+CREATE TABLE devices (
+    id        TEXT PRIMARY KEY,
+    name      TEXT NOT NULL DEFAULT '',
+    paired_at INTEGER NOT NULL,
+    last_seen INTEGER
+);
+
+-- Which device has stored which server message. The server copy is deleted
+-- only once every paired device is here (ADR 0013).
+CREATE TABLE server_acks (
+    remote_key TEXT NOT NULL,
+    device     TEXT NOT NULL,
+    PRIMARY KEY (remote_key, device)
+);
+)sql",
 };
 
 } // namespace

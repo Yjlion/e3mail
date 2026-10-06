@@ -127,6 +127,9 @@ void Contacts::setEncryptionOverride(MailContext &ctx, qint64 contactId, std::op
                    int(*mode));
     else
         ctx.db.run("DELETE FROM contact_policy WHERE contact_id=?", contactId);
+    if (const auto c = byId(ctx, contactId))
+        ctx.ops.record(op::ContactPolicy, {{QStringLiteral("addr"), c->addr},
+                                           {QStringLiteral("mode"), mode ? QJsonValue(int(*mode)) : QJsonValue()}});
 }
 
 void Contacts::setName(MailContext &ctx, qint64 contactId, const QString &name)
@@ -141,6 +144,7 @@ void Contacts::setVerified(MailContext &ctx, const QString &addr, const QString 
 {
     touch(ctx, addr, QString(), ContactOrigin::Manual);
     ctx.db.run("UPDATE contacts SET fingerprint=?, verified=1 WHERE addr=?", fpr, mime::normalizeAddr(addr));
+    ctx.ops.record(op::ContactVerify, {{QStringLiteral("addr"), mime::normalizeAddr(addr)}, {QStringLiteral("fpr"), fpr}});
 }
 
 QString Contacts::normalizePattern(const QString &pattern)
