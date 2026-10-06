@@ -12,6 +12,7 @@
 namespace e3 {
 
 namespace {
+#ifdef E3MAIL_HAVE_KEYCHAIN
 const QString kService = QStringLiteral("e3mail");
 
 bool disabled()
@@ -19,7 +20,6 @@ bool disabled()
     return !qEnvironmentVariableIsEmpty("E3MAIL_NO_KEYCHAIN");
 }
 
-#ifdef E3MAIL_HAVE_KEYCHAIN
 template<typename Job>
 bool runJob(Job &job)
 {
