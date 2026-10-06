@@ -6,7 +6,9 @@ function(e3mail_set_warnings target)
             target_compile_options(${target} PRIVATE /WX)
         endif()
     else()
-        target_compile_options(${target} PRIVATE -Wall -Wextra -Wpedantic -Wshadow=local)
+        target_compile_options(${target} PRIVATE -Wall -Wextra -Wpedantic
+            $<$<CXX_COMPILER_ID:GNU>:-Wshadow=local>
+            $<$<CXX_COMPILER_ID:Clang,AppleClang>:-Wshadow-uncaptured-local>)
         if(E3MAIL_WARNINGS_AS_ERRORS)
             target_compile_options(${target} PRIVATE -Werror)
         endif()

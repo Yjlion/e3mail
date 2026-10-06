@@ -1,13 +1,12 @@
 {
   "name": "e3mail",
   "version-semver": "0.1.0",
-  "description": "Dependencies for Windows builds; Linux and macOS use system packages.",
+  "description": "Windows dependencies (RNP itself is built by scripts/build-rnp.sh). QtKeychain is left out: its port builds a second Qt.",
   "dependencies": [
     "botan",
     "json-c",
     "zlib",
     "bzip2",
-    { "name": "sqlite3", "features": ["fts5"] },
-    "qtkeychain-qt6"
+    { "name": "sqlite3", "features": ["fts5"] }
   ]
 }
