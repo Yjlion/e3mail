@@ -23,7 +23,17 @@ DESTDIR="$APPDIR" cmake --install "$BUILD" --prefix /usr
 export QML_SOURCES_PATHS="$ROOT/src/app/qml"
 export EXTRA_QT_MODULES="svg;waylandcompositor"
 # xcb is deployed by default; Wayland for modern desktops, offscreen for CI.
-export EXTRA_PLATFORM_PLUGINS="libqwayland.so;libqoffscreen.so"
+# The Wayland plugin's name depends on the Qt version (libqwayland.so since
+# 6.10, libqwayland-generic.so and libqwayland-egl.so before), so take
+# whichever this Qt has.
+QMAKE=${QMAKE:-$(command -v qmake6 || command -v qmake)}
+PLATFORMS="$("$QMAKE" -query QT_INSTALL_PLUGINS)/platforms"
+plugins="libqoffscreen.so"
+for f in "$PLATFORMS"/libqwayland*.so; do
+    if [[ -e $f ]]; then plugins+=";$(basename "$f")"; fi
+done
+export EXTRA_PLATFORM_PLUGINS="$plugins"
+echo "extra platform plugins: $EXTRA_PLATFORM_PLUGINS"
 export APPIMAGE_EXTRACT_AND_RUN=1
 # linuxdeploy bundles an old strip that rejects newer ELF sections (.relr.dyn);
 # stripping system libraries buys little, so do not.

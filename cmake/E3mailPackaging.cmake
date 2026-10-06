@@ -31,7 +31,10 @@ endif()
 # executable.
 set(E3MAIL_BUNDLE_DLLS_FROM "" CACHE STRING "Directories whose DLLs are installed beside e3mail (Windows)")
 if(WIN32)
-    foreach(dir ${E3MAIL_BUNDLE_DLLS_FROM})
+    # The workflow passes native paths (D:\a\...); with backslashes, the
+    # generated install script reads them as escapes.
+    string(REPLACE "\\" "/" e3_dll_dirs "${E3MAIL_BUNDLE_DLLS_FROM}")
+    foreach(dir ${e3_dll_dirs})
         file(GLOB e3_dlls "${dir}/*.dll")
         install(FILES ${e3_dlls} DESTINATION ${CMAKE_INSTALL_BINDIR})
     endforeach()
