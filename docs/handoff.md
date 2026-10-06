@@ -54,11 +54,8 @@ bytes move. [ADR 0013](adr/0013-op-merge-rules.md) has the rules.
   `tests/LoopbackTransport`. Each mechanism (replay, LWW, the device wait,
   gap refill) was broken on purpose once to see the suite fail.
 
-**Not verified:** `scripts/e2e.py` was not run for this change. The e3mail
-test server was down and this user could not reach the Docker socket. The
-single-device retention path is covered by `tst_engine` and by the last step
-of `tst_sync::serverDeletionWaitsForEveryDevice`, both against the fake
-server only.
+`scripts/e2e.py` against `server/compose` passes with this change, so
+single-device delete-after-download is unchanged on real servers.
 
 **Not built yet:** the Rust crate and Corrosion, pairing (QR and the
 encrypted snapshot; tests clone the account directory instead), the mailbox
@@ -152,6 +149,12 @@ person had made elsewhere. Only what a person or a timer does is an op.
 `OpLog`. Sequence numbers are taken inside the insert, and the clock observes
 the log's highest value before every op. Otherwise the worker's frequent
 `server.ack` ops race the UI's on `UNIQUE(device, seq)`.
+
+**13. `e2e.py` leaves one message on dana's server on purpose** (the
+pre-existing one, which retention must never delete). A second run against
+the same container then counts two and fails "it stays on the server".
+Empty `/var/mail/e3.test/dana/Maildir/{new,cur}` in `e3mail-test-mail`
+between runs.
 
 ## Next
 
