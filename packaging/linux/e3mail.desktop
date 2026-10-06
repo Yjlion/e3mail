@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=e3mail
+GenericName=Mail Client
+Comment=End-to-end encrypted email
+Exec=e3mail %U
+Icon=e3mail
+Terminal=false
+Categories=Network;Email;Qt;
+MimeType=x-scheme-handler/mailto;
+Keywords=email;mail;encryption;openpgp;autocrypt;
+StartupWMClass=e3mail

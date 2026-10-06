@@ -38,6 +38,15 @@ set_target_properties(e3mail PROPERTIES
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION})
 
+if(WIN32)
+    target_sources(e3mail PRIVATE ${PROJECT_SOURCE_DIR}/packaging/windows/e3mail.rc)
+elseif(APPLE)
+    set(E3_ICNS ${PROJECT_SOURCE_DIR}/packaging/macos/e3mail.icns)
+    set_source_files_properties(${E3_ICNS} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+    target_sources(e3mail PRIVATE ${E3_ICNS})
+    set_target_properties(e3mail PROPERTIES MACOSX_BUNDLE_ICON_FILE e3mail.icns)
+endif()
+
 install(TARGETS e3mail
     BUNDLE DESTINATION .
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})

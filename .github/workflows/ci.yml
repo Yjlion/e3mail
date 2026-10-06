@@ -1,0 +1,77 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  QT_VERSION: "6.8.3"
+  RNP_VERSION: "v0.18.1"
+
+jobs:
+  build:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { name: Linux, os: ubuntu-24.04 }
+          - { name: Windows, os: windows-2022 }
+          - { name: macOS, os: macos-14 }
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ env.QT_VERSION }}
+          cache: true
+
+      - name: Dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build pkg-config libsqlite3-dev gnupg \
+              libgl1-mesa-dev libxkbcommon-dev libjson-c-dev libbotan-2-dev zlib1g-dev libbz2-dev
+          # Distribution RNP where available; otherwise build it.
+          if ! sudo apt-get install -y librnp-dev; then
+            RNP_CRYPTO_BACKEND=botan scripts/build-rnp.sh "$HOME/deps"
+          fi
+          echo "CMAKE_PREFIX_PATH=$HOME/deps" >> "$GITHUB_ENV"
+          echo "LD_LIBRARY_PATH=$HOME/deps/lib:$LD_LIBRARY_PATH" >> "$GITHUB_ENV"
+
+      - name: Dependencies (macOS)
+        if: runner.os == 'macOS'
+        run: brew install ninja rnp sqlite pkg-config gnupg
+
+      - name: MSVC environment (Windows)
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Dependencies (Windows)
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          VCPKG="$VCPKG_INSTALLATION_ROOT"
+          "$VCPKG/vcpkg" install --triplet x64-windows botan json-c zlib bzip2 "sqlite3[fts5]"
+          TOOLCHAIN="$VCPKG/scripts/buildsystems/vcpkg.cmake"
+          scripts/build-rnp.sh "$GITHUB_WORKSPACE/deps" -G Ninja \
+              -DCMAKE_TOOLCHAIN_FILE="$TOOLCHAIN" -DVCPKG_TARGET_TRIPLET=x64-windows
+          echo "E3_CMAKE_ARGS=-DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN -DVCPKG_TARGET_TRIPLET=x64-windows" >> "$GITHUB_ENV"
+          echo "CMAKE_PREFIX_PATH=$GITHUB_WORKSPACE/deps" >> "$GITHUB_ENV"
+          echo "$GITHUB_WORKSPACE/deps/bin" >> "$GITHUB_PATH"
+          echo "$VCPKG/installed/x64-windows/bin" >> "$GITHUB_PATH"
+
+      - name: Configure
+        shell: bash
+        run: cmake --preset ci $E3_CMAKE_ARGS
+
+      - name: Build
+        run: cmake --build --preset ci
+
+      - name: Test
+        run: ctest --preset ci
