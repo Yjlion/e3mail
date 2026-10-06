@@ -18,3 +18,4 @@ that supersedes it, or a dated amendment block inside it, and add a row here.
 | [0011](0011-linear-protocol-code-over-an-event-loop.md) | Linear protocol code over a local event loop | Accepted |
 | [0012](0012-passwords-in-the-os-keyring.md) | Passwords in the OS keyring, with an honest fallback | Accepted |
 | [0013](0013-op-merge-rules.md) | How devices merge the op-log | Accepted, Phase 8 |
+| [0014](0014-languages-icu-and-qt-linguist.md) | Languages: ICU for charsets and dates, Qt Linguist for the interface | Accepted |

@@ -9,11 +9,12 @@ Phases 0–7 of [DESIGN.md](DESIGN.md) are done: the engine, the desktop app, th
 CLI and packaging.
 
 **Verified here (Arch Linux, Qt 6.11, RNP 0.18.1, GCC 16):**
-- `ctest --preset dev`: 7 suites, all passing. They cover MIME, the
-  sanitizer, the protocols against the fake mail system, crypto (including
+- `ctest --preset dev`: 9 tests, all passing. They cover MIME and charsets,
+  the sanitizer, the protocols against the fake mail system, crypto (including
   GnuPG decrypting and verifying our output), an engine end-to-end
   conversation over IMAP and POP3, two devices of one account syncing, the
-  composer's whitelist, and a boot of the real QML app.
+  composer's whitelist, the translations, and a boot of the real QML app,
+  left to right and right to left.
 - `scripts/e2e.py` against `server/compose`, all green:
   - real TLS on every port, implicit and STARTTLS;
   - alice on IMAP, bob on POP3, carol on IMAP with STARTTLS, dana on POP3 with
@@ -62,6 +63,30 @@ encrypted snapshot; tests clone the account directory instead), the mailbox
 fallback, any UI, and wiring a `SyncSession` into `Account`. Nothing in the
 app syncs yet.
 
+## Languages and ICU (2026-10-06)
+
+ICU is linked by the core, and the interface is in eleven languages
+([ADR 0014](adr/0014-languages-icu-and-qt-linguist.md),
+[`src/app/translations/`](../src/app/translations/README.md)).
+
+**Verified here:**
+- `tst_mime` decodes seventeen charsets (ISO-2022-JP, Shift_JIS, EUC-JP,
+  GB2312/GBK/GB18030, Big5, EUC-KR, KOI8-R, windows-1250/1251/1255/1256,
+  ISO-8859-2/6/8/15) through ICU, mislabelled ones included, and builds the
+  day-and-month date pattern from CLDR.
+- The `translations` test: all ten files complete, placeholders intact.
+  `app_smoke_rtl` boots the app in Arabic.
+- Screenshots in every language were looked at, at least the inbox, reading
+  pane or settings; Arabic and Hebrew also contacts, first run and the
+  Unverified card; Russian the composer. A live switch from English to Hebrew
+  and German was watched by a temporary hook, not by a test.
+
+**Not verified:** CI with ICU on any platform (Ubuntu's `libicu-dev`,
+Homebrew's keg-only `icu4c` through `ICU_ROOT`, vcpkg's `icu`, which builds
+for a long time on the first run). The packages carrying ICU, by the same
+reasoning that already carries RNP. Any of it on a real display, or by a
+native speaker.
+
 ## Known gaps
 
 - **Signed-only mail** (`multipart/signed` without encryption) is shown, but
@@ -78,14 +103,13 @@ app syncs yet.
 - **Contacts** cannot be added by hand, and there are no address-book fields
   yet (P10).
 - **Replies** quote the plain-text body, even of HTML mail.
-- **Charsets** beyond UTF-8, Latin-1 and Windows-1252 rely on the Qt build
-  having ICU.
 - **Sync**: a message another device sent while it was still pending in that
   device's outbox arrives as Sent. Mail whose raw copy expired under
   raw-message retention never reaches a new device unless the server still
   has it, and sent mail then never does. A label renamed on one device comes
   back if another tags with the old name first (ADR 0013).
-- **No translations**, and plurals are hand-written English.
+- **Translations are machine-made** and unreviewed in all ten languages, and
+  Settings says so. Yiddish is the least certain of them.
 - **Passwords fall back to the database in cleartext** when there is no OS
   keyring, and Settings says so (ADR 0012). The database has no passphrase
   until P11.
@@ -155,6 +179,21 @@ pre-existing one, which retention must never delete). A second run against
 the same container then counts two and fails "it stays on the server".
 Empty `/var/mail/e3.test/dana/Maildir/{new,cur}` in `e3mail-test-mail`
 between runs.
+
+**14. Retranslating rebuilds translated ComboBox models**, and a plain
+ComboBox then shows its first entry: changing the language showed the
+encryption mode as Lenient. Use `ChoiceBox` and bind `selected`.
+
+**15. Read RTL screenshots zoomed in.** At full size, an English subject in a
+Hebrew window looked like "!You have been selected", and three rounds of bidi
+fixes (isolates, marks, embeddings) went at a bug that did not exist. Cropped
+and enlarged it read correctly. The real problem was only that mail text
+aligned by its own script sat at the far edge; it now hugs its text so the
+mirrored row places it.
+
+**16. Short labels grow in translation.** The Russian "PREVIEW" badge pushed
+the sidebar wider than the window allowed. Badges elide now; keep such
+translations short.
 
 ## Next
 
