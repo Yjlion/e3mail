@@ -11,10 +11,25 @@ inputs:
   bundle-dlls:
     description: Pass E3MAIL_BUNDLE_DLLS_FROM, so the install carries these DLLs.
     default: "false"
+  vcpkg-commit:
+    description: >
+      The vcpkg checkout, pinned. The runner image's own changes with image
+      rollouts, and with it every package's ABI hash, which made the package
+      cache miss between two runs started at the same minute.
+    default: f451d04d496aa089e294a1a2d799a269788d47ba
 
 runs:
   using: composite
   steps:
+    - name: Check out vcpkg
+      shell: bash
+      run: |
+        VCPKG="$RUNNER_TEMP/vcpkg"
+        git init -q "$VCPKG"
+        git -C "$VCPKG" fetch -q --depth 1 https://github.com/microsoft/vcpkg.git ${{ inputs.vcpkg-commit }}
+        git -C "$VCPKG" checkout -q FETCH_HEAD
+        echo "E3_VCPKG=$VCPKG" >> "$GITHUB_ENV"
+
     # The whole result, keyed on everything that decides what gets built. The
     # project's version is not in vcpkg.json, so a version bump does not miss.
     - name: Cache dependencies
@@ -42,7 +57,8 @@ runs:
       env:
         RNP_VERSION: ${{ inputs.rnp-version }}
       run: |
-        VCPKG="$VCPKG_INSTALLATION_ROOT"
+        VCPKG="$E3_VCPKG"
+        "$VCPKG/bootstrap-vcpkg.bat" -disableMetrics
         INSTALLED="$GITHUB_WORKSPACE/vcpkg_installed"
         TOOLCHAIN="$VCPKG/scripts/buildsystems/vcpkg.cmake"
         mkdir -p vcpkg-bincache
@@ -50,7 +66,7 @@ runs:
         # Release builds only: neither CI nor the release links debug
         # libraries, and the debug half doubled the build.
         # Manifest mode: installs what vcpkg.json lists into ./vcpkg_installed.
-        "$VCPKG/vcpkg" install --triplet x64-windows-release --host-triplet x64-windows-release
+        "$VCPKG/vcpkg" install --vcpkg-root "$VCPKG" --triplet x64-windows-release --host-triplet x64-windows-release
         # RNP's own tree has no manifest: point it at the packages just installed.
         scripts/build-rnp.sh "$GITHUB_WORKSPACE/deps" -G Ninja \
             -DCMAKE_TOOLCHAIN_FILE="$TOOLCHAIN" -DVCPKG_TARGET_TRIPLET=x64-windows-release \
@@ -61,7 +77,7 @@ runs:
       shell: bash
       run: |
         INSTALLED="$GITHUB_WORKSPACE/vcpkg_installed"
-        TOOLCHAIN="$VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake"
+        TOOLCHAIN="$E3_VCPKG/scripts/buildsystems/vcpkg.cmake"
         ARGS="-DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN -DVCPKG_TARGET_TRIPLET=x64-windows-release"
         ARGS+=" -DVCPKG_HOST_TRIPLET=x64-windows-release -DVCPKG_INSTALLED_DIR=$INSTALLED"
         # The step above installed everything. Left on, the toolchain's own

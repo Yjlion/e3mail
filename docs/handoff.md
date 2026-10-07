@@ -292,6 +292,13 @@ never saved. Why the hash differed between the two steps is not known.
 `VCPKG_MANIFEST_INSTALL=OFF` makes configure only use what the dependency
 step installed.
 
+**23. Runner images carry different vcpkg checkouts.** Two runs started in the
+same minute got `vcpkg-make@2026-07-09` and `vcpkg-make@2026-07-09#1`, so ICU's
+ABI hash, and with it the per-package cache, depended on which image a job
+landed on. Botan came back from that cache in 53 ms; ICU was rebuilt (5 min).
+The action now checks out vcpkg at a pinned commit (`vcpkg-commit`) instead of
+using `C:\vcpkg`. Bump it deliberately; that rebuilds everything once.
+
 ## Next
 
 1. P8, slice 2: install Rust, build `src/p2p/` (Iroh, `iroh-blobs`) with
