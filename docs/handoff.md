@@ -111,6 +111,58 @@ happens for tags.
   v0.1.0 and v0.1.1 tags point at commits without these fixes (and with
   version 0.1.0).
 
+## Mail to self, and finding server settings (2026-10-07)
+
+**Mail to self is encrypted.** `Policy` used to look up the own address as a
+contact, find no key, and send cleartext (or refuse under strict mode). Worse,
+a Bcc to self on mail to keyed peers made the whole message cleartext. The own
+address now counts as keyed. `tst_engine::selfIsEncrypted` covers both cases
+and fails without the fix.
+
+**Setup asks six sources** ([ADR 0015](adr/0015-finding-server-settings.md)):
+the provider's autoconfig file, ISPDB, Autodiscover, DNS SRV, ISPDB for the MX
+host, and a guess. `e3mail-cli discover --addr` prints what it finds.
+
+**Verified here:**
+- `tst_autoconfig`: the parsers, and the order, the deadline, the redirect
+  and abandoning a stale lookup against a fake network. Breaking the
+  ordering failed 8 of its tests; dropping the stale-lookup check failed 1.
+- Against the real network: gmail.com (ISPDB); fastmail.com, posteo.de and
+  mailbox.org (provider); anthropic.com and microsoft.com (MX → ISPDB,
+  needing review); kernel.org (guess). `QDnsLookup` returned gmail's and
+  fastmail's real SRV records, but no real domain answered through SRV in
+  the full lookup, because each was answered by a higher-ranked source.
+- Setup screenshots, English and Arabic, with the source line and with
+  server settings opened for review. They were grabbed through a temporary
+  hook that typed an address; no script reproduces them.
+
+**Not verified:** a real Autodiscover answer (fakes only), the Connect-during-
+lookup wait in the running app, and any of it on Windows or macOS.
+
+## Windows build time (2026-10-07)
+
+Before: the Windows job took 25–40 minutes. vcpkg spent 23 min building Botan
+and 8 min building ICU, on every release run (no cache) and on every CI run
+after a version bump (the key hashed `vcpkg.json`, which carried the version).
+
+Now `.github/actions/windows-deps` serves CI and the release from one cache,
+built release-only (`x64-windows-release`), with a per-package vcpkg binary
+cache behind it. CI runs on push only.
+
+**Measured** (Windows job, wall clock):
+
+| Case | Before | Now | Run |
+|---|---|---|---|
+| Nothing cached | 39–41 min | 26 min (Botan 15, ICU 4.7) | 37577790974 |
+| Key changed, packages cached | 39–41 min | 5.7 min (dependencies 1.9) | 37583208476 |
+| Full cache hit | 4 min, if the key survived | 4.1 min (dependencies 7 s) | 37583208476, re-run |
+| Release, cache hit | 39–41 min | 4.7 min | 37584188287 |
+
+The portable install still carries RNP, Botan, ICU, SQLite and json-c from the
+release-only path. Getting here took three more rounds (traps 22–23, and
+vcpkg.exe missing on a hit). A release on a tag restoring main's cache is
+documented GitHub behaviour but has not been seen yet.
+
 ## Known gaps
 
 - **Signed-only mail** (`multipart/signed` without encryption) is shown, but
@@ -233,6 +285,30 @@ install rules.
 
 **19. Qt's deploy step needs an absolute install prefix**, because it writes
 `qt.conf` there. In Git Bash use `$(pwd -W)`, which gives `D:/...`.
+
+**20. The project version was in the cache key.** `vcpkg.json` carried
+`version-semver`, and the Windows cache was keyed on its hash, so "Set the
+version" cost a 40-minute rebuild. The version lives only in `CMakeLists.txt`.
+
+**21. The vcpkg triplet is in every path.** `x64-windows-release` puts DLLs in
+`vcpkg_installed/x64-windows-release/bin`. The host triplet is set to match.
+
+**22. The vcpkg toolchain installs again at configure time.** On the first
+cache hit (run 37580256256), the dependency step took 1 s, but `cmake` with
+the vcpkg toolchain ran its manifest install, judged `vcpkg-make`'s ABI
+changed, and rebuilt it and ICU: Configure took 6 min, and the result was
+never saved. Why the hash differed between the two steps is not known.
+`VCPKG_MANIFEST_INSTALL=OFF` makes configure only use what the dependency
+step installed.
+
+**23. Runner images carry different vcpkg checkouts.** Two runs started in the
+same minute got `vcpkg-make@2026-07-09` and `vcpkg-make@2026-07-09#1`, so ICU's
+ABI hash, and with it the per-package cache, depended on which image a job
+landed on. Botan came back from that cache in 53 ms; ICU was rebuilt (5 min).
+The action now checks out vcpkg at a pinned commit (`vcpkg-commit`) instead of
+using `C:\vcpkg`. Bump it deliberately; that rebuilds everything once. It is
+bootstrapped on every run, hit or not: the toolchain calls `vcpkg.exe` after
+each link to copy DLLs, and without it a cache hit failed to link.
 
 ## Next
 

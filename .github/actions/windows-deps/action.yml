@@ -1,0 +1,95 @@
+name: Windows dependencies
+description: >
+  vcpkg's packages and RNP, built once and kept between runs. Botan and ICU
+  take most of half an hour to build, so both CI and the release use this,
+  and a release on a tag restores what main's CI saved.
+
+inputs:
+  rnp-version:
+    description: The RNP tag scripts/build-rnp.sh builds.
+    required: true
+  bundle-dlls:
+    description: Pass E3MAIL_BUNDLE_DLLS_FROM, so the install carries these DLLs.
+    default: "false"
+  vcpkg-commit:
+    description: >
+      The vcpkg checkout, pinned. The runner image's own changes with image
+      rollouts, and with it every package's ABI hash, which made the package
+      cache miss between two runs started at the same minute.
+    default: f451d04d496aa089e294a1a2d799a269788d47ba
+
+runs:
+  using: composite
+  steps:
+    - name: Check out vcpkg
+      shell: bash
+      run: |
+        VCPKG="$RUNNER_TEMP/vcpkg"
+        git init -q "$VCPKG"
+        git -C "$VCPKG" fetch -q --depth 1 https://github.com/microsoft/vcpkg.git ${{ inputs.vcpkg-commit }}
+        git -C "$VCPKG" checkout -q FETCH_HEAD
+        # Every run, cache hit or not: the toolchain calls vcpkg.exe after each
+        # link to copy DLLs beside the program. Bootstrapping downloads it.
+        "$VCPKG/bootstrap-vcpkg.bat" -disableMetrics
+        echo "E3_VCPKG=$VCPKG" >> "$GITHUB_ENV"
+
+    # The whole result, keyed on everything that decides what gets built. The
+    # project's version is not in vcpkg.json, so a version bump does not miss.
+    - name: Cache dependencies
+      id: deps
+      uses: actions/cache@v4
+      with:
+        path: |
+          vcpkg_installed
+          deps
+        key: windeps-v2-${{ inputs.rnp-version }}-${{ hashFiles('vcpkg.json', 'scripts/build-rnp.sh', '.github/actions/windows-deps/action.yml') }}
+
+    # Built packages one by one: when the cache above misses because one
+    # dependency changed, only that one is built again.
+    - name: Cache vcpkg packages
+      if: steps.deps.outputs.cache-hit != 'true'
+      uses: actions/cache@v4
+      with:
+        path: vcpkg-bincache
+        key: vcpkg-bin-${{ hashFiles('vcpkg.json', '.github/actions/windows-deps/action.yml') }}
+        restore-keys: vcpkg-bin-
+
+    - name: Build dependencies
+      if: steps.deps.outputs.cache-hit != 'true'
+      shell: bash
+      env:
+        RNP_VERSION: ${{ inputs.rnp-version }}
+      run: |
+        VCPKG="$E3_VCPKG"
+        INSTALLED="$GITHUB_WORKSPACE/vcpkg_installed"
+        TOOLCHAIN="$VCPKG/scripts/buildsystems/vcpkg.cmake"
+        mkdir -p vcpkg-bincache
+        export VCPKG_BINARY_SOURCES="clear;files,$GITHUB_WORKSPACE\\vcpkg-bincache,readwrite"
+        # Release builds only: neither CI nor the release links debug
+        # libraries, and the debug half doubled the build.
+        # Manifest mode: installs what vcpkg.json lists into ./vcpkg_installed.
+        "$VCPKG/vcpkg" install --vcpkg-root "$VCPKG" --triplet x64-windows-release --host-triplet x64-windows-release
+        # RNP's own tree has no manifest: point it at the packages just installed.
+        scripts/build-rnp.sh "$GITHUB_WORKSPACE/deps" -G Ninja \
+            -DCMAKE_TOOLCHAIN_FILE="$TOOLCHAIN" -DVCPKG_TARGET_TRIPLET=x64-windows-release \
+            -DVCPKG_HOST_TRIPLET=x64-windows-release \
+            -DVCPKG_MANIFEST_MODE=OFF -DVCPKG_INSTALLED_DIR="$INSTALLED"
+
+    - name: Use dependencies
+      shell: bash
+      run: |
+        INSTALLED="$GITHUB_WORKSPACE/vcpkg_installed"
+        TOOLCHAIN="$E3_VCPKG/scripts/buildsystems/vcpkg.cmake"
+        ARGS="-DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN -DVCPKG_TARGET_TRIPLET=x64-windows-release"
+        ARGS+=" -DVCPKG_HOST_TRIPLET=x64-windows-release -DVCPKG_INSTALLED_DIR=$INSTALLED"
+        # The step above installed everything. Left on, the toolchain's own
+        # install at configure time judged vcpkg-make's hash different and
+        # rebuilt it and ICU on every cache hit (6 min), without saving them.
+        ARGS+=" -DVCPKG_MANIFEST_INSTALL=OFF"
+        if [[ "${{ inputs.bundle-dlls }}" == "true" ]]; then
+          ARGS+=" -DE3MAIL_BUNDLE_DLLS_FROM=$GITHUB_WORKSPACE/deps/bin;$INSTALLED/x64-windows-release/bin"
+        fi
+        echo "E3_CMAKE_ARGS=$ARGS" >> "$GITHUB_ENV"
+        echo "CMAKE_PREFIX_PATH=$GITHUB_WORKSPACE/deps" >> "$GITHUB_ENV"
+        echo "$GITHUB_WORKSPACE/deps/bin" >> "$GITHUB_PATH"
+        echo "$INSTALLED/x64-windows-release/bin" >> "$GITHUB_PATH"

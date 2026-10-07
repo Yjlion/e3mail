@@ -188,6 +188,55 @@ private Q_SLOTS:
         QVERIFY(r.padlockLocked);
     }
 
+    void selfIsEncrypted()
+    {
+        Account *alice = makeAccount(QStringLiteral("alice@x.test"), QStringLiteral("imap"));
+        Account *bob = makeAccount(QStringLiteral("bob@x.test"), QStringLiteral("imap"));
+        const QString self = QStringLiteral("Alice@X.test"); // compared normalised
+
+        // Our own key is always there, whatever the mode.
+        for (const auto mode : {EncryptionMode::Lenient, EncryptionMode::Opportunistic, EncryptionMode::Strict}) {
+            alice->ctx().config.setInt(cfg::EncryptionMode, int(mode));
+            const auto r = mail::Policy::evaluate(alice->ctx(), {self}, SendEncryption::Auto);
+            QVERIFY(r.willEncrypt);
+            QVERIFY(r.canSend);
+            QVERIFY(r.missingKeys.isEmpty());
+        }
+        alice->ctx().config.setInt(cfg::EncryptionMode, int(EncryptionMode::Opportunistic));
+
+        // A note to self goes out encrypted.
+        const qint64 noteId = mail::Compose::queue(alice->ctx(), draft(self, QStringLiteral("note"),
+                                                                       QStringLiteral("remember the milk")));
+        QVERIFY(mail::Search::detail(alice->ctx(), noteId)->encrypted);
+        sync(alice);
+        QByteArray wire = m_srv->envelopes().last().data;
+        QVERIFY(wire.contains("multipart/encrypted"));
+        QVERIFY(!wire.contains("milk"));
+        // Its copy coming back is the same message, not a second one.
+        sync(alice);
+        QCOMPARE(mail::Search::count(alice->ctx(), tag::Sent, false), 1);
+        QCOMPARE(mail::Search::count(alice->ctx(), tag::Inbox, false), 0);
+
+        // With a stranger along, the stranger decides, and only the stranger
+        // is missing a key.
+        const auto mixed = mail::Policy::evaluate(alice->ctx(), {self, QStringLiteral("x@y.test")},
+                                                  SendEncryption::Auto);
+        QVERIFY(!mixed.willEncrypt);
+        QCOMPARE(mixed.missingKeys, QStringList{QStringLiteral("x@y.test")});
+
+        // Bob learns Alice's key; a Bcc to himself keeps his reply encrypted.
+        mail::Compose::queue(alice->ctx(), draft(QStringLiteral("bob@x.test"), QStringLiteral("hi"), QStringLiteral("x")));
+        sync(alice);
+        sync(bob);
+        Draft withBcc = draft(QStringLiteral("alice@x.test"), QStringLiteral("re"), QStringLiteral("secret plans"));
+        withBcc.bcc = {{QString(), QStringLiteral("bob@x.test")}};
+        QVERIFY(mail::Search::detail(bob->ctx(), mail::Compose::queue(bob->ctx(), withBcc))->encrypted);
+        sync(bob);
+        wire = m_srv->envelopes().last().data;
+        QVERIFY(wire.contains("multipart/encrypted"));
+        QVERIFY(!wire.contains("secret plans"));
+    }
+
     void blocklistTrashesOnArrival()
     {
         Account *bob = makeAccount(QStringLiteral("bob@x.test"), QStringLiteral("imap"));

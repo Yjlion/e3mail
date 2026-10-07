@@ -894,6 +894,30 @@ Do: %4
 <context>
     <name>SetupController</name>
     <message>
+        <source>Server settings from your provider.</source>
+        <translation>Ustawienia serwera od Twojego dostawcy.</translation>
+    </message>
+    <message>
+        <source>Server settings from Thunderbird&apos;s provider database.</source>
+        <translation>Ustawienia serwera z bazy dostawców Thunderbirda.</translation>
+    </message>
+    <message>
+        <source>Server settings of the service that receives your domain&apos;s mail. Check them before connecting.</source>
+        <translation>Ustawienia serwera usługi, która odbiera pocztę Twojej domeny. Sprawdź je przed połączeniem.</translation>
+    </message>
+    <message>
+        <source>Server settings from your provider&apos;s Autodiscover service.</source>
+        <translation>Ustawienia serwera z usługi Autodiscover Twojego dostawcy.</translation>
+    </message>
+    <message>
+        <source>Server settings from DNS. Check them before connecting.</source>
+        <translation>Ustawienia serwera z DNS. Sprawdź je przed połączeniem.</translation>
+    </message>
+    <message>
+        <source>Server settings guessed from the address. Check them before connecting.</source>
+        <translation>Ustawienia serwera odgadnięte z adresu. Sprawdź je przed połączeniem.</translation>
+    </message>
+    <message>
         <source>Enter your email address and password.</source>
         <translation>Wpisz adres e-mail i hasło.</translation>
     </message>

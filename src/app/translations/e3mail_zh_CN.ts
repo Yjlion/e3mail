@@ -886,6 +886,30 @@ To: %4
 <context>
     <name>SetupController</name>
     <message>
+        <source>Server settings from your provider.</source>
+        <translation>来自您的服务商的服务器设置。</translation>
+    </message>
+    <message>
+        <source>Server settings from Thunderbird&apos;s provider database.</source>
+        <translation>来自 Thunderbird 服务商数据库的服务器设置。</translation>
+    </message>
+    <message>
+        <source>Server settings of the service that receives your domain&apos;s mail. Check them before connecting.</source>
+        <translation>接收您域名邮件的服务的服务器设置。连接前请检查。</translation>
+    </message>
+    <message>
+        <source>Server settings from your provider&apos;s Autodiscover service.</source>
+        <translation>来自您的服务商 Autodiscover 服务的服务器设置。</translation>
+    </message>
+    <message>
+        <source>Server settings from DNS. Check them before connecting.</source>
+        <translation>来自 DNS 的服务器设置。连接前请检查。</translation>
+    </message>
+    <message>
+        <source>Server settings guessed from the address. Check them before connecting.</source>
+        <translation>根据地址推测的服务器设置。连接前请检查。</translation>
+    </message>
+    <message>
         <source>Enter your email address and password.</source>
         <translation>请输入您的邮箱地址和密码。</translation>
     </message>

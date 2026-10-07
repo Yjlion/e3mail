@@ -1,12 +1,10 @@
 // SPDX-License-Identifier: MPL-2.0
 #pragma once
 
+#include "engine/Autoconfig.h"
+
 #include <QObject>
 #include <QtQml/qqmlregistration.h>
-
-namespace e3 {
-class Autoconfig;
-}
 
 // The add-a-mailbox form: suggests servers, then checks them before saving.
 class SetupController : public QObject
@@ -25,6 +23,8 @@ class SetupController : public QObject
     Q_PROPERTY(int smtpPort MEMBER m_smtpPort NOTIFY changed)
     Q_PROPERTY(QString smtpSecurity MEMBER m_smtpSecurity NOTIFY changed)
     Q_PROPERTY(bool showServers MEMBER m_showServers NOTIFY changed)
+    // Where the server settings came from, and whether to check them.
+    Q_PROPERTY(QString suggestionNote MEMBER m_note NOTIFY changed)
     Q_PROPERTY(bool busy READ busy NOTIFY busyChanged)
     Q_PROPERTY(QString error READ error NOTIFY busyChanged)
 
@@ -48,14 +48,18 @@ Q_SIGNALS:
 
 private:
     void setBusy(bool busy, const QString &error = {});
+    void suggested(const e3::Autoconfig::Result &r);
 
     e3::Autoconfig *m_autoconfig;
     QString m_addr, m_password, m_name, m_protocol = QStringLiteral("imap");
-    QString m_inHost, m_inSecurity = QStringLiteral("ssl"), m_smtpHost, m_smtpSecurity = QStringLiteral("ssl");
+    QString m_inHost, m_inUser, m_smtpUser, m_note;
+    QString m_inSecurity = QStringLiteral("ssl"), m_smtpHost, m_smtpSecurity = QStringLiteral("ssl");
     int m_inPort = 993, m_smtpPort = 465;
     bool m_showServers = false;
     bool m_busy = false;
     QString m_error;
     QString m_suggestedFor;
+    bool m_looking = false;     // a lookup is running
+    bool m_submitAfter = false; // Connect was pressed during it
     QList<QVariantMap> m_incomingSuggestions;
 };

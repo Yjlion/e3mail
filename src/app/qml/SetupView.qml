@@ -77,6 +77,15 @@ Rectangle {
             }
 
             Text {
+                Layout.fillWidth: true
+                visible: setup.suggestionNote.length > 0
+                text: setup.suggestionNote
+                color: Theme.muted
+                wrapMode: Text.Wrap
+                font.pixelSize: Theme.fontSmall + 1
+            }
+
+            Text {
                 text: setup.showServers ? qsTr("Hide server settings") : qsTr("Server settings…")
                 color: Theme.accent
                 font.pixelSize: Theme.fontSmall + 1

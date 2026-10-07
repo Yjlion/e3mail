@@ -890,6 +890,30 @@ Objet : %3
 <context>
     <name>SetupController</name>
     <message>
+        <source>Server settings from your provider.</source>
+        <translation>Réglages du serveur fournis par votre fournisseur.</translation>
+    </message>
+    <message>
+        <source>Server settings from Thunderbird&apos;s provider database.</source>
+        <translation>Réglages du serveur issus de la base de fournisseurs de Thunderbird.</translation>
+    </message>
+    <message>
+        <source>Server settings of the service that receives your domain&apos;s mail. Check them before connecting.</source>
+        <translation>Réglages du serveur du service qui reçoit le courrier de votre domaine. Vérifiez-les avant de vous connecter.</translation>
+    </message>
+    <message>
+        <source>Server settings from your provider&apos;s Autodiscover service.</source>
+        <translation>Réglages du serveur issus du service Autodiscover de votre fournisseur.</translation>
+    </message>
+    <message>
+        <source>Server settings from DNS. Check them before connecting.</source>
+        <translation>Réglages du serveur issus du DNS. Vérifiez-les avant de vous connecter.</translation>
+    </message>
+    <message>
+        <source>Server settings guessed from the address. Check them before connecting.</source>
+        <translation>Réglages du serveur devinés d’après l’adresse. Vérifiez-les avant de vous connecter.</translation>
+    </message>
+    <message>
         <source>Enter your email address and password.</source>
         <translation>Saisissez votre adresse électronique et votre mot de passe.</translation>
     </message>
