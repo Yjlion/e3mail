@@ -60,6 +60,29 @@ qint64 labelIdFor(MailContext &ctx, const QString &name)
     return ctx.db.queryInt("SELECT id FROM labels WHERE name_norm=?", norm).value_or(0);
 }
 
+bool isContactOp(const QString &kind)
+{
+    return kind == op::Accept || kind == op::ContactEdit || kind == op::ContactPolicy || kind == op::ContactVerify
+        || kind == op::ContactDetails;
+}
+
+// Removing a contact competes with every other op about that address, not
+// only with its own key: whichever is newer by (hlc, device) decides whether
+// the contact is in the book (ADR 0013, amendment of 2026-10-07).
+bool newerContactOp(MailContext &ctx, const Op &o, bool removals)
+{
+    Statement st(ctx.db, removals
+                             ? "SELECT 1 FROM ops WHERE kind = 'contact.remove' "
+                               "AND lower(json_extract(payload, '$.addr')) = ?1 "
+                               "AND (hlc > ?2 OR (hlc = ?2 AND device > ?3)) LIMIT 1"
+                             : "SELECT 1 FROM ops WHERE kind IN ('contact.accept', 'contact.edit', 'contact.policy', "
+                               "'contact.verify', 'contact.details') "
+                               "AND lower(json_extract(payload, '$.addr')) = ?1 "
+                               "AND (hlc > ?2 OR (hlc = ?2 AND device > ?3)) LIMIT 1");
+    st.bindAll(mime::normalizeAddr(str(o, "addr")), o.hlc, o.device);
+    return st.step();
+}
+
 // Applies one op that has already won its merge key. Never records: the op is
 // in the log already. Returns whether anything visible changed.
 bool applyOne(MailContext &ctx, const Op &o, OpApply::Result *r)
@@ -135,6 +158,18 @@ bool applyOne(MailContext &ctx, const Op &o, OpApply::Result *r)
     }
     if (o.kind == op::LabelDelete) {
         ctx.db.run("DELETE FROM labels WHERE name_norm=? AND system=0", str(o, "name").trimmed().toLower());
+        return true;
+    }
+    if (isContactOp(o.kind) && newerContactOp(ctx, o, true))
+        return false; // removed since
+    if (o.kind == op::ContactRemove) {
+        if (newerContactOp(ctx, o, false))
+            return false; // edited since: still in the book
+        ctx.db.run("DELETE FROM contacts WHERE addr=?", mime::normalizeAddr(str(o, "addr")));
+        return true;
+    }
+    if (o.kind == op::ContactDetails) {
+        mail::Contacts::applyDetails(ctx, str(o, "addr"), o.payload);
         return true;
     }
     if (o.kind == op::Accept) {

@@ -9,6 +9,7 @@
 #include "mail/Organize.h"
 #include "mail/Preferences.h"
 #include "mail/Search.h"
+#include "mail/VCard.h"
 #include "mime/Html.h"
 #include "mime/Part.h"
 #include "store/BlobStore.h"
@@ -631,7 +632,83 @@ QVariantMap MailApp::contact(qint64 id) const
             {QStringLiteral("verified"), c->verified},
             {QStringLiteral("preferEncrypt"), c->preferEncrypt},
             {QStringLiteral("blocked"), c->blocked},
-            {QStringLiteral("encryption"), c->encryptionOverride ? int(*c->encryptionOverride) : -1}};
+            {QStringLiteral("encryption"), c->encryptionOverride ? int(*c->encryptionOverride) : -1},
+            {QStringLiteral("organization"), c->organization},
+            {QStringLiteral("title"), c->title},
+            {QStringLiteral("notes"), c->notes},
+            {QStringLiteral("birthday"), c->birthday},
+            {QStringLiteral("phones"), [&c] {
+                 QVariantList out;
+                 for (const ContactPhone &p : c->phones)
+                     out.append(QVariantMap{{QStringLiteral("label"), p.label}, {QStringLiteral("number"), p.number}});
+                 return out;
+             }()}};
+}
+
+qint64 MailApp::createContact(const QString &addr, const QString &name)
+{
+    if (!account())
+        return 0;
+    const auto id = mail::Contacts::create(account()->ctx(), addr, name);
+    if (!id) {
+        Q_EMIT notify(tr("%1 is not an email address, or is in your contacts already.").arg(addr.trimmed()));
+        return 0;
+    }
+    account()->notifyChanged();
+    return *id;
+}
+
+void MailApp::setContactDetails(qint64 id, const QVariantMap &details)
+{
+    ContactInfo d;
+    d.name = details.value(QStringLiteral("name")).toString();
+    d.organization = details.value(QStringLiteral("organization")).toString();
+    d.title = details.value(QStringLiteral("title")).toString();
+    d.notes = details.value(QStringLiteral("notes")).toString();
+    d.birthday = details.value(QStringLiteral("birthday")).toString();
+    for (const QVariant &v : details.value(QStringLiteral("phones")).toList()) {
+        const QVariantMap m = v.toMap();
+        d.phones.append({m.value(QStringLiteral("label")).toString(), m.value(QStringLiteral("number")).toString()});
+    }
+    WITH_ACCOUNT(mail::Contacts::setDetails(ctx, id, d));
+}
+
+void MailApp::removeContact(qint64 id)
+{
+    WITH_ACCOUNT(mail::Contacts::remove(ctx, id));
+}
+
+void MailApp::importContacts(const QUrl &file)
+{
+    if (!account())
+        return;
+    QFile f(file.toLocalFile());
+    if (!f.open(QIODevice::ReadOnly)) {
+        Q_EMIT notify(tr("Could not read %1.").arg(file.fileName()));
+        return;
+    }
+    const auto r = mail::Contacts::import(account()->ctx(), mail::VCard::parse(f.readAll()));
+    account()->notifyChanged();
+    QString msg = tr("%n contact(s) added", "", r.added) + QStringLiteral(", ") + tr("%n updated", "", r.updated);
+    if (r.skipped)
+        msg += QStringLiteral(", ") + tr("%n without an email address skipped", "", r.skipped);
+    Q_EMIT notify(msg + u'.');
+}
+
+void MailApp::exportContacts(const QUrl &file)
+{
+    if (!account())
+        return;
+    // The address book: people added, accepted or written to, not everyone
+    // ever seen on a message.
+    QList<ContactInfo> book;
+    for (const ContactInfo &c : mail::Contacts::list(account()->ctx(), QString(), 1000000)) {
+        if (c.isKnown())
+            book.append(c);
+    }
+    QSaveFile f(file.toLocalFile());
+    const bool ok = f.open(QIODevice::WriteOnly) && f.write(mail::VCard::emit(book)) >= 0 && f.commit();
+    Q_EMIT notify(ok ? tr("%n contact(s) exported.", "", int(book.size())) : tr("Could not write %1.").arg(file.fileName()));
 }
 
 void MailApp::setContactName(qint64 id, const QString &name)

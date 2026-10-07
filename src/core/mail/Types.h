@@ -143,11 +143,24 @@ struct SearchQuery
     }
 };
 
+struct ContactPhone
+{
+    QString label;  // mobile | work | home | other
+    QString number;
+    bool operator==(const ContactPhone &) const = default;
+};
+
 struct ContactInfo
 {
     qint64 id = 0;
     QString addr;
     QString name;
+    // Address book (P10).
+    QString organization;
+    QString title;
+    QString notes;
+    QString birthday;          // YYYY-MM-DD, or --MM-DD without a year
+    QList<ContactPhone> phones;
     ContactOrigin origin = ContactOrigin::IncomingFrom;
     QString fingerprint;
     bool verified = false;

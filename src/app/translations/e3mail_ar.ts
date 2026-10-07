@@ -205,8 +205,40 @@ To: %4
 <context>
     <name>ContactsView</name>
     <message>
+        <source>Mobile</source>
+        <translation>جوال</translation>
+    </message>
+    <message>
+        <source>Work</source>
+        <translation>العمل</translation>
+    </message>
+    <message>
+        <source>Home</source>
+        <translation>المنزل</translation>
+    </message>
+    <message>
+        <source>Other</source>
+        <translation>آخر</translation>
+    </message>
+    <message>
         <source>Search contacts</source>
         <translation>البحث في جهات الاتصال</translation>
+    </message>
+    <message>
+        <source>New contact</source>
+        <translation>جهة اتصال جديدة</translation>
+    </message>
+    <message>
+        <source>Import or export</source>
+        <translation>استيراد أو تصدير</translation>
+    </message>
+    <message>
+        <source>Import vCard…</source>
+        <translation>استيراد vCard…</translation>
+    </message>
+    <message>
+        <source>Export contacts…</source>
+        <translation>تصدير جهات الاتصال…</translation>
     </message>
     <message>
         <source>verified</source>
@@ -227,6 +259,38 @@ To: %4
     <message>
         <source>Name</source>
         <translation>الاسم</translation>
+    </message>
+    <message>
+        <source>Organization</source>
+        <translation>المؤسسة</translation>
+    </message>
+    <message>
+        <source>Title</source>
+        <translation>المسمّى الوظيفي</translation>
+    </message>
+    <message>
+        <source>Birthday</source>
+        <translation>تاريخ الميلاد</translation>
+    </message>
+    <message>
+        <source>YYYY-MM-DD, or --MM-DD without the year</source>
+        <translation>YYYY-MM-DD، أو ‎--MM-DD دون السنة</translation>
+    </message>
+    <message>
+        <source>Phone</source>
+        <translation>الهاتف</translation>
+    </message>
+    <message>
+        <source>Remove this number</source>
+        <translation>إزالة هذا الرقم</translation>
+    </message>
+    <message>
+        <source>Add a phone number</source>
+        <translation>إضافة رقم هاتف</translation>
+    </message>
+    <message>
+        <source>Notes</source>
+        <translation>ملاحظات</translation>
     </message>
     <message>
         <source>Verified in person.</source>
@@ -271,6 +335,38 @@ To: %4
     <message>
         <source>Block</source>
         <translation>حظر</translation>
+    </message>
+    <message>
+        <source>Remove contact</source>
+        <translation>إزالة جهة الاتصال</translation>
+    </message>
+    <message>
+        <source>Email address</source>
+        <translation>عنوان البريد الإلكتروني</translation>
+    </message>
+    <message>
+        <source>Name (optional)</source>
+        <translation>الاسم (اختياري)</translation>
+    </message>
+    <message>
+        <source>Mail from your contacts goes straight to the Inbox.</source>
+        <translation>بريد جهات اتصالك يذهب مباشرة إلى الوارد.</translation>
+    </message>
+    <message>
+        <source>Remove %1?</source>
+        <translation>إزالة %1؟</translation>
+    </message>
+    <message>
+        <source>Their details are removed from your contacts. Their next mail waits in Unverified until you accept it. Their key is kept.</source>
+        <translation>تُزال بياناته من جهات اتصالك. ينتظر بريده التالي في «غير الموثّق» حتى تقبله. يبقى مفتاحه محفوظًا.</translation>
+    </message>
+    <message>
+        <source>vCard files (*.vcf *.vcard)</source>
+        <translation>ملفات vCard (*.vcf *.vcard)</translation>
+    </message>
+    <message>
+        <source>All files (*)</source>
+        <translation>كل الملفات (*)</translation>
     </message>
 </context>
 <context>
@@ -416,6 +512,62 @@ To: %4
         <translation>
 
 (تعذّر فك التشفير: %1)</translation>
+    </message>
+    <message>
+        <source>%1 is not an email address, or is in your contacts already.</source>
+        <translation>%1 ليس عنوان بريد إلكتروني، أو أنه في جهات اتصالك بالفعل.</translation>
+    </message>
+    <message>
+        <source>Could not read %1.</source>
+        <translation>تعذّرت قراءة %1.</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n contact(s) added</source>
+        <translation>
+            <numerusform>لم تُضف أي جهة اتصال</numerusform>
+            <numerusform>أُضيفت جهة اتصال واحدة</numerusform>
+            <numerusform>أُضيفت جهتا اتصال</numerusform>
+            <numerusform>أُضيفت %n جهات اتصال</numerusform>
+            <numerusform>أُضيفت %n جهة اتصال</numerusform>
+            <numerusform>أُضيفت %n جهة اتصال</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n updated</source>
+        <translation>
+            <numerusform>لم يُحدَّث شيء</numerusform>
+            <numerusform>حُدّثت واحدة</numerusform>
+            <numerusform>حُدّثت اثنتان</numerusform>
+            <numerusform>حُدّثت %n</numerusform>
+            <numerusform>حُدّثت %n</numerusform>
+            <numerusform>حُدّثت %n</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n without an email address skipped</source>
+        <translation>
+            <numerusform>لم يُتخطَّ شيء</numerusform>
+            <numerusform>تُخطّيت واحدة دون عنوان بريد</numerusform>
+            <numerusform>تُخطّيت اثنتان دون عنوان بريد</numerusform>
+            <numerusform>تُخطّيت %n دون عنوان بريد</numerusform>
+            <numerusform>تُخطّيت %n دون عنوان بريد</numerusform>
+            <numerusform>تُخطّيت %n دون عنوان بريد</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n contact(s) exported.</source>
+        <translation>
+            <numerusform>لم تُصدَّر أي جهة اتصال.</numerusform>
+            <numerusform>صُدّرت جهة اتصال واحدة.</numerusform>
+            <numerusform>صُدّرت جهتا اتصال.</numerusform>
+            <numerusform>صُدّرت %n جهات اتصال.</numerusform>
+            <numerusform>صُدّرت %n جهة اتصال.</numerusform>
+            <numerusform>صُدّرت %n جهة اتصال.</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Could not write %1.</source>
+        <translation>تعذّرت كتابة %1.</translation>
     </message>
 </context>
 <context>

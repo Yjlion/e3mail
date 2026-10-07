@@ -53,6 +53,10 @@ QString OpLog::mergeKey(const QString &kind, const QJsonObject &p)
         return QStringLiteral("cpolicy:") + s("addr");
     if (kind == op::ContactVerify)
         return QStringLiteral("cverify:") + s("addr");
+    if (kind == op::ContactDetails)
+        return QStringLiteral("cdetail:") + s("addr");
+    if (kind == op::ContactRemove)
+        return QStringLiteral("cremove:") + s("addr");
     if (kind == op::Setting)
         return QStringLiteral("cfg:") + s("key");
     return {};

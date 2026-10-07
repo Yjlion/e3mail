@@ -123,6 +123,13 @@ public:
     Q_INVOKABLE void setContactName(qint64 id, const QString &name);
     // -1 inherits the account's mode; 0 lenient, 1 opportunistic, 2 strict.
     Q_INVOKABLE void setContactEncryption(qint64 id, int mode);
+    // The address book. createContact returns the new id, or 0.
+    Q_INVOKABLE qint64 createContact(const QString &addr, const QString &name);
+    // name, organization, title, notes, birthday, phones: [{label, number}]
+    Q_INVOKABLE void setContactDetails(qint64 id, const QVariantMap &details);
+    Q_INVOKABLE void removeContact(qint64 id);
+    Q_INVOKABLE void importContacts(const QUrl &file);
+    Q_INVOKABLE void exportContacts(const QUrl &file);
     Q_INVOKABLE QStringList completeAddress(const QString &prefix) const;
 
     Q_INVOKABLE QVariantMap settings() const;

@@ -205,8 +205,40 @@ To: %4
 <context>
     <name>ContactsView</name>
     <message>
+        <source>Mobile</source>
+        <translation>נייד</translation>
+    </message>
+    <message>
+        <source>Work</source>
+        <translation>עבודה</translation>
+    </message>
+    <message>
+        <source>Home</source>
+        <translation>בית</translation>
+    </message>
+    <message>
+        <source>Other</source>
+        <translation>אחר</translation>
+    </message>
+    <message>
         <source>Search contacts</source>
         <translation>חיפוש אנשי קשר</translation>
+    </message>
+    <message>
+        <source>New contact</source>
+        <translation>איש קשר חדש</translation>
+    </message>
+    <message>
+        <source>Import or export</source>
+        <translation>ייבוא או ייצוא</translation>
+    </message>
+    <message>
+        <source>Import vCard…</source>
+        <translation>ייבוא vCard…</translation>
+    </message>
+    <message>
+        <source>Export contacts…</source>
+        <translation>ייצוא אנשי קשר…</translation>
     </message>
     <message>
         <source>verified</source>
@@ -227,6 +259,38 @@ To: %4
     <message>
         <source>Name</source>
         <translation>שם</translation>
+    </message>
+    <message>
+        <source>Organization</source>
+        <translation>ארגון</translation>
+    </message>
+    <message>
+        <source>Title</source>
+        <translation>תפקיד</translation>
+    </message>
+    <message>
+        <source>Birthday</source>
+        <translation>יום הולדת</translation>
+    </message>
+    <message>
+        <source>YYYY-MM-DD, or --MM-DD without the year</source>
+        <translation>YYYY-MM-DD, או ‎--MM-DD בלי השנה</translation>
+    </message>
+    <message>
+        <source>Phone</source>
+        <translation>טלפון</translation>
+    </message>
+    <message>
+        <source>Remove this number</source>
+        <translation>הסרת המספר</translation>
+    </message>
+    <message>
+        <source>Add a phone number</source>
+        <translation>הוספת מספר טלפון</translation>
+    </message>
+    <message>
+        <source>Notes</source>
+        <translation>הערות</translation>
     </message>
     <message>
         <source>Verified in person.</source>
@@ -271,6 +335,38 @@ To: %4
     <message>
         <source>Block</source>
         <translation>חסימה</translation>
+    </message>
+    <message>
+        <source>Remove contact</source>
+        <translation>הסרת איש הקשר</translation>
+    </message>
+    <message>
+        <source>Email address</source>
+        <translation>כתובת דואר</translation>
+    </message>
+    <message>
+        <source>Name (optional)</source>
+        <translation>שם (לא חובה)</translation>
+    </message>
+    <message>
+        <source>Mail from your contacts goes straight to the Inbox.</source>
+        <translation>דואר מאנשי הקשר שלך מגיע ישר לתיבת הדואר הנכנס.</translation>
+    </message>
+    <message>
+        <source>Remove %1?</source>
+        <translation>להסיר את %1?</translation>
+    </message>
+    <message>
+        <source>Their details are removed from your contacts. Their next mail waits in Unverified until you accept it. Their key is kept.</source>
+        <translation>הפרטים יוסרו מאנשי הקשר שלך. הדואר הבא ממנו ימתין ב״לא מאומת״ עד שתאשר אותו. המפתח נשמר.</translation>
+    </message>
+    <message>
+        <source>vCard files (*.vcf *.vcard)</source>
+        <translation>קובצי vCard (*.vcf *.vcard)</translation>
+    </message>
+    <message>
+        <source>All files (*)</source>
+        <translation>כל הקבצים (*)</translation>
     </message>
 </context>
 <context>
@@ -412,6 +508,46 @@ To: %4
         <translation>
 
 (לא ניתן לפענח: %1)</translation>
+    </message>
+    <message>
+        <source>%1 is not an email address, or is in your contacts already.</source>
+        <translation>%1 אינה כתובת דואר, או שכבר נמצאת באנשי הקשר שלך.</translation>
+    </message>
+    <message>
+        <source>Could not read %1.</source>
+        <translation>לא ניתן לקרוא את %1.</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n contact(s) added</source>
+        <translation>
+            <numerusform>איש קשר אחד נוסף</numerusform>
+            <numerusform>%n אנשי קשר נוספו</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n updated</source>
+        <translation>
+            <numerusform>אחד עודכן</numerusform>
+            <numerusform>%n עודכנו</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n without an email address skipped</source>
+        <translation>
+            <numerusform>אחד בלי כתובת דואר דולג</numerusform>
+            <numerusform>%n בלי כתובת דואר דולגו</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n contact(s) exported.</source>
+        <translation>
+            <numerusform>איש קשר אחד יוצא.</numerusform>
+            <numerusform>%n אנשי קשר יוצאו.</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Could not write %1.</source>
+        <translation>לא ניתן לכתוב את %1.</translation>
     </message>
 </context>
 <context>

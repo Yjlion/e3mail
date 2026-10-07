@@ -10,6 +10,34 @@
             <numerusform>Accepted %1. %n messages moved to the Inbox.</numerusform>
         </translation>
     </message>
+    <message numerus="yes">
+        <source>%n contact(s) added</source>
+        <translation>
+            <numerusform>%n contact added</numerusform>
+            <numerusform>%n contacts added</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n updated</source>
+        <translation>
+            <numerusform>%n updated</numerusform>
+            <numerusform>%n updated</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n without an email address skipped</source>
+        <translation>
+            <numerusform>%n without an email address skipped</numerusform>
+            <numerusform>%n without an email address skipped</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n contact(s) exported.</source>
+        <translation>
+            <numerusform>%n contact exported.</numerusform>
+            <numerusform>%n contacts exported.</numerusform>
+        </translation>
+    </message>
 </context>
 <context>
     <name>MessageCard</name>

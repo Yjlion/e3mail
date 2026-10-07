@@ -385,6 +385,64 @@ private Q_SLOTS:
 
     // Every user-visible change is recorded, including those that once were
     // not.
+    // The address book travels: details are last writer wins, and a removal
+    // competes with every other change to that contact.
+    void addressBookTravels()
+    {
+        auto &a = m_a->ctx();
+        auto &b = m_b->ctx();
+        const qint64 ca = *mail::Contacts::create(a, QStringLiteral("Ada@Z.test"), QStringLiteral("Ada"));
+        ContactInfo d = *mail::Contacts::byId(a, ca);
+        d.organization = QStringLiteral("Engines Ltd");
+        d.phones = {{QStringLiteral("mobile"), QStringLiteral("+44 1")}};
+        mail::Contacts::setDetails(a, ca, d);
+        connectDevices();
+        auto onB = mail::Contacts::get(b, QStringLiteral("ada@z.test"));
+        QVERIFY(onB);
+        QCOMPARE(onB->name, QStringLiteral("Ada"));
+        QCOMPARE(onB->organization, QStringLiteral("Engines Ltd"));
+        QCOMPARE(onB->phones.value(0).number, QStringLiteral("+44 1"));
+        QVERIFY(onB->isKnown());
+
+        // B edits after A did: B's details win on both.
+        QTest::qWait(5);
+        ContactInfo e = *onB;
+        e.title = QStringLiteral("Countess");
+        e.organization.clear();
+        mail::Contacts::setDetails(b, onB->id, e);
+        m_syncB->push();
+        m_net->settle();
+        for (auto *x : {&a, &b}) {
+            const auto c = mail::Contacts::get(*x, QStringLiteral("ada@z.test"));
+            QCOMPARE(c->title, QStringLiteral("Countess"));
+            QVERIFY(c->organization.isEmpty());
+        }
+
+        // A removes, then B edits later: the edit keeps her in the book.
+        QTest::qWait(5);
+        mail::Contacts::remove(a, mail::Contacts::get(a, QStringLiteral("ada@z.test"))->id);
+        QTest::qWait(5);
+        QVERIFY(mail::Contacts::get(b, QStringLiteral("ada@z.test")));
+        mail::Contacts::setName(b, mail::Contacts::get(b, QStringLiteral("ada@z.test"))->id, QStringLiteral("Ada L."));
+        m_syncA->push();
+        m_syncB->push();
+        m_net->settle();
+        for (auto *x : {&a, &b}) {
+            const auto c = mail::Contacts::get(*x, QStringLiteral("ada@z.test"));
+            QVERIFY(c);
+            QCOMPARE(c->name, QStringLiteral("Ada L."));
+        }
+
+        // B removes last: gone on both, and A's older edit does not bring her back.
+        QTest::qWait(5);
+        QVERIFY(mail::Contacts::get(b, QStringLiteral("ada@z.test")));
+        mail::Contacts::remove(b, mail::Contacts::get(b, QStringLiteral("ada@z.test"))->id);
+        m_syncB->push();
+        m_net->settle();
+        for (auto *x : {&a, &b})
+            QVERIFY(!mail::Contacts::get(*x, QStringLiteral("ada@z.test")));
+    }
+
     void everyChangeIsRecorded()
     {
         auto &a = m_a->ctx();

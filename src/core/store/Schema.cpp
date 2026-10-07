@@ -243,6 +243,22 @@ CREATE TABLE server_acks (
     PRIMARY KEY (remote_key, device)
 );
 )sql",
+
+    // 3 — the address book (P10).
+    R"sql(
+ALTER TABLE contacts ADD COLUMN organization TEXT NOT NULL DEFAULT '';
+ALTER TABLE contacts ADD COLUMN title        TEXT NOT NULL DEFAULT '';
+ALTER TABLE contacts ADD COLUMN notes        TEXT NOT NULL DEFAULT '';
+ALTER TABLE contacts ADD COLUMN birthday     TEXT NOT NULL DEFAULT ''; -- YYYY-MM-DD or --MM-DD
+
+CREATE TABLE contact_phones (
+    contact_id INTEGER NOT NULL REFERENCES contacts(id) ON DELETE CASCADE,
+    idx        INTEGER NOT NULL,
+    label      TEXT NOT NULL DEFAULT '',   -- mobile | work | home | other
+    number     TEXT NOT NULL,
+    PRIMARY KEY (contact_id, idx)
+);
+)sql",
 };
 
 } // namespace

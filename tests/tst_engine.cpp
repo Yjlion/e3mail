@@ -7,6 +7,8 @@
 #include "mail/Organize.h"
 #include "mail/Policy.h"
 #include "mail/Search.h"
+#include "mail/VCard.h"
+#include "store/OpLog.h"
 #include "store/Config.h"
 #include "store/Database.h"
 
@@ -279,6 +281,62 @@ private Q_SLOTS:
         m_srv->deliver(QStringLiteral("big@x.test"), numbered(500));
         QTRY_COMPARE_WITH_TIMEOUT(spy.size(), 1, 10000);
         a->stop();
+    }
+
+    void addressBook()
+    {
+        Account *bob = makeAccount(QStringLiteral("bob@x.test"), QStringLiteral("imap"));
+        auto &ctx = bob->ctx();
+        const auto ops = [&ctx](const QString &kind) {
+            return *ctx.db.queryInt("SELECT count(*) FROM ops WHERE kind=?", kind);
+        };
+
+        // Added by hand: in the book, so their mail is trusted.
+        QVERIFY(!mail::Contacts::create(ctx, QStringLiteral("not an address"), QString()));
+        const auto id = mail::Contacts::create(ctx, QStringLiteral("Ada@B.test"), QStringLiteral("Ada"));
+        QVERIFY(id);
+        QVERIFY(!mail::Contacts::create(ctx, QStringLiteral("ada@b.test"), QString())); // already there
+        QVERIFY(mail::Contacts::isTrusted(ctx, QStringLiteral("ada@b.test")));
+        QCOMPARE(ops(op::ContactEdit), 1);
+
+        ContactInfo d = *mail::Contacts::byId(ctx, *id);
+        d.organization = QStringLiteral("  Engines  ");
+        d.birthday = QStringLiteral("not a date");
+        d.phones = {{QStringLiteral("work"), QStringLiteral(" +1 ")}, {QStringLiteral("home"), QStringLiteral("  ")}};
+        mail::Contacts::setDetails(ctx, *id, d);
+        auto c = *mail::Contacts::byId(ctx, *id);
+        QCOMPARE(c.organization, QStringLiteral("Engines"));
+        QVERIFY(c.birthday.isEmpty());
+        QCOMPARE(c.phones, (QList<ContactPhone>{{QStringLiteral("work"), QStringLiteral("+1")}}));
+        QCOMPARE(ops(op::ContactDetails), 1);
+        mail::Contacts::setDetails(ctx, *id, c); // nothing changed, nothing recorded
+        QCOMPARE(ops(op::ContactDetails), 1);
+
+        // Removed: their next mail waits in Unverified again.
+        mail::Contacts::remove(ctx, *id);
+        QVERIFY(!mail::Contacts::get(ctx, QStringLiteral("ada@b.test")));
+        QCOMPARE(ops(op::ContactRemove), 1);
+        QCOMPARE(*ctx.db.queryInt("SELECT count(*) FROM contact_phones"), 0);
+        m_srv->deliver(QStringLiteral("bob@x.test"), "From: ada@b.test\r\nSubject: hi\r\n\r\nx\r\n");
+        sync(bob);
+        QCOMPARE(mail::Search::count(ctx, tag::Unverified, false), 1);
+
+        // Import fills only what is missing, and takes people into the book.
+        mail::Contacts::create(ctx, QStringLiteral("grace@c.test"), QStringLiteral("Grace H."));
+        const auto result = mail::Contacts::import(
+            ctx, mail::VCard::parse("BEGIN:VCARD\r\nVERSION:3.0\r\nFN:Grace Hopper\r\nEMAIL:grace@c.test\r\n"
+                                    "ORG:Navy\r\nEND:VCARD\r\n"
+                                    "BEGIN:VCARD\r\nVERSION:3.0\r\nFN:Ada Lovelace\r\nEMAIL:ada@b.test\r\n"
+                                    "EMAIL:ada2@b.test\r\nTEL;TYPE=CELL:+44\r\nEND:VCARD\r\n"
+                                    "BEGIN:VCARD\r\nVERSION:3.0\r\nFN:Nobody\r\nEND:VCARD\r\n"));
+        QCOMPARE(result.added, 1);    // ada2
+        QCOMPARE(result.updated, 2);  // grace (organization), ada (seen, now in the book)
+        QCOMPARE(result.skipped, 1);
+        c = *mail::Contacts::get(ctx, QStringLiteral("grace@c.test"));
+        QCOMPARE(c.name, QStringLiteral("Grace H.")); // kept
+        QCOMPARE(c.organization, QStringLiteral("Navy"));
+        QVERIFY(mail::Contacts::isTrusted(ctx, QStringLiteral("ada@b.test")));
+        QCOMPARE(mail::Contacts::get(ctx, QStringLiteral("ada2@b.test"))->phones.value(0).number, QStringLiteral("+44"));
     }
 
     void repliesQuoteHtmlAsHtml()

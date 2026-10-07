@@ -205,8 +205,40 @@ Objet : %3
 <context>
     <name>ContactsView</name>
     <message>
+        <source>Mobile</source>
+        <translation>Mobile</translation>
+    </message>
+    <message>
+        <source>Work</source>
+        <translation>Travail</translation>
+    </message>
+    <message>
+        <source>Home</source>
+        <translation>Domicile</translation>
+    </message>
+    <message>
+        <source>Other</source>
+        <translation>Autre</translation>
+    </message>
+    <message>
         <source>Search contacts</source>
         <translation>Rechercher des contacts</translation>
+    </message>
+    <message>
+        <source>New contact</source>
+        <translation>Nouveau contact</translation>
+    </message>
+    <message>
+        <source>Import or export</source>
+        <translation>Importer ou exporter</translation>
+    </message>
+    <message>
+        <source>Import vCard…</source>
+        <translation>Importer une vCard…</translation>
+    </message>
+    <message>
+        <source>Export contacts…</source>
+        <translation>Exporter les contacts…</translation>
     </message>
     <message>
         <source>verified</source>
@@ -227,6 +259,38 @@ Objet : %3
     <message>
         <source>Name</source>
         <translation>Nom</translation>
+    </message>
+    <message>
+        <source>Organization</source>
+        <translation>Organisation</translation>
+    </message>
+    <message>
+        <source>Title</source>
+        <translation>Fonction</translation>
+    </message>
+    <message>
+        <source>Birthday</source>
+        <translation>Anniversaire</translation>
+    </message>
+    <message>
+        <source>YYYY-MM-DD, or --MM-DD without the year</source>
+        <translation>AAAA-MM-JJ, ou --MM-JJ sans l’année</translation>
+    </message>
+    <message>
+        <source>Phone</source>
+        <translation>Téléphone</translation>
+    </message>
+    <message>
+        <source>Remove this number</source>
+        <translation>Retirer ce numéro</translation>
+    </message>
+    <message>
+        <source>Add a phone number</source>
+        <translation>Ajouter un numéro</translation>
+    </message>
+    <message>
+        <source>Notes</source>
+        <translation>Notes</translation>
     </message>
     <message>
         <source>Verified in person.</source>
@@ -271,6 +335,38 @@ Objet : %3
     <message>
         <source>Block</source>
         <translation>Bloquer</translation>
+    </message>
+    <message>
+        <source>Remove contact</source>
+        <translation>Retirer le contact</translation>
+    </message>
+    <message>
+        <source>Email address</source>
+        <translation>Adresse électronique</translation>
+    </message>
+    <message>
+        <source>Name (optional)</source>
+        <translation>Nom (facultatif)</translation>
+    </message>
+    <message>
+        <source>Mail from your contacts goes straight to the Inbox.</source>
+        <translation>Le courrier de vos contacts arrive directement dans la boîte de réception.</translation>
+    </message>
+    <message>
+        <source>Remove %1?</source>
+        <translation>Retirer %1 ?</translation>
+    </message>
+    <message>
+        <source>Their details are removed from your contacts. Their next mail waits in Unverified until you accept it. Their key is kept.</source>
+        <translation>Ses informations sont retirées de vos contacts. Son prochain message attendra dans Non vérifié jusqu’à ce que vous l’acceptiez. Sa clé est conservée.</translation>
+    </message>
+    <message>
+        <source>vCard files (*.vcf *.vcard)</source>
+        <translation>Fichiers vCard (*.vcf *.vcard)</translation>
+    </message>
+    <message>
+        <source>All files (*)</source>
+        <translation>Tous les fichiers (*)</translation>
     </message>
 </context>
 <context>
@@ -412,6 +508,46 @@ Objet : %3
         <translation>
 
 (déchiffrement impossible : %1)</translation>
+    </message>
+    <message>
+        <source>%1 is not an email address, or is in your contacts already.</source>
+        <translation>%1 n’est pas une adresse électronique, ou figure déjà dans vos contacts.</translation>
+    </message>
+    <message>
+        <source>Could not read %1.</source>
+        <translation>Impossible de lire %1.</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n contact(s) added</source>
+        <translation>
+            <numerusform>%n contact ajouté</numerusform>
+            <numerusform>%n contacts ajoutés</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n updated</source>
+        <translation>
+            <numerusform>%n mis à jour</numerusform>
+            <numerusform>%n mis à jour</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n without an email address skipped</source>
+        <translation>
+            <numerusform>%n sans adresse électronique ignoré</numerusform>
+            <numerusform>%n sans adresse électronique ignorés</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n contact(s) exported.</source>
+        <translation>
+            <numerusform>%n contact exporté.</numerusform>
+            <numerusform>%n contacts exportés.</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Could not write %1.</source>
+        <translation>Impossible d’écrire %1.</translation>
     </message>
 </context>
 <context>

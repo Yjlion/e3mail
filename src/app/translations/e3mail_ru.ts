@@ -205,8 +205,40 @@ To: %4
 <context>
     <name>ContactsView</name>
     <message>
+        <source>Mobile</source>
+        <translation>Мобильный</translation>
+    </message>
+    <message>
+        <source>Work</source>
+        <translation>Рабочий</translation>
+    </message>
+    <message>
+        <source>Home</source>
+        <translation>Домашний</translation>
+    </message>
+    <message>
+        <source>Other</source>
+        <translation>Другой</translation>
+    </message>
+    <message>
         <source>Search contacts</source>
         <translation>Поиск контактов</translation>
+    </message>
+    <message>
+        <source>New contact</source>
+        <translation>Новый контакт</translation>
+    </message>
+    <message>
+        <source>Import or export</source>
+        <translation>Импорт или экспорт</translation>
+    </message>
+    <message>
+        <source>Import vCard…</source>
+        <translation>Импорт vCard…</translation>
+    </message>
+    <message>
+        <source>Export contacts…</source>
+        <translation>Экспорт контактов…</translation>
     </message>
     <message>
         <source>verified</source>
@@ -227,6 +259,38 @@ To: %4
     <message>
         <source>Name</source>
         <translation>Имя</translation>
+    </message>
+    <message>
+        <source>Organization</source>
+        <translation>Организация</translation>
+    </message>
+    <message>
+        <source>Title</source>
+        <translation>Должность</translation>
+    </message>
+    <message>
+        <source>Birthday</source>
+        <translation>День рождения</translation>
+    </message>
+    <message>
+        <source>YYYY-MM-DD, or --MM-DD without the year</source>
+        <translation>ГГГГ-ММ-ДД или --ММ-ДД без года</translation>
+    </message>
+    <message>
+        <source>Phone</source>
+        <translation>Телефон</translation>
+    </message>
+    <message>
+        <source>Remove this number</source>
+        <translation>Удалить этот номер</translation>
+    </message>
+    <message>
+        <source>Add a phone number</source>
+        <translation>Добавить номер телефона</translation>
+    </message>
+    <message>
+        <source>Notes</source>
+        <translation>Заметки</translation>
     </message>
     <message>
         <source>Verified in person.</source>
@@ -271,6 +335,38 @@ To: %4
     <message>
         <source>Block</source>
         <translation>Заблокировать</translation>
+    </message>
+    <message>
+        <source>Remove contact</source>
+        <translation>Удалить контакт</translation>
+    </message>
+    <message>
+        <source>Email address</source>
+        <translation>Адрес электронной почты</translation>
+    </message>
+    <message>
+        <source>Name (optional)</source>
+        <translation>Имя (необязательно)</translation>
+    </message>
+    <message>
+        <source>Mail from your contacts goes straight to the Inbox.</source>
+        <translation>Почта от ваших контактов сразу попадает во «Входящие».</translation>
+    </message>
+    <message>
+        <source>Remove %1?</source>
+        <translation>Удалить %1?</translation>
+    </message>
+    <message>
+        <source>Their details are removed from your contacts. Their next mail waits in Unverified until you accept it. Their key is kept.</source>
+        <translation>Сведения будут удалены из контактов. Следующее письмо от этого человека будет ждать в «Непроверенных», пока вы его не примете. Ключ сохранится.</translation>
+    </message>
+    <message>
+        <source>vCard files (*.vcf *.vcard)</source>
+        <translation>Файлы vCard (*.vcf *.vcard)</translation>
+    </message>
+    <message>
+        <source>All files (*)</source>
+        <translation>Все файлы (*)</translation>
     </message>
 </context>
 <context>
@@ -413,6 +509,50 @@ To: %4
         <translation>
 
 (не удаётся расшифровать: %1)</translation>
+    </message>
+    <message>
+        <source>%1 is not an email address, or is in your contacts already.</source>
+        <translation>%1 — не адрес электронной почты, или он уже есть в контактах.</translation>
+    </message>
+    <message>
+        <source>Could not read %1.</source>
+        <translation>Не удалось прочитать %1.</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n contact(s) added</source>
+        <translation>
+            <numerusform>Добавлен %n контакт</numerusform>
+            <numerusform>Добавлено %n контакта</numerusform>
+            <numerusform>Добавлено %n контактов</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n updated</source>
+        <translation>
+            <numerusform>%n обновлён</numerusform>
+            <numerusform>%n обновлено</numerusform>
+            <numerusform>%n обновлено</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n without an email address skipped</source>
+        <translation>
+            <numerusform>%n без адреса пропущен</numerusform>
+            <numerusform>%n без адреса пропущено</numerusform>
+            <numerusform>%n без адреса пропущено</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n contact(s) exported.</source>
+        <translation>
+            <numerusform>Экспортирован %n контакт.</numerusform>
+            <numerusform>Экспортировано %n контакта.</numerusform>
+            <numerusform>Экспортировано %n контактов.</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Could not write %1.</source>
+        <translation>Не удалось записать %1.</translation>
     </message>
 </context>
 <context>

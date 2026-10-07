@@ -57,3 +57,22 @@ Iroh joins the build.
   server, and sent mail never does.
 - A paired device that is never online, directly or through the mailbox
   fallback, holds every message on the server.
+
+## Amendment — 2026-10-07: the address book (P10)
+
+- **`contact.details`** carries a contact's organization, title, notes,
+  birthday and phone numbers as one record, keyed `cdetail:<addr>`: last
+  writer wins for the whole record, not field by field. The name stays in
+  `contact.edit`, keyed as before.
+- **`contact.remove`** (key `cremove:<addr>`) competes with every other op
+  about that address, not only with its own key: `contact.accept`, `.edit`,
+  `.policy`, `.verify` and `.details`. A removal takes effect only if none of
+  those is newer by `(hlc, device)`, and none of those takes effect if a
+  removal is newer. So an edit made after a removal on another device keeps
+  the contact, and an older edit arriving late does not bring a removed
+  contact back.
+- Contacts that Ingest creates from arriving mail are derived, as before, and
+  never recorded: a removed contact whose mail arrives again is a contact
+  only *seen*, not one in the book, so its mail waits in Unverified.
+- Keys never travel in a contact. vCard import ignores `KEY`, and export does
+  not write it: keys come only from Autocrypt and verification.

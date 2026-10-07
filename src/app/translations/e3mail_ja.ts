@@ -205,8 +205,40 @@ To: %4
 <context>
     <name>ContactsView</name>
     <message>
+        <source>Mobile</source>
+        <translation>携帯</translation>
+    </message>
+    <message>
+        <source>Work</source>
+        <translation>勤務先</translation>
+    </message>
+    <message>
+        <source>Home</source>
+        <translation>自宅</translation>
+    </message>
+    <message>
+        <source>Other</source>
+        <translation>その他</translation>
+    </message>
+    <message>
         <source>Search contacts</source>
         <translation>連絡先を検索</translation>
+    </message>
+    <message>
+        <source>New contact</source>
+        <translation>新しい連絡先</translation>
+    </message>
+    <message>
+        <source>Import or export</source>
+        <translation>インポートまたはエクスポート</translation>
+    </message>
+    <message>
+        <source>Import vCard…</source>
+        <translation>vCard をインポート…</translation>
+    </message>
+    <message>
+        <source>Export contacts…</source>
+        <translation>連絡先をエクスポート…</translation>
     </message>
     <message>
         <source>verified</source>
@@ -227,6 +259,38 @@ To: %4
     <message>
         <source>Name</source>
         <translation>名前</translation>
+    </message>
+    <message>
+        <source>Organization</source>
+        <translation>組織</translation>
+    </message>
+    <message>
+        <source>Title</source>
+        <translation>役職</translation>
+    </message>
+    <message>
+        <source>Birthday</source>
+        <translation>誕生日</translation>
+    </message>
+    <message>
+        <source>YYYY-MM-DD, or --MM-DD without the year</source>
+        <translation>YYYY-MM-DD、年なしは --MM-DD</translation>
+    </message>
+    <message>
+        <source>Phone</source>
+        <translation>電話</translation>
+    </message>
+    <message>
+        <source>Remove this number</source>
+        <translation>この番号を削除</translation>
+    </message>
+    <message>
+        <source>Add a phone number</source>
+        <translation>電話番号を追加</translation>
+    </message>
+    <message>
+        <source>Notes</source>
+        <translation>メモ</translation>
     </message>
     <message>
         <source>Verified in person.</source>
@@ -271,6 +335,38 @@ To: %4
     <message>
         <source>Block</source>
         <translation>ブロック</translation>
+    </message>
+    <message>
+        <source>Remove contact</source>
+        <translation>連絡先を削除</translation>
+    </message>
+    <message>
+        <source>Email address</source>
+        <translation>メールアドレス</translation>
+    </message>
+    <message>
+        <source>Name (optional)</source>
+        <translation>名前（任意）</translation>
+    </message>
+    <message>
+        <source>Mail from your contacts goes straight to the Inbox.</source>
+        <translation>連絡先からのメールは直接受信トレイに届きます。</translation>
+    </message>
+    <message>
+        <source>Remove %1?</source>
+        <translation>%1 を削除しますか？</translation>
+    </message>
+    <message>
+        <source>Their details are removed from your contacts. Their next mail waits in Unverified until you accept it. Their key is kept.</source>
+        <translation>この人の情報は連絡先から削除されます。次のメールは承認するまで「未確認」で待機します。鍵は保持されます。</translation>
+    </message>
+    <message>
+        <source>vCard files (*.vcf *.vcard)</source>
+        <translation>vCard ファイル (*.vcf *.vcard)</translation>
+    </message>
+    <message>
+        <source>All files (*)</source>
+        <translation>すべてのファイル (*)</translation>
     </message>
 </context>
 <context>
@@ -411,6 +507,42 @@ To: %4
         <translation>
 
 (復号できません: %1)</translation>
+    </message>
+    <message>
+        <source>%1 is not an email address, or is in your contacts already.</source>
+        <translation>%1 はメールアドレスではないか、すでに連絡先にあります。</translation>
+    </message>
+    <message>
+        <source>Could not read %1.</source>
+        <translation>%1 を読み込めませんでした。</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n contact(s) added</source>
+        <translation>
+            <numerusform>%n 件の連絡先を追加</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n updated</source>
+        <translation>
+            <numerusform>%n 件を更新</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n without an email address skipped</source>
+        <translation>
+            <numerusform>メールアドレスのない %n 件をスキップ</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n contact(s) exported.</source>
+        <translation>
+            <numerusform>%n 件の連絡先をエクスポートしました。</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Could not write %1.</source>
+        <translation>%1 に書き込めませんでした。</translation>
     </message>
 </context>
 <context>
