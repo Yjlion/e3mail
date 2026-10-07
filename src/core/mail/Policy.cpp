@@ -14,6 +14,8 @@ Policy::Readiness Policy::evaluate(MailContext &ctx, const QStringList &recipien
 {
     Readiness r;
     auto mode = EncryptionMode(qBound(0, ctx.config.getInt(cfg::EncryptionMode), 2));
+    const QString selfAddr = ctx.config.get(cfg::Addr);
+    const QString self = mime::normalizeAddr(selfAddr);
     bool allPreferEncrypt = true;
     QStringList seen;
     for (const QString &raw : recipients) {
@@ -21,6 +23,11 @@ Policy::Readiness Policy::evaluate(MailContext &ctx, const QStringList &recipien
         if (addr.isEmpty() || seen.contains(addr))
             continue;
         seen.append(addr);
+        // Our own key is always there, and every message is encrypted to it
+        // anyway: mail to ourselves never lacks a key, and never makes a
+        // message cleartext for everyone else (a Bcc to self, say).
+        if (addr == self && !Keyring::ensureSelfKey(ctx, selfAddr).isEmpty())
+            continue;
         const auto c = Contacts::get(ctx, addr);
         if (c && c->encryptionOverride && int(*c->encryptionOverride) > int(mode))
             mode = *c->encryptionOverride;
