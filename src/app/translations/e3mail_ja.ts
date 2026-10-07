@@ -886,6 +886,30 @@ To: %4
 <context>
     <name>SetupController</name>
     <message>
+        <source>Server settings from your provider.</source>
+        <translation>プロバイダーから取得したサーバー設定です。</translation>
+    </message>
+    <message>
+        <source>Server settings from Thunderbird&apos;s provider database.</source>
+        <translation>Thunderbird のプロバイダーデータベースから取得したサーバー設定です。</translation>
+    </message>
+    <message>
+        <source>Server settings of the service that receives your domain&apos;s mail. Check them before connecting.</source>
+        <translation>ドメインのメールを受信しているサービスのサーバー設定です。接続する前に確認してください。</translation>
+    </message>
+    <message>
+        <source>Server settings from your provider&apos;s Autodiscover service.</source>
+        <translation>プロバイダーの Autodiscover サービスから取得したサーバー設定です。</translation>
+    </message>
+    <message>
+        <source>Server settings from DNS. Check them before connecting.</source>
+        <translation>DNS から取得したサーバー設定です。接続する前に確認してください。</translation>
+    </message>
+    <message>
+        <source>Server settings guessed from the address. Check them before connecting.</source>
+        <translation>アドレスから推測したサーバー設定です。接続する前に確認してください。</translation>
+    </message>
+    <message>
         <source>Enter your email address and password.</source>
         <translation>メールアドレスとパスワードを入力してください。</translation>
     </message>

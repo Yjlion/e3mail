@@ -890,6 +890,30 @@ To: %4
 <context>
     <name>SetupController</name>
     <message>
+        <source>Server settings from your provider.</source>
+        <translation>הגדרות השרת מספק הדואר שלך.</translation>
+    </message>
+    <message>
+        <source>Server settings from Thunderbird&apos;s provider database.</source>
+        <translation>הגדרות השרת ממאגר הספקים של Thunderbird.</translation>
+    </message>
+    <message>
+        <source>Server settings of the service that receives your domain&apos;s mail. Check them before connecting.</source>
+        <translation>הגדרות השרת של השירות שמקבל את הדואר של הדומיין שלך. יש לבדוק אותן לפני ההתחברות.</translation>
+    </message>
+    <message>
+        <source>Server settings from your provider&apos;s Autodiscover service.</source>
+        <translation>הגדרות השרת משירות ה־Autodiscover של הספק.</translation>
+    </message>
+    <message>
+        <source>Server settings from DNS. Check them before connecting.</source>
+        <translation>הגדרות השרת מ־DNS. יש לבדוק אותן לפני ההתחברות.</translation>
+    </message>
+    <message>
+        <source>Server settings guessed from the address. Check them before connecting.</source>
+        <translation>הגדרות השרת נוחשו מהכתובת. יש לבדוק אותן לפני ההתחברות.</translation>
+    </message>
+    <message>
         <source>Enter your email address and password.</source>
         <translation>יש להזין כתובת דואר וסיסמה.</translation>
     </message>

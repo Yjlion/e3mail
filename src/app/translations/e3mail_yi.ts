@@ -890,6 +890,30 @@ To: %4
 <context>
     <name>SetupController</name>
     <message>
+        <source>Server settings from your provider.</source>
+        <translation>סערווער־איינשטעלונגען פֿון אײַער פּראָווײַדער.</translation>
+    </message>
+    <message>
+        <source>Server settings from Thunderbird&apos;s provider database.</source>
+        <translation>סערווער־איינשטעלונגען פֿון Thunderbird ס פּראָווײַדער־דאַטנבאַזע.</translation>
+    </message>
+    <message>
+        <source>Server settings of the service that receives your domain&apos;s mail. Check them before connecting.</source>
+        <translation>סערווער־איינשטעלונגען פֿון דער סערוויס וואָס באַקומט די פּאָסט פֿון אײַער דאָמען. קאָנטראָלירט זיי איידער איר פֿאַרבינדט זיך.</translation>
+    </message>
+    <message>
+        <source>Server settings from your provider&apos;s Autodiscover service.</source>
+        <translation>סערווער־איינשטעלונגען פֿון אײַער פּראָווײַדערס Autodiscover־סערוויס.</translation>
+    </message>
+    <message>
+        <source>Server settings from DNS. Check them before connecting.</source>
+        <translation>סערווער־איינשטעלונגען פֿון DNS. קאָנטראָלירט זיי איידער איר פֿאַרבינדט זיך.</translation>
+    </message>
+    <message>
+        <source>Server settings guessed from the address. Check them before connecting.</source>
+        <translation>סערווער־איינשטעלונגען געטראָפֿן פֿון דעם אַדרעס. קאָנטראָלירט זיי איידער איר פֿאַרבינדט זיך.</translation>
+    </message>
+    <message>
         <source>Enter your email address and password.</source>
         <translation>שרײַבט אײַער בליצבריוו־אַדרעס און פּאַראָל.</translation>
     </message>

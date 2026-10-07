@@ -906,6 +906,30 @@ To: %4
 <context>
     <name>SetupController</name>
     <message>
+        <source>Server settings from your provider.</source>
+        <translation>إعدادات الخادم من مزوّد خدمتك.</translation>
+    </message>
+    <message>
+        <source>Server settings from Thunderbird&apos;s provider database.</source>
+        <translation>إعدادات الخادم من قاعدة بيانات المزوّدين في Thunderbird.</translation>
+    </message>
+    <message>
+        <source>Server settings of the service that receives your domain&apos;s mail. Check them before connecting.</source>
+        <translation>إعدادات الخادم للخدمة التي تستقبل بريد نطاقك. راجعها قبل الاتصال.</translation>
+    </message>
+    <message>
+        <source>Server settings from your provider&apos;s Autodiscover service.</source>
+        <translation>إعدادات الخادم من خدمة Autodiscover لدى مزوّدك.</translation>
+    </message>
+    <message>
+        <source>Server settings from DNS. Check them before connecting.</source>
+        <translation>إعدادات الخادم من DNS. راجعها قبل الاتصال.</translation>
+    </message>
+    <message>
+        <source>Server settings guessed from the address. Check them before connecting.</source>
+        <translation>إعدادات الخادم مُخمَّنة من العنوان. راجعها قبل الاتصال.</translation>
+    </message>
+    <message>
         <source>Enter your email address and password.</source>
         <translation>أدخل عنوان بريدك الإلكتروني وكلمة المرور.</translation>
     </message>

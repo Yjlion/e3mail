@@ -18,6 +18,7 @@
 #include "util/Paths.h"
 
 #include <QCommandLineParser>
+#include <QEventLoop>
 #include <QCoreApplication>
 #include <QFile>
 #include <QFileInfo>
@@ -73,6 +74,30 @@ QJsonObject summaryJson(const MessageSummary &m)
             {QStringLiteral("attachments"), m.hasAttachments}};
 }
 
+// Asks every source, as the setup form does.
+Autoconfig::Result discover(const QString &addr)
+{
+    Autoconfig ac;
+    Autoconfig::Result result;
+    QEventLoop loop;
+    QObject::connect(&ac, &Autoconfig::finished, &loop, [&](const Autoconfig::Result &r) {
+        result = r;
+        loop.quit();
+    });
+    ac.lookup(addr);
+    loop.exec();
+    return result;
+}
+
+QJsonObject serverJson(const Autoconfig::Server &s)
+{
+    return {{QStringLiteral("protocol"), s.protocol},
+            {QStringLiteral("host"), s.host},
+            {QStringLiteral("port"), s.port},
+            {QStringLiteral("security"), net::securityToString(s.security)},
+            {QStringLiteral("username"), s.username}};
+}
+
 } // namespace
 
 int main(int argc, char **argv)
@@ -85,6 +110,7 @@ int main(int argc, char **argv)
     p.setApplicationDescription(QStringLiteral(
         "Headless e3mail.\n\nCommands:\n"
         "  accounts                       list accounts\n"
+        "  discover                       find server settings for --addr\n"
         "  add                            add an account (--addr, --password, server options)\n"
         "  sync                           send the outbox and fetch once\n"
         "  list                           list messages (--tag, --search)\n"
@@ -137,6 +163,20 @@ int main(int argc, char **argv)
         Paths::setDataDir(p.value(QStringLiteral("data-dir")));
 
     try {
+        if (cmd == QLatin1String("discover")) {
+            const QString addr = p.value(QStringLiteral("addr"));
+            if (!addr.contains(u'@'))
+                fail(QStringLiteral("discover needs --addr"));
+            const Autoconfig::Result r = discover(addr);
+            QJsonArray incoming;
+            for (const Autoconfig::Server &x : r.incoming)
+                incoming.append(serverJson(x));
+            print(QJsonObject{{QStringLiteral("source"), r.source},
+                              {QStringLiteral("needs_review"), r.needsReview},
+                              {QStringLiteral("incoming"), incoming},
+                              {QStringLiteral("smtp"), serverJson(r.smtp)}});
+            return 0;
+        }
         AccountManager mgr(Paths::dataDir());
         if (cmd == QLatin1String("accounts")) {
             QJsonArray a;
@@ -152,9 +192,16 @@ int main(int argc, char **argv)
             const QString addr = p.value(QStringLiteral("addr"));
             if (!addr.contains(u'@') || !p.isSet(QStringLiteral("password")))
                 fail(QStringLiteral("add needs --addr and --password"));
-            const Autoconfig::Result guess = Autoconfig::guess(addr);
+            const bool given = p.isSet(QStringLiteral("in-host")) && p.isSet(QStringLiteral("smtp-host"));
+            const Autoconfig::Result guess = given ? Autoconfig::guess(addr) : discover(addr);
             const QString protocol = p.value(QStringLiteral("protocol"));
-            Autoconfig::Server in = guess.incoming.value(protocol == QLatin1String("pop3") ? 1 : 0);
+            Autoconfig::Server in = guess.incoming.value(0);
+            for (const Autoconfig::Server &x : guess.incoming) {
+                if (x.protocol == protocol) {
+                    in = x;
+                    break;
+                }
+            }
             Account::Settings s;
             s.addr = addr;
             s.displayName = p.value(QStringLiteral("name"));
@@ -168,6 +215,10 @@ int main(int argc, char **argv)
                                                                       : guess.smtp.port);
             s.smtpSecurity = p.isSet(QStringLiteral("smtp-security")) ? p.value(QStringLiteral("smtp-security"))
                                                                       : net::securityToString(guess.smtp.security);
+            if (!p.isSet(QStringLiteral("in-host")))
+                s.inUser = in.username;
+            if (!p.isSet(QStringLiteral("smtp-host")))
+                s.smtpUser = guess.smtp.username;
             s.inPassword = p.value(QStringLiteral("password"));
             s.acceptInvalidCertificates = p.isSet(QStringLiteral("insecure"));
             Account *acc = mgr.create();
