@@ -301,6 +301,13 @@ Para: %4
     </message>
 </context>
 <context>
+    <name>FreedesktopBackend</name>
+    <message>
+        <source>Open</source>
+        <translation>Abrir</translation>
+    </message>
+</context>
+<context>
     <name>Ingest</name>
     <message>
         <source>This message is encrypted and could not be decrypted on this device.
@@ -612,6 +619,31 @@ Para: %4
     </message>
 </context>
 <context>
+    <name>Notifier</name>
+    <message>
+        <source>New message</source>
+        <translation>Mensaje nuevo</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n new messages</source>
+        <translation>
+            <numerusform>%n mensaje nuevo</numerusform>
+            <numerusform>%n mensajes nuevos</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>From %1 and %n more</source>
+        <translation>
+            <numerusform>De %1 y %n más</numerusform>
+            <numerusform>De %1 y %n más</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>From %1</source>
+        <translation>De %1</translation>
+    </message>
+</context>
+<context>
     <name>Policy</name>
     <message>
         <source>Add a recipient.</source>
@@ -709,6 +741,30 @@ Para: %4
     <message>
         <source>Translations other than English were made by machine and await review by native speakers.</source>
         <translation>Las traducciones distintas del inglés se hicieron por máquina y esperan revisión de hablantes nativos.</translation>
+    </message>
+    <message>
+        <source>Notifications</source>
+        <translation>Notificaciones</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation>Desactivadas</translation>
+    </message>
+    <message>
+        <source>Show who wrote</source>
+        <translation>Mostrar quién escribe</translation>
+    </message>
+    <message>
+        <source>Show who wrote and the subject</source>
+        <translation>Mostrar quién escribe y el asunto</translation>
+    </message>
+    <message>
+        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system&apos;s notification history, outside e3mail&apos;s encryption.</source>
+        <translation>Para este dispositivo, mientras e3mail está abierto y no en primer plano. Un asunto mostrado aquí queda en el historial de notificaciones del sistema, fuera del cifrado de e3mail.</translation>
+    </message>
+    <message>
+        <source>This system offers no desktop notifications.</source>
+        <translation>Este sistema no ofrece notificaciones de escritorio.</translation>
     </message>
     <message>
         <source>You</source>

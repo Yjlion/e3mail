@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MPL-2.0
 #include "MailApp.h"
 #include "Languages.h"
+#include "NotifierBackends.h"
 
 #include "crypto/Pgp.h"
 #include "engine/AccountManager.h"
@@ -16,6 +17,8 @@
 #include "util/Paths.h"
 
 #include <QDesktopServices>
+#include <QGuiApplication>
+#include <QSettings>
 #include <QJSEngine>
 #include <QFile>
 #include <QLocale>
@@ -24,6 +27,14 @@
 using namespace e3;
 
 MailApp *MailApp::s_instance = nullptr;
+
+namespace {
+// This device's own settings, beside the language (Languages.cpp).
+QSettings appSettings()
+{
+    return QSettings(Paths::dataDir() + QStringLiteral("/app.ini"), QSettings::IniFormat);
+}
+} // namespace
 
 namespace {
 
@@ -64,7 +75,61 @@ MailApp::MailApp(AccountManager *manager, QObject *parent) : QObject(parent), m_
     for (Account *a : m_mgr->accounts()) {
         connect(a, &Account::statusChanged, this, &MailApp::accountsChanged);
     }
+
+    m_notifier = new Notifier(makeSystemNotifierBackend(), this);
+    m_notifier->setMode(Notifier::modeFromString(appSettings().value(QStringLiteral("notifications")).toString()));
+    m_notifier->setWindowActive([] { return QGuiApplication::applicationState() == Qt::ApplicationActive; });
+    connect(m_notifier, &Notifier::activated, this, [this](int accountId, qint64 msgId) {
+        if (accountId >= 0 && m_mgr->account(accountId)) {
+            m_mgr->select(accountId);
+            selectTag(tag::Inbox);
+            if (msgId)
+                selectMessage(msgId);
+        }
+        Q_EMIT raiseRequested();
+    });
+    connect(m_mgr, &AccountManager::accountsChanged, this, &MailApp::wireNotifications);
+    wireNotifications();
     switchAccount();
+}
+
+// Every account's new mail, not only the one on screen.
+void MailApp::wireNotifications()
+{
+    const QList<Account *> all = m_mgr->accounts();
+    m_notifier->setAccountCount(int(all.size()));
+    for (Account *a : all) {
+        if (a->property("e3NotifyWired").toBool())
+            continue;
+        a->setProperty("e3NotifyWired", true);
+        connect(a, &Account::newMail, this, [this, a](qint64 id) {
+            // Our own mail from another device is filed as Sent, not announced.
+            if (const auto d = mail::Search::detail(a->ctx(), id); d && d->direction != Direction::Outgoing)
+                m_notifier->arrived(a->id(), a->addr(), id, d->from.name.isEmpty() ? d->from.addr : d->from.name,
+                                    d->subject);
+        });
+    }
+}
+
+QString MailApp::notificationMode() const
+{
+    return Notifier::modeToString(m_notifier->mode());
+}
+
+void MailApp::setNotificationMode(const QString &mode)
+{
+    const Notifier::Mode m = Notifier::modeFromString(mode);
+    if (m == m_notifier->mode())
+        return;
+    m_notifier->setMode(m);
+    QSettings s = appSettings();
+    s.setValue(QStringLiteral("notifications"), Notifier::modeToString(m));
+    Q_EMIT notificationsChanged();
+}
+
+bool MailApp::notificationsAvailable() const
+{
+    return m_notifier->available();
 }
 
 MailApp *MailApp::create(QQmlEngine *, QJSEngine *)

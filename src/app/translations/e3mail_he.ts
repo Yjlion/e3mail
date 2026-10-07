@@ -301,6 +301,13 @@ To: %4
     </message>
 </context>
 <context>
+    <name>FreedesktopBackend</name>
+    <message>
+        <source>Open</source>
+        <translation>פתיחה</translation>
+    </message>
+</context>
+<context>
     <name>Ingest</name>
     <message>
         <source>This message is encrypted and could not be decrypted on this device.
@@ -612,6 +619,31 @@ To: %4
     </message>
 </context>
 <context>
+    <name>Notifier</name>
+    <message>
+        <source>New message</source>
+        <translation>הודעה חדשה</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n new messages</source>
+        <translation>
+            <numerusform>הודעה חדשה אחת</numerusform>
+            <numerusform>%n הודעות חדשות</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>From %1 and %n more</source>
+        <translation>
+            <numerusform>מאת %1 ועוד אחד</numerusform>
+            <numerusform>מאת %1 ועוד %n</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>From %1</source>
+        <translation>מאת %1</translation>
+    </message>
+</context>
+<context>
     <name>Policy</name>
     <message>
         <source>Add a recipient.</source>
@@ -709,6 +741,30 @@ To: %4
     <message>
         <source>Translations other than English were made by machine and await review by native speakers.</source>
         <translation>התרגומים לשפות שאינן אנגלית נעשו במכונה וממתינים לבדיקה של דוברים ילידיים.</translation>
+    </message>
+    <message>
+        <source>Notifications</source>
+        <translation>התראות</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation>כבויות</translation>
+    </message>
+    <message>
+        <source>Show who wrote</source>
+        <translation>להציג מי כתב</translation>
+    </message>
+    <message>
+        <source>Show who wrote and the subject</source>
+        <translation>להציג מי כתב ואת הנושא</translation>
+    </message>
+    <message>
+        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system&apos;s notification history, outside e3mail&apos;s encryption.</source>
+        <translation>למכשיר הזה, כש־e3mail פתוח ולא בחזית. נושא שמוצג כאן נשמר בהיסטוריית ההתראות של המערכת, מחוץ להצפנה של e3mail.</translation>
+    </message>
+    <message>
+        <source>This system offers no desktop notifications.</source>
+        <translation>המערכת הזו לא מציעה התראות שולחן עבודה.</translation>
     </message>
     <message>
         <source>You</source>

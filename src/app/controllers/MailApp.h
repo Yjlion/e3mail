@@ -10,6 +10,7 @@
 #include <QVariant>
 #include <QtQml/qqmlregistration.h>
 
+class Notifier;
 class QQmlEngine;
 class QJSEngine;
 
@@ -51,6 +52,9 @@ class MailApp : public QObject
     // The chosen interface language; empty follows the system.
     Q_PROPERTY(QString language READ language WRITE setLanguage NOTIFY languageChanged)
     Q_PROPERTY(QVariantList languages READ languages CONSTANT)
+    // New-mail notifications on this device: off | sender | full.
+    Q_PROPERTY(QString notificationMode READ notificationMode WRITE setNotificationMode NOTIFY notificationsChanged)
+    Q_PROPERTY(bool notificationsAvailable READ notificationsAvailable CONSTANT)
 
 public:
     explicit MailApp(e3::AccountManager *manager, QObject *parent = nullptr);
@@ -127,6 +131,9 @@ public:
 
     QString language() const;
     void setLanguage(const QString &code);
+    QString notificationMode() const;
+    void setNotificationMode(const QString &mode);
+    bool notificationsAvailable() const;
     QVariantList languages() const;
 
 Q_SIGNALS:
@@ -142,6 +149,9 @@ Q_SIGNALS:
     void newMailArrived(const QString &from, const QString &subject);
     // Translators were replaced: the QML engine must retranslate.
     void languageChanged();
+    void notificationsChanged();
+    // A notification was clicked: the window should come to the front.
+    void raiseRequested();
 
 private:
     void switchAccount();
@@ -151,6 +161,7 @@ private:
     void reloadThread();
     QVariantMap messageMap(qint64 id) const;
     void scheduleRefresh();
+    void wireNotifications();
 
     static MailApp *s_instance;
     e3::AccountManager *m_mgr;
@@ -164,4 +175,5 @@ private:
     qint64 m_selected = 0;
     QVariantList m_thread;
     QTimer m_refresh;
+    Notifier *m_notifier;
 };

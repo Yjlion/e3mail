@@ -301,6 +301,13 @@ Objet : %3
     </message>
 </context>
 <context>
+    <name>FreedesktopBackend</name>
+    <message>
+        <source>Open</source>
+        <translation>Ouvrir</translation>
+    </message>
+</context>
+<context>
     <name>Ingest</name>
     <message>
         <source>This message is encrypted and could not be decrypted on this device.
@@ -612,6 +619,31 @@ Objet : %3
     </message>
 </context>
 <context>
+    <name>Notifier</name>
+    <message>
+        <source>New message</source>
+        <translation>Nouveau message</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n new messages</source>
+        <translation>
+            <numerusform>%n nouveau message</numerusform>
+            <numerusform>%n nouveaux messages</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>From %1 and %n more</source>
+        <translation>
+            <numerusform>De %1 et %n autre</numerusform>
+            <numerusform>De %1 et %n autres</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>From %1</source>
+        <translation>De %1</translation>
+    </message>
+</context>
+<context>
     <name>Policy</name>
     <message>
         <source>Add a recipient.</source>
@@ -709,6 +741,30 @@ Objet : %3
     <message>
         <source>Translations other than English were made by machine and await review by native speakers.</source>
         <translation>Les traductions autres que l’anglais ont été faites par machine et attendent une relecture par des locuteurs natifs.</translation>
+    </message>
+    <message>
+        <source>Notifications</source>
+        <translation>Notifications</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation>Désactivées</translation>
+    </message>
+    <message>
+        <source>Show who wrote</source>
+        <translation>Afficher l’expéditeur</translation>
+    </message>
+    <message>
+        <source>Show who wrote and the subject</source>
+        <translation>Afficher l’expéditeur et l’objet</translation>
+    </message>
+    <message>
+        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system&apos;s notification history, outside e3mail&apos;s encryption.</source>
+        <translation>Pour cet appareil, quand e3mail est ouvert mais pas au premier plan. Un objet affiché ici reste dans l’historique des notifications du système, hors du chiffrement d’e3mail.</translation>
+    </message>
+    <message>
+        <source>This system offers no desktop notifications.</source>
+        <translation>Ce système n’offre pas de notifications de bureau.</translation>
     </message>
     <message>
         <source>You</source>

@@ -301,6 +301,13 @@ To: %4
     </message>
 </context>
 <context>
+    <name>FreedesktopBackend</name>
+    <message>
+        <source>Open</source>
+        <translation>打开</translation>
+    </message>
+</context>
+<context>
     <name>Ingest</name>
     <message>
         <source>This message is encrypted and could not be decrypted on this device.
@@ -608,6 +615,29 @@ To: %4
     </message>
 </context>
 <context>
+    <name>Notifier</name>
+    <message>
+        <source>New message</source>
+        <translation>新邮件</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n new messages</source>
+        <translation>
+            <numerusform>%n 封新邮件</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>From %1 and %n more</source>
+        <translation>
+            <numerusform>来自 %1 等 %n 人</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>From %1</source>
+        <translation>来自 %1</translation>
+    </message>
+</context>
+<context>
     <name>Policy</name>
     <message>
         <source>Add a recipient.</source>
@@ -705,6 +735,30 @@ To: %4
     <message>
         <source>Translations other than English were made by machine and await review by native speakers.</source>
         <translation>除英语外的翻译均由机器完成，有待母语使用者审校。</translation>
+    </message>
+    <message>
+        <source>Notifications</source>
+        <translation>通知</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation>关闭</translation>
+    </message>
+    <message>
+        <source>Show who wrote</source>
+        <translation>显示发件人</translation>
+    </message>
+    <message>
+        <source>Show who wrote and the subject</source>
+        <translation>显示发件人和主题</translation>
+    </message>
+    <message>
+        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system&apos;s notification history, outside e3mail&apos;s encryption.</source>
+        <translation>仅限本设备，在 e3mail 打开但不在前台时通知。此处显示的主题会保留在系统的通知历史中，不受 e3mail 加密保护。</translation>
+    </message>
+    <message>
+        <source>This system offers no desktop notifications.</source>
+        <translation>此系统不提供桌面通知。</translation>
     </message>
     <message>
         <source>You</source>

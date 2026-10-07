@@ -301,6 +301,13 @@ An: %4
     </message>
 </context>
 <context>
+    <name>FreedesktopBackend</name>
+    <message>
+        <source>Open</source>
+        <translation>Öffnen</translation>
+    </message>
+</context>
+<context>
     <name>Ingest</name>
     <message>
         <source>This message is encrypted and could not be decrypted on this device.
@@ -612,6 +619,31 @@ An: %4
     </message>
 </context>
 <context>
+    <name>Notifier</name>
+    <message>
+        <source>New message</source>
+        <translation>Neue Nachricht</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n new messages</source>
+        <translation>
+            <numerusform>%n neue Nachricht</numerusform>
+            <numerusform>%n neue Nachrichten</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>From %1 and %n more</source>
+        <translation>
+            <numerusform>Von %1 und %n weiteren</numerusform>
+            <numerusform>Von %1 und %n weiteren</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>From %1</source>
+        <translation>Von %1</translation>
+    </message>
+</context>
+<context>
     <name>Policy</name>
     <message>
         <source>Add a recipient.</source>
@@ -709,6 +741,30 @@ An: %4
     <message>
         <source>Translations other than English were made by machine and await review by native speakers.</source>
         <translation>Übersetzungen außer Englisch wurden maschinell erstellt und warten auf Durchsicht durch Muttersprachler.</translation>
+    </message>
+    <message>
+        <source>Notifications</source>
+        <translation>Benachrichtigungen</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation>Aus</translation>
+    </message>
+    <message>
+        <source>Show who wrote</source>
+        <translation>Absender zeigen</translation>
+    </message>
+    <message>
+        <source>Show who wrote and the subject</source>
+        <translation>Absender und Betreff zeigen</translation>
+    </message>
+    <message>
+        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system&apos;s notification history, outside e3mail&apos;s encryption.</source>
+        <translation>Für dieses Gerät, solange e3mail geöffnet und nicht im Vordergrund ist. Ein hier gezeigter Betreff bleibt im Benachrichtigungsverlauf des Systems, außerhalb der Verschlüsselung von e3mail.</translation>
+    </message>
+    <message>
+        <source>This system offers no desktop notifications.</source>
+        <translation>Dieses System bietet keine Desktop-Benachrichtigungen.</translation>
     </message>
     <message>
         <source>You</source>

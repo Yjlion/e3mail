@@ -301,6 +301,13 @@ To: %4
     </message>
 </context>
 <context>
+    <name>FreedesktopBackend</name>
+    <message>
+        <source>Open</source>
+        <translation>Открыть</translation>
+    </message>
+</context>
+<context>
     <name>Ingest</name>
     <message>
         <source>This message is encrypted and could not be decrypted on this device.
@@ -616,6 +623,33 @@ To: %4
     </message>
 </context>
 <context>
+    <name>Notifier</name>
+    <message>
+        <source>New message</source>
+        <translation>Новое сообщение</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n new messages</source>
+        <translation>
+            <numerusform>%n новое сообщение</numerusform>
+            <numerusform>%n новых сообщения</numerusform>
+            <numerusform>%n новых сообщений</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>From %1 and %n more</source>
+        <translation>
+            <numerusform>От %1 и ещё %n</numerusform>
+            <numerusform>От %1 и ещё %n</numerusform>
+            <numerusform>От %1 и ещё %n</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>From %1</source>
+        <translation>От %1</translation>
+    </message>
+</context>
+<context>
     <name>Policy</name>
     <message>
         <source>Add a recipient.</source>
@@ -713,6 +747,30 @@ To: %4
     <message>
         <source>Translations other than English were made by machine and await review by native speakers.</source>
         <translation>Переводы, кроме английского, сделаны машиной и ждут проверки носителями языка.</translation>
+    </message>
+    <message>
+        <source>Notifications</source>
+        <translation>Уведомления</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation>Выключены</translation>
+    </message>
+    <message>
+        <source>Show who wrote</source>
+        <translation>Показывать отправителя</translation>
+    </message>
+    <message>
+        <source>Show who wrote and the subject</source>
+        <translation>Показывать отправителя и тему</translation>
+    </message>
+    <message>
+        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system&apos;s notification history, outside e3mail&apos;s encryption.</source>
+        <translation>На этом устройстве, когда e3mail открыт, но не на переднем плане. Показанная здесь тема остаётся в истории уведомлений системы, вне шифрования e3mail.</translation>
+    </message>
+    <message>
+        <source>This system offers no desktop notifications.</source>
+        <translation>Эта система не поддерживает уведомления на рабочем столе.</translation>
     </message>
     <message>
         <source>You</source>

@@ -301,6 +301,13 @@ To: %4
     </message>
 </context>
 <context>
+    <name>FreedesktopBackend</name>
+    <message>
+        <source>Open</source>
+        <translation>開く</translation>
+    </message>
+</context>
+<context>
     <name>Ingest</name>
     <message>
         <source>This message is encrypted and could not be decrypted on this device.
@@ -608,6 +615,29 @@ To: %4
     </message>
 </context>
 <context>
+    <name>Notifier</name>
+    <message>
+        <source>New message</source>
+        <translation>新着メッセージ</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n new messages</source>
+        <translation>
+            <numerusform>新着メッセージ %n 件</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>From %1 and %n more</source>
+        <translation>
+            <numerusform>%1 ほか %n 人から</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>From %1</source>
+        <translation>%1 から</translation>
+    </message>
+</context>
+<context>
     <name>Policy</name>
     <message>
         <source>Add a recipient.</source>
@@ -705,6 +735,30 @@ To: %4
     <message>
         <source>Translations other than English were made by machine and await review by native speakers.</source>
         <translation>英語以外の翻訳は機械によるもので、ネイティブスピーカーによる確認を待っています。</translation>
+    </message>
+    <message>
+        <source>Notifications</source>
+        <translation>通知</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation>オフ</translation>
+    </message>
+    <message>
+        <source>Show who wrote</source>
+        <translation>差出人を表示</translation>
+    </message>
+    <message>
+        <source>Show who wrote and the subject</source>
+        <translation>差出人と件名を表示</translation>
+    </message>
+    <message>
+        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system&apos;s notification history, outside e3mail&apos;s encryption.</source>
+        <translation>このデバイスで、e3mail が開いていて前面にないときに通知します。ここに表示された件名は、e3mail の暗号化の外にあるシステムの通知履歴に残ります。</translation>
+    </message>
+    <message>
+        <source>This system offers no desktop notifications.</source>
+        <translation>このシステムにはデスクトップ通知がありません。</translation>
     </message>
     <message>
         <source>You</source>

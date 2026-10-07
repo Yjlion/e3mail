@@ -301,6 +301,13 @@ Do: %4
     </message>
 </context>
 <context>
+    <name>FreedesktopBackend</name>
+    <message>
+        <source>Open</source>
+        <translation>Otwórz</translation>
+    </message>
+</context>
+<context>
     <name>Ingest</name>
     <message>
         <source>This message is encrypted and could not be decrypted on this device.
@@ -616,6 +623,33 @@ Do: %4
     </message>
 </context>
 <context>
+    <name>Notifier</name>
+    <message>
+        <source>New message</source>
+        <translation>Nowa wiadomość</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n new messages</source>
+        <translation>
+            <numerusform>%n nowa wiadomość</numerusform>
+            <numerusform>%n nowe wiadomości</numerusform>
+            <numerusform>%n nowych wiadomości</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>From %1 and %n more</source>
+        <translation>
+            <numerusform>Od %1 i %n innej osoby</numerusform>
+            <numerusform>Od %1 i %n innych osób</numerusform>
+            <numerusform>Od %1 i %n innych osób</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>From %1</source>
+        <translation>Od %1</translation>
+    </message>
+</context>
+<context>
     <name>Policy</name>
     <message>
         <source>Add a recipient.</source>
@@ -713,6 +747,30 @@ Do: %4
     <message>
         <source>Translations other than English were made by machine and await review by native speakers.</source>
         <translation>Tłumaczenia inne niż angielskie wykonała maszyna; czekają na sprawdzenie przez rodzimych użytkowników języka.</translation>
+    </message>
+    <message>
+        <source>Notifications</source>
+        <translation>Powiadomienia</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation>Wyłączone</translation>
+    </message>
+    <message>
+        <source>Show who wrote</source>
+        <translation>Pokaż nadawcę</translation>
+    </message>
+    <message>
+        <source>Show who wrote and the subject</source>
+        <translation>Pokaż nadawcę i temat</translation>
+    </message>
+    <message>
+        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system&apos;s notification history, outside e3mail&apos;s encryption.</source>
+        <translation>Na tym urządzeniu, gdy e3mail jest otwarty, ale nie na pierwszym planie. Pokazany tu temat zostaje w historii powiadomień systemu, poza szyfrowaniem e3mail.</translation>
+    </message>
+    <message>
+        <source>This system offers no desktop notifications.</source>
+        <translation>Ten system nie oferuje powiadomień na pulpicie.</translation>
     </message>
     <message>
         <source>You</source>

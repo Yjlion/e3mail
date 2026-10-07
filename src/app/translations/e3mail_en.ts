@@ -36,6 +36,23 @@
     </message>
 </context>
 <context>
+    <name>Notifier</name>
+    <message numerus="yes">
+        <source>%n new messages</source>
+        <translation>
+            <numerusform>%n new message</numerusform>
+            <numerusform>%n new messages</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>From %1 and %n more</source>
+        <translation>
+            <numerusform>From %1 and %n more</numerusform>
+            <numerusform>From %1 and %n more</numerusform>
+        </translation>
+    </message>
+</context>
+<context>
     <name>Sidebar</name>
     <message numerus="yes">
         <source>Fetching older mail… %n left</source>

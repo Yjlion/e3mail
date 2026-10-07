@@ -301,6 +301,13 @@ To: %4
     </message>
 </context>
 <context>
+    <name>FreedesktopBackend</name>
+    <message>
+        <source>Open</source>
+        <translation>فتح</translation>
+    </message>
+</context>
+<context>
     <name>Ingest</name>
     <message>
         <source>This message is encrypted and could not be decrypted on this device.
@@ -628,6 +635,39 @@ To: %4
     </message>
 </context>
 <context>
+    <name>Notifier</name>
+    <message>
+        <source>New message</source>
+        <translation>رسالة جديدة</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n new messages</source>
+        <translation>
+            <numerusform>لا رسائل جديدة</numerusform>
+            <numerusform>رسالة جديدة واحدة</numerusform>
+            <numerusform>رسالتان جديدتان</numerusform>
+            <numerusform>%n رسائل جديدة</numerusform>
+            <numerusform>%n رسالة جديدة</numerusform>
+            <numerusform>%n رسالة جديدة</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>From %1 and %n more</source>
+        <translation>
+            <numerusform>من %1</numerusform>
+            <numerusform>من %1 وشخص آخر</numerusform>
+            <numerusform>من %1 وشخصين آخرين</numerusform>
+            <numerusform>من %1 و%n آخرين</numerusform>
+            <numerusform>من %1 و%n آخرين</numerusform>
+            <numerusform>من %1 و%n آخرين</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>From %1</source>
+        <translation>من %1</translation>
+    </message>
+</context>
+<context>
     <name>Policy</name>
     <message>
         <source>Add a recipient.</source>
@@ -725,6 +765,30 @@ To: %4
     <message>
         <source>Translations other than English were made by machine and await review by native speakers.</source>
         <translation>الترجمات غير الإنجليزية آلية، وتنتظر مراجعة متحدثين أصليين.</translation>
+    </message>
+    <message>
+        <source>Notifications</source>
+        <translation>الإشعارات</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation>إيقاف</translation>
+    </message>
+    <message>
+        <source>Show who wrote</source>
+        <translation>إظهار المُرسِل</translation>
+    </message>
+    <message>
+        <source>Show who wrote and the subject</source>
+        <translation>إظهار المُرسِل والموضوع</translation>
+    </message>
+    <message>
+        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system&apos;s notification history, outside e3mail&apos;s encryption.</source>
+        <translation>لهذا الجهاز، حين يكون e3mail مفتوحًا وليس في المقدمة. الموضوع المعروض هنا يُحفظ في سجل إشعارات النظام، خارج تشفير e3mail.</translation>
+    </message>
+    <message>
+        <source>This system offers no desktop notifications.</source>
+        <translation>لا يوفّر هذا النظام إشعارات سطح المكتب.</translation>
     </message>
     <message>
         <source>You</source>

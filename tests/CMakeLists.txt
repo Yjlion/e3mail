@@ -21,7 +21,7 @@ endfunction()
 
 file(GLOB E3_TEST_SOURCES CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/tst_*.cpp)
 if(NOT E3MAIL_BUILD_APP)
-    list(FILTER E3_TEST_SOURCES EXCLUDE REGEX "tst_richtext")
+    list(FILTER E3_TEST_SOURCES EXCLUDE REGEX "tst_richtext|tst_notifier")
 endif()
 foreach(src ${E3_TEST_SOURCES})
     get_filename_component(stem ${src} NAME_WE)
@@ -46,6 +46,7 @@ if(E3MAIL_BUILD_APP)
             COMMAND Python3::Interpreter ${PROJECT_SOURCE_DIR}/scripts/check-translations.py)
     endif()
     target_link_libraries(tst_richtext PRIVATE e3richtext Qt6::Gui)
+    target_link_libraries(tst_notifier PRIVATE e3notifier)
     # Boots the real QML application offscreen against an empty data
     # directory: every QML file must load and every type must resolve.
     add_test(NAME app_smoke

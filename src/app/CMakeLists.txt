@@ -4,9 +4,17 @@ target_include_directories(e3richtext PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/control
 target_link_libraries(e3richtext PUBLIC e3core Qt6::Gui)
 e3mail_set_warnings(e3richtext)
 
+# New-mail notifications: gathering and wording, separate so tests can reach
+# it. The platform backends are in the app.
+add_library(e3notifier STATIC controllers/Notifier.cpp controllers/Notifier.h)
+target_include_directories(e3notifier PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/controllers)
+target_link_libraries(e3notifier PUBLIC Qt6::Core)
+e3mail_set_warnings(e3notifier)
+
 qt_add_executable(e3mail WIN32 MACOSX_BUNDLE
     main.cpp
     NetworkBarrier.cpp NetworkBarrier.h
+    controllers/NotifierBackends.cpp controllers/NotifierBackends.h
 )
 
 file(GLOB E3_QML_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} CONFIGURE_DEPENDS
@@ -32,7 +40,7 @@ qt_add_qml_module(e3mail
 # them from the sources with `cmake --build --preset dev --target
 # update_translations`. Compiled into the binary under :/i18n.
 qt_add_translations(TARGETS e3mail
-    SOURCE_TARGETS e3mail e3core
+    SOURCE_TARGETS e3mail e3core e3notifier
     TS_FILE_DIR translations
     PLURALS_TS_FILE translations/e3mail_en.ts
     RESOURCE_PREFIX /i18n
@@ -41,7 +49,12 @@ qt_add_translations(TARGETS e3mail
 target_include_directories(e3mail PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/controllers ${CMAKE_CURRENT_SOURCE_DIR}/models)
 target_link_libraries(e3mail PRIVATE
-    e3core e3richtext Qt6::Gui Qt6::Qml Qt6::Quick Qt6::QuickControls2 Qt6::Svg)
+    e3core e3richtext e3notifier Qt6::Gui Qt6::Qml Qt6::Quick Qt6::QuickControls2 Qt6::Svg)
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    target_link_libraries(e3mail PRIVATE Qt6::DBus)
+else()
+    target_link_libraries(e3mail PRIVATE Qt6::Widgets)
+endif()
 e3mail_set_warnings(e3mail)
 
 set_target_properties(e3mail PROPERTIES

@@ -301,6 +301,13 @@ To: %4
     </message>
 </context>
 <context>
+    <name>FreedesktopBackend</name>
+    <message>
+        <source>Open</source>
+        <translation>עפֿענען</translation>
+    </message>
+</context>
+<context>
     <name>Ingest</name>
     <message>
         <source>This message is encrypted and could not be decrypted on this device.
@@ -612,6 +619,31 @@ To: %4
     </message>
 </context>
 <context>
+    <name>Notifier</name>
+    <message>
+        <source>New message</source>
+        <translation>נײַער בריוו</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n new messages</source>
+        <translation>
+            <numerusform>%n נײַער בריוו</numerusform>
+            <numerusform>%n נײַע בריוו</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>From %1 and %n more</source>
+        <translation>
+            <numerusform>פֿון %1 און נאָך %n</numerusform>
+            <numerusform>פֿון %1 און נאָך %n</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>From %1</source>
+        <translation>פֿון %1</translation>
+    </message>
+</context>
+<context>
     <name>Policy</name>
     <message>
         <source>Add a recipient.</source>
@@ -709,6 +741,30 @@ To: %4
     <message>
         <source>Translations other than English were made by machine and await review by native speakers.</source>
         <translation>די איבערזעצונגען אַחוץ ענגליש זענען געמאַכט געוואָרן פֿון אַ מאַשין און וואַרטן אויף אַ דורכקוק פֿון געבוירענע רעדערס.</translation>
+    </message>
+    <message>
+        <source>Notifications</source>
+        <translation>מעלדונגען</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation>אויסגעלאָשן</translation>
+    </message>
+    <message>
+        <source>Show who wrote</source>
+        <translation>ווײַזן ווער האָט געשריבן</translation>
+    </message>
+    <message>
+        <source>Show who wrote and the subject</source>
+        <translation>ווײַזן ווער האָט געשריבן און די טעמע</translation>
+    </message>
+    <message>
+        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system&apos;s notification history, outside e3mail&apos;s encryption.</source>
+        <translation>פֿאַר דעם מכשיר, ווען e3mail איז אָפֿן און נישט פֿאָרנט. אַ טעמע וואָס ווערט דאָ געוויזן בלײַבט אין דער סיסטעמס מעלדונג־היסטאָריע, אַרויס פֿון e3mail ס פֿאַרשליסלונג.</translation>
+    </message>
+    <message>
+        <source>This system offers no desktop notifications.</source>
+        <translation>די סיסטעם גיט נישט קיין דעסקטאָפּ־מעלדונגען.</translation>
     </message>
     <message>
         <source>You</source>

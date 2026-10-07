@@ -7,15 +7,23 @@
 
 #include <QCommandLineParser>
 #include <QGuiApplication>
+#ifndef Q_OS_LINUX
+#include <QApplication> // the system tray, for notifications
+#endif
 #include <QIcon>
 #include <QQmlApplicationEngine>
+#include <QWindow>
 #include <QQuickStyle>
 #include <QQuickWindow>
 #include <QTimer>
 
 int main(int argc, char *argv[])
 {
+#ifdef Q_OS_LINUX
     QGuiApplication app(argc, argv);
+#else
+    QApplication app(argc, argv);
+#endif
     QGuiApplication::setApplicationName(QStringLiteral("e3mail"));
     QGuiApplication::setApplicationDisplayName(QStringLiteral("e3mail"));
     QGuiApplication::setOrganizationName(QStringLiteral("e3mail"));
@@ -66,6 +74,14 @@ int main(int argc, char *argv[])
         return 1;
 
     QObject *root = engine.rootObjects().first();
+    // A clicked notification brings the window to the front.
+    if (auto *w = qobject_cast<QWindow *>(root)) {
+        QObject::connect(&mailApp, &MailApp::raiseRequested, w, [w] {
+            w->show();
+            w->raise();
+            w->requestActivate();
+        });
+    }
     if (p.isSet(open)) {
         // "inbox" or "inbox:2" (the third newest)
         mailApp.selectTag(p.value(open).section(u':', 0, 0));
