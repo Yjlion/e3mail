@@ -163,6 +163,53 @@ release-only path. Getting here took three more rounds (traps 22–23, and
 vcpkg.exe missing on a hit). A release on a tag restoring main's cache is
 documented GitHub behaviour but has not been seen yet.
 
+## Four gaps closed (2026-10-07)
+
+**Large mailboxes.** IMAP's first sync fetches new mail first, then pages of
+100 older messages, newest first, resumable through cursors in the config
+(`imap_baseline`, `imap_high`, `imap_low`). Mail that was there before is never
+announced, and a copy re-read under a new UIDVALIDITY keeps its first copy's
+`preexisting` flag. A message deleted between listing and fetch is skipped.
+The sidebar shows how many older messages are left.
+
+**Desktop notifications.** Gathered per account for 2 s, quiet while the
+window is in front, opening the message on click. A per-device setting in
+`app.ini` (off / sender / sender and subject; default sender). Linux uses the
+freedesktop service over D-Bus; Windows and macOS use the tray, so the app is
+a `QApplication` there.
+
+**Address book (P10).** Add, edit and remove contacts; organization, title,
+phones, birthday and notes; vCard 2.1/3.0/4.0 import, 4.0 export. Ops
+`contact.details` and `contact.remove` ([ADR 0013 amendment](adr/0013-op-merge-rules.md)).
+
+**HTML replies.** Replies and forwards to HTML mail quote it as HTML;
+`RichText::load` puts it in the editor, and the composer still re-emits
+through its whitelist. Formatted drafts now reopen formatted.
+
+**Verified here:**
+- Tests: 12 suites. New: `tst_notifier`, `tst_vcard`, and in `tst_engine`
+  `firstSyncPagesNewestFirst`, `firstSyncIsNotNewMail`, `addressBook`,
+  `repliesQuoteHtmlAsHtml`; `tst_sync::addressBookTravels`. Each of the new
+  rules (newest first, no notifying the first sync, the duplicate keeps its
+  flag, the cross-key removal rule) was broken on purpose once and its test
+  failed.
+- `scripts/e2e.py` against `server/compose`: all passed with the new sync.
+- 500 messages delivered to alice on the real Dovecot: five `sync` rounds of
+  100, newest first (n499–n400, then down to n000), under a second each.
+- A real D-Bus notification: the app under Xvfb on a private session bus,
+  with a stand-in `org.freedesktop.Notifications` printing what it got. One
+  message gave "Mira Dorn" / subject; a burst of three gave "3 new
+  messages". Clicking (`ActionInvoked`) was tested only through the fake
+  backend.
+- CI (run 37631060889): Linux, macOS and Windows build and pass with Qt
+  Widgets and the tray backend.
+- Screenshots: an HTML reply (English, Arabic), the contact editor (English,
+  Arabic, zoomed), Settings in German.
+
+**Not verified:** a notification on Windows or macOS, or on a real desktop
+session; clicking a real notification; any vCard from a real address book
+(Google, Apple, Thunderbird exports) beyond the hand-written test cards.
+
 ## Known gaps
 
 - **Signed-only mail** (`multipart/signed` without encryption) is shown, but
@@ -172,13 +219,12 @@ documented GitHub behaviour but has not been seen yet.
 - **Bcc and encryption**: Bcc recipients' key IDs are in the encrypted message,
   so recipients who inspect it can tell that Bcc recipients exist
   (ADR 0004).
-- **First sync of a large mailbox** downloads everything in one pass with
-  `UID SEARCH ALL`. There is no paging and no limit.
-- **New-mail notifications**: `MailApp::newMailArrived` is emitted, but nothing
-  shows a desktop notification yet.
-- **Contacts** cannot be added by hand, and there are no address-book fields
-  yet (P10).
-- **Replies** quote the plain-text body, even of HTML mail.
+- **POP3 is not paged.** Its first download is still one pass, now newest
+  first; POP3 has no way to ask for part of a mailbox by order.
+- **Address book**: one contact per address, so a person with two addresses
+  is two contacts. No categories, postal addresses or photos.
+- **Notifications** are shown only while e3mail runs; there is no background
+  service.
 - **Sync**: a message another device sent while it was still pending in that
   device's outbox arrives as Sent. Mail whose raw copy expired under
   raw-message retention never reaches a new device unless the server still
@@ -310,6 +356,33 @@ using `C:\vcpkg`. Bump it deliberately; that rebuilds everything once. It is
 bootstrapped on every run, hit or not: the toolchain calls `vcpkg.exe` after
 each link to copy DLLs, and without it a cache hit failed to link.
 
+**24. Offscreen windows are active.** Under `QT_QPA_PLATFORM=offscreen` the
+window counts as in front, so no notification is ever shown. A live check
+needs Xvfb with `QT_QPA_PLATFORM=xcb QT_QUICK_BACKEND=software` (Xvfb has no
+GLX here), inside `dbus-run-session` with a notification service: this
+machine's session bus has none.
+
+**25. Qt logs to the journal** when stderr is not a terminal. Set
+`QT_FORCE_STDERR_LOGGING=1` to see the app's log in a file.
+
+**26. The fake mail server runs on the test's main thread.** Anything that
+blocks that thread while a worker waits on the server deadlocks until the
+socket's 120 s timeout. `Account::stop()` did, because IDLE waited for the
+server to acknowledge DONE. Stopping now drops the connection; the engine
+suite went from 123 s to 3 s.
+
+**27. `QTextDocument::setHtml` is not the inverse of our emit.** `<p><br></p>`
+comes back as a line holding a line break (two lines tall), headings come back
+bold (so emit wrote `<h2><b>`), every paragraph gets 12 px margins, and a
+`<pre>` ending in a newline gains an empty line. `RichText::load` undoes each.
+
+**28. moc rejects a nested class with `Q_OBJECT`.** `Notifier::Backend` is
+`NotifierBackend` with an alias.
+
+**29. A new branch cannot read another unmerged branch's cache.** The first
+Windows CI run on `known-gaps` rebuilt every dependency (29 min), because
+`discovery-and-ci`'s cache is not on the default branch yet.
+
 ## Next
 
 1. P8, slice 2: install Rust, build `src/p2p/` (Iroh, `iroh-blobs`) with
@@ -321,4 +394,6 @@ each link to copy DLLs, and without it a cache hit failed to link.
    platform.
 4. P9 SecureJoin, then an interop pass against Delta Chat's released
    `deltachat-rpc-server`, as eeemail's `scripts/interop-pass.py` does.
-4. Verify signed-only mail; desktop notifications.
+5. Verify signed-only mail.
+6. Try notifications on a real Windows and macOS desktop, and import real
+   vCard exports (Google, Apple, Thunderbird).

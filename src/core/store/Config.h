@@ -42,6 +42,12 @@ inline constexpr char DeviceId[] = "device_id";
 inline constexpr char SelfFingerprint[] = "self_fingerprint";
 inline constexpr char ImapUidValidity[] = "imap_uidvalidity";
 inline constexpr char FirstSyncDone[] = "first_sync_done";
+// IMAP cursors, per UIDVALIDITY: UIDs below the baseline were on the server
+// before e3mail first looked; high is the newest UID handled, and backfill
+// (newest first) has handled everything from low up.
+inline constexpr char ImapBaseline[] = "imap_baseline";
+inline constexpr char ImapHigh[] = "imap_high";
+inline constexpr char ImapLow[] = "imap_low";
 inline constexpr char Configured[] = "configured";
 } // namespace cfg
 

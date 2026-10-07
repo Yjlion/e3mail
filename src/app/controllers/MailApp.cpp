@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MPL-2.0
 #include "MailApp.h"
 #include "Languages.h"
+#include "NotifierBackends.h"
 
 #include "crypto/Pgp.h"
 #include "engine/AccountManager.h"
@@ -8,6 +9,7 @@
 #include "mail/Organize.h"
 #include "mail/Preferences.h"
 #include "mail/Search.h"
+#include "mail/VCard.h"
 #include "mime/Html.h"
 #include "mime/Part.h"
 #include "store/BlobStore.h"
@@ -16,6 +18,8 @@
 #include "util/Paths.h"
 
 #include <QDesktopServices>
+#include <QGuiApplication>
+#include <QSettings>
 #include <QJSEngine>
 #include <QFile>
 #include <QLocale>
@@ -24,6 +28,14 @@
 using namespace e3;
 
 MailApp *MailApp::s_instance = nullptr;
+
+namespace {
+// This device's own settings, beside the language (Languages.cpp).
+QSettings appSettings()
+{
+    return QSettings(Paths::dataDir() + QStringLiteral("/app.ini"), QSettings::IniFormat);
+}
+} // namespace
 
 namespace {
 
@@ -64,7 +76,61 @@ MailApp::MailApp(AccountManager *manager, QObject *parent) : QObject(parent), m_
     for (Account *a : m_mgr->accounts()) {
         connect(a, &Account::statusChanged, this, &MailApp::accountsChanged);
     }
+
+    m_notifier = new Notifier(makeSystemNotifierBackend(), this);
+    m_notifier->setMode(Notifier::modeFromString(appSettings().value(QStringLiteral("notifications")).toString()));
+    m_notifier->setWindowActive([] { return QGuiApplication::applicationState() == Qt::ApplicationActive; });
+    connect(m_notifier, &Notifier::activated, this, [this](int accountId, qint64 msgId) {
+        if (accountId >= 0 && m_mgr->account(accountId)) {
+            m_mgr->select(accountId);
+            selectTag(tag::Inbox);
+            if (msgId)
+                selectMessage(msgId);
+        }
+        Q_EMIT raiseRequested();
+    });
+    connect(m_mgr, &AccountManager::accountsChanged, this, &MailApp::wireNotifications);
+    wireNotifications();
     switchAccount();
+}
+
+// Every account's new mail, not only the one on screen.
+void MailApp::wireNotifications()
+{
+    const QList<Account *> all = m_mgr->accounts();
+    m_notifier->setAccountCount(int(all.size()));
+    for (Account *a : all) {
+        if (a->property("e3NotifyWired").toBool())
+            continue;
+        a->setProperty("e3NotifyWired", true);
+        connect(a, &Account::newMail, this, [this, a](qint64 id) {
+            // Our own mail from another device is filed as Sent, not announced.
+            if (const auto d = mail::Search::detail(a->ctx(), id); d && d->direction != Direction::Outgoing)
+                m_notifier->arrived(a->id(), a->addr(), id, d->from.name.isEmpty() ? d->from.addr : d->from.name,
+                                    d->subject);
+        });
+    }
+}
+
+QString MailApp::notificationMode() const
+{
+    return Notifier::modeToString(m_notifier->mode());
+}
+
+void MailApp::setNotificationMode(const QString &mode)
+{
+    const Notifier::Mode m = Notifier::modeFromString(mode);
+    if (m == m_notifier->mode())
+        return;
+    m_notifier->setMode(m);
+    QSettings s = appSettings();
+    s.setValue(QStringLiteral("notifications"), Notifier::modeToString(m));
+    Q_EMIT notificationsChanged();
+}
+
+bool MailApp::notificationsAvailable() const
+{
+    return m_notifier->available();
 }
 
 MailApp *MailApp::create(QQmlEngine *, QJSEngine *)
@@ -147,6 +213,11 @@ QString MailApp::accountStatus() const
 QString MailApp::accountStatusDetail() const
 {
     return account() ? account()->statusDetail() : QString();
+}
+
+int MailApp::olderRemaining() const
+{
+    return account() ? account()->olderRemaining() : 0;
 }
 
 void MailApp::switchAccount()
@@ -561,7 +632,83 @@ QVariantMap MailApp::contact(qint64 id) const
             {QStringLiteral("verified"), c->verified},
             {QStringLiteral("preferEncrypt"), c->preferEncrypt},
             {QStringLiteral("blocked"), c->blocked},
-            {QStringLiteral("encryption"), c->encryptionOverride ? int(*c->encryptionOverride) : -1}};
+            {QStringLiteral("encryption"), c->encryptionOverride ? int(*c->encryptionOverride) : -1},
+            {QStringLiteral("organization"), c->organization},
+            {QStringLiteral("title"), c->title},
+            {QStringLiteral("notes"), c->notes},
+            {QStringLiteral("birthday"), c->birthday},
+            {QStringLiteral("phones"), [&c] {
+                 QVariantList out;
+                 for (const ContactPhone &p : c->phones)
+                     out.append(QVariantMap{{QStringLiteral("label"), p.label}, {QStringLiteral("number"), p.number}});
+                 return out;
+             }()}};
+}
+
+qint64 MailApp::createContact(const QString &addr, const QString &name)
+{
+    if (!account())
+        return 0;
+    const auto id = mail::Contacts::create(account()->ctx(), addr, name);
+    if (!id) {
+        Q_EMIT notify(tr("%1 is not an email address, or is in your contacts already.").arg(addr.trimmed()));
+        return 0;
+    }
+    account()->notifyChanged();
+    return *id;
+}
+
+void MailApp::setContactDetails(qint64 id, const QVariantMap &details)
+{
+    ContactInfo d;
+    d.name = details.value(QStringLiteral("name")).toString();
+    d.organization = details.value(QStringLiteral("organization")).toString();
+    d.title = details.value(QStringLiteral("title")).toString();
+    d.notes = details.value(QStringLiteral("notes")).toString();
+    d.birthday = details.value(QStringLiteral("birthday")).toString();
+    for (const QVariant &v : details.value(QStringLiteral("phones")).toList()) {
+        const QVariantMap m = v.toMap();
+        d.phones.append({m.value(QStringLiteral("label")).toString(), m.value(QStringLiteral("number")).toString()});
+    }
+    WITH_ACCOUNT(mail::Contacts::setDetails(ctx, id, d));
+}
+
+void MailApp::removeContact(qint64 id)
+{
+    WITH_ACCOUNT(mail::Contacts::remove(ctx, id));
+}
+
+void MailApp::importContacts(const QUrl &file)
+{
+    if (!account())
+        return;
+    QFile f(file.toLocalFile());
+    if (!f.open(QIODevice::ReadOnly)) {
+        Q_EMIT notify(tr("Could not read %1.").arg(file.fileName()));
+        return;
+    }
+    const auto r = mail::Contacts::import(account()->ctx(), mail::VCard::parse(f.readAll()));
+    account()->notifyChanged();
+    QString msg = tr("%n contact(s) added", "", r.added) + QStringLiteral(", ") + tr("%n updated", "", r.updated);
+    if (r.skipped)
+        msg += QStringLiteral(", ") + tr("%n without an email address skipped", "", r.skipped);
+    Q_EMIT notify(msg + u'.');
+}
+
+void MailApp::exportContacts(const QUrl &file)
+{
+    if (!account())
+        return;
+    // The address book: people added, accepted or written to, not everyone
+    // ever seen on a message.
+    QList<ContactInfo> book;
+    for (const ContactInfo &c : mail::Contacts::list(account()->ctx(), QString(), 1000000)) {
+        if (c.isKnown())
+            book.append(c);
+    }
+    QSaveFile f(file.toLocalFile());
+    const bool ok = f.open(QIODevice::WriteOnly) && f.write(mail::VCard::emit(book)) >= 0 && f.commit();
+    Q_EMIT notify(ok ? tr("%n contact(s) exported.", "", int(book.size())) : tr("Could not write %1.").arg(file.fileName()));
 }
 
 void MailApp::setContactName(qint64 id, const QString &name)

@@ -19,6 +19,7 @@ shot reading --open inbox:0
 shot thread --open inbox:1
 shot unverified --open unverified
 shot composer --page compose
+shot reply-html --open inbox:0 --page reply
 shot contacts --page contacts
 shot settings --page settings
 # Other languages: right to left, CJK, and a long-worded one. CJK needs a

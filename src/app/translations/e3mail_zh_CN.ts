@@ -205,8 +205,40 @@ To: %4
 <context>
     <name>ContactsView</name>
     <message>
+        <source>Mobile</source>
+        <translation>手机</translation>
+    </message>
+    <message>
+        <source>Work</source>
+        <translation>工作</translation>
+    </message>
+    <message>
+        <source>Home</source>
+        <translation>住宅</translation>
+    </message>
+    <message>
+        <source>Other</source>
+        <translation>其他</translation>
+    </message>
+    <message>
         <source>Search contacts</source>
         <translation>搜索联系人</translation>
+    </message>
+    <message>
+        <source>New contact</source>
+        <translation>新建联系人</translation>
+    </message>
+    <message>
+        <source>Import or export</source>
+        <translation>导入或导出</translation>
+    </message>
+    <message>
+        <source>Import vCard…</source>
+        <translation>导入 vCard…</translation>
+    </message>
+    <message>
+        <source>Export contacts…</source>
+        <translation>导出联系人…</translation>
     </message>
     <message>
         <source>verified</source>
@@ -227,6 +259,38 @@ To: %4
     <message>
         <source>Name</source>
         <translation>姓名</translation>
+    </message>
+    <message>
+        <source>Organization</source>
+        <translation>组织</translation>
+    </message>
+    <message>
+        <source>Title</source>
+        <translation>职位</translation>
+    </message>
+    <message>
+        <source>Birthday</source>
+        <translation>生日</translation>
+    </message>
+    <message>
+        <source>YYYY-MM-DD, or --MM-DD without the year</source>
+        <translation>YYYY-MM-DD，不含年份时用 --MM-DD</translation>
+    </message>
+    <message>
+        <source>Phone</source>
+        <translation>电话</translation>
+    </message>
+    <message>
+        <source>Remove this number</source>
+        <translation>删除此号码</translation>
+    </message>
+    <message>
+        <source>Add a phone number</source>
+        <translation>添加电话号码</translation>
+    </message>
+    <message>
+        <source>Notes</source>
+        <translation>备注</translation>
     </message>
     <message>
         <source>Verified in person.</source>
@@ -272,6 +336,38 @@ To: %4
         <source>Block</source>
         <translation>屏蔽</translation>
     </message>
+    <message>
+        <source>Remove contact</source>
+        <translation>删除联系人</translation>
+    </message>
+    <message>
+        <source>Email address</source>
+        <translation>邮箱地址</translation>
+    </message>
+    <message>
+        <source>Name (optional)</source>
+        <translation>姓名（可选）</translation>
+    </message>
+    <message>
+        <source>Mail from your contacts goes straight to the Inbox.</source>
+        <translation>来自联系人的邮件会直接进入收件箱。</translation>
+    </message>
+    <message>
+        <source>Remove %1?</source>
+        <translation>删除 %1？</translation>
+    </message>
+    <message>
+        <source>Their details are removed from your contacts. Their next mail waits in Unverified until you accept it. Their key is kept.</source>
+        <translation>其信息将从联系人中删除。其下一封邮件将在“未验证”中等待，直到你接受。其密钥会保留。</translation>
+    </message>
+    <message>
+        <source>vCard files (*.vcf *.vcard)</source>
+        <translation>vCard 文件 (*.vcf *.vcard)</translation>
+    </message>
+    <message>
+        <source>All files (*)</source>
+        <translation>所有文件 (*)</translation>
+    </message>
 </context>
 <context>
     <name>FirstRunDialog</name>
@@ -298,6 +394,13 @@ To: %4
     <message>
         <source>I understand</source>
         <translation>我已了解</translation>
+    </message>
+</context>
+<context>
+    <name>FreedesktopBackend</name>
+    <message>
+        <source>Open</source>
+        <translation>打开</translation>
     </message>
 </context>
 <context>
@@ -404,6 +507,42 @@ To: %4
         <translation>
 
 （无法解密：%1）</translation>
+    </message>
+    <message>
+        <source>%1 is not an email address, or is in your contacts already.</source>
+        <translation>%1 不是邮箱地址，或已在联系人中。</translation>
+    </message>
+    <message>
+        <source>Could not read %1.</source>
+        <translation>无法读取 %1。</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n contact(s) added</source>
+        <translation>
+            <numerusform>已添加 %n 个联系人</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n updated</source>
+        <translation>
+            <numerusform>已更新 %n 个</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n without an email address skipped</source>
+        <translation>
+            <numerusform>已跳过 %n 个没有邮箱地址的条目</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n contact(s) exported.</source>
+        <translation>
+            <numerusform>已导出 %n 个联系人。</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Could not write %1.</source>
+        <translation>无法写入 %1。</translation>
     </message>
 </context>
 <context>
@@ -608,6 +747,29 @@ To: %4
     </message>
 </context>
 <context>
+    <name>Notifier</name>
+    <message>
+        <source>New message</source>
+        <translation>新邮件</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n new messages</source>
+        <translation>
+            <numerusform>%n 封新邮件</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>From %1 and %n more</source>
+        <translation>
+            <numerusform>来自 %1 等 %n 人</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>From %1</source>
+        <translation>来自 %1</translation>
+    </message>
+</context>
+<context>
     <name>Policy</name>
     <message>
         <source>Add a recipient.</source>
@@ -705,6 +867,30 @@ To: %4
     <message>
         <source>Translations other than English were made by machine and await review by native speakers.</source>
         <translation>除英语外的翻译均由机器完成，有待母语使用者审校。</translation>
+    </message>
+    <message>
+        <source>Notifications</source>
+        <translation>通知</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation>关闭</translation>
+    </message>
+    <message>
+        <source>Show who wrote</source>
+        <translation>显示发件人</translation>
+    </message>
+    <message>
+        <source>Show who wrote and the subject</source>
+        <translation>显示发件人和主题</translation>
+    </message>
+    <message>
+        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system&apos;s notification history, outside e3mail&apos;s encryption.</source>
+        <translation>仅限本设备，在 e3mail 打开但不在前台时通知。此处显示的主题会保留在系统的通知历史中，不受 e3mail 加密保护。</translation>
+    </message>
+    <message>
+        <source>This system offers no desktop notifications.</source>
+        <translation>此系统不提供桌面通知。</translation>
     </message>
     <message>
         <source>You</source>
@@ -1046,6 +1232,12 @@ To: %4
     <message>
         <source>Add a mailbox…</source>
         <translation>添加邮箱…</translation>
+    </message>
+    <message numerus="yes">
+        <source>Fetching older mail… %n left</source>
+        <translation>
+            <numerusform>正在获取较早的邮件… 还剩 %n 封</numerusform>
+        </translation>
     </message>
     <message>
         <source>Connected</source>

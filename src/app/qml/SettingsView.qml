@@ -63,6 +63,23 @@ Rectangle {
             }
             Note { text: qsTr("Translations other than English were made by machine and await review by native speakers.") }
 
+            Heading { text: qsTr("Notifications") }
+            ChoiceBox {
+                Layout.fillWidth: true
+                enabled: MailApp.notificationsAvailable
+                model: [{ v: "off", t: qsTr("Off") },
+                        { v: "sender", t: qsTr("Show who wrote") },
+                        { v: "full", t: qsTr("Show who wrote and the subject") }]
+                textRole: "t"; valueRole: "v"
+                selected: ["off", "sender", "full"].indexOf(MailApp.notificationMode)
+                onActivated: MailApp.notificationMode = currentValue
+            }
+            Note {
+                text: MailApp.notificationsAvailable
+                      ? qsTr("For this device, while e3mail is open and not in front. A subject shown here is kept in the system's notification history, outside e3mail's encryption.")
+                      : qsTr("This system offers no desktop notifications.")
+            }
+
             Heading { text: qsTr("You") }
             Label { text: qsTr("Name"); color: Theme.muted }
             Field {

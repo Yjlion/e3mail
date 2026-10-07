@@ -205,8 +205,40 @@ Do: %4
 <context>
     <name>ContactsView</name>
     <message>
+        <source>Mobile</source>
+        <translation>Komórkowy</translation>
+    </message>
+    <message>
+        <source>Work</source>
+        <translation>Służbowy</translation>
+    </message>
+    <message>
+        <source>Home</source>
+        <translation>Domowy</translation>
+    </message>
+    <message>
+        <source>Other</source>
+        <translation>Inny</translation>
+    </message>
+    <message>
         <source>Search contacts</source>
         <translation>Szukaj kontaktów</translation>
+    </message>
+    <message>
+        <source>New contact</source>
+        <translation>Nowy kontakt</translation>
+    </message>
+    <message>
+        <source>Import or export</source>
+        <translation>Import lub eksport</translation>
+    </message>
+    <message>
+        <source>Import vCard…</source>
+        <translation>Importuj vCard…</translation>
+    </message>
+    <message>
+        <source>Export contacts…</source>
+        <translation>Eksportuj kontakty…</translation>
     </message>
     <message>
         <source>verified</source>
@@ -227,6 +259,38 @@ Do: %4
     <message>
         <source>Name</source>
         <translation>Nazwa</translation>
+    </message>
+    <message>
+        <source>Organization</source>
+        <translation>Organizacja</translation>
+    </message>
+    <message>
+        <source>Title</source>
+        <translation>Stanowisko</translation>
+    </message>
+    <message>
+        <source>Birthday</source>
+        <translation>Urodziny</translation>
+    </message>
+    <message>
+        <source>YYYY-MM-DD, or --MM-DD without the year</source>
+        <translation>RRRR-MM-DD lub --MM-DD bez roku</translation>
+    </message>
+    <message>
+        <source>Phone</source>
+        <translation>Telefon</translation>
+    </message>
+    <message>
+        <source>Remove this number</source>
+        <translation>Usuń ten numer</translation>
+    </message>
+    <message>
+        <source>Add a phone number</source>
+        <translation>Dodaj numer telefonu</translation>
+    </message>
+    <message>
+        <source>Notes</source>
+        <translation>Notatki</translation>
     </message>
     <message>
         <source>Verified in person.</source>
@@ -272,6 +336,38 @@ Do: %4
         <source>Block</source>
         <translation>Zablokuj</translation>
     </message>
+    <message>
+        <source>Remove contact</source>
+        <translation>Usuń kontakt</translation>
+    </message>
+    <message>
+        <source>Email address</source>
+        <translation>Adres e-mail</translation>
+    </message>
+    <message>
+        <source>Name (optional)</source>
+        <translation>Imię i nazwisko (opcjonalnie)</translation>
+    </message>
+    <message>
+        <source>Mail from your contacts goes straight to the Inbox.</source>
+        <translation>Poczta od Twoich kontaktów trafia od razu do skrzynki odbiorczej.</translation>
+    </message>
+    <message>
+        <source>Remove %1?</source>
+        <translation>Usunąć %1?</translation>
+    </message>
+    <message>
+        <source>Their details are removed from your contacts. Their next mail waits in Unverified until you accept it. Their key is kept.</source>
+        <translation>Dane zostaną usunięte z kontaktów. Następna wiadomość od tej osoby zaczeka w „Niezweryfikowane”, dopóki jej nie przyjmiesz. Klucz zostaje zachowany.</translation>
+    </message>
+    <message>
+        <source>vCard files (*.vcf *.vcard)</source>
+        <translation>Pliki vCard (*.vcf *.vcard)</translation>
+    </message>
+    <message>
+        <source>All files (*)</source>
+        <translation>Wszystkie pliki (*)</translation>
+    </message>
 </context>
 <context>
     <name>FirstRunDialog</name>
@@ -298,6 +394,13 @@ Do: %4
     <message>
         <source>I understand</source>
         <translation>Rozumiem</translation>
+    </message>
+</context>
+<context>
+    <name>FreedesktopBackend</name>
+    <message>
+        <source>Open</source>
+        <translation>Otwórz</translation>
     </message>
 </context>
 <context>
@@ -406,6 +509,50 @@ Do: %4
         <translation>
 
 (nie można odszyfrować: %1)</translation>
+    </message>
+    <message>
+        <source>%1 is not an email address, or is in your contacts already.</source>
+        <translation>%1 nie jest adresem e-mail albo jest już w kontaktach.</translation>
+    </message>
+    <message>
+        <source>Could not read %1.</source>
+        <translation>Nie udało się odczytać %1.</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n contact(s) added</source>
+        <translation>
+            <numerusform>Dodano %n kontakt</numerusform>
+            <numerusform>Dodano %n kontakty</numerusform>
+            <numerusform>Dodano %n kontaktów</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n updated</source>
+        <translation>
+            <numerusform>%n zaktualizowany</numerusform>
+            <numerusform>%n zaktualizowane</numerusform>
+            <numerusform>%n zaktualizowanych</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n without an email address skipped</source>
+        <translation>
+            <numerusform>Pominięto %n bez adresu e-mail</numerusform>
+            <numerusform>Pominięto %n bez adresu e-mail</numerusform>
+            <numerusform>Pominięto %n bez adresu e-mail</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n contact(s) exported.</source>
+        <translation>
+            <numerusform>Wyeksportowano %n kontakt.</numerusform>
+            <numerusform>Wyeksportowano %n kontakty.</numerusform>
+            <numerusform>Wyeksportowano %n kontaktów.</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Could not write %1.</source>
+        <translation>Nie udało się zapisać %1.</translation>
     </message>
 </context>
 <context>
@@ -616,6 +763,33 @@ Do: %4
     </message>
 </context>
 <context>
+    <name>Notifier</name>
+    <message>
+        <source>New message</source>
+        <translation>Nowa wiadomość</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n new messages</source>
+        <translation>
+            <numerusform>%n nowa wiadomość</numerusform>
+            <numerusform>%n nowe wiadomości</numerusform>
+            <numerusform>%n nowych wiadomości</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>From %1 and %n more</source>
+        <translation>
+            <numerusform>Od %1 i %n innej osoby</numerusform>
+            <numerusform>Od %1 i %n innych osób</numerusform>
+            <numerusform>Od %1 i %n innych osób</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>From %1</source>
+        <translation>Od %1</translation>
+    </message>
+</context>
+<context>
     <name>Policy</name>
     <message>
         <source>Add a recipient.</source>
@@ -713,6 +887,30 @@ Do: %4
     <message>
         <source>Translations other than English were made by machine and await review by native speakers.</source>
         <translation>Tłumaczenia inne niż angielskie wykonała maszyna; czekają na sprawdzenie przez rodzimych użytkowników języka.</translation>
+    </message>
+    <message>
+        <source>Notifications</source>
+        <translation>Powiadomienia</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation>Wyłączone</translation>
+    </message>
+    <message>
+        <source>Show who wrote</source>
+        <translation>Pokaż nadawcę</translation>
+    </message>
+    <message>
+        <source>Show who wrote and the subject</source>
+        <translation>Pokaż nadawcę i temat</translation>
+    </message>
+    <message>
+        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system&apos;s notification history, outside e3mail&apos;s encryption.</source>
+        <translation>Na tym urządzeniu, gdy e3mail jest otwarty, ale nie na pierwszym planie. Pokazany tu temat zostaje w historii powiadomień systemu, poza szyfrowaniem e3mail.</translation>
+    </message>
+    <message>
+        <source>This system offers no desktop notifications.</source>
+        <translation>Ten system nie oferuje powiadomień na pulpicie.</translation>
     </message>
     <message>
         <source>You</source>
@@ -1054,6 +1252,14 @@ Do: %4
     <message>
         <source>Add a mailbox…</source>
         <translation>Dodaj skrzynkę…</translation>
+    </message>
+    <message numerus="yes">
+        <source>Fetching older mail… %n left</source>
+        <translation>
+            <numerusform>Pobieranie starszej poczty… została %n</numerusform>
+            <numerusform>Pobieranie starszej poczty… zostały %n</numerusform>
+            <numerusform>Pobieranie starszej poczty… zostało %n</numerusform>
+        </translation>
     </message>
     <message>
         <source>Connected</source>

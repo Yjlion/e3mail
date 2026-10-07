@@ -106,14 +106,17 @@ void Composer::load(const Draft &d, const QString &title)
     m_encrypt = d.encryption == SendEncryption::Required;
     // Signature goes in the body where it can be seen and edited, not
     // appended invisibly at send time.
-    QString text = d.text;
+    QString sig;
     if (Account *a = currentAccount(); a && !d.id) {
-        const QString sig = a->ctx().config.get(cfg::Signature);
-        if (!sig.trimmed().isEmpty())
-            text = text.isEmpty() ? QStringLiteral("\n\n-- \n") + sig
-                                  : QStringLiteral("\n\n-- \n") + sig + text;
+        const QString configured = a->ctx().config.get(cfg::Signature);
+        if (!configured.trimmed().isEmpty())
+            sig = QStringLiteral("\n\n-- \n") + configured;
     }
-    m_initialText = text;
+    m_initialText = sig + d.text;
+    // With HTML (a reply to HTML mail, a formatted draft), the signature goes
+    // in as plain lines above it.
+    m_initialHtml = d.html;
+    m_initialSignature = sig;
     Q_EMIT recipientsChanged();
     Q_EMIT subjectChanged();
     Q_EMIT optionsChanged();
@@ -175,7 +178,16 @@ void Composer::loadInto(QQuickTextDocument *doc)
 {
     if (!doc)
         return;
-    doc->textDocument()->setPlainText(m_initialText);
+    if (m_initialHtml.isEmpty()) {
+        doc->textDocument()->setPlainText(m_initialText);
+    } else {
+        RichText::load(doc->textDocument(), m_initialHtml);
+        if (!m_initialSignature.isEmpty()) {
+            QTextCursor s(doc->textDocument());
+            s.movePosition(QTextCursor::Start);
+            s.insertText(m_initialSignature); // its last line ends in the empty line it lands on
+        }
+    }
     QTextCursor c(doc->textDocument());
     c.movePosition(QTextCursor::Start);
 }

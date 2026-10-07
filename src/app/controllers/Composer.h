@@ -91,6 +91,7 @@ private:
 
     e3::Draft m_draft;
     QString m_to, m_cc, m_bcc, m_subject, m_initialText, m_title;
+    QString m_initialHtml, m_initialSignature; // a draft or reply with HTML
     bool m_important = false;
     bool m_encrypt = false;
     bool m_userSetPadlock = false;

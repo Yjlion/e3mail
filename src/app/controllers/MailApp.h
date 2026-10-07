@@ -10,6 +10,7 @@
 #include <QVariant>
 #include <QtQml/qqmlregistration.h>
 
+class Notifier;
 class QQmlEngine;
 class QJSEngine;
 
@@ -38,6 +39,8 @@ class MailApp : public QObject
     Q_PROPERTY(QString accountName READ accountName NOTIFY accountChanged)
     Q_PROPERTY(QString accountStatus READ accountStatus NOTIFY statusChanged)
     Q_PROPERTY(QString accountStatusDetail READ accountStatusDetail NOTIFY statusChanged)
+    // Older mail the first sync is still downloading, newest first.
+    Q_PROPERTY(int olderRemaining READ olderRemaining NOTIFY statusChanged)
     Q_PROPERTY(QString currentTag READ currentTag NOTIFY viewChanged)
     Q_PROPERTY(qint64 currentLabelId READ currentLabelId NOTIFY viewChanged)
     Q_PROPERTY(QString searchText READ searchText NOTIFY viewChanged)
@@ -49,6 +52,9 @@ class MailApp : public QObject
     // The chosen interface language; empty follows the system.
     Q_PROPERTY(QString language READ language WRITE setLanguage NOTIFY languageChanged)
     Q_PROPERTY(QVariantList languages READ languages CONSTANT)
+    // New-mail notifications on this device: off | sender | full.
+    Q_PROPERTY(QString notificationMode READ notificationMode WRITE setNotificationMode NOTIFY notificationsChanged)
+    Q_PROPERTY(bool notificationsAvailable READ notificationsAvailable CONSTANT)
 
 public:
     explicit MailApp(e3::AccountManager *manager, QObject *parent = nullptr);
@@ -66,6 +72,7 @@ public:
     QString accountName() const;
     QString accountStatus() const;
     QString accountStatusDetail() const;
+    int olderRemaining() const;
     QString currentTag() const { return m_tag; }
     qint64 currentLabelId() const { return m_labelId; }
     QString searchText() const { return m_search; }
@@ -116,6 +123,13 @@ public:
     Q_INVOKABLE void setContactName(qint64 id, const QString &name);
     // -1 inherits the account's mode; 0 lenient, 1 opportunistic, 2 strict.
     Q_INVOKABLE void setContactEncryption(qint64 id, int mode);
+    // The address book. createContact returns the new id, or 0.
+    Q_INVOKABLE qint64 createContact(const QString &addr, const QString &name);
+    // name, organization, title, notes, birthday, phones: [{label, number}]
+    Q_INVOKABLE void setContactDetails(qint64 id, const QVariantMap &details);
+    Q_INVOKABLE void removeContact(qint64 id);
+    Q_INVOKABLE void importContacts(const QUrl &file);
+    Q_INVOKABLE void exportContacts(const QUrl &file);
     Q_INVOKABLE QStringList completeAddress(const QString &prefix) const;
 
     Q_INVOKABLE QVariantMap settings() const;
@@ -124,6 +138,9 @@ public:
 
     QString language() const;
     void setLanguage(const QString &code);
+    QString notificationMode() const;
+    void setNotificationMode(const QString &mode);
+    bool notificationsAvailable() const;
     QVariantList languages() const;
 
 Q_SIGNALS:
@@ -139,6 +156,9 @@ Q_SIGNALS:
     void newMailArrived(const QString &from, const QString &subject);
     // Translators were replaced: the QML engine must retranslate.
     void languageChanged();
+    void notificationsChanged();
+    // A notification was clicked: the window should come to the front.
+    void raiseRequested();
 
 private:
     void switchAccount();
@@ -148,6 +168,7 @@ private:
     void reloadThread();
     QVariantMap messageMap(qint64 id) const;
     void scheduleRefresh();
+    void wireNotifications();
 
     static MailApp *s_instance;
     e3::AccountManager *m_mgr;
@@ -161,4 +182,5 @@ private:
     qint64 m_selected = 0;
     QVariantList m_thread;
     QTimer m_refresh;
+    Notifier *m_notifier;
 };

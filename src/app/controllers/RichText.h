@@ -24,4 +24,10 @@ struct Output
 
 Output emit(const QTextDocument *doc);
 
+// The other way: fills the document from HTML (a draft, or the quote in a
+// reply), sanitized first. Quotes and code get the composer's block roles, so
+// `emit` writes them back; what the whitelist lacks keeps its text, and
+// images are left out.
+void load(QTextDocument *doc, const QString &html);
+
 } // namespace RichText

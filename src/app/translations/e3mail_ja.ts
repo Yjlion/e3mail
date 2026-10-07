@@ -205,8 +205,40 @@ To: %4
 <context>
     <name>ContactsView</name>
     <message>
+        <source>Mobile</source>
+        <translation>携帯</translation>
+    </message>
+    <message>
+        <source>Work</source>
+        <translation>勤務先</translation>
+    </message>
+    <message>
+        <source>Home</source>
+        <translation>自宅</translation>
+    </message>
+    <message>
+        <source>Other</source>
+        <translation>その他</translation>
+    </message>
+    <message>
         <source>Search contacts</source>
         <translation>連絡先を検索</translation>
+    </message>
+    <message>
+        <source>New contact</source>
+        <translation>新しい連絡先</translation>
+    </message>
+    <message>
+        <source>Import or export</source>
+        <translation>インポートまたはエクスポート</translation>
+    </message>
+    <message>
+        <source>Import vCard…</source>
+        <translation>vCard をインポート…</translation>
+    </message>
+    <message>
+        <source>Export contacts…</source>
+        <translation>連絡先をエクスポート…</translation>
     </message>
     <message>
         <source>verified</source>
@@ -227,6 +259,38 @@ To: %4
     <message>
         <source>Name</source>
         <translation>名前</translation>
+    </message>
+    <message>
+        <source>Organization</source>
+        <translation>組織</translation>
+    </message>
+    <message>
+        <source>Title</source>
+        <translation>役職</translation>
+    </message>
+    <message>
+        <source>Birthday</source>
+        <translation>誕生日</translation>
+    </message>
+    <message>
+        <source>YYYY-MM-DD, or --MM-DD without the year</source>
+        <translation>YYYY-MM-DD、年なしは --MM-DD</translation>
+    </message>
+    <message>
+        <source>Phone</source>
+        <translation>電話</translation>
+    </message>
+    <message>
+        <source>Remove this number</source>
+        <translation>この番号を削除</translation>
+    </message>
+    <message>
+        <source>Add a phone number</source>
+        <translation>電話番号を追加</translation>
+    </message>
+    <message>
+        <source>Notes</source>
+        <translation>メモ</translation>
     </message>
     <message>
         <source>Verified in person.</source>
@@ -272,6 +336,38 @@ To: %4
         <source>Block</source>
         <translation>ブロック</translation>
     </message>
+    <message>
+        <source>Remove contact</source>
+        <translation>連絡先を削除</translation>
+    </message>
+    <message>
+        <source>Email address</source>
+        <translation>メールアドレス</translation>
+    </message>
+    <message>
+        <source>Name (optional)</source>
+        <translation>名前（任意）</translation>
+    </message>
+    <message>
+        <source>Mail from your contacts goes straight to the Inbox.</source>
+        <translation>連絡先からのメールは直接受信トレイに届きます。</translation>
+    </message>
+    <message>
+        <source>Remove %1?</source>
+        <translation>%1 を削除しますか？</translation>
+    </message>
+    <message>
+        <source>Their details are removed from your contacts. Their next mail waits in Unverified until you accept it. Their key is kept.</source>
+        <translation>この人の情報は連絡先から削除されます。次のメールは承認するまで「未確認」で待機します。鍵は保持されます。</translation>
+    </message>
+    <message>
+        <source>vCard files (*.vcf *.vcard)</source>
+        <translation>vCard ファイル (*.vcf *.vcard)</translation>
+    </message>
+    <message>
+        <source>All files (*)</source>
+        <translation>すべてのファイル (*)</translation>
+    </message>
 </context>
 <context>
     <name>FirstRunDialog</name>
@@ -298,6 +394,13 @@ To: %4
     <message>
         <source>I understand</source>
         <translation>了解しました</translation>
+    </message>
+</context>
+<context>
+    <name>FreedesktopBackend</name>
+    <message>
+        <source>Open</source>
+        <translation>開く</translation>
     </message>
 </context>
 <context>
@@ -404,6 +507,42 @@ To: %4
         <translation>
 
 (復号できません: %1)</translation>
+    </message>
+    <message>
+        <source>%1 is not an email address, or is in your contacts already.</source>
+        <translation>%1 はメールアドレスではないか、すでに連絡先にあります。</translation>
+    </message>
+    <message>
+        <source>Could not read %1.</source>
+        <translation>%1 を読み込めませんでした。</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n contact(s) added</source>
+        <translation>
+            <numerusform>%n 件の連絡先を追加</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n updated</source>
+        <translation>
+            <numerusform>%n 件を更新</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n without an email address skipped</source>
+        <translation>
+            <numerusform>メールアドレスのない %n 件をスキップ</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n contact(s) exported.</source>
+        <translation>
+            <numerusform>%n 件の連絡先をエクスポートしました。</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Could not write %1.</source>
+        <translation>%1 に書き込めませんでした。</translation>
     </message>
 </context>
 <context>
@@ -608,6 +747,29 @@ To: %4
     </message>
 </context>
 <context>
+    <name>Notifier</name>
+    <message>
+        <source>New message</source>
+        <translation>新着メッセージ</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n new messages</source>
+        <translation>
+            <numerusform>新着メッセージ %n 件</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>From %1 and %n more</source>
+        <translation>
+            <numerusform>%1 ほか %n 人から</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>From %1</source>
+        <translation>%1 から</translation>
+    </message>
+</context>
+<context>
     <name>Policy</name>
     <message>
         <source>Add a recipient.</source>
@@ -705,6 +867,30 @@ To: %4
     <message>
         <source>Translations other than English were made by machine and await review by native speakers.</source>
         <translation>英語以外の翻訳は機械によるもので、ネイティブスピーカーによる確認を待っています。</translation>
+    </message>
+    <message>
+        <source>Notifications</source>
+        <translation>通知</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation>オフ</translation>
+    </message>
+    <message>
+        <source>Show who wrote</source>
+        <translation>差出人を表示</translation>
+    </message>
+    <message>
+        <source>Show who wrote and the subject</source>
+        <translation>差出人と件名を表示</translation>
+    </message>
+    <message>
+        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system&apos;s notification history, outside e3mail&apos;s encryption.</source>
+        <translation>このデバイスで、e3mail が開いていて前面にないときに通知します。ここに表示された件名は、e3mail の暗号化の外にあるシステムの通知履歴に残ります。</translation>
+    </message>
+    <message>
+        <source>This system offers no desktop notifications.</source>
+        <translation>このシステムにはデスクトップ通知がありません。</translation>
     </message>
     <message>
         <source>You</source>
@@ -1046,6 +1232,12 @@ To: %4
     <message>
         <source>Add a mailbox…</source>
         <translation>メールボックスを追加…</translation>
+    </message>
+    <message numerus="yes">
+        <source>Fetching older mail… %n left</source>
+        <translation>
+            <numerusform>古いメールを取得中… 残り %n 件</numerusform>
+        </translation>
     </message>
     <message>
         <source>Connected</source>

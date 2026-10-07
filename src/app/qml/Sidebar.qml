@@ -168,7 +168,9 @@ Rectangle {
                 }
                 Text {
                     Layout.fillWidth: true
-                    text: MailApp.accountStatus === "online" ? qsTr("Connected")
+                    text: MailApp.accountStatus === "online" && MailApp.olderRemaining > 0
+                          ? qsTr("Fetching older mail… %n left", "", MailApp.olderRemaining)
+                        : MailApp.accountStatus === "online" ? qsTr("Connected")
                         : MailApp.accountStatus === "auth" ? qsTr("Login failed — check the password")
                         : qsTr("Offline")
                     color: Theme.muted

@@ -6,6 +6,8 @@
 #include <QList>
 #include <QSet>
 
+#include <optional>
+
 namespace e3::net {
 
 // IMAP4rev1 as a transport: one folder, read by UID, deleted when retention
@@ -22,14 +24,20 @@ public:
 
     void connect(const ServerSettings &server);
     Mailbox select(const QString &mailbox = QStringLiteral("INBOX"));
-    QList<quint32> uids();                       // UID SEARCH ALL, ascending
-    QByteArray fetch(quint32 uid);               // BODY.PEEK[], never sets \Seen
+    // UID SEARCH UID <range>, e.g. "5:*" or "1:99", ascending. Only UIDs in
+    // the range are returned: "n:*" always matches the last message.
+    QList<quint32> uids(quint32 first, std::optional<quint32> last = std::nullopt);
+    // BODY.PEEK[], never sets \Seen. Nothing when the message is gone, which
+    // another client may have deleted since it was listed.
+    std::optional<QByteArray> fetch(quint32 uid);
     void remove(const QList<quint32> &uids);     // \Deleted, then (UID) EXPUNGE
     // IDLE until the server reports a change, `stop()` is true or maxMs
     // passes. Returns true if the mailbox changed. Polls with NOOP when the
-    // server has no IDLE.
+    // server has no IDLE. Stopped mid-IDLE, it closes the connection.
     bool idle(int maxMs, const std::function<bool()> &stop);
     void logout();
+    void close(); // without LOGOUT: nothing waits on the server
+
 
     bool hasCapability(const QByteArray &cap) const { return m_caps.contains(cap.toUpper()); }
 

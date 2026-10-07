@@ -12,6 +12,7 @@
 #include "mail/Organize.h"
 #include "mail/Preferences.h"
 #include "mail/Search.h"
+#include "mail/VCard.h"
 #include "store/BlobStore.h"
 #include "store/Config.h"
 #include "store/Database.h"
@@ -112,7 +113,7 @@ int main(int argc, char **argv)
         "  accounts                       list accounts\n"
         "  discover                       find server settings for --addr\n"
         "  add                            add an account (--addr, --password, server options)\n"
-        "  sync                           send the outbox and fetch once\n"
+        "  sync                           send the outbox and fetch once (new mail, then a page of older)\n"
         "  list                           list messages (--tag, --search)\n"
         "  show <id>                      show a message (--raw for the original)\n"
         "  send                           queue a message (--to, --subject, --body ...); run sync to deliver\n"
@@ -120,6 +121,10 @@ int main(int argc, char **argv)
         "  block <pattern> | unblock <pattern>\n"
         "  trash <id> | restore <id> | archive <id>\n"
         "  contacts                       list contacts\n"
+        "  contact-add                    add a contact (--addr, --name)\n"
+        "  contact-remove <addr>          remove a contact\n"
+        "  vcard-import <file>            import contacts from a vCard file\n"
+        "  vcard-export [file]            export the address book as vCard 4.0\n"
         "  config <key> [value]           read or write an account setting\n"
         "  housekeeping                   run deadlines now"));
     p.addHelpOption();
@@ -236,8 +241,9 @@ int main(int argc, char **argv)
         const qint64 idArg = args.value(1).toLongLong();
 
         if (cmd == QLatin1String("sync")) {
-            MailWorker::runOnce(acc->dir(), acc->credentials());
-            print(QJsonObject{{QStringLiteral("inbox"), mail::Search::count(ctx, tag::Inbox, false)},
+            const int older = MailWorker::runOnce(acc->dir(), acc->credentials());
+            print(QJsonObject{{QStringLiteral("older_remaining"), older},
+                              {QStringLiteral("inbox"), mail::Search::count(ctx, tag::Inbox, false)},
                               {QStringLiteral("unread"), mail::Search::count(ctx, tag::Inbox, true)},
                               {QStringLiteral("unverified"), mail::Search::count(ctx, tag::Unverified, false)}});
         } else if (cmd == QLatin1String("list")) {
@@ -285,6 +291,9 @@ int main(int argc, char **argv)
             if (p.isSet(QStringLiteral("subject")))
                 d.subject = p.value(QStringLiteral("subject"));
             d.text = p.value(QStringLiteral("body")) + d.text;
+            // The CLI writes plain text: a reply quotes the plain body, never
+            // an HTML quote without the new text in it.
+            d.html.clear();
             d.importance = p.isSet(QStringLiteral("important")) ? 1 : 0;
             const QString enc = p.value(QStringLiteral("encrypt"));
             d.encryption = enc == QLatin1String("required") ? SendEncryption::Required
@@ -318,14 +327,56 @@ int main(int argc, char **argv)
             print(QJsonObject{{QStringLiteral("archived"), idArg}});
         } else if (cmd == QLatin1String("contacts")) {
             QJsonArray a;
-            for (const ContactInfo &c : mail::Contacts::list(ctx))
+            for (const ContactInfo &c : mail::Contacts::list(ctx)) {
+                QJsonArray phones;
+                for (const ContactPhone &ph : c.phones)
+                    phones.append(QJsonObject{{QStringLiteral("label"), ph.label}, {QStringLiteral("number"), ph.number}});
                 a.append(QJsonObject{{QStringLiteral("addr"), c.addr},
                                      {QStringLiteral("name"), c.name},
                                      {QStringLiteral("known"), c.isKnown()},
                                      {QStringLiteral("key"), c.fingerprint},
                                      {QStringLiteral("verified"), c.verified},
-                                     {QStringLiteral("blocked"), c.blocked}});
+                                     {QStringLiteral("blocked"), c.blocked},
+                                     {QStringLiteral("organization"), c.organization},
+                                     {QStringLiteral("title"), c.title},
+                                     {QStringLiteral("birthday"), c.birthday},
+                                     {QStringLiteral("notes"), c.notes},
+                                     {QStringLiteral("phones"), phones}});
+            }
             print(a);
+        } else if (cmd == QLatin1String("contact-add")) {
+            const auto id = mail::Contacts::create(ctx, p.value(QStringLiteral("addr")), p.value(QStringLiteral("name")));
+            if (!id)
+                fail(QStringLiteral("not an address, or a contact already"));
+            print(QJsonObject{{QStringLiteral("id"), *id}});
+        } else if (cmd == QLatin1String("contact-remove")) {
+            const auto c = mail::Contacts::get(ctx, args.value(1));
+            if (!c)
+                fail(QStringLiteral("no such contact"));
+            mail::Contacts::remove(ctx, c->id);
+            print(QJsonObject{{QStringLiteral("removed"), c->addr}});
+        } else if (cmd == QLatin1String("vcard-import")) {
+            QFile f(args.value(1));
+            if (!f.open(QIODevice::ReadOnly))
+                fail(QStringLiteral("cannot read %1").arg(args.value(1)));
+            const auto r = mail::Contacts::import(ctx, mail::VCard::parse(f.readAll()));
+            print(QJsonObject{{QStringLiteral("added"), r.added},
+                              {QStringLiteral("updated"), r.updated},
+                              {QStringLiteral("skipped"), r.skipped}});
+        } else if (cmd == QLatin1String("vcard-export")) {
+            QList<ContactInfo> book;
+            for (const ContactInfo &c : mail::Contacts::list(ctx, QString(), 1000000)) {
+                if (c.isKnown())
+                    book.append(c);
+            }
+            const QByteArray vcf = mail::VCard::emit(book);
+            if (args.size() > 1) {
+                QFile f(args.value(1));
+                if (!f.open(QIODevice::WriteOnly) || f.write(vcf) != vcf.size())
+                    fail(QStringLiteral("cannot write %1").arg(args.value(1)));
+            } else {
+                std::fwrite(vcf.constData(), 1, size_t(vcf.size()), stdout);
+            }
         } else if (cmd == QLatin1String("config")) {
             const QByteArray key = args.value(1).toUtf8();
             if (key.isEmpty())

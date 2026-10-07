@@ -70,6 +70,8 @@ public:
     void syncNow();
     bool isRunning() const;
     QString status() const { return m_status; }
+    // Older mail the first sync still has to download; 0 when done.
+    int olderRemaining() const { return m_olderRemaining; }
     QString statusDetail() const { return m_statusDetail; }
 
     MailContext &ctx() { return *m_ctx; }
@@ -92,6 +94,7 @@ private:
     std::unique_ptr<MailContext> m_ctx;
     QPointer<MailWorker> m_worker;
     QString m_status = QStringLiteral("offline");
+    int m_olderRemaining = 0;
     QString m_statusDetail;
 };
 

@@ -71,11 +71,12 @@ private Q_SLOTS:
         const auto mb = imap.select();
         QCOMPARE(mb.uidValidity, 777u);
         QCOMPARE(mb.exists, 2u);
-        const QList<quint32> uids = imap.uids();
+        const QList<quint32> uids = imap.uids(1);
         QCOMPARE(uids, (QList<quint32>{1, 2}));
-        QCOMPARE(imap.fetch(2), QByteArray("Subject: two\r\n\r\nbody {5}\r\n"));
+        QCOMPARE(imap.fetch(2).value_or(QByteArray()), QByteArray("Subject: two\r\n\r\nbody {5}\r\n"));
+        QVERIFY(!imap.fetch(99)); // gone
         imap.remove({1});
-        QCOMPARE(imap.uids(), QList<quint32>{2});
+        QCOMPARE(imap.uids(1), QList<quint32>{2});
         imap.logout();
         QCOMPARE(srv.mailbox(QStringLiteral("bob@x.test")).size(), 1);
     }

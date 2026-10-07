@@ -205,8 +205,40 @@ To: %4
 <context>
     <name>ContactsView</name>
     <message>
+        <source>Mobile</source>
+        <translation>מאָביל</translation>
+    </message>
+    <message>
+        <source>Work</source>
+        <translation>אַרבעט</translation>
+    </message>
+    <message>
+        <source>Home</source>
+        <translation>היים</translation>
+    </message>
+    <message>
+        <source>Other</source>
+        <translation>אַנדער</translation>
+    </message>
+    <message>
         <source>Search contacts</source>
         <translation>זוכן קאָנטאַקטן</translation>
+    </message>
+    <message>
+        <source>New contact</source>
+        <translation>נײַער קאָנטאַקט</translation>
+    </message>
+    <message>
+        <source>Import or export</source>
+        <translation>אימפּאָרטירן אָדער עקספּאָרטירן</translation>
+    </message>
+    <message>
+        <source>Import vCard…</source>
+        <translation>אימפּאָרטירן vCard…</translation>
+    </message>
+    <message>
+        <source>Export contacts…</source>
+        <translation>עקספּאָרטירן קאָנטאַקטן…</translation>
     </message>
     <message>
         <source>verified</source>
@@ -227,6 +259,38 @@ To: %4
     <message>
         <source>Name</source>
         <translation>נאָמען</translation>
+    </message>
+    <message>
+        <source>Organization</source>
+        <translation>אָרגאַניזאַציע</translation>
+    </message>
+    <message>
+        <source>Title</source>
+        <translation>שטעלע</translation>
+    </message>
+    <message>
+        <source>Birthday</source>
+        <translation>געבוירנטאָג</translation>
+    </message>
+    <message>
+        <source>YYYY-MM-DD, or --MM-DD without the year</source>
+        <translation>YYYY-MM-DD, אָדער ‎--MM-DD אָן דעם יאָר</translation>
+    </message>
+    <message>
+        <source>Phone</source>
+        <translation>טעלעפֿאָן</translation>
+    </message>
+    <message>
+        <source>Remove this number</source>
+        <translation>אַוועקנעמען דעם נומער</translation>
+    </message>
+    <message>
+        <source>Add a phone number</source>
+        <translation>צוגעבן אַ טעלעפֿאָן־נומער</translation>
+    </message>
+    <message>
+        <source>Notes</source>
+        <translation>נאָטיצן</translation>
     </message>
     <message>
         <source>Verified in person.</source>
@@ -272,6 +336,38 @@ To: %4
         <source>Block</source>
         <translation>בלאָקירן</translation>
     </message>
+    <message>
+        <source>Remove contact</source>
+        <translation>אַוועקנעמען דעם קאָנטאַקט</translation>
+    </message>
+    <message>
+        <source>Email address</source>
+        <translation>בליצבריוו־אַדרעס</translation>
+    </message>
+    <message>
+        <source>Name (optional)</source>
+        <translation>נאָמען (נישט מוז)</translation>
+    </message>
+    <message>
+        <source>Mail from your contacts goes straight to the Inbox.</source>
+        <translation>פּאָסט פֿון אײַערע קאָנטאַקטן קומט גלײַך אין אײַנגאַנג.</translation>
+    </message>
+    <message>
+        <source>Remove %1?</source>
+        <translation>אַוועקנעמען %1?</translation>
+    </message>
+    <message>
+        <source>Their details are removed from your contacts. Their next mail waits in Unverified until you accept it. Their key is kept.</source>
+        <translation>די פּרטים ווערן אַוועקגענומען פֿון אײַערע קאָנטאַקטן. דער קומענדיקער בריוו וואַרט אין ״נישט באַשטעטיקט״ ביז איר נעמט אים אָן. דער שליסל בלײַבט.</translation>
+    </message>
+    <message>
+        <source>vCard files (*.vcf *.vcard)</source>
+        <translation>vCard־טעקעס (*.vcf *.vcard)</translation>
+    </message>
+    <message>
+        <source>All files (*)</source>
+        <translation>אַלע טעקעס (*)</translation>
+    </message>
 </context>
 <context>
     <name>FirstRunDialog</name>
@@ -298,6 +394,13 @@ To: %4
     <message>
         <source>I understand</source>
         <translation>איך פֿאַרשטיי</translation>
+    </message>
+</context>
+<context>
+    <name>FreedesktopBackend</name>
+    <message>
+        <source>Open</source>
+        <translation>עפֿענען</translation>
     </message>
 </context>
 <context>
@@ -405,6 +508,46 @@ To: %4
         <translation>
 
 (מע קען ניט אויסשיפֿרירן: %1)</translation>
+    </message>
+    <message>
+        <source>%1 is not an email address, or is in your contacts already.</source>
+        <translation>%1 איז נישט קיין בליצבריוו־אַדרעס, אָדער איז שוין אין אײַערע קאָנטאַקטן.</translation>
+    </message>
+    <message>
+        <source>Could not read %1.</source>
+        <translation>מע האָט נישט געקענט לייענען %1.</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n contact(s) added</source>
+        <translation>
+            <numerusform>%n קאָנטאַקט צוגעגעבן</numerusform>
+            <numerusform>%n קאָנטאַקטן צוגעגעבן</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n updated</source>
+        <translation>
+            <numerusform>%n דערהײַנטיקט</numerusform>
+            <numerusform>%n דערהײַנטיקט</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n without an email address skipped</source>
+        <translation>
+            <numerusform>%n אָן אַ בליצבריוו־אַדרעס איבערגעשפּרונגען</numerusform>
+            <numerusform>%n אָן אַ בליצבריוו־אַדרעס איבערגעשפּרונגען</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n contact(s) exported.</source>
+        <translation>
+            <numerusform>%n קאָנטאַקט עקספּאָרטירט.</numerusform>
+            <numerusform>%n קאָנטאַקטן עקספּאָרטירט.</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Could not write %1.</source>
+        <translation>מע האָט נישט געקענט שרײַבן %1.</translation>
     </message>
 </context>
 <context>
@@ -612,6 +755,31 @@ To: %4
     </message>
 </context>
 <context>
+    <name>Notifier</name>
+    <message>
+        <source>New message</source>
+        <translation>נײַער בריוו</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n new messages</source>
+        <translation>
+            <numerusform>%n נײַער בריוו</numerusform>
+            <numerusform>%n נײַע בריוו</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>From %1 and %n more</source>
+        <translation>
+            <numerusform>פֿון %1 און נאָך %n</numerusform>
+            <numerusform>פֿון %1 און נאָך %n</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>From %1</source>
+        <translation>פֿון %1</translation>
+    </message>
+</context>
+<context>
     <name>Policy</name>
     <message>
         <source>Add a recipient.</source>
@@ -709,6 +877,30 @@ To: %4
     <message>
         <source>Translations other than English were made by machine and await review by native speakers.</source>
         <translation>די איבערזעצונגען אַחוץ ענגליש זענען געמאַכט געוואָרן פֿון אַ מאַשין און וואַרטן אויף אַ דורכקוק פֿון געבוירענע רעדערס.</translation>
+    </message>
+    <message>
+        <source>Notifications</source>
+        <translation>מעלדונגען</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation>אויסגעלאָשן</translation>
+    </message>
+    <message>
+        <source>Show who wrote</source>
+        <translation>ווײַזן ווער האָט געשריבן</translation>
+    </message>
+    <message>
+        <source>Show who wrote and the subject</source>
+        <translation>ווײַזן ווער האָט געשריבן און די טעמע</translation>
+    </message>
+    <message>
+        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system&apos;s notification history, outside e3mail&apos;s encryption.</source>
+        <translation>פֿאַר דעם מכשיר, ווען e3mail איז אָפֿן און נישט פֿאָרנט. אַ טעמע וואָס ווערט דאָ געוויזן בלײַבט אין דער סיסטעמס מעלדונג־היסטאָריע, אַרויס פֿון e3mail ס פֿאַרשליסלונג.</translation>
+    </message>
+    <message>
+        <source>This system offers no desktop notifications.</source>
+        <translation>די סיסטעם גיט נישט קיין דעסקטאָפּ־מעלדונגען.</translation>
     </message>
     <message>
         <source>You</source>
@@ -1050,6 +1242,13 @@ To: %4
     <message>
         <source>Add a mailbox…</source>
         <translation>צולייגן אַ פּאָסטקאַסטן…</translation>
+    </message>
+    <message numerus="yes">
+        <source>Fetching older mail… %n left</source>
+        <translation>
+            <numerusform>מע ברענגט עלטערע פּאָסט… עס בלײַבט %n</numerusform>
+            <numerusform>מע ברענגט עלטערע פּאָסט… עס בלײַבן %n</numerusform>
+        </translation>
     </message>
     <message>
         <source>Connected</source>

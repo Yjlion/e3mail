@@ -21,6 +21,13 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 set(E3MAIL_QT_COMPONENTS Core Network Concurrent)
 if(E3MAIL_BUILD_APP)
     list(APPEND E3MAIL_QT_COMPONENTS Gui Qml Quick QuickControls2 Svg LinguistTools)
+    # Desktop notifications: the freedesktop service over D-Bus on Linux, the
+    # system tray (Qt Widgets) elsewhere.
+    if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+        list(APPEND E3MAIL_QT_COMPONENTS DBus)
+    else()
+        list(APPEND E3MAIL_QT_COMPONENTS Widgets)
+    endif()
 endif()
 if(E3MAIL_BUILD_TESTS)
     list(APPEND E3MAIL_QT_COMPONENTS Test)

@@ -33,14 +33,18 @@ public:
     void wake() { m_wake = true; }
     void requestStop() { m_stop = true; }
 
-    // One synchronous pass: send, fetch, retention. For the CLI and tests.
-    static void runOnce(const QString &accountDir, const Credentials &creds);
+    // One synchronous pass: send, fetch new mail and one page of older mail,
+    // retention. Returns how many older messages are still to fetch. For the
+    // CLI and tests.
+    static int runOnce(const QString &accountDir, const Credentials &creds);
 
 Q_SIGNALS:
     void mailChanged();
     void newMail(qint64 msgId);
     void status(const QString &state, const QString &detail); // online | offline | error | auth
     void sent(qint64 msgId);
+    // Older mail still to download (IMAP's first sync); 0 when done.
+    void backfillProgress(int remaining);
 
 protected:
     void run() override;

@@ -1,11 +1,14 @@
 // SPDX-License-Identifier: MPL-2.0
 #include "FakeMailServer.h"
 #include "engine/AccountManager.h"
+#include "engine/MailWorker.h"
 #include "mail/Compose.h"
 #include "mail/Contacts.h"
 #include "mail/Organize.h"
 #include "mail/Policy.h"
 #include "mail/Search.h"
+#include "mail/VCard.h"
+#include "store/OpLog.h"
 #include "store/Config.h"
 #include "store/Database.h"
 
@@ -186,6 +189,183 @@ private Q_SLOTS:
         const auto r = mail::Policy::evaluate(alice->ctx(), {QStringLiteral("x@y.test")}, SendEncryption::Plaintext);
         QVERIFY(!r.canSend);
         QVERIFY(r.padlockLocked);
+    }
+
+    static QByteArray numbered(int i)
+    {
+        return QStringLiteral("From: a@b.test\r\nSubject: m%1\r\nMessage-ID: <m%1@b.test>\r\n"
+                              "Date: Mon, 1 Jan 2024 10:%2:00 +0000\r\n\r\nbody %1\r\n")
+            .arg(i)
+            .arg(i % 60, 2, 10, QLatin1Char('0'))
+            .toUtf8();
+    }
+
+    static bool has(Account *a, int i)
+    {
+        return a->ctx().db.queryInt("SELECT 1 FROM messages WHERE message_id=?", QStringLiteral("m%1@b.test").arg(i))
+            .has_value();
+    }
+
+    void firstSyncPagesNewestFirst()
+    {
+        m_srv->addUser(QStringLiteral("big@x.test"), QStringLiteral("pw"));
+        for (int i = 0; i < 250; ++i)
+            m_srv->deliver(QStringLiteral("big@x.test"), numbered(i));
+        Account *a = m_mgr->create();
+        Account::Settings s;
+        s.addr = QStringLiteral("big@x.test");
+        s.protocol = QStringLiteral("imap");
+        s.inHost = s.smtpHost = QStringLiteral("127.0.0.1");
+        s.inPort = m_srv->imapPort();
+        s.smtpPort = m_srv->smtpPort();
+        s.inSecurity = s.smtpSecurity = QStringLiteral("plain");
+        s.inPassword = QStringLiteral("pw");
+        a->configure(s);
+        const auto count = [a] { return *a->ctx().db.queryInt("SELECT count(*) FROM messages"); };
+
+        // A round is new mail, then the newest page of what was there.
+        QCOMPARE(MailWorker::runOnce(a->dir(), a->credentials()), 150);
+        QCOMPARE(count(), 100);
+        QVERIFY(has(a, 249) && has(a, 150) && !has(a, 149));
+
+        // New mail goes first, even mid-backfill, and is not "found there".
+        // Retention keeps it on the server for now.
+        a->ctx().config.set(cfg::ServerRetention, QStringLiteral("keep"));
+        a->ctx().config.setInt(cfg::ServerKeepDays, 30);
+        m_srv->deliver(QStringLiteral("big@x.test"), numbered(1000));
+        QCOMPARE(MailWorker::runOnce(a->dir(), a->credentials()), 50);
+        QVERIFY(has(a, 1000) && has(a, 50) && !has(a, 49));
+
+        // A fresh connection resumes where the last stopped: nothing twice.
+        QCOMPARE(MailWorker::runOnce(a->dir(), a->credentials()), 0);
+        QCOMPARE(count(), 251);
+        QCOMPARE(m_srv->fetchCount, 251);
+
+        QCOMPARE(m_srv->mailbox(QStringLiteral("big@x.test")).size(), 251);
+
+        // A new UIDVALIDITY re-reads everything and adds nothing. Each copy
+        // keeps what it was: the 250 were there before e3mail looked, and
+        // the new one is still retention's to delete.
+        m_srv->uidValidity = 778;
+        QCOMPARE(MailWorker::runOnce(a->dir(), a->credentials()), 151);
+        QCOMPARE(MailWorker::runOnce(a->dir(), a->credentials()), 51);
+        a->ctx().config.setInt(cfg::ServerKeepDays, 0);
+        QCOMPARE(MailWorker::runOnce(a->dir(), a->credentials()), 0);
+        QCOMPARE(count(), 251);
+        QCOMPARE(m_srv->mailbox(QStringLiteral("big@x.test")).size(), 250);
+        QVERIFY(!m_srv->mailbox(QStringLiteral("big@x.test")).join().contains("m1000"));
+    }
+
+    void firstSyncIsNotNewMail()
+    {
+        m_srv->addUser(QStringLiteral("big@x.test"), QStringLiteral("pw"));
+        for (int i = 0; i < 150; ++i)
+            m_srv->deliver(QStringLiteral("big@x.test"), numbered(i));
+        Account *a = m_mgr->create();
+        Account::Settings s;
+        s.addr = QStringLiteral("big@x.test");
+        s.protocol = QStringLiteral("imap");
+        s.inHost = s.smtpHost = QStringLiteral("127.0.0.1");
+        s.inPort = m_srv->imapPort();
+        s.smtpPort = m_srv->smtpPort();
+        s.inSecurity = s.smtpSecurity = QStringLiteral("plain");
+        s.inPassword = QStringLiteral("pw");
+        a->configure(s);
+        mail::Contacts::touch(a->ctx(), QStringLiteral("a@b.test"), QString(), ContactOrigin::Manual);
+        QSignalSpy spy(a, &Account::newMail);
+        a->start();
+        // The worker goes straight on from page to page.
+        QTRY_COMPARE_WITH_TIMEOUT(*a->ctx().db.queryInt("SELECT count(*) FROM messages"), 150, 10000);
+        QTRY_COMPARE(a->olderRemaining(), 0);
+        QCOMPARE(spy.size(), 0);
+        m_srv->deliver(QStringLiteral("big@x.test"), numbered(500));
+        QTRY_COMPARE_WITH_TIMEOUT(spy.size(), 1, 10000);
+        a->stop();
+    }
+
+    void addressBook()
+    {
+        Account *bob = makeAccount(QStringLiteral("bob@x.test"), QStringLiteral("imap"));
+        auto &ctx = bob->ctx();
+        const auto ops = [&ctx](const QString &kind) {
+            return *ctx.db.queryInt("SELECT count(*) FROM ops WHERE kind=?", kind);
+        };
+
+        // Added by hand: in the book, so their mail is trusted.
+        QVERIFY(!mail::Contacts::create(ctx, QStringLiteral("not an address"), QString()));
+        const auto id = mail::Contacts::create(ctx, QStringLiteral("Ada@B.test"), QStringLiteral("Ada"));
+        QVERIFY(id);
+        QVERIFY(!mail::Contacts::create(ctx, QStringLiteral("ada@b.test"), QString())); // already there
+        QVERIFY(mail::Contacts::isTrusted(ctx, QStringLiteral("ada@b.test")));
+        QCOMPARE(ops(op::ContactEdit), 1);
+
+        ContactInfo d = *mail::Contacts::byId(ctx, *id);
+        d.organization = QStringLiteral("  Engines  ");
+        d.birthday = QStringLiteral("not a date");
+        d.phones = {{QStringLiteral("work"), QStringLiteral(" +1 ")}, {QStringLiteral("home"), QStringLiteral("  ")}};
+        mail::Contacts::setDetails(ctx, *id, d);
+        auto c = *mail::Contacts::byId(ctx, *id);
+        QCOMPARE(c.organization, QStringLiteral("Engines"));
+        QVERIFY(c.birthday.isEmpty());
+        QCOMPARE(c.phones, (QList<ContactPhone>{{QStringLiteral("work"), QStringLiteral("+1")}}));
+        QCOMPARE(ops(op::ContactDetails), 1);
+        mail::Contacts::setDetails(ctx, *id, c); // nothing changed, nothing recorded
+        QCOMPARE(ops(op::ContactDetails), 1);
+
+        // Removed: their next mail waits in Unverified again.
+        mail::Contacts::remove(ctx, *id);
+        QVERIFY(!mail::Contacts::get(ctx, QStringLiteral("ada@b.test")));
+        QCOMPARE(ops(op::ContactRemove), 1);
+        QCOMPARE(*ctx.db.queryInt("SELECT count(*) FROM contact_phones"), 0);
+        m_srv->deliver(QStringLiteral("bob@x.test"), "From: ada@b.test\r\nSubject: hi\r\n\r\nx\r\n");
+        sync(bob);
+        QCOMPARE(mail::Search::count(ctx, tag::Unverified, false), 1);
+
+        // Import fills only what is missing, and takes people into the book.
+        mail::Contacts::create(ctx, QStringLiteral("grace@c.test"), QStringLiteral("Grace H."));
+        const auto result = mail::Contacts::import(
+            ctx, mail::VCard::parse("BEGIN:VCARD\r\nVERSION:3.0\r\nFN:Grace Hopper\r\nEMAIL:grace@c.test\r\n"
+                                    "ORG:Navy\r\nEND:VCARD\r\n"
+                                    "BEGIN:VCARD\r\nVERSION:3.0\r\nFN:Ada Lovelace\r\nEMAIL:ada@b.test\r\n"
+                                    "EMAIL:ada2@b.test\r\nTEL;TYPE=CELL:+44\r\nEND:VCARD\r\n"
+                                    "BEGIN:VCARD\r\nVERSION:3.0\r\nFN:Nobody\r\nEND:VCARD\r\n"));
+        QCOMPARE(result.added, 1);    // ada2
+        QCOMPARE(result.updated, 2);  // grace (organization), ada (seen, now in the book)
+        QCOMPARE(result.skipped, 1);
+        c = *mail::Contacts::get(ctx, QStringLiteral("grace@c.test"));
+        QCOMPARE(c.name, QStringLiteral("Grace H.")); // kept
+        QCOMPARE(c.organization, QStringLiteral("Navy"));
+        QVERIFY(mail::Contacts::isTrusted(ctx, QStringLiteral("ada@b.test")));
+        QCOMPARE(mail::Contacts::get(ctx, QStringLiteral("ada2@b.test"))->phones.value(0).number, QStringLiteral("+44"));
+    }
+
+    void repliesQuoteHtmlAsHtml()
+    {
+        Account *bob = makeAccount(QStringLiteral("bob@x.test"), QStringLiteral("imap"));
+        m_srv->deliver(QStringLiteral("bob@x.test"),
+                       "From: Ada <ada@b.test>\r\nSubject: plans\r\nMessage-ID: <h1@b.test>\r\n"
+                       "MIME-Version: 1.0\r\nContent-Type: text/html; charset=utf-8\r\n\r\n"
+                       "<p>The <b>plan</b> is <a href=\"https://plan.test/\">here</a>.</p>"
+                       "<script>x()</script>\r\n");
+        sync(bob);
+        const qint64 id = *bob->ctx().db.queryInt("SELECT id FROM messages WHERE message_id='h1@b.test'");
+
+        const Draft reply = mail::Compose::reply(bob->ctx(), id, false);
+        QVERIFY2(reply.html.contains(QLatin1String("<blockquote><p>The <b>plan</b> is <a href=\"https://plan.test/\">")),
+                 qPrintable(reply.html));
+        QVERIFY(reply.html.contains(QLatin1String("Ada wrote:")));
+        QVERIFY(!reply.html.contains(QLatin1String("script")));
+        QVERIFY(reply.text.contains(QLatin1String("> The plan is"))); // the plain alternative stays
+
+        const Draft fwd = mail::Compose::forward(bob->ctx(), id);
+        QVERIFY(fwd.html.contains(QLatin1String("Forwarded message")));
+        QVERIFY(fwd.html.contains(QLatin1String("<b>plan</b>")));
+
+        // Plain mail is quoted as plain text, as before.
+        m_srv->deliver(QStringLiteral("bob@x.test"), "From: ada@b.test\r\nSubject: p\r\nMessage-ID: <p1@b.test>\r\n\r\nplain\r\n");
+        sync(bob);
+        const qint64 plain = *bob->ctx().db.queryInt("SELECT id FROM messages WHERE message_id='p1@b.test'");
+        QVERIFY(mail::Compose::reply(bob->ctx(), plain, false).html.isEmpty());
     }
 
     void selfIsEncrypted()

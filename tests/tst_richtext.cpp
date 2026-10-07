@@ -62,6 +62,42 @@ private Q_SLOTS:
         QCOMPARE(out.text, QStringLiteral("> quoted\n    code"));
     }
 
+    void loadIsTheInverseOfEmit()
+    {
+        // What emit writes, load reads back to the same thing.
+        const QString html = QStringLiteral(
+            "<p><b>bold</b> <i>it</i> <u>under</u> <s>gone</s> <a href=\"https://ok.example/\">link</a></p>"
+            "<h2>Heading</h2><ul><li>one</li><li>two</li></ul><ol><li>first</li></ol>"
+            "<blockquote><p>quoted <b>text</b></p></blockquote><pre><code>code\n</code></pre><p><br></p><p>after</p>");
+        QTextDocument doc;
+        RichText::load(&doc, html);
+        QCOMPARE(RichText::emit(&doc).html, html);
+        // The empty line is an empty line, not a line holding a line break.
+        QCOMPARE(doc.lastBlock().previous().text(), QString());
+    }
+
+    void loadQuotesAndDropsTheRest()
+    {
+        QTextDocument doc;
+        RichText::load(&doc, QStringLiteral(
+                                 "<p>On Monday, Ada wrote:</p><blockquote><p>see <b>this</b></p>"
+                                 "<blockquote><p>nested</p></blockquote>"
+                                 "<table><tr><td>cell</td></tr></table><p>pic<img src=\"cid:a\">end</p>"
+                                 "<script>alert(1)</script></blockquote>"));
+        int quoted = 0;
+        for (QTextBlock b = doc.begin(); b.isValid(); b = b.next())
+            quoted += b.blockFormat().intProperty(RichText::RoleProperty) == RichText::Quote;
+        QVERIFY(quoted >= 2);
+        const auto out = RichText::emit(&doc);
+        QVERIFY2(out.html.contains(QLatin1String("<blockquote><p>see <b>this</b></p>")), qPrintable(out.html));
+        QVERIFY(out.html.contains(QLatin1String("nested")));
+        QVERIFY(out.html.contains(QLatin1String("cell"))); // the table flattens to its text
+        QVERIFY(out.html.contains(QLatin1String("<p>picend</p>")));
+        QVERIFY(!out.html.contains(QLatin1String("alert")));
+        QVERIFY(!out.html.contains(QChar(QChar::ObjectReplacementCharacter)));
+        QVERIFY(out.text.contains(QLatin1String("> see this")));
+    }
+
     void escapesText()
     {
         QTextDocument doc;
