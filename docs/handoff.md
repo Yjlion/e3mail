@@ -149,10 +149,19 @@ Now `.github/actions/windows-deps` serves CI and the release from one cache,
 built release-only (`x64-windows-release`), with a per-package vcpkg binary
 cache behind it. CI runs on push only.
 
-**Measured** (runs 37577790974 and 37577793325, cold cache): Botan 15 min,
-ICU 4.7 min, the dependency step 22.5 min instead of about 35, and the
-Windows job 26 min instead of 39–41. The portable install still carries RNP,
-Botan, ICU, SQLite and json-c from the new path.
+**Measured** (Windows job, wall clock):
+
+| Case | Before | Now | Run |
+|---|---|---|---|
+| Nothing cached | 39–41 min | 26 min (Botan 15, ICU 4.7) | 37577790974 |
+| Key changed, packages cached | 39–41 min | 5.7 min (dependencies 1.9) | 37583208476 |
+| Full cache hit | 4 min, if the key survived | 4.1 min (dependencies 7 s) | 37583208476, re-run |
+| Release, cache hit | 39–41 min | 4.7 min | 37584188287 |
+
+The portable install still carries RNP, Botan, ICU, SQLite and json-c from the
+release-only path. Getting here took three more rounds (traps 22–23, and
+vcpkg.exe missing on a hit). A release on a tag restoring main's cache is
+documented GitHub behaviour but has not been seen yet.
 
 ## Known gaps
 
@@ -297,7 +306,9 @@ same minute got `vcpkg-make@2026-07-09` and `vcpkg-make@2026-07-09#1`, so ICU's
 ABI hash, and with it the per-package cache, depended on which image a job
 landed on. Botan came back from that cache in 53 ms; ICU was rebuilt (5 min).
 The action now checks out vcpkg at a pinned commit (`vcpkg-commit`) instead of
-using `C:\vcpkg`. Bump it deliberately; that rebuilds everything once.
+using `C:\vcpkg`. Bump it deliberately; that rebuilds everything once. It is
+bootstrapped on every run, hit or not: the toolchain calls `vcpkg.exe` after
+each link to copy DLLs, and without it a cache hit failed to link.
 
 ## Next
 
