@@ -1,8 +1,10 @@
 name: CI
 
+# Push only: a pull request's checks are its head commit's, and a second,
+# pull_request-scoped run cannot read the branch's dependency cache, so it
+# built Windows' dependencies again beside the first.
 on:
   push:
-  pull_request:
 
 permissions:
   contents: read
@@ -60,37 +62,11 @@ jobs:
         if: runner.os == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1
 
-      # Botan and RNP take most of a Windows run to build; keep them between
-      # runs, keyed on everything that decides what gets built.
-      - name: Cache dependencies (Windows)
-        if: runner.os == 'Windows'
-        id: windeps
-        uses: actions/cache@v4
-        with:
-          path: |
-            vcpkg_installed
-            deps
-          key: windeps-${{ env.RNP_VERSION }}-${{ hashFiles('vcpkg.json', 'scripts/build-rnp.sh') }}
-
       - name: Dependencies (Windows)
         if: runner.os == 'Windows'
-        shell: bash
-        run: |
-          VCPKG="$VCPKG_INSTALLATION_ROOT"
-          INSTALLED="$GITHUB_WORKSPACE/vcpkg_installed"
-          TOOLCHAIN="$VCPKG/scripts/buildsystems/vcpkg.cmake"
-          if [[ "${{ steps.windeps.outputs.cache-hit }}" != "true" ]]; then
-            # Manifest mode: installs what vcpkg.json lists into ./vcpkg_installed.
-            "$VCPKG/vcpkg" install --triplet x64-windows
-            # RNP's own tree has no manifest: point it at the packages just installed.
-            scripts/build-rnp.sh "$GITHUB_WORKSPACE/deps" -G Ninja \
-                -DCMAKE_TOOLCHAIN_FILE="$TOOLCHAIN" -DVCPKG_TARGET_TRIPLET=x64-windows \
-                -DVCPKG_MANIFEST_MODE=OFF -DVCPKG_INSTALLED_DIR="$INSTALLED"
-          fi
-          echo "E3_CMAKE_ARGS=-DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN -DVCPKG_TARGET_TRIPLET=x64-windows -DVCPKG_INSTALLED_DIR=$INSTALLED" >> "$GITHUB_ENV"
-          echo "CMAKE_PREFIX_PATH=$GITHUB_WORKSPACE/deps" >> "$GITHUB_ENV"
-          echo "$GITHUB_WORKSPACE/deps/bin" >> "$GITHUB_PATH"
-          echo "$INSTALLED/x64-windows/bin" >> "$GITHUB_PATH"
+        uses: ./.github/actions/windows-deps
+        with:
+          rnp-version: ${{ env.RNP_VERSION }}
 
       - name: Configure
         shell: bash
