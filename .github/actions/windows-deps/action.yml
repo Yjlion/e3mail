@@ -64,6 +64,10 @@ runs:
         TOOLCHAIN="$VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake"
         ARGS="-DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN -DVCPKG_TARGET_TRIPLET=x64-windows-release"
         ARGS+=" -DVCPKG_HOST_TRIPLET=x64-windows-release -DVCPKG_INSTALLED_DIR=$INSTALLED"
+        # The step above installed everything. Left on, the toolchain's own
+        # install at configure time judged vcpkg-make's hash different and
+        # rebuilt it and ICU on every cache hit (6 min), without saving them.
+        ARGS+=" -DVCPKG_MANIFEST_INSTALL=OFF"
         if [[ "${{ inputs.bundle-dlls }}" == "true" ]]; then
           ARGS+=" -DE3MAIL_BUNDLE_DLLS_FROM=$GITHUB_WORKSPACE/deps/bin;$INSTALLED/x64-windows-release/bin"
         fi

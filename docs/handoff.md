@@ -282,8 +282,15 @@ install rules.
 version" cost a 40-minute rebuild. The version lives only in `CMakeLists.txt`.
 
 **21. The vcpkg triplet is in every path.** `x64-windows-release` puts DLLs in
-`vcpkg_installed/x64-windows-release/bin`. The host triplet is set to match,
-or vcpkg builds host ports a second time, debug included.
+`vcpkg_installed/x64-windows-release/bin`. The host triplet is set to match.
+
+**22. The vcpkg toolchain installs again at configure time.** On the first
+cache hit (run 37580256256), the dependency step took 1 s, but `cmake` with
+the vcpkg toolchain ran its manifest install, judged `vcpkg-make`'s ABI
+changed, and rebuilt it and ICU: Configure took 6 min, and the result was
+never saved. Why the hash differed between the two steps is not known.
+`VCPKG_MANIFEST_INSTALL=OFF` makes configure only use what the dependency
+step installed.
 
 ## Next
 
