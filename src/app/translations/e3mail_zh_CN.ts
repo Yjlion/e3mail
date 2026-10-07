@@ -1047,6 +1047,12 @@ To: %4
         <source>Add a mailbox…</source>
         <translation>添加邮箱…</translation>
     </message>
+    <message numerus="yes">
+        <source>Fetching older mail… %n left</source>
+        <translation>
+            <numerusform>正在获取较早的邮件… 还剩 %n 封</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Connected</source>
         <translation>已连接</translation>

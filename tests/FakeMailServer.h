@@ -49,6 +49,8 @@ public:
     bool pop3SaslPlain = false;
     quint32 uidValidity = 777;
     int expungeCount = 0;
+    int fetchCount = 0;
+    int searchCount = 0;
 
 private:
     struct ImapConn;

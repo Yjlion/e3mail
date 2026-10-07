@@ -1067,6 +1067,17 @@ To: %4
         <source>Add a mailbox…</source>
         <translation>إضافة صندوق بريد…</translation>
     </message>
+    <message numerus="yes">
+        <source>Fetching older mail… %n left</source>
+        <translation>
+            <numerusform>جارٍ جلب البريد الأقدم… لم يبقَ شيء</numerusform>
+            <numerusform>جارٍ جلب البريد الأقدم… بقيت رسالة واحدة</numerusform>
+            <numerusform>جارٍ جلب البريد الأقدم… بقيت رسالتان</numerusform>
+            <numerusform>جارٍ جلب البريد الأقدم… بقيت %n رسائل</numerusform>
+            <numerusform>جارٍ جلب البريد الأقدم… بقيت %n رسالة</numerusform>
+            <numerusform>جارٍ جلب البريد الأقدم… بقيت %n رسالة</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Connected</source>
         <translation>متصل</translation>

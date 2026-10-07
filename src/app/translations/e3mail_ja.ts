@@ -1047,6 +1047,12 @@ To: %4
         <source>Add a mailbox…</source>
         <translation>メールボックスを追加…</translation>
     </message>
+    <message numerus="yes">
+        <source>Fetching older mail… %n left</source>
+        <translation>
+            <numerusform>古いメールを取得中… 残り %n 件</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Connected</source>
         <translation>接続済み</translation>

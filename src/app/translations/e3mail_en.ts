@@ -35,4 +35,14 @@
         </translation>
     </message>
 </context>
+<context>
+    <name>Sidebar</name>
+    <message numerus="yes">
+        <source>Fetching older mail… %n left</source>
+        <translation>
+            <numerusform>Fetching older mail… %n left</numerusform>
+            <numerusform>Fetching older mail… %n left</numerusform>
+        </translation>
+    </message>
+</context>
 </TS>

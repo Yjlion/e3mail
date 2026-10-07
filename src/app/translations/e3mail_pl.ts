@@ -1055,6 +1055,14 @@ Do: %4
         <source>Add a mailbox…</source>
         <translation>Dodaj skrzynkę…</translation>
     </message>
+    <message numerus="yes">
+        <source>Fetching older mail… %n left</source>
+        <translation>
+            <numerusform>Pobieranie starszej poczty… została %n</numerusform>
+            <numerusform>Pobieranie starszej poczty… zostały %n</numerusform>
+            <numerusform>Pobieranie starszej poczty… zostało %n</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Connected</source>
         <translation>Połączono</translation>

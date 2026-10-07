@@ -196,9 +196,11 @@ ImapClient::Mailbox ImapClient::select(const QString &mailbox)
     return mb;
 }
 
-QList<quint32> ImapClient::uids()
+QList<quint32> ImapClient::uids(quint32 first, std::optional<quint32> last)
 {
-    const Response r = command("UID SEARCH ALL");
+    first = qMax<quint32>(first, 1);
+    const Response r = command("UID SEARCH UID " + QByteArray::number(first) + ':'
+                               + (last ? QByteArray::number(*last) : QByteArray("*")));
     throwIfFailed(r, "UID SEARCH");
     QList<quint32> out;
     for (const QByteArray &line : r.untagged) {
@@ -207,7 +209,7 @@ QList<quint32> ImapClient::uids()
         for (const QByteArray &t : line.mid(8).split(' ')) {
             bool ok = false;
             const quint32 v = t.toUInt(&ok);
-            if (ok)
+            if (ok && v >= first && (!last || v <= *last))
                 out.append(v);
         }
     }
@@ -215,7 +217,7 @@ QList<quint32> ImapClient::uids()
     return out;
 }
 
-QByteArray ImapClient::fetch(quint32 uid)
+std::optional<QByteArray> ImapClient::fetch(quint32 uid)
 {
     const Response r = command("UID FETCH " + QByteArray::number(uid) + " (UID BODY.PEEK[])");
     throwIfFailed(r, "UID FETCH");
@@ -228,7 +230,7 @@ QByteArray ImapClient::fetch(quint32 uid)
             continue;
         return r.literals[i].first();
     }
-    throw NetError(QStringLiteral("IMAP: message UID %1 is gone").arg(uid));
+    return std::nullopt;
 }
 
 void ImapClient::remove(const QList<quint32> &uids)
@@ -283,9 +285,20 @@ bool ImapClient::idle(int maxMs, const std::function<bool()> &stop)
         if (line.endsWith(" EXISTS") || line.endsWith(" EXPUNGE") || line.contains(" RECENT"))
             changed = true;
     }
+    // Stopping: drop the connection rather than wait for the server to
+    // acknowledge DONE, so a slow or unreachable server cannot hold up a quit.
+    if (stop && stop()) {
+        m_socket.close();
+        return changed;
+    }
     m_socket.write("DONE\r\n");
     throwIfFailed(readUntilTagged(tag), "IDLE");
     return changed;
+}
+
+void ImapClient::close()
+{
+    m_socket.close();
 }
 
 void ImapClient::logout()

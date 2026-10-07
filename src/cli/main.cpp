@@ -112,7 +112,7 @@ int main(int argc, char **argv)
         "  accounts                       list accounts\n"
         "  discover                       find server settings for --addr\n"
         "  add                            add an account (--addr, --password, server options)\n"
-        "  sync                           send the outbox and fetch once\n"
+        "  sync                           send the outbox and fetch once (new mail, then a page of older)\n"
         "  list                           list messages (--tag, --search)\n"
         "  show <id>                      show a message (--raw for the original)\n"
         "  send                           queue a message (--to, --subject, --body ...); run sync to deliver\n"
@@ -236,8 +236,9 @@ int main(int argc, char **argv)
         const qint64 idArg = args.value(1).toLongLong();
 
         if (cmd == QLatin1String("sync")) {
-            MailWorker::runOnce(acc->dir(), acc->credentials());
-            print(QJsonObject{{QStringLiteral("inbox"), mail::Search::count(ctx, tag::Inbox, false)},
+            const int older = MailWorker::runOnce(acc->dir(), acc->credentials());
+            print(QJsonObject{{QStringLiteral("older_remaining"), older},
+                              {QStringLiteral("inbox"), mail::Search::count(ctx, tag::Inbox, false)},
                               {QStringLiteral("unread"), mail::Search::count(ctx, tag::Inbox, true)},
                               {QStringLiteral("unverified"), mail::Search::count(ctx, tag::Unverified, false)}});
         } else if (cmd == QLatin1String("list")) {

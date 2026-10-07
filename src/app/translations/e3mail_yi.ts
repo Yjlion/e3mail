@@ -1051,6 +1051,13 @@ To: %4
         <source>Add a mailbox…</source>
         <translation>צולייגן אַ פּאָסטקאַסטן…</translation>
     </message>
+    <message numerus="yes">
+        <source>Fetching older mail… %n left</source>
+        <translation>
+            <numerusform>מע ברענגט עלטערע פּאָסט… עס בלײַבט %n</numerusform>
+            <numerusform>מע ברענגט עלטערע פּאָסט… עס בלײַבן %n</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Connected</source>
         <translation>פֿאַרבונדן</translation>

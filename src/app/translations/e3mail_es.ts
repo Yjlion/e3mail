@@ -1051,6 +1051,13 @@ Para: %4
         <source>Add a mailbox…</source>
         <translation>Añadir un buzón…</translation>
     </message>
+    <message numerus="yes">
+        <source>Fetching older mail… %n left</source>
+        <translation>
+            <numerusform>Descargando correo anterior… queda %n</numerusform>
+            <numerusform>Descargando correo anterior… quedan %n</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Connected</source>
         <translation>Conectado</translation>

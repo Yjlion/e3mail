@@ -215,14 +215,28 @@ void FakeMailServer::imapLine(QTcpSocket *s, ImapConn &c, const QByteArray &line
                  + QByteArray::number(uidValidity) + "] ok\r\n* OK [UIDNEXT "
                  + QByteArray::number(m_nextUid.value(c.user)) + "] ok\r\n" + tag + " OK [READ-WRITE] selected\r\n");
     } else if (cmd == "UID SEARCH") {
+        // ALL, or UID a:b where b may be "*". As RFC 3501 says, "a:*" also
+        // matches the last message when a is above every UID.
+        quint32 lo = 1, hi = UINT32_MAX, last = 0;
+        for (const Stored &m : box)
+            last = m.deleted ? last : qMax(last, m.uid);
+        if (args.value(0).toUpper() == "UID") {
+            const QList<QByteArray> r = args.value(1).split(':');
+            lo = r.value(0).toUInt();
+            hi = r.value(1) == "*" ? UINT32_MAX : r.value(1).toUInt();
+            if (r.value(1) == "*" && lo > last)
+                lo = last;
+        }
         QByteArray out = "* SEARCH";
         for (const Stored &m : box) {
-            if (!m.deleted)
+            if (!m.deleted && m.uid >= lo && m.uid <= hi)
                 out += ' ' + QByteArray::number(m.uid);
         }
+        ++searchCount;
         s->write(out + "\r\n" + tag + " OK done\r\n");
     } else if (cmd == "UID FETCH") {
         const quint32 uid = args.value(0).toUInt();
+        ++fetchCount;
         int seq = 0;
         for (const Stored &m : box) {
             if (m.deleted)

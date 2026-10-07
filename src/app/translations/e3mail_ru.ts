@@ -1055,6 +1055,14 @@ To: %4
         <source>Add a mailbox…</source>
         <translation>Добавить почтовый ящик…</translation>
     </message>
+    <message numerus="yes">
+        <source>Fetching older mail… %n left</source>
+        <translation>
+            <numerusform>Загрузка старой почты… осталось %n</numerusform>
+            <numerusform>Загрузка старой почты… осталось %n</numerusform>
+            <numerusform>Загрузка старой почты… осталось %n</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Connected</source>
         <translation>Подключено</translation>

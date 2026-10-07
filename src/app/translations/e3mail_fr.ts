@@ -1051,6 +1051,13 @@ Objet : %3
         <source>Add a mailbox…</source>
         <translation>Ajouter une boîte aux lettres…</translation>
     </message>
+    <message numerus="yes">
+        <source>Fetching older mail… %n left</source>
+        <translation>
+            <numerusform>Récupération du courrier ancien… %n restant</numerusform>
+            <numerusform>Récupération du courrier ancien… %n restants</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Connected</source>
         <translation>Connecté</translation>

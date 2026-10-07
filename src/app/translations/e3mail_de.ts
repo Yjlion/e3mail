@@ -1051,6 +1051,13 @@ An: %4
         <source>Add a mailbox…</source>
         <translation>Postfach hinzufügen…</translation>
     </message>
+    <message numerus="yes">
+        <source>Fetching older mail… %n left</source>
+        <translation>
+            <numerusform>Ältere Mail wird geladen … noch %n</numerusform>
+            <numerusform>Ältere Mail wird geladen … noch %n</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Connected</source>
         <translation>Verbunden</translation>

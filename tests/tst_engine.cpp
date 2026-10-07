@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MPL-2.0
 #include "FakeMailServer.h"
 #include "engine/AccountManager.h"
+#include "engine/MailWorker.h"
 #include "mail/Compose.h"
 #include "mail/Contacts.h"
 #include "mail/Organize.h"
@@ -186,6 +187,98 @@ private Q_SLOTS:
         const auto r = mail::Policy::evaluate(alice->ctx(), {QStringLiteral("x@y.test")}, SendEncryption::Plaintext);
         QVERIFY(!r.canSend);
         QVERIFY(r.padlockLocked);
+    }
+
+    static QByteArray numbered(int i)
+    {
+        return QStringLiteral("From: a@b.test\r\nSubject: m%1\r\nMessage-ID: <m%1@b.test>\r\n"
+                              "Date: Mon, 1 Jan 2024 10:%2:00 +0000\r\n\r\nbody %1\r\n")
+            .arg(i)
+            .arg(i % 60, 2, 10, QLatin1Char('0'))
+            .toUtf8();
+    }
+
+    static bool has(Account *a, int i)
+    {
+        return a->ctx().db.queryInt("SELECT 1 FROM messages WHERE message_id=?", QStringLiteral("m%1@b.test").arg(i))
+            .has_value();
+    }
+
+    void firstSyncPagesNewestFirst()
+    {
+        m_srv->addUser(QStringLiteral("big@x.test"), QStringLiteral("pw"));
+        for (int i = 0; i < 250; ++i)
+            m_srv->deliver(QStringLiteral("big@x.test"), numbered(i));
+        Account *a = m_mgr->create();
+        Account::Settings s;
+        s.addr = QStringLiteral("big@x.test");
+        s.protocol = QStringLiteral("imap");
+        s.inHost = s.smtpHost = QStringLiteral("127.0.0.1");
+        s.inPort = m_srv->imapPort();
+        s.smtpPort = m_srv->smtpPort();
+        s.inSecurity = s.smtpSecurity = QStringLiteral("plain");
+        s.inPassword = QStringLiteral("pw");
+        a->configure(s);
+        const auto count = [a] { return *a->ctx().db.queryInt("SELECT count(*) FROM messages"); };
+
+        // A round is new mail, then the newest page of what was there.
+        QCOMPARE(MailWorker::runOnce(a->dir(), a->credentials()), 150);
+        QCOMPARE(count(), 100);
+        QVERIFY(has(a, 249) && has(a, 150) && !has(a, 149));
+
+        // New mail goes first, even mid-backfill, and is not "found there".
+        // Retention keeps it on the server for now.
+        a->ctx().config.set(cfg::ServerRetention, QStringLiteral("keep"));
+        a->ctx().config.setInt(cfg::ServerKeepDays, 30);
+        m_srv->deliver(QStringLiteral("big@x.test"), numbered(1000));
+        QCOMPARE(MailWorker::runOnce(a->dir(), a->credentials()), 50);
+        QVERIFY(has(a, 1000) && has(a, 50) && !has(a, 49));
+
+        // A fresh connection resumes where the last stopped: nothing twice.
+        QCOMPARE(MailWorker::runOnce(a->dir(), a->credentials()), 0);
+        QCOMPARE(count(), 251);
+        QCOMPARE(m_srv->fetchCount, 251);
+
+        QCOMPARE(m_srv->mailbox(QStringLiteral("big@x.test")).size(), 251);
+
+        // A new UIDVALIDITY re-reads everything and adds nothing. Each copy
+        // keeps what it was: the 250 were there before e3mail looked, and
+        // the new one is still retention's to delete.
+        m_srv->uidValidity = 778;
+        QCOMPARE(MailWorker::runOnce(a->dir(), a->credentials()), 151);
+        QCOMPARE(MailWorker::runOnce(a->dir(), a->credentials()), 51);
+        a->ctx().config.setInt(cfg::ServerKeepDays, 0);
+        QCOMPARE(MailWorker::runOnce(a->dir(), a->credentials()), 0);
+        QCOMPARE(count(), 251);
+        QCOMPARE(m_srv->mailbox(QStringLiteral("big@x.test")).size(), 250);
+        QVERIFY(!m_srv->mailbox(QStringLiteral("big@x.test")).join().contains("m1000"));
+    }
+
+    void firstSyncIsNotNewMail()
+    {
+        m_srv->addUser(QStringLiteral("big@x.test"), QStringLiteral("pw"));
+        for (int i = 0; i < 150; ++i)
+            m_srv->deliver(QStringLiteral("big@x.test"), numbered(i));
+        Account *a = m_mgr->create();
+        Account::Settings s;
+        s.addr = QStringLiteral("big@x.test");
+        s.protocol = QStringLiteral("imap");
+        s.inHost = s.smtpHost = QStringLiteral("127.0.0.1");
+        s.inPort = m_srv->imapPort();
+        s.smtpPort = m_srv->smtpPort();
+        s.inSecurity = s.smtpSecurity = QStringLiteral("plain");
+        s.inPassword = QStringLiteral("pw");
+        a->configure(s);
+        mail::Contacts::touch(a->ctx(), QStringLiteral("a@b.test"), QString(), ContactOrigin::Manual);
+        QSignalSpy spy(a, &Account::newMail);
+        a->start();
+        // The worker goes straight on from page to page.
+        QTRY_COMPARE_WITH_TIMEOUT(*a->ctx().db.queryInt("SELECT count(*) FROM messages"), 150, 10000);
+        QTRY_COMPARE(a->olderRemaining(), 0);
+        QCOMPARE(spy.size(), 0);
+        m_srv->deliver(QStringLiteral("big@x.test"), numbered(500));
+        QTRY_COMPARE_WITH_TIMEOUT(spy.size(), 1, 10000);
+        a->stop();
     }
 
     void selfIsEncrypted()

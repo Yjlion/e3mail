@@ -1051,6 +1051,13 @@ To: %4
         <source>Add a mailbox…</source>
         <translation>הוספת תיבת דואר…</translation>
     </message>
+    <message numerus="yes">
+        <source>Fetching older mail… %n left</source>
+        <translation>
+            <numerusform>מוריד דואר ישן יותר… נותרה %n</numerusform>
+            <numerusform>מוריד דואר ישן יותר… נותרו %n</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Connected</source>
         <translation>מחובר</translation>

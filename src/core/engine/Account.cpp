@@ -170,6 +170,12 @@ void Account::start()
     connect(m_worker, &MailWorker::mailChanged, this, &Account::mailChanged);
     connect(m_worker, &MailWorker::newMail, this, &Account::newMail);
     connect(m_worker, &MailWorker::sent, this, &Account::mailChanged);
+    connect(m_worker, &MailWorker::backfillProgress, this, [this](int remaining) {
+        if (remaining == m_olderRemaining)
+            return;
+        m_olderRemaining = remaining;
+        Q_EMIT statusChanged();
+    });
     connect(m_worker, &MailWorker::status, this, [this](const QString &state, const QString &detail) {
         m_status = state;
         m_statusDetail = detail;

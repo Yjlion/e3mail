@@ -149,6 +149,11 @@ QString MailApp::accountStatusDetail() const
     return account() ? account()->statusDetail() : QString();
 }
 
+int MailApp::olderRemaining() const
+{
+    return account() ? account()->olderRemaining() : 0;
+}
+
 void MailApp::switchAccount()
 {
     if (m_connected)

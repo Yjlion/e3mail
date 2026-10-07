@@ -38,6 +38,8 @@ class MailApp : public QObject
     Q_PROPERTY(QString accountName READ accountName NOTIFY accountChanged)
     Q_PROPERTY(QString accountStatus READ accountStatus NOTIFY statusChanged)
     Q_PROPERTY(QString accountStatusDetail READ accountStatusDetail NOTIFY statusChanged)
+    // Older mail the first sync is still downloading, newest first.
+    Q_PROPERTY(int olderRemaining READ olderRemaining NOTIFY statusChanged)
     Q_PROPERTY(QString currentTag READ currentTag NOTIFY viewChanged)
     Q_PROPERTY(qint64 currentLabelId READ currentLabelId NOTIFY viewChanged)
     Q_PROPERTY(QString searchText READ searchText NOTIFY viewChanged)
@@ -66,6 +68,7 @@ public:
     QString accountName() const;
     QString accountStatus() const;
     QString accountStatusDetail() const;
+    int olderRemaining() const;
     QString currentTag() const { return m_tag; }
     qint64 currentLabelId() const { return m_labelId; }
     QString searchText() const { return m_search; }
