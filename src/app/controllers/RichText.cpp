@@ -5,6 +5,7 @@
 
 #include <QFont>
 #include <QTextBlock>
+#include <QTextCursor>
 #include <QTextDocument>
 #include <QTextFragment>
 #include <QTextList>
@@ -20,7 +21,8 @@ bool isMono(const QTextCharFormat &f)
     return f.fontFixedPitch() || f.fontFamilies().toStringList().join(u',').contains(QLatin1String("mono"), Qt::CaseInsensitive);
 }
 
-QString inlineHtml(const QTextBlock &block, bool inCode, bool *formatted)
+// `inHeading`: headings are bold already, so bold is not written inside one.
+QString inlineHtml(const QTextBlock &block, bool inCode, bool inHeading, bool *formatted)
 {
     QString out;
     for (auto it = block.begin(); !it.atEnd(); ++it) {
@@ -31,7 +33,7 @@ QString inlineHtml(const QTextBlock &block, bool inCode, bool *formatted)
         QString text = mime::escapeHtml(frag.text());
         text.replace(QChar::LineSeparator, QStringLiteral("<br>"));
         QStringList open;
-        if (f.fontWeight() >= QFont::Bold)
+        if (f.fontWeight() >= QFont::Bold && !inHeading)
             open << QStringLiteral("b");
         if (f.fontItalic())
             open << QStringLiteral("i");
@@ -123,7 +125,8 @@ Output emit(const QTextDocument *doc)
             }
             openRole = role;
         }
-        const QString inner = inlineHtml(b, role == Code, &formatted);
+        const int level = bf.headingLevel();
+        const QString inner = inlineHtml(b, role == Code, level >= 1 && level <= 3 && !list, &formatted);
         const QString plain = inlineText(b);
         if (list) {
             const bool ordered = list->format().style() == QTextListFormat::ListDecimal;
@@ -137,7 +140,6 @@ Output emit(const QTextDocument *doc)
             text << (ordered ? QString::number(n) + QStringLiteral(". ") : QStringLiteral("• ")) + plain;
             continue;
         }
-        const int level = bf.headingLevel();
         if (role == Code) {
             html << inner + QStringLiteral("\n");
             text << QStringLiteral("    ") + plain;
@@ -157,6 +159,65 @@ Output emit(const QTextDocument *doc)
     if (formatted)
         o.html = html.join(QString());
     return o;
+}
+
+void load(QTextDocument *doc, const QString &html)
+{
+    doc->setHtml(mime::sanitizeHtml(html).html);
+    QTextCursor c(doc);
+    c.beginEditBlock();
+    for (QTextBlock b = doc->begin(); b.isValid(); b = b.next()) {
+        QTextBlockFormat bf = b.blockFormat();
+        const int role = bf.intProperty(QTextFormat::BlockQuoteLevel) > 0 ? Quote
+            : bf.nonBreakableLines()                                     ? Code
+                                                                          : Paragraph;
+        // As Composer::setBlock lays them out.
+        bf.setProperty(RoleProperty, role);
+        bf.clearProperty(QTextFormat::BlockQuoteLevel);
+        bf.setLeftMargin(role == Quote ? 16 : 0);
+        bf.setRightMargin(0);
+        // Lines as the composer's own: HTML's paragraph spacing would make
+        // every line of a quote look like its own paragraph.
+        if (bf.headingLevel() == 0) {
+            bf.setTopMargin(0);
+            bf.setBottomMargin(0);
+        }
+        QTextCursor bc(b);
+        bc.setBlockFormat(bf);
+        if (role == Code) {
+            QTextCharFormat cf;
+            cf.setFontFixedPitch(true);
+            cf.setFontFamilies({QStringLiteral("monospace")});
+            bc.select(QTextCursor::BlockUnderCursor);
+            bc.mergeCharFormat(cf);
+        }
+    }
+    // A <pre> ending in a line break leaves an empty line at the end of the
+    // code, which emit would write back as a second one.
+    for (QTextBlock b = doc->begin(); b.isValid();) {
+        const QTextBlock next = b.next();
+        const bool codeEnds = !next.isValid() || next.blockFormat().intProperty(RoleProperty) != Code;
+        if (b.blockFormat().intProperty(RoleProperty) == Code && b.text().isEmpty() && codeEnds
+            && b.previous().isValid() && b.previous().blockFormat().intProperty(RoleProperty) == Code) {
+            QTextCursor del(b);
+            del.deletePreviousChar(); // joins it to the line before
+        }
+        b = next;
+    }
+    // emit writes an empty line as <p><br></p>; read back, that is a line
+    // holding a line break, which shows as two.
+    for (QTextBlock b = doc->begin(); b.isValid(); b = b.next()) {
+        if (b.text() == QString(QChar::LineSeparator)) {
+            QTextCursor bc(b);
+            bc.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
+            bc.removeSelectedText();
+        }
+    }
+    // Images: their placeholders would come out as text.
+    for (QTextCursor f = doc->find(QString(QChar::ObjectReplacementCharacter)); !f.isNull();
+         f = doc->find(QString(QChar::ObjectReplacementCharacter), f))
+        f.removeSelectedText();
+    c.endEditBlock();
 }
 
 } // namespace RichText

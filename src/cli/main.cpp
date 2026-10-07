@@ -286,6 +286,9 @@ int main(int argc, char **argv)
             if (p.isSet(QStringLiteral("subject")))
                 d.subject = p.value(QStringLiteral("subject"));
             d.text = p.value(QStringLiteral("body")) + d.text;
+            // The CLI writes plain text: a reply quotes the plain body, never
+            // an HTML quote without the new text in it.
+            d.html.clear();
             d.importance = p.isSet(QStringLiteral("important")) ? 1 : 0;
             const QString enc = p.value(QStringLiteral("encrypt"));
             d.encryption = enc == QLatin1String("required") ? SendEncryption::Required

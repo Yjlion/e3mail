@@ -291,11 +291,16 @@ Draft Compose::reply(MailContext &ctx, qint64 msgId, bool all)
     // In the writer's language, as other clients do. "Re:" stays as it is:
     // a translated prefix breaks threading in the recipient's client.
     const QDateTime when = m->date.toLocalTime();
-    d.text = QStringLiteral("\n\n%1\n%2")
-                 .arg(QCoreApplication::translate("Compose", "On %1 at %2, %3 wrote:")
-                          .arg(QLocale().toString(when.date(), QLocale::LongFormat),
-                               QLocale().toString(when.time(), QLocale::ShortFormat), who),
-                      quoted);
+    const QString attribution = QCoreApplication::translate("Compose", "On %1 at %2, %3 wrote:")
+                                    .arg(QLocale().toString(when.date(), QLocale::LongFormat),
+                                         QLocale().toString(when.time(), QLocale::ShortFormat), who);
+    d.text = QStringLiteral("\n\n%1\n%2").arg(attribution, quoted);
+    // HTML mail is quoted as HTML, so its formatting survives. It is what was
+    // stored, already sanitized; the composer re-emits it through its own
+    // whitelist before anything is sent.
+    if (!m->bodyHtml.isEmpty())
+        d.html = QStringLiteral("<p><br></p><p><br></p><p>") + mime::escapeHtml(attribution)
+            + QStringLiteral("</p><blockquote>") + m->bodyHtml + QStringLiteral("</blockquote>");
     // A reply to encrypted mail asks for encryption.
     d.encryption = m->encrypted ? SendEncryption::Required : SendEncryption::Auto;
     return d;
@@ -316,6 +321,10 @@ Draft Compose::forward(MailContext &ctx, qint64 msgId)
                  .arg(m->from.display(), QLocale().toString(m->date.toLocalTime(), QLocale::LongFormat), m->subject,
                       toList.join(QStringLiteral(", ")))
         + m->bodyText;
+    if (!m->bodyHtml.isEmpty()) {
+        const QString header = d.text.left(d.text.size() - m->bodyText.size()).trimmed();
+        d.html = QStringLiteral("<p><br></p><p><br></p>") + mime::textToHtml(header) + m->bodyHtml;
+    }
     for (const AttachmentInfo &a : m->attachments)
         d.attachments.append({a.filename, a.mimeType, ctx.blobs.get(a.blob)});
     return d;

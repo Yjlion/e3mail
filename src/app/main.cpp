@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
                                   QStringLiteral("png"));
     const QCommandLineOption offline(QStringLiteral("offline"), QStringLiteral("Do not connect to mail servers."));
     const QCommandLineOption page(QStringLiteral("page"), QStringLiteral("Start on this page (for screenshots)."),
-                                  QStringLiteral("mail|compose|contacts|settings"));
+                                  QStringLiteral("mail|compose|reply|contacts|settings"));
     const QCommandLineOption open(QStringLiteral("open"), QStringLiteral("Open the newest message in a tag (for screenshots)."),
                                   QStringLiteral("tag"));
     const QCommandLineOption lang(QStringLiteral("lang"),
@@ -76,6 +76,9 @@ int main(int argc, char *argv[])
     if (p.isSet(page)) {
         if (p.value(page) == QLatin1String("compose"))
             QMetaObject::invokeMethod(root, "compose", Q_ARG(QVariant, QStringLiteral("new")), Q_ARG(QVariant, 0));
+        else if (p.value(page) == QLatin1String("reply")) // to the message --open selected
+            QMetaObject::invokeMethod(root, "compose", Q_ARG(QVariant, QStringLiteral("reply")),
+                                      Q_ARG(QVariant, mailApp.selectedMessageId()));
         else
             root->setProperty("page", p.value(page));
     }

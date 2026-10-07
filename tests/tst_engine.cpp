@@ -281,6 +281,35 @@ private Q_SLOTS:
         a->stop();
     }
 
+    void repliesQuoteHtmlAsHtml()
+    {
+        Account *bob = makeAccount(QStringLiteral("bob@x.test"), QStringLiteral("imap"));
+        m_srv->deliver(QStringLiteral("bob@x.test"),
+                       "From: Ada <ada@b.test>\r\nSubject: plans\r\nMessage-ID: <h1@b.test>\r\n"
+                       "MIME-Version: 1.0\r\nContent-Type: text/html; charset=utf-8\r\n\r\n"
+                       "<p>The <b>plan</b> is <a href=\"https://plan.test/\">here</a>.</p>"
+                       "<script>x()</script>\r\n");
+        sync(bob);
+        const qint64 id = *bob->ctx().db.queryInt("SELECT id FROM messages WHERE message_id='h1@b.test'");
+
+        const Draft reply = mail::Compose::reply(bob->ctx(), id, false);
+        QVERIFY2(reply.html.contains(QLatin1String("<blockquote><p>The <b>plan</b> is <a href=\"https://plan.test/\">")),
+                 qPrintable(reply.html));
+        QVERIFY(reply.html.contains(QLatin1String("Ada wrote:")));
+        QVERIFY(!reply.html.contains(QLatin1String("script")));
+        QVERIFY(reply.text.contains(QLatin1String("> The plan is"))); // the plain alternative stays
+
+        const Draft fwd = mail::Compose::forward(bob->ctx(), id);
+        QVERIFY(fwd.html.contains(QLatin1String("Forwarded message")));
+        QVERIFY(fwd.html.contains(QLatin1String("<b>plan</b>")));
+
+        // Plain mail is quoted as plain text, as before.
+        m_srv->deliver(QStringLiteral("bob@x.test"), "From: ada@b.test\r\nSubject: p\r\nMessage-ID: <p1@b.test>\r\n\r\nplain\r\n");
+        sync(bob);
+        const qint64 plain = *bob->ctx().db.queryInt("SELECT id FROM messages WHERE message_id='p1@b.test'");
+        QVERIFY(mail::Compose::reply(bob->ctx(), plain, false).html.isEmpty());
+    }
+
     void selfIsEncrypted()
     {
         Account *alice = makeAccount(QStringLiteral("alice@x.test"), QStringLiteral("imap"));
