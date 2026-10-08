@@ -50,3 +50,29 @@ triplets and Qt 6.8 are both comfortable with. The target is API 34.
   (`app_smoke_narrow`, and the phone screenshots).
 - CI builds both ABIs and boots the x86_64 package in an emulator. Packages
   are debug-signed; signing for release is not set up.
+
+## Amendment — 2026-10-08: release packages and their key
+
+The release workflow publishes both APKs (`e3mail-android-arm64-v8a.apk` for
+phones, `e3mail-android-x86_64.apk` for emulators and Chromebooks), each with
+a SHA-256 checksum, beside the desktop packages.
+
+They are signed with one key kept in the repository's secrets, because Android
+installs an update only over a package signed with the same key; a key made
+per run would make every update an uninstall, and an uninstall deletes the
+mailbox. CI keeps its throwaway key: its packages are not published.
+
+Setting the key up, once:
+
+```sh
+keytool -genkeypair -keystore e3mail-release.keystore -alias e3mail \
+    -keyalg RSA -keysize 4096 -validity 10000 -dname "CN=e3mail"
+base64 -w0 e3mail-release.keystore   # the value of ANDROID_KEYSTORE_BASE64
+```
+
+Secrets: `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASS`,
+`ANDROID_KEY_ALIAS` (`e3mail` above) and `ANDROID_KEY_PASS` (may be omitted
+when it equals the store password). Keep a copy of the keystore outside
+GitHub: losing it means no release can update an installed e3mail again.
+Without the secrets the workflow still builds, signs with a throwaway key and
+warns.

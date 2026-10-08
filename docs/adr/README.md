@@ -20,4 +20,4 @@ that supersedes it, or a dated amendment block inside it, and add a row here.
 | [0013](0013-op-merge-rules.md) | How devices merge the op-log | Accepted, Phase 8; amended 2026-10-07 (address book) |
 | [0014](0014-languages-icu-and-qt-linguist.md) | Languages: ICU for charsets and dates, Qt Linguist for the interface | Accepted |
 | [0015](0015-finding-server-settings.md) | Finding server settings: provider, ISPDB, Autodiscover, DNS, guess | Accepted |
-| [0016](0016-android.md) | Android: the same app, one pane at a time, only while it runs | Accepted |
+| [0016](0016-android.md) | Android: the same app, one pane at a time, only while it runs | Accepted; amended 2026-10-08 (release signing) |
