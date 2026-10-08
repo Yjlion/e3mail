@@ -26,12 +26,18 @@ Rectangle {
         color: Theme.muted
         font.pixelSize: Theme.fontSmall + 1
     }
+    // Beside a field: on a phone it wraps rather than push the row off screen.
+    component RowText: Label {
+        Layout.fillWidth: Theme.narrow
+        wrapMode: Text.Wrap
+    }
     component DaysField: SpinBox {
         from: -1; to: 3650
         editable: true
     }
 
     Flickable {
+        id: flick
         anchors.fill: parent
         contentHeight: col.implicitHeight + 60
         clip: true
@@ -39,10 +45,11 @@ Rectangle {
 
         ColumnLayout {
             id: col
+            readonly property int margin: Theme.narrow ? 16 : 32
             // Mirrored by hand: x is not.
-            x: LayoutMirroring.enabled ? parent.width - width - 32 : 32
-            y: 24
-            width: Math.min(parent.width - 64, 640)
+            x: LayoutMirroring.enabled ? flick.width - width - margin : margin
+            y: Theme.narrow ? 12 : 24
+            width: Math.min(flick.width - 2 * margin, 640)
             spacing: 6
 
             Text { text: qsTr("Settings"); color: Theme.text; font.pixelSize: 24; font.weight: Font.DemiBold }
@@ -113,21 +120,24 @@ Rectangle {
 
             Heading { text: qsTr("Strangers") }
             CheckBox {
+                // Wraps on a phone instead of eliding or overflowing.
+                Layout.fillWidth: true
+                Component.onCompleted: { contentItem.wrapMode = Text.Wrap; contentItem.elide = Text.ElideNone }
                 text: qsTr("Hold mail from senders I have not accepted in Unverified")
                 checked: view.s.gating === true
                 onToggled: MailApp.setSetting("gating", checked)
             }
             RowLayout {
-                Label { text: qsTr("Move unaccepted mail to Trash after"); color: Theme.text }
+                RowText { text: qsTr("Move unaccepted mail to Trash after"); color: Theme.text }
                 DaysField { from: 0; value: view.s.unverifiedTrashDays || 0; onValueModified: MailApp.setSetting("unverifiedTrashDays", value) }
-                Label { text: qsTr("days (0: never)"); color: Theme.muted }
+                RowText { text: qsTr("days (0: never)"); color: Theme.muted }
             }
 
             Heading { text: qsTr("Trash") }
             RowLayout {
-                Label { text: qsTr("Destroy messages in Trash after"); color: Theme.text }
+                RowText { text: qsTr("Destroy messages in Trash after"); color: Theme.text }
                 DaysField { from: 0; value: view.s.trashPurgeDays || 0; onValueModified: MailApp.setSetting("trashPurgeDays", value) }
-                Label { text: qsTr("days (0: at once)"); color: Theme.muted }
+                RowText { text: qsTr("days (0: at once)"); color: Theme.muted }
             }
             Note { text: qsTr("Trash is the only place e3mail destroys mail on a timer. Unaccepted and blocked mail goes there first.") }
 
@@ -143,16 +153,16 @@ Rectangle {
             }
             RowLayout {
                 visible: view.s.serverRetention === "keep"
-                Label { text: qsTr("Keep for"); color: Theme.text }
+                RowText { text: qsTr("Keep for"); color: Theme.text }
                 DaysField { from: 1; value: view.s.serverKeepDays || 30; onValueModified: MailApp.setSetting("serverKeepDays", value) }
-                Label { text: qsTr("days"); color: Theme.muted }
+                RowText { text: qsTr("days"); color: Theme.muted }
             }
             Note { text: qsTr("Mail that was on the server before e3mail first connected is never removed. \"Never\" lets another mail program keep using this mailbox.") }
             RowLayout {
                 visible: view.s.protocol === "pop3"
-                Label { text: qsTr("Check for mail every"); color: Theme.text }
+                RowText { text: qsTr("Check for mail every"); color: Theme.text }
                 SpinBox { from: 30; to: 3600; stepSize: 30; editable: true; value: view.s.pollSeconds || 300; onValueModified: MailApp.setSetting("pollSeconds", value) }
-                Label { text: qsTr("seconds"); color: Theme.muted }
+                RowText { text: qsTr("seconds"); color: Theme.muted }
             }
             Note {
                 text: qsTr("%1 %2:%3 · SMTP %4:%5 · password stored in the %6")
@@ -163,9 +173,9 @@ Rectangle {
 
             Heading { text: qsTr("Originals") }
             RowLayout {
-                Label { text: qsTr("Keep each message's original for"); color: Theme.text }
+                RowText { text: qsTr("Keep each message's original for"); color: Theme.text }
                 DaysField { value: view.s.rawMimeDays !== undefined ? view.s.rawMimeDays : 30; onValueModified: MailApp.setSetting("rawMimeDays", value) }
-                Label { text: qsTr("days (0: never, −1: forever)"); color: Theme.muted }
+                RowText { text: qsTr("days (0: never, −1: forever)"); color: Theme.muted }
             }
 
             Heading { text: qsTr("Blocked") }
@@ -173,7 +183,7 @@ Rectangle {
                 id: blocked
                 RowLayout {
                     required property string modelData
-                    Label { text: modelData; color: Theme.text }
+                    RowText { text: modelData; color: Theme.text }
                     Button { text: qsTr("Unblock"); flat: true; onClicked: { MailApp.unblock(modelData); view.reload() } }
                 }
             }
@@ -187,7 +197,9 @@ Rectangle {
             Note { visible: MailApp.portable; text: qsTr("Portable mode: data is kept beside the program.") }
 
             Heading { text: qsTr("Accounts") }
-            RowLayout {
+            Flow {
+                Layout.fillWidth: true
+                spacing: 6
                 Button { text: qsTr("Add a mailbox…"); onClicked: view.addAccount() }
                 Button { text: qsTr("Remove this mailbox…"); flat: true; onClicked: removeConfirm.open() }
             }
@@ -202,7 +214,11 @@ Rectangle {
         modal: true
         title: qsTr("Remove %1?").arg(view.s.addr || "")
         standardButtons: Dialog.Yes | Dialog.Cancel
-        Label { text: qsTr("Every message, contact and key of this mailbox is deleted from this device.") }
+        Label {
+            width: Math.min(implicitWidth, Window.width - 96)
+            wrapMode: Text.Wrap
+            text: qsTr("Every message, contact and key of this mailbox is deleted from this device.")
+        }
         onAccepted: MailApp.removeAccount(MailApp.currentAccountId)
     }
 }

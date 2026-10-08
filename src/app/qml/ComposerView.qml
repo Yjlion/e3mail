@@ -28,6 +28,9 @@ Rectangle {
         else toField.forceActiveFocus()
     }
 
+    // Close, keeping what was written as a draft.
+    function close() { composer.saveDraft(body.textDocument); view.closed() }
+
     function fmt(kind) {
         composer.toggleFormat(body.textDocument, body.selectionStart, body.selectionEnd, kind)
         body.forceActiveFocus()
@@ -50,7 +53,7 @@ Rectangle {
 
     ColumnLayout {
         anchors.fill: parent
-        anchors.margins: 22
+        anchors.margins: Theme.narrow ? 12 : 22
         spacing: 0
 
         RowLayout {
@@ -66,7 +69,7 @@ Rectangle {
             Button {
                 text: qsTr("Close")
                 flat: true
-                onClicked: { composer.saveDraft(body.textDocument); view.closed() }
+                onClicked: view.close()
             }
         }
 
@@ -230,7 +233,8 @@ Rectangle {
                 onClicked: composer.encrypt = !composer.encrypt
             }
             Item { Layout.fillWidth: true }
-            Button { text: qsTr("Save draft"); flat: true; onClicked: { composer.saveDraft(body.textDocument); MailApp.notify(qsTr("Draft saved.")) } }
+            // On a phone, Close keeps the draft and the row has no room.
+            Button { visible: !Theme.narrow; text: qsTr("Save draft"); flat: true; onClicked: { composer.saveDraft(body.textDocument); MailApp.notify(qsTr("Draft saved.")) } }
             IconButton { iconName: "trash"; tip: qsTr("Discard"); onClicked: { composer.discard(); view.closed() } }
         }
 
@@ -267,7 +271,7 @@ Rectangle {
         modal: true
         title: qsTr("Link to")
         standardButtons: Dialog.Ok | Dialog.Cancel
-        Field { id: linkField; width: 360; placeholderText: qsTr("example.com or name@example.com") }
+        Field { id: linkField; width: Math.min(360, Window.width - 96); placeholderText: qsTr("example.com or name@example.com") }
         onOpened: { linkField.text = ""; linkField.forceActiveFocus() }
         onAccepted: composer.setLink(body.textDocument, body.selectionStart, body.selectionEnd, linkField.text)
     }

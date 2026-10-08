@@ -31,12 +31,53 @@
         "CMAKE_BUILD_TYPE": "RelWithDebInfo",
         "E3MAIL_WARNINGS_AS_ERRORS": "ON"
       }
+    },
+    {
+      "name": "android",
+      "hidden": true,
+      "displayName": "Android (Release); the environment comes from scripts/android-toolchain.sh",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "E3MAIL_BUILD_CLI": "OFF",
+        "E3MAIL_BUILD_TESTS": "OFF",
+        "E3MAIL_WARNINGS_AS_ERRORS": "ON",
+        "QT_ANDROID_SIGN_APK": "ON",
+        "QT_HOST_PATH": "$env{QT_HOST_PATH}",
+        "ANDROID_SDK_ROOT": "$env{ANDROID_SDK_ROOT}",
+        "ANDROID_NDK_ROOT": "$env{ANDROID_NDK_ROOT}"
+      }
+    },
+    {
+      "name": "android-x64",
+      "inherits": "android",
+      "displayName": "Android x86_64",
+      "toolchainFile": "$env{QT_ANDROID_ROOT}/android_x86_64/lib/cmake/Qt6/qt.toolchain.cmake",
+      "cacheVariables": {
+        "CMAKE_FIND_ROOT_PATH": "$env{E3_ANDROID_DEPS}/x86_64;$env{E3_ANDROID_DEPS}/x86_64/vcpkg_installed/x64-android-release",
+        "CMAKE_PREFIX_PATH": "$env{E3_ANDROID_DEPS}/x86_64;$env{E3_ANDROID_DEPS}/x86_64/vcpkg_installed/x64-android-release",
+        "E3MAIL_ANDROID_OPENSSL": "$env{E3_ANDROID_DEPS}/x86_64/android_openssl"
+      }
+    },
+    {
+      "name": "android-arm64",
+      "inherits": "android",
+      "displayName": "Android arm64-v8a",
+      "toolchainFile": "$env{QT_ANDROID_ROOT}/android_arm64_v8a/lib/cmake/Qt6/qt.toolchain.cmake",
+      "cacheVariables": {
+        "CMAKE_FIND_ROOT_PATH": "$env{E3_ANDROID_DEPS}/arm64-v8a;$env{E3_ANDROID_DEPS}/arm64-v8a/vcpkg_installed/arm64-android-release",
+        "CMAKE_PREFIX_PATH": "$env{E3_ANDROID_DEPS}/arm64-v8a;$env{E3_ANDROID_DEPS}/arm64-v8a/vcpkg_installed/arm64-android-release",
+        "E3MAIL_ANDROID_OPENSSL": "$env{E3_ANDROID_DEPS}/arm64-v8a/android_openssl"
+      }
     }
   ],
   "buildPresets": [
     { "name": "dev", "configurePreset": "dev" },
     { "name": "release", "configurePreset": "release" },
-    { "name": "ci", "configurePreset": "ci" }
+    { "name": "ci", "configurePreset": "ci" },
+    { "name": "android-x64", "configurePreset": "android-x64", "targets": ["apk"] },
+    { "name": "android-arm64", "configurePreset": "android-arm64", "targets": ["apk"] }
   ],
   "testPresets": [
     { "name": "dev", "configurePreset": "dev", "output": { "outputOnFailure": true } },

@@ -2,6 +2,13 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ru" sourcelanguage="en">
 <context>
+    <name>AndroidBackend</name>
+    <message>
+        <source>New mail</source>
+        <translation>Новая почта</translation>
+    </message>
+</context>
+<context>
     <name>Compose</name>
     <message>
         <source>On %1 at %2, %3 wrote:</source>
@@ -553,6 +560,17 @@ To: %4
     <message>
         <source>Could not write %1.</source>
         <translation>Не удалось записать %1.</translation>
+    </message>
+</context>
+<context>
+    <name>Main</name>
+    <message>
+        <source>Menu</source>
+        <translation>Меню</translation>
+    </message>
+    <message>
+        <source>Back</source>
+        <translation>Назад</translation>
     </message>
 </context>
 <context>

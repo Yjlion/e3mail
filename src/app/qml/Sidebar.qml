@@ -14,6 +14,18 @@ Rectangle {
 
     function showTag(tag) { MailApp.selectTag(tag); navigate("mail") }
 
+    // What a page is called, for the narrow layout's title bar.
+    function title(p) {
+        if (p === "contacts") return qsTr("Contacts")
+        if (p === "settings") return qsTr("Settings")
+        if (p === "setup") return qsTr("Add a mailbox…")
+        for (let i = 0; i < MailApp.labels.length; ++i)
+            if (MailApp.labels[i].id === MailApp.currentLabelId) return MailApp.labels[i].name
+        const tags = { inbox: qsTr("Inbox"), unverified: qsTr("Unverified"), sent: qsTr("Sent"),
+                       drafts: qsTr("Drafts"), archive: qsTr("Archive"), trash: qsTr("Trash") }
+        return tags[MailApp.currentTag] || "e3mail"
+    }
+
     Flickable {
         anchors.fill: parent
         contentHeight: column.implicitHeight + 24

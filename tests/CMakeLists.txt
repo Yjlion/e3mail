@@ -60,4 +60,12 @@ if(E3MAIL_BUILD_APP)
     set_tests_properties(app_smoke_rtl PROPERTIES
         ENVIRONMENT "QT_QPA_PLATFORM=offscreen;E3MAIL_NO_KEYCHAIN=1"
         FAIL_REGULAR_EXPRESSION "qml: |\\.qml:[0-9]+|ReferenceError|TypeError|Cannot assign|is not a type")
+    # A phone: the narrow layout, one pane at a time, both directions.
+    add_test(NAME app_smoke_narrow
+        COMMAND e3mail --smoke-test --size 400x820 --data-dir ${CMAKE_CURRENT_BINARY_DIR}/smoke-data-narrow)
+    add_test(NAME app_smoke_narrow_rtl
+        COMMAND e3mail --smoke-test --size 400x820 --lang ar --data-dir ${CMAKE_CURRENT_BINARY_DIR}/smoke-data-narrow-rtl)
+    set_tests_properties(app_smoke_narrow app_smoke_narrow_rtl PROPERTIES
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen;E3MAIL_NO_KEYCHAIN=1"
+        FAIL_REGULAR_EXPRESSION "qml: |\\.qml:[0-9]+|ReferenceError|TypeError|Cannot assign|is not a type")
 endif()

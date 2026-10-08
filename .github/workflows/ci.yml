@@ -89,3 +89,109 @@ jobs:
             [[ -n "$exe" ]] && scripts/ci-diagnose-tests.sh "$exe"
           done
           exit 1
+
+  # The same app for Android (ADR 0016): a package per ABI, and the x86_64 one
+  # booted in an emulator.
+  android:
+    name: Android ${{ matrix.abi }}
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { abi: x86_64, qt-arch: android_x86_64, preset: android-x64 }
+          - { abi: arm64-v8a, qt-arch: android_arm64_v8a, preset: android-arm64 }
+    env:
+      # r27c: r26b's libc++ cannot build Botan 3.
+      ANDROID_NDK_VERSION: "27.2.12479018"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Android SDK and NDK
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build autoconf-archive
+          "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" \
+              "platforms;android-34" "build-tools;34.0.0" "ndk;$ANDROID_NDK_VERSION" >/dev/null
+          echo "ANDROID_NDK_ROOT=$ANDROID_SDK_ROOT/ndk/$ANDROID_NDK_VERSION" >> "$GITHUB_ENV"
+
+      # Qt for Android, and the desktop Qt of the same version for its tools
+      # (autodesktop). Since Qt 6.7, Android is published for host all_os.
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ env.QT_VERSION }}
+          host: all_os
+          autodesktop: true
+          target: android
+          arch: ${{ matrix.qt-arch }}
+          cache: true
+
+      - name: Qt paths
+        run: |
+          echo "QT_ANDROID=$QT_ROOT_DIR" >> "$GITHUB_ENV"
+          echo "QT_ANDROID_ROOT=$(dirname "$QT_ROOT_DIR")" >> "$GITHUB_ENV"
+          # The action installs the desktop Qt beside it and names it here.
+          test -n "$QT_HOST_PATH"
+
+      - name: Dependencies
+        uses: ./.github/actions/android-deps
+        with:
+          abi: ${{ matrix.abi }}
+          rnp-version: ${{ env.RNP_VERSION }}
+
+      # Debug-signed: Android installs only signed packages, and nothing is
+      # published from here.
+      - name: Signing key
+        run: |
+          keytool -genkeypair -keystore "$RUNNER_TEMP/debug.keystore" -storepass android -keypass android \
+              -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=e3mail debug"
+          {
+            echo "QT_ANDROID_KEYSTORE_PATH=$RUNNER_TEMP/debug.keystore"
+            echo "QT_ANDROID_KEYSTORE_ALIAS=androiddebugkey"
+            echo "QT_ANDROID_KEYSTORE_STORE_PASS=android"
+            echo "QT_ANDROID_KEYSTORE_KEY_PASS=android"
+          } >> "$GITHUB_ENV"
+
+      - name: Configure
+        run: cmake --preset ${{ matrix.preset }}
+
+      - name: Build
+        run: |
+          cmake --build --preset ${{ matrix.preset }}
+          mkdir -p dist
+          cp "$(find build/${{ matrix.preset }} -name '*-signed.apk' | head -1)" dist/e3mail-${{ matrix.abi }}.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: e3mail-android-${{ matrix.abi }}
+          path: dist/*.apk
+
+      - name: Enable KVM
+        if: matrix.abi == 'x86_64'
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Boot in an emulator
+        if: matrix.abi == 'x86_64'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          arch: x86_64
+          target: google_apis
+          disable-animations: true
+          script: scripts/android-smoke.sh dist/e3mail-x86_64.apk android-smoke
+
+      - uses: actions/upload-artifact@v4
+        if: always() && matrix.abi == 'x86_64'
+        with:
+          name: android-smoke
+          path: android-smoke/
+          if-no-files-found: ignore

@@ -8,6 +8,7 @@ Rectangle {
     id: root
     color: Theme.surface
     signal openDraft(int id)
+    signal opened(int id) // a message was chosen, for the narrow layout
 
     function focusSearch() { search.forceActiveFocus(); search.selectAll() }
 
@@ -86,7 +87,7 @@ Rectangle {
                 onActivated: {
                     list.forceActiveFocus()
                     if (state === 10) root.openDraft(messageId)
-                    else MailApp.selectMessage(messageId)
+                    else { MailApp.selectMessage(messageId); root.opened(messageId) }
                 }
             }
 
@@ -106,7 +107,11 @@ Rectangle {
         modal: true
         title: qsTr("Empty Trash?")
         standardButtons: Dialog.Yes | Dialog.Cancel
-        Label { text: qsTr("Every message in Trash is destroyed now. This cannot be undone.") }
+        Label {
+            width: Math.min(implicitWidth, Window.width - 96)
+            wrapMode: Text.Wrap
+            text: qsTr("Every message in Trash is destroyed now. This cannot be undone.")
+        }
         onAccepted: MailApp.emptyTrash()
     }
 }

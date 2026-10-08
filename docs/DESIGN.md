@@ -151,6 +151,7 @@ deletion rule are in place and tested over a loopback transport; Iroh is next.
 | P11 | At rest: SQLCipher passphrase, blob encryption, encrypted backup | |
 | P12 | Read receipts (MDN) and disappearing messages into Trash | |
 | P13 | Structured email (SML), trusted vs inert | |
+| P14 | Android: the same app, adaptive layout, foreground sync ([ADR 0016](adr/0016-android.md)) | APK builds and boots in an emulator; no background service |
 
 ## Verification
 

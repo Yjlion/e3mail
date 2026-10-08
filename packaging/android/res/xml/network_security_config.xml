@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Mail goes over TLS (QSslSocket), which this does not govern; this only
+     refuses cleartext through Android's own HTTP stacks. -->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false" />
+</network-security-config>
