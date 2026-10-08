@@ -12,6 +12,8 @@
 #endif
 #include <QIcon>
 #include <QQmlApplicationEngine>
+
+#include "InlineImages.h"
 #include <QWindow>
 #include <QQuickStyle>
 #include <QQuickWindow>
@@ -69,6 +71,7 @@ int main(int argc, char *argv[])
     QObject::connect(
         &engine, &QQmlApplicationEngine::objectCreationFailed, &app, [] { QCoreApplication::exit(1); },
         Qt::QueuedConnection);
+    engine.addImageProvider(QStringLiteral("cid"), new InlineImages); // the engine owns it
     engine.loadFromModule("E3mail", "Main");
     if (engine.rootObjects().isEmpty())
         return 1;

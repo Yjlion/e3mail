@@ -151,10 +151,11 @@ std::optional<MessageDetail> Search::detail(MailContext &ctx, qint64 msgId)
     while (refs.step())
         d.references.append(refs.text(0));
 
-    Statement att(ctx.db, "SELECT id, filename, mime_type, size, blob FROM attachments WHERE msg_id=? ORDER BY idx");
+    Statement att(ctx.db,
+                  "SELECT id, filename, mime_type, size, blob, content_id FROM attachments WHERE msg_id=? ORDER BY idx");
     att.bind(1, msgId);
     while (att.step())
-        d.attachments.append({att.int64(0), att.text(1), att.text(2), att.int64(3), att.text(4)});
+        d.attachments.append({att.int64(0), att.text(1), att.text(2), att.int64(3), att.text(4), att.text(5)});
 
     Statement und(ctx.db, "SELECT addr FROM undelivered WHERE msg_id=? ORDER BY addr");
     und.bind(1, msgId);

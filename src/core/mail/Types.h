@@ -102,6 +102,7 @@ struct AttachmentInfo
     QString mimeType;
     qint64 size = 0;
     QString blob;
+    QString contentId; // without <>; set for parts the HTML can show inline (cid:)
 };
 
 struct MessageDetail : MessageSummary

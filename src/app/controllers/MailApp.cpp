@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MPL-2.0
 #include "MailApp.h"
 #include "Languages.h"
+#include "InlineImages.h"
 #include "NotifierBackends.h"
 
 #include "crypto/Pgp.h"
@@ -23,7 +24,9 @@
 #include <QJSEngine>
 #include <QFile>
 #include <QLocale>
+#include <QRegularExpression>
 #include <QSaveFile>
+#include <QSet>
 
 using namespace e3;
 
@@ -386,9 +389,36 @@ QVariantMap MailApp::messageMap(qint64 id) const
     const auto d = mail::Search::detail(account()->ctx(), id);
     if (!d)
         return {};
+    // Images the message carries for its HTML (cid:) are shown in it, from
+    // the stored parts, and are not listed again as attachments.
+    QString html = d->bodyHtml;
+    QSet<qsizetype> shownInline;
+    for (qsizetype i = 0; i < d->attachments.size() && !html.isEmpty(); ++i) {
+        const AttachmentInfo &a = d->attachments[i];
+        if (a.contentId.isEmpty())
+            continue;
+        const QString ref = QStringLiteral("src=\"cid:") + mime::escapeHtml(a.contentId) + u'"';
+        if (!html.contains(ref))
+            continue;
+        const QImage img = InlineImages::decode(account()->ctx().blobs.get(a.blob), a.mimeType);
+        if (img.isNull())
+            continue;
+        const QString url = InlineImages::put(QStringLiteral("%1-%2").arg(account()->id()).arg(d->id), int(i), img);
+        html.replace(ref, QStringLiteral("src=\"") + url + u'"');
+        shownInline.insert(i);
+    }
+    // A cid: that names no part we can show becomes its alt text, as a
+    // remote image does.
+    static const QRegularExpression unresolved(QStringLiteral("<img src=\"cid:[^\"]*\"(?: width=\"\\d+\")?(?: alt=\"([^\"]*)\")?>"));
+    for (auto m = unresolved.match(html); m.hasMatch(); m = unresolved.match(html, m.capturedStart())) {
+        const QString alt = m.captured(1);
+        html.replace(m.capturedStart(), m.capturedLength(), alt.isEmpty() ? QString() : u'[' + alt + u']');
+    }
     QVariantList attachments;
     for (qsizetype i = 0; i < d->attachments.size(); ++i) {
         const AttachmentInfo &a = d->attachments[i];
+        if (shownInline.contains(i))
+            continue;
         attachments.append(QVariantMap{{QStringLiteral("index"), int(i)},
                                        {QStringLiteral("name"), a.filename},
                                        {QStringLiteral("type"), a.mimeType},
@@ -415,7 +445,7 @@ QVariantMap MailApp::messageMap(qint64 id) const
         {QStringLiteral("date"), QLocale().toString(d->date.toLocalTime().date(), QLocale::LongFormat) + u' '
                                      + QLocale().toString(d->date.toLocalTime().time(), QLocale::ShortFormat)},
         {QStringLiteral("shortDate"), MessageListModel::formatDate(d->date)},
-        {QStringLiteral("html"), d->bodyHtml},
+        {QStringLiteral("html"), html},
         {QStringLiteral("text"), d->bodyText},
         {QStringLiteral("remoteBlocked"), d->remoteBlocked},
         {QStringLiteral("encrypted"), d->encrypted},
