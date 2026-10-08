@@ -244,8 +244,12 @@ Objet : %3
         <translation>Importer une vCard…</translation>
     </message>
     <message>
-        <source>Export contacts…</source>
-        <translation>Exporter les contacts…</translation>
+        <source>Export as vCard…</source>
+        <translation>Exporter en vCard…</translation>
+    </message>
+    <message>
+        <source>Export as CSV…</source>
+        <translation>Exporter en CSV…</translation>
     </message>
     <message>
         <source>verified</source>
@@ -344,6 +348,10 @@ Objet : %3
         <translation>Bloquer</translation>
     </message>
     <message>
+        <source>Export vCard…</source>
+        <translation>Exporter la vCard…</translation>
+    </message>
+    <message>
         <source>Remove contact</source>
         <translation>Retirer le contact</translation>
     </message>
@@ -374,6 +382,10 @@ Objet : %3
     <message>
         <source>All files (*)</source>
         <translation>Tous les fichiers (*)</translation>
+    </message>
+    <message>
+        <source>CSV files (*.csv)</source>
+        <translation>Fichiers CSV (*.csv)</translation>
     </message>
 </context>
 <context>
@@ -493,28 +505,12 @@ Objet : %3
         <translation>Impossible d’enregistrer la pièce jointe.</translation>
     </message>
     <message>
-        <source>The original of this message is no longer kept. Change how long originals are kept in Settings.</source>
-        <translation>L’original de ce message n’est plus conservé. La durée de conservation des originaux se règle dans les Réglages.</translation>
+        <source>This message cannot be decrypted, or its original is no longer kept.</source>
+        <translation>Ce message ne peut pas être déchiffré, ou son original n’est plus conservé.</translation>
     </message>
     <message>
-        <source>
-
-──── decrypted content ────
-
-</source>
-        <translation>
-
-──── contenu déchiffré ────
-
-</translation>
-    </message>
-    <message>
-        <source>
-
-(cannot decrypt: %1)</source>
-        <translation>
-
-(déchiffrement impossible : %1)</translation>
+        <source>The original of this message is no longer kept.</source>
+        <translation>L’original de ce message n’est plus conservé.</translation>
     </message>
     <message>
         <source>%1 is not an email address, or is in your contacts already.</source>
@@ -660,6 +656,18 @@ Objet : %3
         <translation>Afficher la source</translation>
     </message>
     <message>
+        <source>Save as .eml…</source>
+        <translation>Enregistrer en .eml…</translation>
+    </message>
+    <message>
+        <source>The original of this message is no longer kept.</source>
+        <translation>L’original de ce message n’est plus conservé.</translation>
+    </message>
+    <message>
+        <source>Save decrypted as .eml…</source>
+        <translation>Enregistrer déchiffré en .eml…</translation>
+    </message>
+    <message>
         <source>Mark unread</source>
         <translation>Marquer comme non lu</translation>
     </message>
@@ -723,6 +731,10 @@ Objet : %3
     <message>
         <source>Archive</source>
         <translation>Archiver</translation>
+    </message>
+    <message>
+        <source>Move to Inbox</source>
+        <translation>Replacer dans la boîte de réception</translation>
     </message>
     <message>
         <source>Restore</source>
@@ -876,6 +888,25 @@ Objet : %3
     <message>
         <source>Move to Trash</source>
         <translation>Mettre à la corbeille</translation>
+    </message>
+</context>
+<context>
+    <name>SaveMessage</name>
+    <message>
+        <source>Save decrypted</source>
+        <translation>Enregistrer déchiffré</translation>
+    </message>
+    <message>
+        <source>The saved file is not encrypted. Anyone who can open it can read the message.</source>
+        <translation>Le fichier enregistré n’est pas chiffré. Toute personne qui peut l’ouvrir peut lire le message.</translation>
+    </message>
+    <message>
+        <source>Email messages (*.eml)</source>
+        <translation>Messages e-mail (*.eml)</translation>
+    </message>
+    <message>
+        <source>All files (*)</source>
+        <translation>Tous les fichiers (*)</translation>
     </message>
 </context>
 <context>
@@ -1234,6 +1265,10 @@ Objet : %3
         <translation>Archives</translation>
     </message>
     <message>
+        <source>All mail</source>
+        <translation>Tous les messages</translation>
+    </message>
+    <message>
         <source>Trash</source>
         <translation>Corbeille</translation>
     </message>
@@ -1282,10 +1317,49 @@ Objet : %3
     </message>
 </context>
 <context>
+    <name>Source</name>
+    <message>
+        <source>[… %1 of encoded data …]</source>
+        <translation>[… %1 de données encodées …]</translation>
+    </message>
+</context>
+<context>
     <name>SourceDialog</name>
     <message>
         <source>Message source</source>
         <translation>Source du message</translation>
+    </message>
+    <message>
+        <source>Original</source>
+        <translation>Original</translation>
+    </message>
+    <message>
+        <source>Decrypted</source>
+        <translation>Déchiffré</translation>
+    </message>
+    <message>
+        <source>Shorten encoded data</source>
+        <translation>Raccourcir les données encodées</translation>
+    </message>
+    <message>
+        <source>Structure</source>
+        <translation>Structure</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Copier</translation>
+    </message>
+    <message>
+        <source>Save…</source>
+        <translation>Enregistrer…</translation>
+    </message>
+    <message>
+        <source>The original of this message is no longer kept. Change how long originals are kept in Settings.</source>
+        <translation>L’original de ce message n’est plus conservé. La durée de conservation des originaux se règle dans les Réglages.</translation>
+    </message>
+    <message>
+        <source>This message cannot be decrypted: %1</source>
+        <translation>Ce message ne peut pas être déchiffré : %1</translation>
     </message>
 </context>
 <context>

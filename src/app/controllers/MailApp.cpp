@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 #include "MailApp.h"
+#include "FileIo.h"
 #include "Languages.h"
 #include "InlineImages.h"
 #include "NotifierBackends.h"
@@ -7,12 +8,15 @@
 #include "crypto/Pgp.h"
 #include "engine/AccountManager.h"
 #include "mail/Contacts.h"
+#include "mail/ContactsCsv.h"
+#include "mail/Export.h"
 #include "mail/Organize.h"
 #include "mail/Preferences.h"
 #include "mail/Search.h"
 #include "mail/VCard.h"
 #include "mime/Html.h"
 #include "mime/Part.h"
+#include "mime/Source.h"
 #include "store/BlobStore.h"
 #include "store/Config.h"
 #include "store/Database.h"
@@ -577,11 +581,7 @@ bool MailApp::saveAttachment(qint64 msgId, int index, const QUrl &dest)
     const auto d = mail::Search::detail(account()->ctx(), msgId);
     if (!d || index < 0 || index >= d->attachments.size())
         return false;
-    QSaveFile f(dest.toLocalFile());
-    if (!f.open(QIODevice::WriteOnly))
-        return false;
-    f.write(account()->ctx().blobs.get(d->attachments[index].blob));
-    const bool ok = f.commit();
+    const bool ok = FileIo::write(dest, account()->ctx().blobs.get(d->attachments[index].blob));
     Q_EMIT notify(ok ? tr("Saved %1.").arg(d->attachments[index].filename) : tr("Could not save the attachment."));
     return ok;
 }
@@ -599,26 +599,82 @@ QString MailApp::suggestedFileName(qint64 msgId, int index) const
     return name;
 }
 
-QString MailApp::viewSource(qint64 msgId) const
+namespace {
+
+QVariantList outlineOf(const QByteArray &raw)
+{
+    QVariantList out;
+    for (const auto &n : mime::Source::outline(raw))
+        out.append(QVariantMap{{QStringLiteral("depth"), n.depth},
+                               {QStringLiteral("type"), QString::fromLatin1(n.mimeType)},
+                               {QStringLiteral("encoding"), QString::fromLatin1(n.encoding)},
+                               {QStringLiteral("filename"), n.filename},
+                               {QStringLiteral("size"), QLocale().formattedDataSize(n.size)}});
+    return out;
+}
+
+} // namespace
+
+QVariantMap MailApp::messageSource(qint64 msgId) const
 {
     if (!account())
         return {};
     MailContext &ctx = account()->ctx();
-    const auto blob = ctx.db.queryText("SELECT raw_blob FROM messages WHERE id=?", msgId);
-    if (!blob)
-        return tr("The original of this message is no longer kept. Change how long originals are kept in Settings.");
-    const QByteArray raw = ctx.blobs.get(*blob);
-    QString out = QString::fromUtf8(raw);
-    const mime::Part p = mime::parse(raw);
-    if (p.mimeType == "multipart/encrypted" && p.children.size() >= 2) {
-        try {
-            out += tr("\n\n──── decrypted content ────\n\n")
-                + QString::fromUtf8(ctx.pgp.decrypt(p.children[1].body).data);
-        } catch (const std::exception &e) {
-            out += tr("\n\n(cannot decrypt: %1)").arg(QString::fromUtf8(e.what()));
-        }
+    const mail::Export::Source s = mail::Export::source(ctx, msgId);
+    QVariantMap out{{QStringLiteral("retained"), s.retained},
+                    {QStringLiteral("encrypted"), s.encrypted},
+                    {QStringLiteral("subject"),
+                     ctx.db.queryText("SELECT subject FROM messages WHERE id=?", msgId).value_or(QString())},
+                    {QStringLiteral("fileName"), mail::Export::fileName(ctx, msgId, QStringLiteral("eml"))}};
+    if (!s.retained)
+        return out;
+    out.insert(QStringLiteral("original"), QString::fromUtf8(s.raw));
+    out.insert(QStringLiteral("outline"), outlineOf(s.raw));
+    if (!s.inner.isEmpty()) {
+        out.insert(QStringLiteral("decrypted"), QString::fromUtf8(s.inner));
+        out.insert(QStringLiteral("innerOutline"), outlineOf(s.inner));
     }
+    if (!s.decryptError.isEmpty())
+        out.insert(QStringLiteral("decryptError"), s.decryptError);
     return out;
+}
+
+QString MailApp::shortenSource(const QString &source) const
+{
+    return mime::Source::shorten(source);
+}
+
+QVariantMap MailApp::exportInfo(qint64 msgId) const
+{
+    if (!account())
+        return {};
+    Statement st(account()->ctx().db, "SELECT raw_blob IS NOT NULL, encrypted FROM messages WHERE id=?");
+    st.bindAll(msgId);
+    if (!st.step())
+        return {};
+    return {{QStringLiteral("retained"), st.integer(0) != 0}, {QStringLiteral("encrypted"), st.integer(1) != 0}};
+}
+
+bool MailApp::saveMessage(qint64 msgId, const QUrl &dest, bool decrypted)
+{
+    if (!account())
+        return false;
+    MailContext &ctx = account()->ctx();
+    const QByteArray data = decrypted ? mail::Export::decryptedEml(ctx, msgId) : mail::Export::eml(ctx, msgId);
+    if (data.isEmpty()) {
+        Q_EMIT notify(decrypted ? tr("This message cannot be decrypted, or its original is no longer kept.")
+                                : tr("The original of this message is no longer kept."));
+        return false;
+    }
+    const bool ok = FileIo::write(dest, data);
+    Q_EMIT notify(ok ? tr("Saved %1.").arg(FileIo::displayName(dest))
+                     : tr("Could not write %1.").arg(FileIo::displayName(dest)));
+    return ok;
+}
+
+QString MailApp::suggestedEmlName(qint64 msgId) const
+{
+    return account() ? mail::Export::fileName(account()->ctx(), msgId, QStringLiteral("eml")) : QString();
 }
 
 void MailApp::openLink(const QString &url)
@@ -712,12 +768,12 @@ void MailApp::importContacts(const QUrl &file)
 {
     if (!account())
         return;
-    QFile f(file.toLocalFile());
-    if (!f.open(QIODevice::ReadOnly)) {
-        Q_EMIT notify(tr("Could not read %1.").arg(file.fileName()));
+    const auto data = FileIo::read(file);
+    if (!data) {
+        Q_EMIT notify(tr("Could not read %1.").arg(FileIo::displayName(file)));
         return;
     }
-    const auto r = mail::Contacts::import(account()->ctx(), mail::VCard::parse(f.readAll()));
+    const auto r = mail::Contacts::import(account()->ctx(), mail::VCard::parse(*data));
     account()->notifyChanged();
     QString msg = tr("%n contact(s) added", "", r.added) + QStringLiteral(", ") + tr("%n updated", "", r.updated);
     if (r.skipped)
@@ -725,20 +781,38 @@ void MailApp::importContacts(const QUrl &file)
     Q_EMIT notify(msg + u'.');
 }
 
-void MailApp::exportContacts(const QUrl &file)
+void MailApp::exportContacts(const QUrl &file, const QString &format)
 {
     if (!account())
         return;
-    // The address book: people added, accepted or written to, not everyone
-    // ever seen on a message.
-    QList<ContactInfo> book;
-    for (const ContactInfo &c : mail::Contacts::list(account()->ctx(), QString(), 1000000)) {
-        if (c.isKnown())
-            book.append(c);
-    }
-    QSaveFile f(file.toLocalFile());
-    const bool ok = f.open(QIODevice::WriteOnly) && f.write(mail::VCard::emit(book)) >= 0 && f.commit();
-    Q_EMIT notify(ok ? tr("%n contact(s) exported.", "", int(book.size())) : tr("Could not write %1.").arg(file.fileName()));
+    const QList<ContactInfo> book = mail::Export::addressBook(account()->ctx());
+    const bool ok = FileIo::write(file, format == QLatin1String("csv") ? mail::ContactsCsv::emit(book)
+                                                                        : mail::VCard::emit(book));
+    Q_EMIT notify(ok ? tr("%n contact(s) exported.", "", int(book.size()))
+                     : tr("Could not write %1.").arg(FileIo::displayName(file)));
+}
+
+void MailApp::exportContact(qint64 id, const QUrl &file)
+{
+    if (!account())
+        return;
+    const auto c = mail::Contacts::byId(account()->ctx(), id);
+    if (!c)
+        return;
+    const bool ok = FileIo::write(file, mail::VCard::emit({*c}));
+    Q_EMIT notify(ok ? tr("Saved %1.").arg(FileIo::displayName(file))
+                     : tr("Could not write %1.").arg(FileIo::displayName(file)));
+}
+
+QString MailApp::suggestedContactFileName(qint64 id) const
+{
+    if (!account())
+        return {};
+    const auto c = mail::Contacts::byId(account()->ctx(), id);
+    if (!c)
+        return {};
+    return mail::Export::safeFileName(c->name.isEmpty() ? c->addr : c->name, QStringLiteral("contact"),
+                                      QStringLiteral("vcf"));
 }
 
 void MailApp::setContactName(qint64 id, const QString &name)

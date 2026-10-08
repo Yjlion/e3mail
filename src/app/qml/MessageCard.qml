@@ -255,6 +255,21 @@ Rectangle {
             Item { Layout.fillWidth: true }
             IconButton { iconName: "source"; tip: qsTr("View source"); onClicked: card.showSource(card.m.id) }
             IconButton {
+                id: saveButton
+                iconName: "save"; tip: qsTr("Save as .eml…")
+                onClicked: {
+                    const info = MailApp.exportInfo(card.m.id)
+                    if (!info.retained) MailApp.notify(qsTr("The original of this message is no longer kept."))
+                    else if (info.encrypted) saveMenu.popup(saveButton, 0, saveButton.height)
+                    else emlSaver.save(card.m.id, false)
+                }
+                Menu {
+                    id: saveMenu
+                    MenuItem { text: qsTr("Save as .eml…"); onTriggered: emlSaver.save(card.m.id, false) }
+                    MenuItem { text: qsTr("Save decrypted as .eml…"); onTriggered: emlSaver.save(card.m.id, true) }
+                }
+            }
+            IconButton {
                 iconName: "mark-unread"; tip: qsTr("Mark unread")
                 visible: !card.m.outgoing
                 onClicked: MailApp.markRead(card.m.id, false)
@@ -268,6 +283,8 @@ Rectangle {
         cursorShape: Qt.PointingHandCursor
         onClicked: card.expanded = true
     }
+
+    SaveMessage { id: emlSaver }
 
     FileDialog {
         id: saveDialog

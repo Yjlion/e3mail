@@ -114,7 +114,16 @@ public:
     Q_INVOKABLE void deleteLabel(qint64 labelId);
 
     Q_INVOKABLE bool saveAttachment(qint64 msgId, int index, const QUrl &dest);
-    Q_INVOKABLE QString viewSource(qint64 msgId) const;
+    // A message's source for the source dialog: retained, encrypted,
+    // original, decrypted, decryptError, subject, and outline/innerOutline
+    // ([{depth, type, encoding, filename, size}]).
+    Q_INVOKABLE QVariantMap messageSource(qint64 msgId) const;
+    Q_INVOKABLE QString shortenSource(const QString &source) const;
+    // What can be saved: {retained, encrypted}.
+    Q_INVOKABLE QVariantMap exportInfo(qint64 msgId) const;
+    // The message as a .eml: as received or sent, or decrypted.
+    Q_INVOKABLE bool saveMessage(qint64 msgId, const QUrl &dest, bool decrypted);
+    Q_INVOKABLE QString suggestedEmlName(qint64 msgId) const;
     Q_INVOKABLE void openLink(const QString &url);
     Q_INVOKABLE QString suggestedFileName(qint64 msgId, int index) const;
 
@@ -129,7 +138,10 @@ public:
     Q_INVOKABLE void setContactDetails(qint64 id, const QVariantMap &details);
     Q_INVOKABLE void removeContact(qint64 id);
     Q_INVOKABLE void importContacts(const QUrl &file);
-    Q_INVOKABLE void exportContacts(const QUrl &file);
+    // The address book, format "vcf" or "csv".
+    Q_INVOKABLE void exportContacts(const QUrl &file, const QString &format);
+    Q_INVOKABLE void exportContact(qint64 id, const QUrl &file);
+    Q_INVOKABLE QString suggestedContactFileName(qint64 id) const;
     Q_INVOKABLE QStringList completeAddress(const QString &prefix) const;
 
     Q_INVOKABLE QVariantMap settings() const;

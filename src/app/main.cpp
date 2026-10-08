@@ -114,11 +114,13 @@ int main(int argc, char *argv[])
                                       Q_ARG(QVariant, mailApp.selectedMessageId()));
         else if (p.value(page) == QLatin1String("menu")) // the narrow layout's drawer
             QMetaObject::invokeMethod(root, "openMenu");
+        else if (p.value(page) == QLatin1String("source")) // of the message --open selected
+            QMetaObject::invokeMethod(root, "showSource");
         else
             root->setProperty("page", p.value(page));
     }
     // In the narrow layout, the opened message covers the list.
-    if (p.isSet(open) && !p.isSet(page))
+    if (p.isSet(open) && (!p.isSet(page) || p.value(page) == QLatin1String("source")))
         root->setProperty("reading", true);
 
     if (p.isSet(smoke) || p.isSet(grab)) {

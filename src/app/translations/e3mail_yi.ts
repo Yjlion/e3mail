@@ -244,8 +244,12 @@ To: %4
         <translation>אימפּאָרטירן vCard…</translation>
     </message>
     <message>
-        <source>Export contacts…</source>
-        <translation>עקספּאָרטירן קאָנטאַקטן…</translation>
+        <source>Export as vCard…</source>
+        <translation>עקספּאָרטירן ווי vCard…</translation>
+    </message>
+    <message>
+        <source>Export as CSV…</source>
+        <translation>עקספּאָרטירן ווי CSV…</translation>
     </message>
     <message>
         <source>verified</source>
@@ -344,6 +348,10 @@ To: %4
         <translation>בלאָקירן</translation>
     </message>
     <message>
+        <source>Export vCard…</source>
+        <translation>עקספּאָרטירן vCard…</translation>
+    </message>
+    <message>
         <source>Remove contact</source>
         <translation>אַוועקנעמען דעם קאָנטאַקט</translation>
     </message>
@@ -374,6 +382,10 @@ To: %4
     <message>
         <source>All files (*)</source>
         <translation>אַלע טעקעס (*)</translation>
+    </message>
+    <message>
+        <source>CSV files (*.csv)</source>
+        <translation>CSV־טעקעס (*.csv)</translation>
     </message>
 </context>
 <context>
@@ -493,28 +505,12 @@ To: %4
         <translation>מע האָט ניט געקענט אָפּהיטן די בײַלאַגע.</translation>
     </message>
     <message>
-        <source>The original of this message is no longer kept. Change how long originals are kept in Settings.</source>
-        <translation>דער אָריגינאַל פֿון דעם בריוו ווערט מער ניט אָפּגעהיט. ווי לאַנג מע היט אָפּ אָריגינאַלן, באַשטימט מען אין די איינשטעלונגען.</translation>
+        <source>This message cannot be decrypted, or its original is no longer kept.</source>
+        <translation>מע קען נישט אויפֿשליסלען דעם בריוו, אָדער זײַן אָריגינאַל ווערט מער נישט אָפּגעהיט.</translation>
     </message>
     <message>
-        <source>
-
-──── decrypted content ────
-
-</source>
-        <translation>
-
-──── אויסגעשיפֿרירטער אינהאַלט ────
-
-</translation>
-    </message>
-    <message>
-        <source>
-
-(cannot decrypt: %1)</source>
-        <translation>
-
-(מע קען ניט אויסשיפֿרירן: %1)</translation>
+        <source>The original of this message is no longer kept.</source>
+        <translation>דער אָריגינאַל פֿון דעם בריוו ווערט מער נישט אָפּגעהיט.</translation>
     </message>
     <message>
         <source>%1 is not an email address, or is in your contacts already.</source>
@@ -660,6 +656,18 @@ To: %4
         <translation>ווײַזן דעם מקור</translation>
     </message>
     <message>
+        <source>Save as .eml…</source>
+        <translation>אָפּהיטן ווי eml…</translation>
+    </message>
+    <message>
+        <source>The original of this message is no longer kept.</source>
+        <translation>דער אָריגינאַל פֿון דעם בריוו ווערט מער נישט אָפּגעהיט.</translation>
+    </message>
+    <message>
+        <source>Save decrypted as .eml…</source>
+        <translation>אָפּהיטן אויפֿגעשליסלט ווי eml…</translation>
+    </message>
+    <message>
         <source>Mark unread</source>
         <translation>צייכענען ווי ניט געלייענט</translation>
     </message>
@@ -723,6 +731,10 @@ To: %4
     <message>
         <source>Archive</source>
         <translation>אַרכיווירן</translation>
+    </message>
+    <message>
+        <source>Move to Inbox</source>
+        <translation>אַריבערפֿירן אין די אַרײַנקומענדיקע</translation>
     </message>
     <message>
         <source>Restore</source>
@@ -876,6 +888,25 @@ To: %4
     <message>
         <source>Move to Trash</source>
         <translation>אַריבערפֿירן אין מיסט</translation>
+    </message>
+</context>
+<context>
+    <name>SaveMessage</name>
+    <message>
+        <source>Save decrypted</source>
+        <translation>אָפּהיטן אויפֿגעשליסלט</translation>
+    </message>
+    <message>
+        <source>The saved file is not encrypted. Anyone who can open it can read the message.</source>
+        <translation>די אָפּגעהיטע טעקע איז נישט פֿאַרשליסלט. ווער עס קען זי עפֿענען, קען לייענען דעם בריוו.</translation>
+    </message>
+    <message>
+        <source>Email messages (*.eml)</source>
+        <translation>בריוו (*.eml)</translation>
+    </message>
+    <message>
+        <source>All files (*)</source>
+        <translation>אַלע טעקעס (*)</translation>
     </message>
 </context>
 <context>
@@ -1234,6 +1265,10 @@ To: %4
         <translation>אַרכיוו</translation>
     </message>
     <message>
+        <source>All mail</source>
+        <translation>אַלע פּאָסט</translation>
+    </message>
+    <message>
         <source>Trash</source>
         <translation>מיסט</translation>
     </message>
@@ -1282,10 +1317,49 @@ To: %4
     </message>
 </context>
 <context>
+    <name>Source</name>
+    <message>
+        <source>[… %1 of encoded data …]</source>
+        <translation>[… %1 קאָדירטע דאַטן …]</translation>
+    </message>
+</context>
+<context>
     <name>SourceDialog</name>
     <message>
         <source>Message source</source>
         <translation>דער מקור פֿונעם בריוו</translation>
+    </message>
+    <message>
+        <source>Original</source>
+        <translation>אָריגינאַל</translation>
+    </message>
+    <message>
+        <source>Decrypted</source>
+        <translation>אויפֿגעשליסלט</translation>
+    </message>
+    <message>
+        <source>Shorten encoded data</source>
+        <translation>פֿאַרקירצן קאָדירטע דאַטן</translation>
+    </message>
+    <message>
+        <source>Structure</source>
+        <translation>סטרוקטור</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>קאָפּירן</translation>
+    </message>
+    <message>
+        <source>Save…</source>
+        <translation>אָפּהיטן…</translation>
+    </message>
+    <message>
+        <source>The original of this message is no longer kept. Change how long originals are kept in Settings.</source>
+        <translation>דער אָריגינאַל פֿון דעם בריוו ווערט מער ניט אָפּגעהיט. ווי לאַנג מע היט אָפּ אָריגינאַלן, באַשטימט מען אין די איינשטעלונגען.</translation>
+    </message>
+    <message>
+        <source>This message cannot be decrypted: %1</source>
+        <translation>מע קען נישט אויפֿשליסלען דעם בריוו: %1</translation>
     </message>
 </context>
 <context>

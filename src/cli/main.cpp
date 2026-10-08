@@ -9,6 +9,8 @@
 #include "engine/Autoconfig.h"
 #include "mail/Compose.h"
 #include "mail/Contacts.h"
+#include "mail/ContactsCsv.h"
+#include "mail/Export.h"
 #include "mail/Organize.h"
 #include "mail/Preferences.h"
 #include "mail/Search.h"
@@ -124,7 +126,8 @@ int main(int argc, char **argv)
         "  contact-add                    add a contact (--addr, --name)\n"
         "  contact-remove <addr>          remove a contact\n"
         "  vcard-import <file>            import contacts from a vCard file\n"
-        "  vcard-export [file]            export the address book as vCard 4.0\n"
+        "  contacts-export [file]         export the address book as vCard 4.0, or CSV with --csv\n"
+        "                                 (vcard-export is the same)\n"
         "  config <key> [value]           read or write an account setting\n"
         "  housekeeping                   run deadlines now"));
     p.addHelpOption();
@@ -146,6 +149,8 @@ int main(int argc, char **argv)
         {QStringLiteral("tag"), QStringLiteral("inbox, unverified, sent, drafts, archive, trash, all."), QStringLiteral("tag"), QStringLiteral("inbox")},
         {QStringLiteral("search"), QStringLiteral("Full-text search."), QStringLiteral("text")},
         {QStringLiteral("raw"), QStringLiteral("Show the original message.")},
+        {QStringLiteral("decrypted"), QStringLiteral("With --raw: the message decrypted, as a cleartext .eml.")},
+        {QStringLiteral("csv"), QStringLiteral("With contacts-export: CSV instead of vCard.")},
         {QStringLiteral("to"), QStringLiteral("Recipients."), QStringLiteral("list")},
         {QStringLiteral("cc"), QStringLiteral("Cc recipients."), QStringLiteral("list")},
         {QStringLiteral("bcc"), QStringLiteral("Bcc recipients."), QStringLiteral("list")},
@@ -258,10 +263,12 @@ int main(int argc, char **argv)
             if (!d)
                 fail(QStringLiteral("no message %1").arg(idArg));
             if (p.isSet(QStringLiteral("raw"))) {
-                const auto blob = ctx.db.queryText("SELECT raw_blob FROM messages WHERE id=?", idArg);
-                if (!blob)
-                    fail(QStringLiteral("the original of message %1 is not retained").arg(idArg));
-                const QByteArray raw = ctx.blobs.get(*blob);
+                const QByteArray raw = p.isSet(QStringLiteral("decrypted")) ? mail::Export::decryptedEml(ctx, idArg)
+                                                                            : mail::Export::eml(ctx, idArg);
+                if (raw.isEmpty())
+                    fail(p.isSet(QStringLiteral("decrypted"))
+                             ? QStringLiteral("message %1 is not encrypted, not retained, or cannot be decrypted").arg(idArg)
+                             : QStringLiteral("the original of message %1 is not retained").arg(idArg));
                 std::fwrite(raw.constData(), 1, size_t(raw.size()), stdout);
                 return 0;
             }
@@ -363,13 +370,9 @@ int main(int argc, char **argv)
             print(QJsonObject{{QStringLiteral("added"), r.added},
                               {QStringLiteral("updated"), r.updated},
                               {QStringLiteral("skipped"), r.skipped}});
-        } else if (cmd == QLatin1String("vcard-export")) {
-            QList<ContactInfo> book;
-            for (const ContactInfo &c : mail::Contacts::list(ctx, QString(), 1000000)) {
-                if (c.isKnown())
-                    book.append(c);
-            }
-            const QByteArray vcf = mail::VCard::emit(book);
+        } else if (cmd == QLatin1String("contacts-export") || cmd == QLatin1String("vcard-export")) {
+            const QList<ContactInfo> book = mail::Export::addressBook(ctx);
+            const QByteArray vcf = p.isSet(QStringLiteral("csv")) ? mail::ContactsCsv::emit(book) : mail::VCard::emit(book);
             if (args.size() > 1) {
                 QFile f(args.value(1));
                 if (!f.open(QIODevice::WriteOnly) || f.write(vcf) != vcf.size())

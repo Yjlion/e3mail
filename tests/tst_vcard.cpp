@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MPL-2.0
+#include "mail/ContactsCsv.h"
 #include "mail/VCard.h"
 
 #include <QtTest>
@@ -113,6 +114,46 @@ private Q_SLOTS:
         QCOMPARE(back[0].notes, c.notes);
         QCOMPARE(back[0].birthday, c.birthday);
         QCOMPARE(back[0].phones, c.phones);
+    }
+
+    void csv()
+    {
+        ContactInfo a;
+        a.addr = QStringLiteral("ada@example.org");
+        a.name = QStringLiteral("Lovelace, Ada \"The Countess\"");
+        a.notes = QStringLiteral("two\nlines");
+        a.birthday = QStringLiteral("1815-12-10");
+        a.phones = {{QStringLiteral("mobile"), QStringLiteral("+44 1")},
+                    {QStringLiteral("mobile"), QStringLiteral("+44 2")},
+                    {QStringLiteral("work"), QStringLiteral("+44 3")},
+                    {QStringLiteral("voice"), QStringLiteral("+44 4")}};
+        ContactInfo b;
+        b.addr = QStringLiteral("evil@x.test");
+        b.name = QStringLiteral("=HYPERLINK(\"http://x.test\")");
+        b.organization = QStringLiteral("Zürich AG");
+        b.title = QStringLiteral("@SUM(A1)");
+
+        const QByteArray out = mail::ContactsCsv::emit({a, b});
+        QVERIFY(out.startsWith("\xEF\xBB\xBFName,Email,Organization,Title,Mobile Phone,Work Phone,Home Phone,"
+                               "Other Phone,Birthday,Notes\r\n"));
+        QVERIFY(out.contains("\"Lovelace, Ada \"\"The Countess\"\"\",ada@example.org,,,+44 1 ; +44 2,+44 3,,+44 4,"
+                             "1815-12-10,\"two\nlines\"\r\n"));
+        // A formula is text, quoted because it holds quotes; so is a leading minus.
+        QVERIFY(out.contains("\"'=HYPERLINK(\"\"http://x.test\"\")\",evil@x.test,Zürich AG,'@SUM(A1),"));
+        // A phone number is left alone.
+        QVERIFY(out.contains(",+44 3,"));
+        QVERIFY(out.endsWith(",,,,,,\r\n"));
+        QCOMPARE(mail::ContactsCsv::emit({}).count("\r\n"), 1);
+    }
+
+    void singleCard()
+    {
+        ContactInfo c;
+        c.addr = QStringLiteral("ada@example.org");
+        c.name = QStringLiteral("Ada");
+        const QByteArray vcf = VCard::emit({c});
+        QCOMPARE(vcf.count("BEGIN:VCARD"), 1);
+        QCOMPARE(VCard::parse(vcf).value(0).emails, QStringList{c.addr});
     }
 };
 

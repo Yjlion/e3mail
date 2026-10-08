@@ -33,6 +33,8 @@ qt_add_qml_module(e3mail
         controllers/Languages.cpp controllers/Languages.h
         controllers/Composer.cpp controllers/Composer.h
         controllers/SetupController.cpp controllers/SetupController.h
+        controllers/SourceHighlighter.cpp controllers/SourceHighlighter.h
+        controllers/FileIo.cpp controllers/FileIo.h
         models/MessageListModel.cpp models/MessageListModel.h
 )
 

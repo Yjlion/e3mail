@@ -5,6 +5,7 @@
 #include "mime/Headers.h"
 #include "mime/Html.h"
 #include "mime/Part.h"
+#include "mime/Source.h"
 #include "util/LocalePatterns.h"
 
 #include <QtTest>
@@ -219,6 +220,76 @@ private Q_SLOTS:
         QCOMPARE(alt.children[1].mimeType, QByteArray("text/html"));
         QCOMPARE(p.children[1].filename, QStringLiteral("doc.pdf"));
         QCOMPARE(p.children[1].body, QByteArray("%PDF-"));
+    }
+
+    void sourceOutline()
+    {
+        const QByteArray raw = "Content-Type: multipart/mixed; boundary=b\r\n\r\n"
+                               "--b\r\nContent-Type: text/plain\r\n\r\nhello\r\n"
+                               "--b\r\nContent-Type: image/png\r\nContent-Transfer-Encoding: base64\r\n"
+                               "Content-Disposition: attachment; filename=\"a.png\"\r\n\r\nAAECAw==\r\n--b--\r\n";
+        const auto o = Source::outline(raw);
+        QCOMPARE(o.size(), 3);
+        QCOMPARE(o[0].depth, 0);
+        QCOMPARE(o[0].mimeType, QByteArray("multipart/mixed"));
+        QCOMPARE(o[1].depth, 1);
+        QCOMPARE(o[1].mimeType, QByteArray("text/plain"));
+        QCOMPARE(o[2].filename, QStringLiteral("a.png"));
+        QCOMPARE(o[2].encoding, QByteArray("base64"));
+        QCOMPARE(o[2].size, 4);
+    }
+
+    void sourceShorten()
+    {
+        const QString b64 = QString(76, u'A');
+        QStringList lines = {QStringLiteral("Subject: x"), QString()};
+        for (int i = 0; i < 10; ++i)
+            lines.append(b64 + u'\r');
+        lines.append(QStringLiteral("--b--"));
+        // A short run, such as a key fingerprint line or two, stays.
+        lines.append(b64);
+        lines.append(b64);
+        const QStringList out = Source::shorten(lines.join(u'\n')).split(u'\n');
+        QCOMPARE(out.size(), 2 + 1 + 1 + 2);
+        QCOMPARE(out[0], QStringLiteral("Subject: x"));
+        QVERIFY(out[2].startsWith(QStringLiteral("\u2068[… ")));
+        QVERIFY(out[2].endsWith(QChar(0x2069)));
+        QCOMPARE(out[3], QStringLiteral("--b--"));
+        QCOMPARE(out[4], b64);
+        // A folded header's run keeps its indentation.
+        QStringList folded = {QStringLiteral("Autocrypt: addr=a@x.test; keydata=")};
+        for (int i = 0; i < 6; ++i)
+            folded.append(u' ' + b64);
+        folded.append(QStringLiteral("Subject: y"));
+        const QStringList f = Source::shorten(folded.join(u'\n')).split(u'\n');
+        QCOMPARE(f.size(), 3);
+        QVERIFY(f[1].startsWith(QStringLiteral(" \u2068[… ")));
+        // Text is never touched, nor the empty input.
+        QCOMPARE(Source::shorten(QStringLiteral("a\n\nb")), QStringLiteral("a\n\nb"));
+        QCOMPARE(Source::shorten(QString()), QString());
+    }
+
+    void decryptedEml()
+    {
+        const QByteArray outer = "Return-Path: <a@x.test>\r\nFrom: a@x.test\r\nTo: b@x.test\r\n"
+                                 "Subject: ...\r\nMessage-ID: <m@x.test>\r\nAutocrypt: addr=a@x.test;\r\n keydata=AAAA\r\n"
+                                 "MIME-Version: 1.0\r\nContent-Type: multipart/encrypted; boundary=e;\r\n"
+                                 " protocol=\"application/pgp-encrypted\"\r\n\r\n--e\r\n...\r\n--e--\r\n";
+        const QByteArray inner = "Content-Type: multipart/mixed; boundary=i; protected-headers=v1\r\n"
+                                 "Subject: The real subject\r\n\r\n--i\r\nContent-Type: text/plain\r\n\r\n"
+                                 "secret\r\n--i--\r\n";
+        const QByteArray eml = Source::decryptedEml(outer, inner);
+        const Part p = parse(eml);
+        QCOMPARE(p.mimeType, QByteArray("multipart/mixed"));
+        QCOMPARE(p.headers.text("Subject"), QStringLiteral("The real subject"));
+        QCOMPARE(p.headers.all("Subject").size(), 1);
+        QCOMPARE(p.headers.all("Content-Type").size(), 1);
+        QCOMPARE(p.headers.all("MIME-Version").size(), 1);
+        QCOMPARE(p.headers.raw("From"), QByteArray("a@x.test"));
+        QCOMPARE(p.headers.raw("Message-ID"), QByteArray("<m@x.test>"));
+        QVERIFY(p.headers.raw("Autocrypt").contains("keydata=AAAA")); // folded line kept with its field
+        QCOMPARE(p.children.value(0).text().trimmed(), QStringLiteral("secret"));
+        QVERIFY(!eml.contains("pgp-encrypted"));
     }
 
     void buildAndReparse()

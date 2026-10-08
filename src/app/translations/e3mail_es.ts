@@ -244,8 +244,12 @@ Para: %4
         <translation>Importar vCard…</translation>
     </message>
     <message>
-        <source>Export contacts…</source>
-        <translation>Exportar contactos…</translation>
+        <source>Export as vCard…</source>
+        <translation>Exportar como vCard…</translation>
+    </message>
+    <message>
+        <source>Export as CSV…</source>
+        <translation>Exportar como CSV…</translation>
     </message>
     <message>
         <source>verified</source>
@@ -344,6 +348,10 @@ Para: %4
         <translation>Bloquear</translation>
     </message>
     <message>
+        <source>Export vCard…</source>
+        <translation>Exportar vCard…</translation>
+    </message>
+    <message>
         <source>Remove contact</source>
         <translation>Quitar contacto</translation>
     </message>
@@ -374,6 +382,10 @@ Para: %4
     <message>
         <source>All files (*)</source>
         <translation>Todos los archivos (*)</translation>
+    </message>
+    <message>
+        <source>CSV files (*.csv)</source>
+        <translation>Archivos CSV (*.csv)</translation>
     </message>
 </context>
 <context>
@@ -493,28 +505,12 @@ Para: %4
         <translation>No se pudo guardar el adjunto.</translation>
     </message>
     <message>
-        <source>The original of this message is no longer kept. Change how long originals are kept in Settings.</source>
-        <translation>El original de este mensaje ya no se conserva. Cambia cuánto tiempo se guardan los originales en Ajustes.</translation>
+        <source>This message cannot be decrypted, or its original is no longer kept.</source>
+        <translation>Este mensaje no se puede descifrar o su original ya no se conserva.</translation>
     </message>
     <message>
-        <source>
-
-──── decrypted content ────
-
-</source>
-        <translation>
-
-──── contenido descifrado ────
-
-</translation>
-    </message>
-    <message>
-        <source>
-
-(cannot decrypt: %1)</source>
-        <translation>
-
-(no se puede descifrar: %1)</translation>
+        <source>The original of this message is no longer kept.</source>
+        <translation>El original de este mensaje ya no se conserva.</translation>
     </message>
     <message>
         <source>%1 is not an email address, or is in your contacts already.</source>
@@ -660,6 +656,18 @@ Para: %4
         <translation>Ver código fuente</translation>
     </message>
     <message>
+        <source>Save as .eml…</source>
+        <translation>Guardar como .eml…</translation>
+    </message>
+    <message>
+        <source>The original of this message is no longer kept.</source>
+        <translation>El original de este mensaje ya no se conserva.</translation>
+    </message>
+    <message>
+        <source>Save decrypted as .eml…</source>
+        <translation>Guardar descifrado como .eml…</translation>
+    </message>
+    <message>
         <source>Mark unread</source>
         <translation>Marcar como no leído</translation>
     </message>
@@ -723,6 +731,10 @@ Para: %4
     <message>
         <source>Archive</source>
         <translation>Archivar</translation>
+    </message>
+    <message>
+        <source>Move to Inbox</source>
+        <translation>Mover a la bandeja de entrada</translation>
     </message>
     <message>
         <source>Restore</source>
@@ -876,6 +888,25 @@ Para: %4
     <message>
         <source>Move to Trash</source>
         <translation>Mover a la papelera</translation>
+    </message>
+</context>
+<context>
+    <name>SaveMessage</name>
+    <message>
+        <source>Save decrypted</source>
+        <translation>Guardar descifrado</translation>
+    </message>
+    <message>
+        <source>The saved file is not encrypted. Anyone who can open it can read the message.</source>
+        <translation>El archivo guardado no está cifrado. Cualquiera que pueda abrirlo puede leer el mensaje.</translation>
+    </message>
+    <message>
+        <source>Email messages (*.eml)</source>
+        <translation>Mensajes de correo (*.eml)</translation>
+    </message>
+    <message>
+        <source>All files (*)</source>
+        <translation>Todos los archivos (*)</translation>
     </message>
 </context>
 <context>
@@ -1234,6 +1265,10 @@ Para: %4
         <translation>Archivo</translation>
     </message>
     <message>
+        <source>All mail</source>
+        <translation>Todo el correo</translation>
+    </message>
+    <message>
         <source>Trash</source>
         <translation>Papelera</translation>
     </message>
@@ -1282,10 +1317,49 @@ Para: %4
     </message>
 </context>
 <context>
+    <name>Source</name>
+    <message>
+        <source>[… %1 of encoded data …]</source>
+        <translation>[… %1 de datos codificados …]</translation>
+    </message>
+</context>
+<context>
     <name>SourceDialog</name>
     <message>
         <source>Message source</source>
         <translation>Código fuente del mensaje</translation>
+    </message>
+    <message>
+        <source>Original</source>
+        <translation>Original</translation>
+    </message>
+    <message>
+        <source>Decrypted</source>
+        <translation>Descifrado</translation>
+    </message>
+    <message>
+        <source>Shorten encoded data</source>
+        <translation>Acortar datos codificados</translation>
+    </message>
+    <message>
+        <source>Structure</source>
+        <translation>Estructura</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Copiar</translation>
+    </message>
+    <message>
+        <source>Save…</source>
+        <translation>Guardar…</translation>
+    </message>
+    <message>
+        <source>The original of this message is no longer kept. Change how long originals are kept in Settings.</source>
+        <translation>El original de este mensaje ya no se conserva. Cambia cuánto tiempo se guardan los originales en Ajustes.</translation>
+    </message>
+    <message>
+        <source>This message cannot be decrypted: %1</source>
+        <translation>Este mensaje no se puede descifrar: %1</translation>
     </message>
 </context>
 <context>

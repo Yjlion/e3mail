@@ -11,7 +11,7 @@ that supersedes it, or a dated amendment block inside it, and add a row here.
 | [0004](0004-all-or-nothing-encryption.md) | Opportunistic encryption is all or nothing per message | Accepted |
 | [0005](0005-rnp-and-an-own-keyring.md) | OpenPGP through RNP, in a keyring of our own | Accepted |
 | [0006](0006-transport-only-imap-and-pop3.md) | IMAP and POP3 are transport only; retention is not retroactive | Accepted |
-| [0007](0007-tags-not-folders.md) | Tags, not folders | Accepted |
+| [0007](0007-tags-not-folders.md) | Tags, not folders | Accepted; amended 2026-10-08 (mail to oneself, All mail) |
 | [0008](0008-strangers-wait-and-trash-is-the-only-destroyer.md) | Strangers wait in Unverified; Trash is the only destroyer | Accepted |
 | [0009](0009-two-barriers-for-message-content.md) | Two barriers between message content and the network | Accepted; amended 2026-10-07 (inline images) |
 | [0010](0010-multi-client-over-iroh.md) | Devices sync with each other over Iroh | Accepted, Phase 8 |
@@ -20,4 +20,4 @@ that supersedes it, or a dated amendment block inside it, and add a row here.
 | [0013](0013-op-merge-rules.md) | How devices merge the op-log | Accepted, Phase 8; amended 2026-10-07 (address book) |
 | [0014](0014-languages-icu-and-qt-linguist.md) | Languages: ICU for charsets and dates, Qt Linguist for the interface | Accepted |
 | [0015](0015-finding-server-settings.md) | Finding server settings: provider, ISPDB, Autodiscover, DNS, guess | Accepted |
-| [0016](0016-android.md) | Android: the same app, one pane at a time, only while it runs | Accepted |
+| [0016](0016-android.md) | Android: the same app, one pane at a time, only while it runs | Accepted; amended 2026-10-08 (release signing) |

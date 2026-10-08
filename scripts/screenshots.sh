@@ -21,6 +21,7 @@ shot unverified --open unverified
 shot composer --page compose
 shot reply-html --open inbox:0 --page reply
 shot contacts --page contacts
+shot source --open inbox:0 --page source
 shot settings --page settings
 # Other languages: right to left, CJK, and a long-worded one. CJK needs a
 # CJK font installed (e.g. noto-fonts-cjk or wqy-microhei).
@@ -28,6 +29,7 @@ shot inbox-ar --lang ar
 shot reading-ja --open inbox:0 --lang ja
 shot settings-de --page settings --lang de
 shot unverified-he --open unverified --lang he
+shot source-ar --open inbox:0 --page source --lang ar
 "$APP" --data-dir "$EMPTY" --grab "$OUT/first-run.png"; echo "$OUT/first-run.png"
 # A phone: one pane at a time.
 PHONE=(--size 400x820)
@@ -37,6 +39,7 @@ shot phone-reading --open inbox:0 "${PHONE[@]}"
 shot phone-composer --page compose "${PHONE[@]}"
 shot phone-contacts --page contacts "${PHONE[@]}"
 shot phone-settings --page settings "${PHONE[@]}"
+shot phone-source --open inbox:0 --page source "${PHONE[@]}"
 shot phone-inbox-ar --lang ar "${PHONE[@]}"
 shot phone-reading-ar --open inbox:0 --lang ar "${PHONE[@]}"
 shot phone-menu-ar --page menu --lang ar "${PHONE[@]}"

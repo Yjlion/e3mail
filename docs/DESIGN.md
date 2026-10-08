@@ -147,7 +147,7 @@ deletion rule are in place and tested over a loopback transport; Iroh is next.
 | P7 | Packaging and CI: `.deb`, AppImage, NSIS, portable zip, `.dmg` | ✅ CI green on all three; release workflow not yet run |
 | P8 | Multi-client over Iroh | sync core done; transport next |
 | P9 | SecureJoin and QR (Delta Chat compatible) | |
-| P10 | Address book: details, phones, vCard import and export | ✅ (categories not built) |
+| P10 | Address book: details, phones, vCard import and export, CSV export | ✅ (categories not built) |
 | P11 | At rest: SQLCipher passphrase, blob encryption, encrypted backup | |
 | P12 | Read receipts (MDN) and disappearing messages into Trash | |
 | P13 | Structured email (SML), trusted vs inert | |
