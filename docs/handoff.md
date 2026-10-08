@@ -277,6 +277,70 @@ service. Passwords go to the Android Keystore through QtKeychain.
   the x86_64 one in an API 34 emulator with no QML errors in logcat, and
   passed on Linux, macOS and Windows. Nothing has run on an arm64 device.
 
+## Exports, mail to self, All mail, APKs in releases (2026-10-08)
+
+- **Mail to self is in the Inbox too** ([ADR 0007 amendment](adr/0007-tags-not-folders.md)).
+  The server's copy of mail we send to ourselves was, and still is, dropped
+  as a duplicate of the Sent row (one Message-ID, one row). The Inbox clause
+  now also takes sent mail with our address in To, Cc or Bcc. It is derived:
+  no migration, no op. It shows read.
+- **All mail** has its own place in the sidebar. `E` archives the selected
+  message (and moves it back to the Inbox when viewing Archive). The row
+  menu says "Move to Inbox" in Archive.
+- **Source view.** `mime::Source` gives the MIME outline, shortens runs of
+  base64 (attachments, armour, Autocrypt keydata) to one marker, and builds
+  a decrypted `.eml`. The dialog highlights header names, boundaries and
+  armour (`SourceHighlighter`, a `QSyntaxHighlighter`). It has Original and
+  Decrypted views, Copy, Save, and the structure.
+- **Message export.** "Save as .eml" writes the original as received or
+  sent, so encrypted mail stays encrypted. "Save decrypted as .eml" warns
+  first, then writes the outer headers with the inner part's protected
+  headers winning. The CLI has `show <id> --raw [--decrypted]`.
+- **Contacts.** Export one contact as a vCard, and the address book as vCard
+  or CSV: RFC 4180, UTF-8 with a BOM, and an apostrophe before a cell that
+  would run as a formula, except phone numbers. The CLI has
+  `contacts-export [--csv]`. `mail::Export::addressBook` replaces the filter
+  that was duplicated between the app and the CLI.
+- **Files go through `FileIo`**: `QSaveFile` for local paths, `QFile` on the
+  URL for Android's `content://`. This covers attachments, contact
+  import/export and messages.
+- **Releases carry both APKs** with checksums, signed with a key from the
+  repository's secrets, or a throwaway one with a warning
+  ([ADR 0016 amendment](adr/0016-android.md) has the one-time setup).
+- `todo.md` lists the next large pieces, none started: Iroh sync, encrypted
+  cloud backups, local AI through llama.cpp, and Mox/Maddy administration.
+
+**Verified here:**
+- `ctest --preset dev`: 14 suites pass. New tests:
+  - `tst_engine::sentToSelfInInbox`: To, Cc and Bcc to self, mail to someone
+    else, archive and trash, All mail. Removing the new clause failed it, and
+    `selfIsEncrypted`, whose Inbox count changed from 0 to 1.
+  - `tst_engine::selfIsEncrypted`: a real encrypted note exported as is
+    (still `multipart/encrypted`) and decrypted (subject and body readable).
+  - `tst_mime::sourceOutline`, `sourceShorten`, `decryptedEml`.
+  - `tst_vcard::csv` (quoting, BOM, the formula rule, phones left alone) and
+    `singleCard`.
+- Screenshots looked at:
+  - the source dialog in English, German, Hebrew and Arabic (`source`,
+    `source-ar`), and on a phone (`phone-source`);
+  - the Decrypted view with its structure, and the contact detail with
+    Export vCard on a phone in English and Arabic, through temporary edits
+    that are not in the tree;
+  - the sidebar with All mail.
+- The translations are complete in all ten languages (machine-made, like
+  the rest).
+
+**Not verified:**
+- `scripts/e2e.py`: Docker was not reachable from this session (permission
+  denied on the socket), so mail to self was not tried against
+  `server/compose`. The fake server covers it.
+- The release workflow's Android job has not run. No `workflow_dispatch`
+  and no tag were run from here, and the signing secrets are not set yet.
+- Saving to a `content://` URI on Android, for any of the exports.
+- Saving any file from a real file dialog; offscreen there is none.
+- Opening a decrypted `.eml` in Thunderbird or another client.
+- A CSV opened in Excel, LibreOffice or Google Contacts.
+
 ## Known gaps
 
 - **Signed-only mail** (`multipart/signed` without encryption) is shown, but
@@ -294,7 +358,8 @@ service. Passwords go to the Android Keystore through QtKeychain.
   service.
 - **Android** has no background sync: mail arrives only while e3mail is open.
   Its rendering, typing and mail flow are unverified (see "Android" above).
-  Packages are debug-signed.
+  CI packages are debug-signed; release packages use the key in the
+  repository's secrets once it is set (ADR 0016 amendment).
 - **Sync**: a message another device sent while it was still pending in that
   device's outbox arrives as Sent. Mail whose raw copy expired under
   raw-message retention never reaches a new device unless the server still
@@ -485,6 +550,21 @@ margin lives inside the delegate now.
 column wider than a phone, clipping everything. They fill and wrap on narrow
 windows now.
 
+**37. A short right-to-left label lost its CheckBox padding.** In the
+source dialog's `Flow`, in Hebrew and Arabic, the Basic `CheckBox`
+"Structure" (מבנה, البنية) reported an implicit width without its
+indicator's padding. The next button covered the label, which looked as if
+it had not been translated. Its neighbour with a longer label was fine, and
+the same word in a minimal QML file was fine. The cause is not known. The
+dialog's checkboxes measure themselves (`TextMetrics`). Do not use
+`contentWidth` instead: it follows the elided width, and both checkboxes
+shrank.
+
+**38. `firstSyncIsNotNewMail` sometimes takes 122 s.** It hit what looks
+like trap 26's 120 s socket timeout twice in one session, once on a tree
+without this work's changes. It took 2 to 3 s in eight runs after that. It
+passes either way. Not investigated.
+
 ## Next
 
 1. P8, slice 2: install Rust, build `src/p2p/` (Iroh, `iroh-blobs`) with
@@ -499,7 +579,10 @@ windows now.
 5. Verify signed-only mail.
 6. Try notifications on a real Windows and macOS desktop, and import real
    vCard exports (Google, Apple, Thunderbird).
-7. Android on a real phone: rendering, typing, the keyboard covering setup's
+7. Set the Android signing secrets (ADR 0016 amendment), run the release
+   workflow by hand, and install the arm64 APK on a phone; then try each
+   export there (Android's file picker returns `content://`).
+8. Android on a real phone: rendering, typing, the keyboard covering setup's
    Connect button, then a real account (receive, send, a notification, the
    Keystore). Setup needs a way to accept a self-signed test certificate, or
    a debuggable build with a copied account, to reach `server/compose`.
