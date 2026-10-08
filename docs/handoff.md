@@ -259,8 +259,11 @@ service. Passwords go to the Android Keystore through QtKeychain.
   with torn and missing areas under both `swiftshader_indirect` and `guest`.
   With `QT_QUICK_BACKEND=software` (passed as the `extraenvvars` intent extra)
   most of setup drew correctly, but the radio buttons, the Connect button and
-  the field borders were still damaged. Whether that is the emulator's GL or
-  ours is not known. Look at it on a real phone first.
+  the field borders were still damaged. CI's emulator (run 37721374406, a
+  different host, also SwiftShader) shows the same diagonal tears and the
+  first-run dialog bleeding through, so it is less likely to be this machine
+  alone. Whether it is SwiftShader or ours is not known. Look at it on a real
+  phone first.
 - **Typing.** `adb shell input text` arrived scrambled ("@ensomeanthropic.como"),
   probably the IME's composition against Qt over a slow emulator; not tried by
   hand. The keyboard covered the Connect button: `adjustResize` did not shrink
@@ -270,8 +273,9 @@ service. Passwords go to the Android Keystore through QtKeychain.
   was added, and nothing was received, sent, notified, or stored in the
   Keystore. Server discovery on Android, and whether `QDnsLookup` works there,
   are untested for the same reason (typing failed).
-- arm64-v8a was not built here; CI builds it. CI's Android job has not run
-  yet.
+- arm64-v8a was not built here. CI (run 37721374406) built both APKs, booted
+  the x86_64 one in an API 34 emulator with no QML errors in logcat, and
+  passed on Linux, macOS and Windows. Nothing has run on an arm64 device.
 
 ## Known gaps
 
