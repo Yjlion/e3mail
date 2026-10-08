@@ -36,12 +36,15 @@ Rectangle {
             radius: Theme.radius
             color: Theme.warnBg
             implicitHeight: heldRow.implicitHeight + 16
-            RowLayout {
+            // Narrow: the buttons go under the sentence.
+            GridLayout {
                 id: heldRow
                 anchors.fill: parent
                 anchors.margins: 8
+                columns: Theme.narrow ? 2 : 3
                 Text {
                     Layout.fillWidth: true
+                    Layout.columnSpan: Theme.narrow ? 2 : 1
                     wrapMode: Text.Wrap
                     color: Theme.warn
                     font.pixelSize: Theme.fontSmall + 1
@@ -116,8 +119,16 @@ Rectangle {
                     font.pixelSize: Theme.fontSmall + 1
                     elide: Text.ElideRight
                 }
+                // Narrow: the date goes under the names, not beside them.
+                Text {
+                    visible: Theme.narrow && card.expanded
+                    text: card.m.date
+                    color: Theme.muted
+                    font.pixelSize: Theme.fontSmall
+                }
             }
             Text {
+                visible: !Theme.narrow || !card.expanded
                 text: card.expanded ? card.m.date : card.m.shortDate
                 color: Theme.muted
                 font.pixelSize: Theme.fontSmall

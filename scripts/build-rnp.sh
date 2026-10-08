@@ -14,17 +14,17 @@ WORK=${RNP_WORK:-$(mktemp -d)}
 git clone --depth 1 --branch "$RNP_VERSION" --recurse-submodules --shallow-submodules \
     https://github.com/rnpgp/rnp.git "$WORK/rnp"
 EXTRA=()
-if [[ "$(uname -s)" == Linux* ]]; then
+if [[ "$(uname -s)" == Linux* && -z "${E3_CROSS:-}" ]]; then
     # Newer GCC no longer pulls these in transitively. Only here: setting
     # CMAKE_CXX_FLAGS replaces the platform defaults, which on MSVC include
-    # /EHsc, and RNP throws.
+    # /EHsc, and RNP throws. Not when cross-compiling (Android's clang).
     EXTRA+=("-DCMAKE_CXX_FLAGS=-include cstring -include cstdint")
 fi
 cmake -S "$WORK/rnp" -B "$WORK/build" \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX="$PREFIX" \
     "${EXTRA[@]}" \
-    -DBUILD_SHARED_LIBS=ON -DBUILD_TESTING=OFF -DENABLE_DOC=OFF \
+    -DBUILD_SHARED_LIBS="${BUILD_SHARED:-ON}" -DBUILD_TESTING=OFF -DENABLE_DOC=OFF \
     -DENABLE_SM2=OFF -DENABLE_IDEA=OFF -DCRYPTO_BACKEND="${RNP_CRYPTO_BACKEND:-botan3}" \
     "$@"
 cmake --build "$WORK/build" --config Release --parallel

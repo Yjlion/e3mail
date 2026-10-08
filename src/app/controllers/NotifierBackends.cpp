@@ -4,7 +4,13 @@
 #include <QGuiApplication>
 #include <QHash>
 
-#ifdef Q_OS_LINUX
+#if defined(Q_OS_ANDROID)
+#include <QCoreApplication>
+#include <QtCore/qcoreapplication_platform.h>
+#include <QJniEnvironment>
+#include <QJniObject>
+#include <QPointer>
+#elif defined(Q_OS_LINUX)
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
 #include <QDBusMessage>
@@ -16,7 +22,66 @@
 
 namespace {
 
-#ifdef Q_OS_LINUX
+#if defined(Q_OS_ANDROID)
+// Android's own notifications, through org.e3mail.e3mail.E3Notify
+// (packaging/android). A tap brings the activity back with the token, and
+// E3Activity hands it to notificationTapped below.
+class AndroidBackend;
+QPointer<AndroidBackend> s_android;
+
+class AndroidBackend : public Notifier::Backend
+{
+    Q_OBJECT
+public:
+    AndroidBackend()
+    {
+        s_android = this;
+        static const bool registered = [] {
+            const JNINativeMethod methods[] = {
+                {"notificationTapped", "(J)V", reinterpret_cast<void *>(&AndroidBackend::tapped)}};
+            QJniEnvironment env;
+            return env.registerNativeMethods("org/e3mail/e3mail/E3Activity", methods, 1);
+        }();
+        Q_UNUSED(registered)
+        // Android 13 asks the person once; until they allow it, available()
+        // is false.
+        QJniObject::callStaticMethod<void>("org/e3mail/e3mail/E3Notify", "requestPermission",
+                                           "(Landroid/content/Context;)V", context().object());
+    }
+
+    bool available() const override
+    {
+        return QJniObject::callStaticMethod<jboolean>("org/e3mail/e3mail/E3Notify", "available",
+                                                      "(Landroid/content/Context;)Z", context().object());
+    }
+
+    void show(const QString &title, const QString &body, quint64 token) override
+    {
+        // The channel's name is what Android's settings list for e3mail.
+        QJniObject::callStaticMethod<void>(
+            "org/e3mail/e3mail/E3Notify", "show",
+            "(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;J)V",
+            context().object(), QJniObject::fromString(tr("New mail")).object<jstring>(),
+            QJniObject::fromString(title).object<jstring>(), QJniObject::fromString(body).object<jstring>(),
+            jlong(token));
+    }
+
+private:
+    static QJniObject context() { return QNativeInterface::QAndroidApplication::context(); }
+
+    // Called on Android's UI thread.
+    static void tapped(JNIEnv *, jclass, jlong token)
+    {
+        QMetaObject::invokeMethod(
+            qApp,
+            [token] {
+                if (s_android)
+                    Q_EMIT s_android->clicked(quint64(token));
+            },
+            Qt::QueuedConnection);
+    }
+};
+#elif defined(Q_OS_LINUX)
 const QString kService = QStringLiteral("org.freedesktop.Notifications");
 const QString kPath = QStringLiteral("/org/freedesktop/Notifications");
 
@@ -114,7 +179,9 @@ private:
 
 std::unique_ptr<Notifier::Backend> makeSystemNotifierBackend()
 {
-#ifdef Q_OS_LINUX
+#if defined(Q_OS_ANDROID)
+    return std::make_unique<AndroidBackend>();
+#elif defined(Q_OS_LINUX)
     return std::make_unique<FreedesktopBackend>();
 #else
     return std::make_unique<TrayBackend>();

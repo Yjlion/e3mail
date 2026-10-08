@@ -28,6 +28,10 @@ QtObject {
     readonly property color bad: dark ? "#ff7b72" : "#b42318"
     readonly property color badBg: dark ? "#3d1b1a" : "#fdecea"
 
+    // A phone, or a window too narrow for three panes: one pane at a time.
+    // Main.qml sets it from the window's width.
+    property bool narrow: false
+
     readonly property int radius: 6
     readonly property int pad: 12
     readonly property int sidebarWidth: 220

@@ -53,7 +53,7 @@ target_link_libraries(e3mail PRIVATE
     e3core e3richtext e3notifier Qt6::Gui Qt6::Qml Qt6::Quick Qt6::QuickControls2 Qt6::Svg)
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     target_link_libraries(e3mail PRIVATE Qt6::DBus)
-else()
+elseif(NOT ANDROID)
     target_link_libraries(e3mail PRIVATE Qt6::Widgets)
 endif()
 e3mail_set_warnings(e3mail)
@@ -64,7 +64,27 @@ set_target_properties(e3mail PROPERTIES
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION})
 
-if(WIN32)
+if(ANDROID)
+    # Version code: major, minor, patch, two digits each (0.1.1 -> 101).
+    math(EXPR e3_version_code
+        "${PROJECT_VERSION_MAJOR} * 10000 + ${PROJECT_VERSION_MINOR} * 100 + ${PROJECT_VERSION_PATCH}")
+    set_target_properties(e3mail PROPERTIES
+        QT_ANDROID_PACKAGE_SOURCE_DIR ${PROJECT_SOURCE_DIR}/packaging/android
+        QT_ANDROID_PACKAGE_NAME org.e3mail.e3mail
+        QT_ANDROID_APP_NAME e3mail
+        QT_ANDROID_MIN_SDK_VERSION 28
+        QT_ANDROID_TARGET_SDK_VERSION 34
+        QT_ANDROID_VERSION_NAME ${PROJECT_VERSION}
+        QT_ANDROID_VERSION_CODE ${e3_version_code})
+    # QSslSocket loads OpenSSL at run time: KDAB's prebuilt libraries, from
+    # scripts/android-deps.sh.
+    set(E3MAIL_ANDROID_OPENSSL "" CACHE PATH "KDAB's android_openssl checkout")
+    if(NOT E3MAIL_ANDROID_OPENSSL)
+        message(FATAL_ERROR "Set E3MAIL_ANDROID_OPENSSL (scripts/android-deps.sh clones it).")
+    endif()
+    include(${E3MAIL_ANDROID_OPENSSL}/android_openssl.cmake)
+    add_android_openssl_libraries(e3mail)
+elseif(WIN32)
     target_sources(e3mail PRIVATE ${PROJECT_SOURCE_DIR}/packaging/windows/e3mail.rc)
 elseif(APPLE)
     set(E3_ICNS ${PROJECT_SOURCE_DIR}/packaging/macos/e3mail.icns)
@@ -73,6 +93,9 @@ elseif(APPLE)
     set_target_properties(e3mail PROPERTIES MACOSX_BUNDLE_ICON_FILE e3mail.icns)
 endif()
 
-install(TARGETS e3mail
-    BUNDLE DESTINATION .
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+# On Android the app is a library inside the package androiddeployqt builds.
+if(NOT ANDROID)
+    install(TARGETS e3mail
+        BUNDLE DESTINATION .
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+endif()

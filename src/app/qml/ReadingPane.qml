@@ -86,21 +86,33 @@ Rectangle {
             Layout.fillHeight: true
             clip: true
             spacing: 12
-            topMargin: 16
+            topMargin: Theme.narrow ? 10 : 16
             bottomMargin: 24
-            leftMargin: 20
             model: pane.thread
             ScrollBar.vertical: ScrollBar {}
             boundsBehavior: Flickable.StopAtBounds
             // Open on the newest message.
             onCountChanged: Qt.callLater(() => positionViewAtEnd())
-            delegate: MessageCard {
-                width: Math.min(cards.width - 40, 900)
-                // Earlier messages in a thread start folded.
-                expanded: index === cards.count - 1 || modelData.id === MailApp.selectedMessageId
-                onEditDraft: (id) => pane.editDraft(id)
-                onShowSource: (id) => sourceDialog.show(id)
-                onAskOpenLink: (url) => linkDialog.ask(url)
+            // The list places its delegates at x = 0, so the margin is inside
+            // (a leftMargin that changes with the width is not re-applied).
+            delegate: Item {
+                id: slot
+                required property var modelData
+                required property int index
+                width: cards.width
+                height: card.height
+                MessageCard {
+                    id: card
+                    x: Theme.narrow ? 10 : 20
+                    width: Math.min(cards.width - 2 * x, 900)
+                    modelData: slot.modelData
+                    index: slot.index
+                    // Earlier messages in a thread start folded.
+                    expanded: index === cards.count - 1 || modelData.id === MailApp.selectedMessageId
+                    onEditDraft: (id) => pane.editDraft(id)
+                    onShowSource: (id) => sourceDialog.show(id)
+                    onAskOpenLink: (url) => linkDialog.ask(url)
+                }
             }
         }
     }

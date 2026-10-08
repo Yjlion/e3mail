@@ -36,15 +36,23 @@ Rectangle {
         phones = p
     }
     onVisibleChanged: if (visible) reload()
+    // Narrow: from a contact back to the list. False when already there.
+    function back() {
+        if (!Theme.narrow || !current.id) return false
+        show(0)
+        return true
+    }
 
     RowLayout {
         anchors.fill: parent
         spacing: 0
 
+        // Narrow: the list, or the contact chosen from it.
         ColumnLayout {
+            visible: !Theme.narrow || !view.current.id
             Layout.preferredWidth: Theme.listWidth
-            Layout.maximumWidth: Theme.listWidth
-            Layout.fillWidth: false
+            Layout.maximumWidth: Theme.narrow ? Number.POSITIVE_INFINITY : Theme.listWidth
+            Layout.fillWidth: Theme.narrow
             Layout.fillHeight: true
             spacing: 0
             RowLayout {
@@ -108,9 +116,10 @@ Rectangle {
                 }
             }
         }
-        Rectangle { Layout.fillHeight: true; width: 1; color: Theme.border }
+        Rectangle { visible: !Theme.narrow; Layout.fillHeight: true; width: 1; color: Theme.border }
 
         Item {
+            visible: !Theme.narrow || !!view.current.id
             Layout.fillWidth: true
             Layout.fillHeight: true
             Text {
@@ -313,7 +322,7 @@ Rectangle {
         title: qsTr("Remove %1?").arg(view.current.name || view.current.addr || "")
         standardButtons: Dialog.Yes | Dialog.Cancel
         Label {
-            width: 360
+            width: Math.min(360, Window.width - 96)
             text: qsTr("Their details are removed from your contacts. Their next mail waits in Unverified until you accept it. Their key is kept.")
             wrapMode: Text.Wrap
         }

@@ -12,7 +12,7 @@ ToolButton {
     property color tint: on ? Theme.accent : Theme.muted
     // Arrows that point along the reading direction turn around in a
     // right-to-left layout.
-    readonly property bool directional: ["reply", "reply-all", "forward", "restore"].indexOf(iconName) >= 0
+    readonly property bool directional: ["reply", "reply-all", "forward", "restore", "back"].indexOf(iconName) >= 0
     transform: Scale {
         origin.x: btn.width / 2
         xScale: btn.directional && btn.mirrored ? -1 : 1

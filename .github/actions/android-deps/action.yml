@@ -1,0 +1,48 @@
+name: Android dependencies
+description: >
+  vcpkg's packages, RNP, QtKeychain and OpenSSL for one Android ABI, built by
+  scripts/android-deps.sh and kept between runs. Needs ANDROID_NDK_ROOT,
+  QT_HOST_PATH and QT_ANDROID in the environment.
+
+inputs:
+  abi:
+    description: arm64-v8a or x86_64.
+    required: true
+  rnp-version:
+    description: The RNP tag scripts/build-rnp.sh builds.
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Cache dependencies
+      id: deps
+      uses: actions/cache@v4
+      with:
+        path: android-deps/${{ inputs.abi }}
+        key: androiddeps-v1-${{ inputs.abi }}-${{ inputs.rnp-version }}-${{ env.ANDROID_NDK_VERSION }}-${{ hashFiles('vcpkg.json', 'scripts/android-deps.sh', 'scripts/build-rnp.sh', 'packaging/android/vcpkg-triplets/*') }}
+
+    # Built packages one by one, as for Windows: a change to one dependency
+    # rebuilds only that one.
+    - name: Cache vcpkg packages
+      if: steps.deps.outputs.cache-hit != 'true'
+      uses: actions/cache@v4
+      with:
+        path: vcpkg-bincache
+        key: vcpkg-android-${{ inputs.abi }}-${{ env.ANDROID_NDK_VERSION }}-${{ hashFiles('vcpkg.json', 'packaging/android/vcpkg-triplets/*') }}
+        restore-keys: vcpkg-android-${{ inputs.abi }}-${{ env.ANDROID_NDK_VERSION }}-
+
+    - name: Build dependencies
+      if: steps.deps.outputs.cache-hit != 'true'
+      shell: bash
+      env:
+        RNP_VERSION: ${{ inputs.rnp-version }}
+      run: |
+        mkdir -p vcpkg-bincache
+        export VCPKG_BINARY_SOURCES="clear;files,$GITHUB_WORKSPACE/vcpkg-bincache,readwrite"
+        # The work tree (sources, build trees) is not worth caching.
+        E3_WORK="$RUNNER_TEMP/android-work" scripts/android-deps.sh ${{ inputs.abi }} "$GITHUB_WORKSPACE/android-deps/${{ inputs.abi }}"
+
+    - name: Use dependencies
+      shell: bash
+      run: echo "E3_ANDROID_DEPS=$GITHUB_WORKSPACE/android-deps" >> "$GITHUB_ENV"

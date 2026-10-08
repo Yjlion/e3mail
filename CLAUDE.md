@@ -36,6 +36,14 @@ Dependencies on Arch: `qt6-base qt6-declarative qt6-svg qt6-tools icu botan
 json-c sqlite`, plus RNP from `scripts/build-rnp.sh /usr/local` (it is not
 packaged). Screenshots in Chinese and Japanese need a CJK font.
 
+Android (ADR 0016): `scripts/android-toolchain.sh <dir>` installs the SDK,
+NDK r27c and Qt 6.8.3 for Android and prints the environment;
+`scripts/android-deps.sh <abi> $E3_ANDROID_DEPS/<abi>` builds the native
+dependencies (an hour the first time, mostly ICU and Botan); then
+`cmake --preset android-x64 && cmake --build --preset android-x64` makes a
+debug-signed APK, and `scripts/android-smoke.sh <apk>` boots it on an
+emulator. QML changes: look at the `phone-*` screenshots too.
+
 User-visible strings go through `qsTr`/`tr` (in the core,
 `QCoreApplication::translate`), with `%n` for anything counted. After changing
 them, run `cmake --build --preset dev --target update_translations` and

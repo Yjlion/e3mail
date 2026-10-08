@@ -18,7 +18,7 @@ Dialog {
     ColumnLayout {
         Label { text: qsTr("This link goes to:") }
         TextField {
-            Layout.preferredWidth: 460
+            Layout.preferredWidth: Math.min(460, Window.width - 96)
             readOnly: true
             text: dlg.url
             selectByMouse: true

@@ -230,6 +230,49 @@ test server, before and after (top and bottom of the message looked at);
 **Not verified:** other senders' newsletters; a row of icons in layout cells
 now stacks vertically, which is readable but not the sender's layout.
 
+## Android (2026-10-07)
+
+e3mail builds for Android as the same app ([ADR 0016](adr/0016-android.md)).
+Below 720 px the window shows one pane at a time: a drawer for the sidebar, an
+opened message covering the list, a title bar with the menu or Back. Contacts
+does the same for its list and detail. Desktop windows may now shrink to
+360 px and get the same layout. Notifications go through Android's own while
+the app runs, and it syncs on returning to the front; there is no background
+service. Passwords go to the Android Keystore through QtKeychain.
+
+**Verified here:**
+- The desktop: all 14 suites, including the new `app_smoke_narrow` and
+  `app_smoke_narrow_rtl`. Phone-size screenshots (inbox, drawer, message,
+  composer, contacts, settings, first run; Arabic for inbox, message and
+  drawer; German settings at full length) were looked at. They found real
+  overflow in Settings, the dialogs and the message header, now fixed.
+- `scripts/android-deps.sh x86_64` built every dependency (about 40 minutes
+  here, ICU and Botan most of it), and `cmake --preset android-x64` built a
+  signed 43 MB APK with warnings as errors.
+- On an API 34 x86_64 emulator: it installs and starts, asks for the
+  notification permission, and shows setup with the first-run dialog. The
+  accessibility tree (`uiautomator dump`) lists the expected controls, and
+  logcat has no QML errors. "I understand" dismissed the dialog.
+
+**Not verified:**
+- **Rendering.** The emulator here (3 cores, under 6 GB, no GPU) draws Qt
+  with torn and missing areas under both `swiftshader_indirect` and `guest`.
+  With `QT_QUICK_BACKEND=software` (passed as the `extraenvvars` intent extra)
+  most of setup drew correctly, but the radio buttons, the Connect button and
+  the field borders were still damaged. Whether that is the emulator's GL or
+  ours is not known. Look at it on a real phone first.
+- **Typing.** `adb shell input text` arrived scrambled ("@ensomeanthropic.como"),
+  probably the IME's composition against Qt over a slow emulator; not tried by
+  hand. The keyboard covered the Connect button: `adjustResize` did not shrink
+  the window.
+- **Any mail.** The setup form has no way to accept the test server's
+  self-signed certificate (only `e3mail-cli --insecure` has), so no account
+  was added, and nothing was received, sent, notified, or stored in the
+  Keystore. Server discovery on Android, and whether `QDnsLookup` works there,
+  are untested for the same reason (typing failed).
+- arm64-v8a was not built here; CI builds it. CI's Android job has not run
+  yet.
+
 ## Known gaps
 
 - **Signed-only mail** (`multipart/signed` without encryption) is shown, but
@@ -245,6 +288,9 @@ now stacks vertically, which is readable but not the sender's layout.
   is two contacts. No categories, postal addresses or photos.
 - **Notifications** are shown only while e3mail runs; there is no background
   service.
+- **Android** has no background sync: mail arrives only while e3mail is open.
+  Its rendering, typing and mail flow are unverified (see "Android" above).
+  Packages are debug-signed.
 - **Sync**: a message another device sent while it was still pending in that
   device's outbox arrives as Sent. Mail whose raw copy expired under
   raw-message retention never reaches a new device unless the server still
@@ -403,6 +449,38 @@ bold (so emit wrote `<h2><b>`), every paragraph gets 12 px margins, and a
 Windows CI run on `known-gaps` rebuilt every dependency (29 min), because
 `discovery-and-ci`'s cache is not on the default branch yet.
 
+**30. `Q_OS_LINUX` is defined on Android.** Code that means the desktop
+Linux (D-Bus, the freedesktop notifier) must test `Q_OS_ANDROID` first.
+CMake's `CMAKE_SYSTEM_NAME` is `Android`, so CMake branches are not fooled.
+
+**31. NDK r26b cannot build Botan 3**: its libc++ lacks an `operator<=>`
+Botan needs (`IPv6Address`). r27c can, and Qt 6.8.3 for Android works with it.
+
+**32. An interrupted aqt install looks complete.** The first toolchain run hit
+the disk quota (aqt downloads into `/tmp`; set `TMPDIR`) after the desktop
+Qt's base but before its ICU. The rerun saw the directory and skipped it, and
+`qtpaths` then failed on `libicui18n.so.73`. The script now trusts a marker
+written after a full install.
+
+**33. `pgrep -f`/`pkill -f` match the shell running them** when the pattern
+is in its own command line. Killing `qemu-system` that way killed the command
+itself.
+
+**34. The emulator needs memory.** At `-memory 2048` with a Gradle daemon
+left over from the build, the kernel's OOM killer ended the emulator. Kill
+the daemon after building and use `-memory 1536`; Android then restarts the
+app in the background now and then. `settings put global hide_error_dialogs 1`
+stops the "System UI isn't responding" dialogs covering the app.
+
+**35. A `ListView`'s `leftMargin` changed after layout is not re-applied**,
+so a binding on `Theme.narrow` left the desktop's message cards at x = 0. The
+margin lives inside the delegate now.
+
+**36. A layout item that does not fill keeps its implicit width.** A
+`CheckBox` or `Label` with long text in a `ColumnLayout` pushed the whole
+column wider than a phone, clipping everything. They fill and wrap on narrow
+windows now.
+
 ## Next
 
 1. P8, slice 2: install Rust, build `src/p2p/` (Iroh, `iroh-blobs`) with
@@ -417,3 +495,7 @@ Windows CI run on `known-gaps` rebuilt every dependency (29 min), because
 5. Verify signed-only mail.
 6. Try notifications on a real Windows and macOS desktop, and import real
    vCard exports (Google, Apple, Thunderbird).
+7. Android on a real phone: rendering, typing, the keyboard covering setup's
+   Connect button, then a real account (receive, send, a notification, the
+   Keystore). Setup needs a way to accept a self-signed test certificate, or
+   a debuggable build with a copied account, to reach `server/compose`.

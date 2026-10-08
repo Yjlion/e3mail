@@ -7,7 +7,7 @@
 
 #include <QCommandLineParser>
 #include <QGuiApplication>
-#ifndef Q_OS_LINUX
+#ifndef Q_OS_LINUX // which Android defines too
 #include <QApplication> // the system tray, for notifications
 #endif
 #include <QIcon>
@@ -44,13 +44,15 @@ int main(int argc, char *argv[])
                                   QStringLiteral("png"));
     const QCommandLineOption offline(QStringLiteral("offline"), QStringLiteral("Do not connect to mail servers."));
     const QCommandLineOption page(QStringLiteral("page"), QStringLiteral("Start on this page (for screenshots)."),
-                                  QStringLiteral("mail|compose|reply|contacts|settings"));
+                                  QStringLiteral("mail|compose|reply|contacts|settings|menu"));
     const QCommandLineOption open(QStringLiteral("open"), QStringLiteral("Open the newest message in a tag (for screenshots)."),
                                   QStringLiteral("tag"));
     const QCommandLineOption lang(QStringLiteral("lang"),
                                   QStringLiteral("Show the interface in this language, without saving it."),
                                   QStringLiteral("code"));
-    p.addOptions({dataDir, smoke, grab, offline, page, open, lang});
+    const QCommandLineOption size(QStringLiteral("size"), QStringLiteral("Open the window at this size (for screenshots)."),
+                                  QStringLiteral("WxH"));
+    p.addOptions({dataDir, smoke, grab, offline, page, open, lang, size});
     p.process(app);
     if (p.isSet(dataDir))
         e3::Paths::setDataDir(p.value(dataDir));
@@ -77,6 +79,18 @@ int main(int argc, char *argv[])
         return 1;
 
     QObject *root = engine.rootObjects().first();
+    if (p.isSet(size)) {
+        root->setProperty("width", p.value(size).section(u'x', 0, 0).toInt());
+        root->setProperty("height", p.value(size).section(u'x', 1, 1).toInt());
+    }
+#ifdef Q_OS_ANDROID
+    // Android drops the IDLE connections of an app in the background; catch up
+    // when it comes back. There is no background service (ADR 0016).
+    QObject::connect(&app, &QGuiApplication::applicationStateChanged, &mailApp, [&mailApp](Qt::ApplicationState s) {
+        if (s == Qt::ApplicationActive)
+            mailApp.syncNow();
+    });
+#endif
     // A clicked notification brings the window to the front.
     if (auto *w = qobject_cast<QWindow *>(root)) {
         QObject::connect(&mailApp, &MailApp::raiseRequested, w, [w] {
@@ -98,9 +112,14 @@ int main(int argc, char *argv[])
         else if (p.value(page) == QLatin1String("reply")) // to the message --open selected
             QMetaObject::invokeMethod(root, "compose", Q_ARG(QVariant, QStringLiteral("reply")),
                                       Q_ARG(QVariant, mailApp.selectedMessageId()));
+        else if (p.value(page) == QLatin1String("menu")) // the narrow layout's drawer
+            QMetaObject::invokeMethod(root, "openMenu");
         else
             root->setProperty("page", p.value(page));
     }
+    // In the narrow layout, the opened message covers the list.
+    if (p.isSet(open) && !p.isSet(page))
+        root->setProperty("reading", true);
 
     if (p.isSet(smoke) || p.isSet(grab)) {
         auto *window = qobject_cast<QQuickWindow *>(engine.rootObjects().first());

@@ -29,3 +29,15 @@ shot reading-ja --open inbox:0 --lang ja
 shot settings-de --page settings --lang de
 shot unverified-he --open unverified --lang he
 "$APP" --data-dir "$EMPTY" --grab "$OUT/first-run.png"; echo "$OUT/first-run.png"
+# A phone: one pane at a time.
+PHONE=(--size 400x820)
+shot phone-inbox "${PHONE[@]}"
+shot phone-menu --page menu "${PHONE[@]}"
+shot phone-reading --open inbox:0 "${PHONE[@]}"
+shot phone-composer --page compose "${PHONE[@]}"
+shot phone-contacts --page contacts "${PHONE[@]}"
+shot phone-settings --page settings "${PHONE[@]}"
+shot phone-inbox-ar --lang ar "${PHONE[@]}"
+shot phone-reading-ar --open inbox:0 --lang ar "${PHONE[@]}"
+shot phone-menu-ar --page menu --lang ar "${PHONE[@]}"
+"$APP" --data-dir "$EMPTY" --grab "$OUT/phone-first-run.png" "${PHONE[@]}"; echo "$OUT/phone-first-run.png"
