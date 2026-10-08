@@ -74,7 +74,8 @@ Rectangle {
                     Menu {
                         id: bookMenu
                         MenuItem { text: qsTr("Import vCard…"); onTriggered: importDialog.open() }
-                        MenuItem { text: qsTr("Export contacts…"); onTriggered: exportDialog.open() }
+                        MenuItem { text: qsTr("Export as vCard…"); onTriggered: exportDialog.open() }
+                        MenuItem { text: qsTr("Export as CSV…"); onTriggered: csvDialog.open() }
                     }
                 }
             }
@@ -254,8 +255,11 @@ Rectangle {
                         selected: (view.current.encryption !== undefined ? view.current.encryption : -1) + 1
                         onActivated: (i) => MailApp.setContactEncryption(view.current.id, i - 1)
                     }
-                    RowLayout {
+                    // Wraps on a phone, where four buttons do not fit one row.
+                    Flow {
+                        Layout.fillWidth: true
                         Layout.topMargin: 12
+                        spacing: 6
                         Button {
                             visible: !view.current.known
                             text: qsTr("Accept")
@@ -266,6 +270,13 @@ Rectangle {
                             onClicked: {
                                 if (view.current.blocked) MailApp.unblock(view.current.addr); else MailApp.block(view.current.addr)
                                 view.show(view.current.id); view.reload()
+                            }
+                        }
+                        Button {
+                            text: qsTr("Export vCard…")
+                            onClicked: {
+                                contactExportDialog.selectedFile = "file:///" + MailApp.suggestedContactFileName(view.current.id)
+                                contactExportDialog.open()
                             }
                         }
                         Button {
@@ -340,6 +351,20 @@ Rectangle {
         fileMode: FileDialog.SaveFile
         defaultSuffix: "vcf"
         nameFilters: [qsTr("vCard files (*.vcf *.vcard)")]
-        onAccepted: MailApp.exportContacts(selectedFile)
+        onAccepted: MailApp.exportContacts(selectedFile, "vcf")
+    }
+    FileDialog {
+        id: csvDialog
+        fileMode: FileDialog.SaveFile
+        defaultSuffix: "csv"
+        nameFilters: [qsTr("CSV files (*.csv)")]
+        onAccepted: MailApp.exportContacts(selectedFile, "csv")
+    }
+    FileDialog {
+        id: contactExportDialog
+        fileMode: FileDialog.SaveFile
+        defaultSuffix: "vcf"
+        nameFilters: [qsTr("vCard files (*.vcf *.vcard)")]
+        onAccepted: MailApp.exportContact(view.current.id, selectedFile)
     }
 }

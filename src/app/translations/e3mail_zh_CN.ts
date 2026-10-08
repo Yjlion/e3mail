@@ -244,8 +244,12 @@ To: %4
         <translation>导入 vCard…</translation>
     </message>
     <message>
-        <source>Export contacts…</source>
-        <translation>导出联系人…</translation>
+        <source>Export as vCard…</source>
+        <translation>导出为 vCard…</translation>
+    </message>
+    <message>
+        <source>Export as CSV…</source>
+        <translation>导出为 CSV…</translation>
     </message>
     <message>
         <source>verified</source>
@@ -344,6 +348,10 @@ To: %4
         <translation>屏蔽</translation>
     </message>
     <message>
+        <source>Export vCard…</source>
+        <translation>导出 vCard…</translation>
+    </message>
+    <message>
         <source>Remove contact</source>
         <translation>删除联系人</translation>
     </message>
@@ -374,6 +382,10 @@ To: %4
     <message>
         <source>All files (*)</source>
         <translation>所有文件 (*)</translation>
+    </message>
+    <message>
+        <source>CSV files (*.csv)</source>
+        <translation>CSV 文件 (*.csv)</translation>
     </message>
 </context>
 <context>
@@ -492,28 +504,12 @@ To: %4
         <translation>无法保存附件。</translation>
     </message>
     <message>
-        <source>The original of this message is no longer kept. Change how long originals are kept in Settings.</source>
-        <translation>此邮件的原件已不再保留。可在设置中更改原件的保留时长。</translation>
+        <source>This message cannot be decrypted, or its original is no longer kept.</source>
+        <translation>此邮件无法解密，或其原件已不再保留。</translation>
     </message>
     <message>
-        <source>
-
-──── decrypted content ────
-
-</source>
-        <translation>
-
-──── 解密后的内容 ────
-
-</translation>
-    </message>
-    <message>
-        <source>
-
-(cannot decrypt: %1)</source>
-        <translation>
-
-（无法解密：%1）</translation>
+        <source>The original of this message is no longer kept.</source>
+        <translation>此邮件的原件已不再保留。</translation>
     </message>
     <message>
         <source>%1 is not an email address, or is in your contacts already.</source>
@@ -652,6 +648,18 @@ To: %4
         <translation>查看源代码</translation>
     </message>
     <message>
+        <source>Save as .eml…</source>
+        <translation>另存为 .eml…</translation>
+    </message>
+    <message>
+        <source>The original of this message is no longer kept.</source>
+        <translation>此邮件的原件已不再保留。</translation>
+    </message>
+    <message>
+        <source>Save decrypted as .eml…</source>
+        <translation>解密后另存为 .eml…</translation>
+    </message>
+    <message>
         <source>Mark unread</source>
         <translation>标为未读</translation>
     </message>
@@ -715,6 +723,10 @@ To: %4
     <message>
         <source>Archive</source>
         <translation>归档</translation>
+    </message>
+    <message>
+        <source>Move to Inbox</source>
+        <translation>移至收件箱</translation>
     </message>
     <message>
         <source>Restore</source>
@@ -866,6 +878,25 @@ To: %4
     <message>
         <source>Move to Trash</source>
         <translation>移至废纸篓</translation>
+    </message>
+</context>
+<context>
+    <name>SaveMessage</name>
+    <message>
+        <source>Save decrypted</source>
+        <translation>解密后保存</translation>
+    </message>
+    <message>
+        <source>The saved file is not encrypted. Anyone who can open it can read the message.</source>
+        <translation>保存的文件未加密。任何能打开它的人都能阅读这封邮件。</translation>
+    </message>
+    <message>
+        <source>Email messages (*.eml)</source>
+        <translation>电子邮件 (*.eml)</translation>
+    </message>
+    <message>
+        <source>All files (*)</source>
+        <translation>所有文件 (*)</translation>
     </message>
 </context>
 <context>
@@ -1224,6 +1255,10 @@ To: %4
         <translation>归档</translation>
     </message>
     <message>
+        <source>All mail</source>
+        <translation>所有邮件</translation>
+    </message>
+    <message>
         <source>Trash</source>
         <translation>废纸篓</translation>
     </message>
@@ -1271,10 +1306,49 @@ To: %4
     </message>
 </context>
 <context>
+    <name>Source</name>
+    <message>
+        <source>[… %1 of encoded data …]</source>
+        <translation>[… %1 编码数据 …]</translation>
+    </message>
+</context>
+<context>
     <name>SourceDialog</name>
     <message>
         <source>Message source</source>
         <translation>邮件源代码</translation>
+    </message>
+    <message>
+        <source>Original</source>
+        <translation>原件</translation>
+    </message>
+    <message>
+        <source>Decrypted</source>
+        <translation>已解密</translation>
+    </message>
+    <message>
+        <source>Shorten encoded data</source>
+        <translation>缩短编码数据</translation>
+    </message>
+    <message>
+        <source>Structure</source>
+        <translation>结构</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>复制</translation>
+    </message>
+    <message>
+        <source>Save…</source>
+        <translation>保存…</translation>
+    </message>
+    <message>
+        <source>The original of this message is no longer kept. Change how long originals are kept in Settings.</source>
+        <translation>此邮件的原件已不再保留。可在设置中更改原件的保留时长。</translation>
+    </message>
+    <message>
+        <source>This message cannot be decrypted: %1</source>
+        <translation>此邮件无法解密：%1</translation>
     </message>
 </context>
 <context>

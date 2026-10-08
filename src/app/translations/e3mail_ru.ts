@@ -244,8 +244,12 @@ To: %4
         <translation>Импорт vCard…</translation>
     </message>
     <message>
-        <source>Export contacts…</source>
-        <translation>Экспорт контактов…</translation>
+        <source>Export as vCard…</source>
+        <translation>Экспорт в vCard…</translation>
+    </message>
+    <message>
+        <source>Export as CSV…</source>
+        <translation>Экспорт в CSV…</translation>
     </message>
     <message>
         <source>verified</source>
@@ -344,6 +348,10 @@ To: %4
         <translation>Заблокировать</translation>
     </message>
     <message>
+        <source>Export vCard…</source>
+        <translation>Экспортировать vCard…</translation>
+    </message>
+    <message>
         <source>Remove contact</source>
         <translation>Удалить контакт</translation>
     </message>
@@ -374,6 +382,10 @@ To: %4
     <message>
         <source>All files (*)</source>
         <translation>Все файлы (*)</translation>
+    </message>
+    <message>
+        <source>CSV files (*.csv)</source>
+        <translation>Файлы CSV (*.csv)</translation>
     </message>
 </context>
 <context>
@@ -494,28 +506,12 @@ To: %4
         <translation>Не удалось сохранить вложение.</translation>
     </message>
     <message>
-        <source>The original of this message is no longer kept. Change how long originals are kept in Settings.</source>
-        <translation>Оригинал этого сообщения больше не хранится. Срок хранения оригиналов меняется в настройках.</translation>
+        <source>This message cannot be decrypted, or its original is no longer kept.</source>
+        <translation>Это сообщение нельзя расшифровать, или его оригинал больше не хранится.</translation>
     </message>
     <message>
-        <source>
-
-──── decrypted content ────
-
-</source>
-        <translation>
-
-──── расшифрованное содержимое ────
-
-</translation>
-    </message>
-    <message>
-        <source>
-
-(cannot decrypt: %1)</source>
-        <translation>
-
-(не удаётся расшифровать: %1)</translation>
+        <source>The original of this message is no longer kept.</source>
+        <translation>Оригинал этого сообщения больше не хранится.</translation>
     </message>
     <message>
         <source>%1 is not an email address, or is in your contacts already.</source>
@@ -668,6 +664,18 @@ To: %4
         <translation>Исходный текст</translation>
     </message>
     <message>
+        <source>Save as .eml…</source>
+        <translation>Сохранить как .eml…</translation>
+    </message>
+    <message>
+        <source>The original of this message is no longer kept.</source>
+        <translation>Оригинал этого сообщения больше не хранится.</translation>
+    </message>
+    <message>
+        <source>Save decrypted as .eml…</source>
+        <translation>Сохранить расшифрованным как .eml…</translation>
+    </message>
+    <message>
         <source>Mark unread</source>
         <translation>Пометить непрочитанным</translation>
     </message>
@@ -731,6 +739,10 @@ To: %4
     <message>
         <source>Archive</source>
         <translation>В архив</translation>
+    </message>
+    <message>
+        <source>Move to Inbox</source>
+        <translation>Во «Входящие»</translation>
     </message>
     <message>
         <source>Restore</source>
@@ -886,6 +898,25 @@ To: %4
     <message>
         <source>Move to Trash</source>
         <translation>В корзину</translation>
+    </message>
+</context>
+<context>
+    <name>SaveMessage</name>
+    <message>
+        <source>Save decrypted</source>
+        <translation>Сохранить расшифрованным</translation>
+    </message>
+    <message>
+        <source>The saved file is not encrypted. Anyone who can open it can read the message.</source>
+        <translation>Сохранённый файл не зашифрован. Любой, кто сможет его открыть, сможет прочитать сообщение.</translation>
+    </message>
+    <message>
+        <source>Email messages (*.eml)</source>
+        <translation>Письма (*.eml)</translation>
+    </message>
+    <message>
+        <source>All files (*)</source>
+        <translation>Все файлы (*)</translation>
     </message>
 </context>
 <context>
@@ -1244,6 +1275,10 @@ To: %4
         <translation>Архив</translation>
     </message>
     <message>
+        <source>All mail</source>
+        <translation>Вся почта</translation>
+    </message>
+    <message>
         <source>Trash</source>
         <translation>Корзина</translation>
     </message>
@@ -1293,10 +1328,49 @@ To: %4
     </message>
 </context>
 <context>
+    <name>Source</name>
+    <message>
+        <source>[… %1 of encoded data …]</source>
+        <translation>[… %1 закодированных данных …]</translation>
+    </message>
+</context>
+<context>
     <name>SourceDialog</name>
     <message>
         <source>Message source</source>
         <translation>Исходный текст сообщения</translation>
+    </message>
+    <message>
+        <source>Original</source>
+        <translation>Оригинал</translation>
+    </message>
+    <message>
+        <source>Decrypted</source>
+        <translation>Расшифрованное</translation>
+    </message>
+    <message>
+        <source>Shorten encoded data</source>
+        <translation>Сокращать закодированные данные</translation>
+    </message>
+    <message>
+        <source>Structure</source>
+        <translation>Структура</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Копировать</translation>
+    </message>
+    <message>
+        <source>Save…</source>
+        <translation>Сохранить…</translation>
+    </message>
+    <message>
+        <source>The original of this message is no longer kept. Change how long originals are kept in Settings.</source>
+        <translation>Оригинал этого сообщения больше не хранится. Срок хранения оригиналов меняется в настройках.</translation>
+    </message>
+    <message>
+        <source>This message cannot be decrypted: %1</source>
+        <translation>Это сообщение нельзя расшифровать: %1</translation>
     </message>
 </context>
 <context>

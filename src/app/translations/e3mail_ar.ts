@@ -244,8 +244,12 @@ To: %4
         <translation>استيراد vCard…</translation>
     </message>
     <message>
-        <source>Export contacts…</source>
-        <translation>تصدير جهات الاتصال…</translation>
+        <source>Export as vCard…</source>
+        <translation>تصدير بصيغة vCard…</translation>
+    </message>
+    <message>
+        <source>Export as CSV…</source>
+        <translation>تصدير بصيغة CSV…</translation>
     </message>
     <message>
         <source>verified</source>
@@ -344,6 +348,10 @@ To: %4
         <translation>حظر</translation>
     </message>
     <message>
+        <source>Export vCard…</source>
+        <translation>تصدير vCard…</translation>
+    </message>
+    <message>
         <source>Remove contact</source>
         <translation>إزالة جهة الاتصال</translation>
     </message>
@@ -374,6 +382,10 @@ To: %4
     <message>
         <source>All files (*)</source>
         <translation>كل الملفات (*)</translation>
+    </message>
+    <message>
+        <source>CSV files (*.csv)</source>
+        <translation>ملفات CSV (*.csv)</translation>
     </message>
 </context>
 <context>
@@ -497,28 +509,12 @@ To: %4
         <translation>تعذّر حفظ المرفق.</translation>
     </message>
     <message>
-        <source>The original of this message is no longer kept. Change how long originals are kept in Settings.</source>
-        <translation>لم يعد أصل هذه الرسالة محفوظًا. غيّر مدة حفظ الأصول من الإعدادات.</translation>
+        <source>This message cannot be decrypted, or its original is no longer kept.</source>
+        <translation>لا يمكن فك تشفير هذه الرسالة، أو لم يعد أصلها محفوظًا.</translation>
     </message>
     <message>
-        <source>
-
-──── decrypted content ────
-
-</source>
-        <translation>
-
-──── المحتوى بعد فك التشفير ────
-
-</translation>
-    </message>
-    <message>
-        <source>
-
-(cannot decrypt: %1)</source>
-        <translation>
-
-(تعذّر فك التشفير: %1)</translation>
+        <source>The original of this message is no longer kept.</source>
+        <translation>لم يعد أصل هذه الرسالة محفوظًا.</translation>
     </message>
     <message>
         <source>%1 is not an email address, or is in your contacts already.</source>
@@ -692,6 +688,18 @@ To: %4
         <translation>عرض المصدر</translation>
     </message>
     <message>
+        <source>Save as .eml…</source>
+        <translation>حفظ كملف eml…</translation>
+    </message>
+    <message>
+        <source>The original of this message is no longer kept.</source>
+        <translation>لم يعد أصل هذه الرسالة محفوظًا.</translation>
+    </message>
+    <message>
+        <source>Save decrypted as .eml…</source>
+        <translation>حفظ مفكوك التشفير كملف eml…</translation>
+    </message>
+    <message>
         <source>Mark unread</source>
         <translation>تعليم كغير مقروءة</translation>
     </message>
@@ -755,6 +763,10 @@ To: %4
     <message>
         <source>Archive</source>
         <translation>أرشفة</translation>
+    </message>
+    <message>
+        <source>Move to Inbox</source>
+        <translation>نقل إلى الوارد</translation>
     </message>
     <message>
         <source>Restore</source>
@@ -916,6 +928,25 @@ To: %4
     <message>
         <source>Move to Trash</source>
         <translation>نقل إلى سلة المهملات</translation>
+    </message>
+</context>
+<context>
+    <name>SaveMessage</name>
+    <message>
+        <source>Save decrypted</source>
+        <translation>حفظ مفكوك التشفير</translation>
+    </message>
+    <message>
+        <source>The saved file is not encrypted. Anyone who can open it can read the message.</source>
+        <translation>الملف المحفوظ غير مشفّر. يمكن لأي شخص يستطيع فتحه قراءة الرسالة.</translation>
+    </message>
+    <message>
+        <source>Email messages (*.eml)</source>
+        <translation>رسائل البريد (*.eml)</translation>
+    </message>
+    <message>
+        <source>All files (*)</source>
+        <translation>كل الملفات (*)</translation>
     </message>
 </context>
 <context>
@@ -1274,6 +1305,10 @@ To: %4
         <translation>الأرشيف</translation>
     </message>
     <message>
+        <source>All mail</source>
+        <translation>كل البريد</translation>
+    </message>
+    <message>
         <source>Trash</source>
         <translation>سلة المهملات</translation>
     </message>
@@ -1326,10 +1361,49 @@ To: %4
     </message>
 </context>
 <context>
+    <name>Source</name>
+    <message>
+        <source>[… %1 of encoded data …]</source>
+        <translation>[… %1 من البيانات المرمّزة …]</translation>
+    </message>
+</context>
+<context>
     <name>SourceDialog</name>
     <message>
         <source>Message source</source>
         <translation>مصدر الرسالة</translation>
+    </message>
+    <message>
+        <source>Original</source>
+        <translation>الأصل</translation>
+    </message>
+    <message>
+        <source>Decrypted</source>
+        <translation>مفكوك التشفير</translation>
+    </message>
+    <message>
+        <source>Shorten encoded data</source>
+        <translation>اختصار البيانات المرمّزة</translation>
+    </message>
+    <message>
+        <source>Structure</source>
+        <translation>البنية</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>نسخ</translation>
+    </message>
+    <message>
+        <source>Save…</source>
+        <translation>حفظ…</translation>
+    </message>
+    <message>
+        <source>The original of this message is no longer kept. Change how long originals are kept in Settings.</source>
+        <translation>لم يعد أصل هذه الرسالة محفوظًا. غيّر مدة حفظ الأصول من الإعدادات.</translation>
+    </message>
+    <message>
+        <source>This message cannot be decrypted: %1</source>
+        <translation>لا يمكن فك تشفير هذه الرسالة: %1</translation>
     </message>
 </context>
 <context>

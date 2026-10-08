@@ -244,8 +244,12 @@ To: %4
         <translation>ייבוא vCard…</translation>
     </message>
     <message>
-        <source>Export contacts…</source>
-        <translation>ייצוא אנשי קשר…</translation>
+        <source>Export as vCard…</source>
+        <translation>ייצוא כ-vCard…</translation>
+    </message>
+    <message>
+        <source>Export as CSV…</source>
+        <translation>ייצוא כ-CSV…</translation>
     </message>
     <message>
         <source>verified</source>
@@ -344,6 +348,10 @@ To: %4
         <translation>חסימה</translation>
     </message>
     <message>
+        <source>Export vCard…</source>
+        <translation>ייצוא vCard…</translation>
+    </message>
+    <message>
         <source>Remove contact</source>
         <translation>הסרת איש הקשר</translation>
     </message>
@@ -374,6 +382,10 @@ To: %4
     <message>
         <source>All files (*)</source>
         <translation>כל הקבצים (*)</translation>
+    </message>
+    <message>
+        <source>CSV files (*.csv)</source>
+        <translation>קובצי CSV (*.csv)</translation>
     </message>
 </context>
 <context>
@@ -493,28 +505,12 @@ To: %4
         <translation>לא ניתן היה לשמור את הקובץ המצורף.</translation>
     </message>
     <message>
-        <source>The original of this message is no longer kept. Change how long originals are kept in Settings.</source>
-        <translation>המקור של ההודעה הזו כבר לא נשמר. משך שמירת המקורות נקבע בהגדרות.</translation>
+        <source>This message cannot be decrypted, or its original is no longer kept.</source>
+        <translation>לא ניתן לפענח הודעה זו, או שהעותק המקורי שלה כבר לא נשמר.</translation>
     </message>
     <message>
-        <source>
-
-──── decrypted content ────
-
-</source>
-        <translation>
-
-──── התוכן המפוענח ────
-
-</translation>
-    </message>
-    <message>
-        <source>
-
-(cannot decrypt: %1)</source>
-        <translation>
-
-(לא ניתן לפענח: %1)</translation>
+        <source>The original of this message is no longer kept.</source>
+        <translation>העותק המקורי של הודעה זו כבר לא נשמר.</translation>
     </message>
     <message>
         <source>%1 is not an email address, or is in your contacts already.</source>
@@ -660,6 +656,18 @@ To: %4
         <translation>הצגת המקור</translation>
     </message>
     <message>
+        <source>Save as .eml…</source>
+        <translation>שמירה כקובץ eml…</translation>
+    </message>
+    <message>
+        <source>The original of this message is no longer kept.</source>
+        <translation>העותק המקורי של הודעה זו כבר לא נשמר.</translation>
+    </message>
+    <message>
+        <source>Save decrypted as .eml…</source>
+        <translation>שמירה מפוענחת כקובץ eml…</translation>
+    </message>
+    <message>
         <source>Mark unread</source>
         <translation>סימון כלא נקראה</translation>
     </message>
@@ -723,6 +731,10 @@ To: %4
     <message>
         <source>Archive</source>
         <translation>העברה לארכיון</translation>
+    </message>
+    <message>
+        <source>Move to Inbox</source>
+        <translation>העברה לדואר הנכנס</translation>
     </message>
     <message>
         <source>Restore</source>
@@ -876,6 +888,25 @@ To: %4
     <message>
         <source>Move to Trash</source>
         <translation>העברה לאשפה</translation>
+    </message>
+</context>
+<context>
+    <name>SaveMessage</name>
+    <message>
+        <source>Save decrypted</source>
+        <translation>שמירה מפוענחת</translation>
+    </message>
+    <message>
+        <source>The saved file is not encrypted. Anyone who can open it can read the message.</source>
+        <translation>הקובץ השמור אינו מוצפן. כל מי שיכול לפתוח אותו יכול לקרוא את ההודעה.</translation>
+    </message>
+    <message>
+        <source>Email messages (*.eml)</source>
+        <translation>הודעות דואר (*.eml)</translation>
+    </message>
+    <message>
+        <source>All files (*)</source>
+        <translation>כל הקבצים (*)</translation>
     </message>
 </context>
 <context>
@@ -1234,6 +1265,10 @@ To: %4
         <translation>ארכיון</translation>
     </message>
     <message>
+        <source>All mail</source>
+        <translation>כל הדואר</translation>
+    </message>
+    <message>
         <source>Trash</source>
         <translation>אשפה</translation>
     </message>
@@ -1282,10 +1317,49 @@ To: %4
     </message>
 </context>
 <context>
+    <name>Source</name>
+    <message>
+        <source>[… %1 of encoded data …]</source>
+        <translation>[… %1 של נתונים מקודדים …]</translation>
+    </message>
+</context>
+<context>
     <name>SourceDialog</name>
     <message>
         <source>Message source</source>
         <translation>מקור ההודעה</translation>
+    </message>
+    <message>
+        <source>Original</source>
+        <translation>מקורי</translation>
+    </message>
+    <message>
+        <source>Decrypted</source>
+        <translation>מפוענח</translation>
+    </message>
+    <message>
+        <source>Shorten encoded data</source>
+        <translation>קיצור נתונים מקודדים</translation>
+    </message>
+    <message>
+        <source>Structure</source>
+        <translation>מבנה</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>העתקה</translation>
+    </message>
+    <message>
+        <source>Save…</source>
+        <translation>שמירה…</translation>
+    </message>
+    <message>
+        <source>The original of this message is no longer kept. Change how long originals are kept in Settings.</source>
+        <translation>המקור של ההודעה הזו כבר לא נשמר. משך שמירת המקורות נקבע בהגדרות.</translation>
+    </message>
+    <message>
+        <source>This message cannot be decrypted: %1</source>
+        <translation>לא ניתן לפענח הודעה זו: %1</translation>
     </message>
 </context>
 <context>

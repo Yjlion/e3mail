@@ -43,6 +43,8 @@ ApplicationWindow {
     // For screenshots (--page menu), when the window may not have its
     // narrow size yet.
     function openMenu() { drawer.open() }
+    // For screenshots (--page source): the selected message's source.
+    function showSource() { readingPane.showSource(MailApp.selectedMessageId) }
     onClosing: (close) => { if (narrow && back()) close.accepted = false }
 
     Shortcut { sequence: StandardKey.New; onActivated: window.compose("new", 0) }
@@ -124,6 +126,7 @@ ApplicationWindow {
                     }
                     Rectangle { visible: !window.narrow; Layout.fillHeight: true; width: 1; color: Theme.border }
                     ReadingPane {
+                        id: readingPane
                         visible: !window.narrow || window.reading
                         Layout.fillWidth: true
                         Layout.fillHeight: true

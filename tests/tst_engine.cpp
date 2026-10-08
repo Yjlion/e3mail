@@ -4,10 +4,12 @@
 #include "engine/MailWorker.h"
 #include "mail/Compose.h"
 #include "mail/Contacts.h"
+#include "mail/Export.h"
 #include "mail/Organize.h"
 #include "mail/Policy.h"
 #include "mail/Search.h"
 #include "mail/VCard.h"
+#include "mime/Part.h"
 #include "store/OpLog.h"
 #include "store/Config.h"
 #include "store/Database.h"
@@ -392,6 +394,15 @@ private Q_SLOTS:
         QByteArray wire = m_srv->envelopes().last().data;
         QVERIFY(wire.contains("multipart/encrypted"));
         QVERIFY(!wire.contains("milk"));
+        // Exported as it was sent it stays encrypted; decrypted, it is a
+        // plain message any program can open.
+        QVERIFY(mail::Export::eml(alice->ctx(), noteId).contains("multipart/encrypted"));
+        const mime::Part plain = mime::parse(mail::Export::decryptedEml(alice->ctx(), noteId));
+        QVERIFY(!plain.mimeType.startsWith("multipart/encrypted"));
+        QCOMPARE(plain.headers.text("Subject"), QStringLiteral("note"));
+        QCOMPARE(plain.headers.all("Subject").size(), 1);
+        QVERIFY(plain.raw.contains("remember the milk"));
+        QCOMPARE(mail::Export::fileName(alice->ctx(), noteId, QStringLiteral("eml")), QStringLiteral("note.eml"));
         // Its copy coming back is the same message, not a second one; it
         // shows in Sent and, being addressed to us, in the Inbox.
         sync(alice);

@@ -244,8 +244,12 @@ Do: %4
         <translation>Importuj vCard…</translation>
     </message>
     <message>
-        <source>Export contacts…</source>
-        <translation>Eksportuj kontakty…</translation>
+        <source>Export as vCard…</source>
+        <translation>Eksportuj jako vCard…</translation>
+    </message>
+    <message>
+        <source>Export as CSV…</source>
+        <translation>Eksportuj jako CSV…</translation>
     </message>
     <message>
         <source>verified</source>
@@ -344,6 +348,10 @@ Do: %4
         <translation>Zablokuj</translation>
     </message>
     <message>
+        <source>Export vCard…</source>
+        <translation>Eksportuj vCard…</translation>
+    </message>
+    <message>
         <source>Remove contact</source>
         <translation>Usuń kontakt</translation>
     </message>
@@ -374,6 +382,10 @@ Do: %4
     <message>
         <source>All files (*)</source>
         <translation>Wszystkie pliki (*)</translation>
+    </message>
+    <message>
+        <source>CSV files (*.csv)</source>
+        <translation>Pliki CSV (*.csv)</translation>
     </message>
 </context>
 <context>
@@ -494,28 +506,12 @@ Do: %4
         <translation>Nie udało się zapisać załącznika.</translation>
     </message>
     <message>
-        <source>The original of this message is no longer kept. Change how long originals are kept in Settings.</source>
-        <translation>Oryginał tej wiadomości nie jest już przechowywany. Czas przechowywania oryginałów zmienisz w Ustawieniach.</translation>
+        <source>This message cannot be decrypted, or its original is no longer kept.</source>
+        <translation>Tej wiadomości nie można odszyfrować albo jej oryginał nie jest już przechowywany.</translation>
     </message>
     <message>
-        <source>
-
-──── decrypted content ────
-
-</source>
-        <translation>
-
-──── odszyfrowana treść ────
-
-</translation>
-    </message>
-    <message>
-        <source>
-
-(cannot decrypt: %1)</source>
-        <translation>
-
-(nie można odszyfrować: %1)</translation>
+        <source>The original of this message is no longer kept.</source>
+        <translation>Oryginał tej wiadomości nie jest już przechowywany.</translation>
     </message>
     <message>
         <source>%1 is not an email address, or is in your contacts already.</source>
@@ -668,6 +664,18 @@ Do: %4
         <translation>Pokaż źródło</translation>
     </message>
     <message>
+        <source>Save as .eml…</source>
+        <translation>Zapisz jako .eml…</translation>
+    </message>
+    <message>
+        <source>The original of this message is no longer kept.</source>
+        <translation>Oryginał tej wiadomości nie jest już przechowywany.</translation>
+    </message>
+    <message>
+        <source>Save decrypted as .eml…</source>
+        <translation>Zapisz odszyfrowaną jako .eml…</translation>
+    </message>
+    <message>
         <source>Mark unread</source>
         <translation>Oznacz jako nieprzeczytaną</translation>
     </message>
@@ -731,6 +739,10 @@ Do: %4
     <message>
         <source>Archive</source>
         <translation>Archiwizuj</translation>
+    </message>
+    <message>
+        <source>Move to Inbox</source>
+        <translation>Przenieś do odebranych</translation>
     </message>
     <message>
         <source>Restore</source>
@@ -886,6 +898,25 @@ Do: %4
     <message>
         <source>Move to Trash</source>
         <translation>Przenieś do kosza</translation>
+    </message>
+</context>
+<context>
+    <name>SaveMessage</name>
+    <message>
+        <source>Save decrypted</source>
+        <translation>Zapisz odszyfrowaną</translation>
+    </message>
+    <message>
+        <source>The saved file is not encrypted. Anyone who can open it can read the message.</source>
+        <translation>Zapisany plik nie jest zaszyfrowany. Każdy, kto może go otworzyć, może przeczytać wiadomość.</translation>
+    </message>
+    <message>
+        <source>Email messages (*.eml)</source>
+        <translation>Wiadomości e-mail (*.eml)</translation>
+    </message>
+    <message>
+        <source>All files (*)</source>
+        <translation>Wszystkie pliki (*)</translation>
     </message>
 </context>
 <context>
@@ -1244,6 +1275,10 @@ Do: %4
         <translation>Archiwum</translation>
     </message>
     <message>
+        <source>All mail</source>
+        <translation>Cała poczta</translation>
+    </message>
+    <message>
         <source>Trash</source>
         <translation>Kosz</translation>
     </message>
@@ -1293,10 +1328,49 @@ Do: %4
     </message>
 </context>
 <context>
+    <name>Source</name>
+    <message>
+        <source>[… %1 of encoded data …]</source>
+        <translation>[… %1 zakodowanych danych …]</translation>
+    </message>
+</context>
+<context>
     <name>SourceDialog</name>
     <message>
         <source>Message source</source>
         <translation>Źródło wiadomości</translation>
+    </message>
+    <message>
+        <source>Original</source>
+        <translation>Oryginał</translation>
+    </message>
+    <message>
+        <source>Decrypted</source>
+        <translation>Odszyfrowana</translation>
+    </message>
+    <message>
+        <source>Shorten encoded data</source>
+        <translation>Skracaj zakodowane dane</translation>
+    </message>
+    <message>
+        <source>Structure</source>
+        <translation>Struktura</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Kopiuj</translation>
+    </message>
+    <message>
+        <source>Save…</source>
+        <translation>Zapisz…</translation>
+    </message>
+    <message>
+        <source>The original of this message is no longer kept. Change how long originals are kept in Settings.</source>
+        <translation>Oryginał tej wiadomości nie jest już przechowywany. Czas przechowywania oryginałów zmienisz w Ustawieniach.</translation>
+    </message>
+    <message>
+        <source>This message cannot be decrypted: %1</source>
+        <translation>Tej wiadomości nie można odszyfrować: %1</translation>
     </message>
 </context>
 <context>

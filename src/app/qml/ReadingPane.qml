@@ -13,6 +13,7 @@ Rectangle {
 
     readonly property var thread: MailApp.thread
     readonly property var last: thread.length ? thread[thread.length - 1] : null
+    function showSource(id) { sourceDialog.show(id) }
 
     Text {
         anchors.centerIn: parent
