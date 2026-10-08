@@ -13,6 +13,10 @@ constexpr char kNotTrashed[] = "m.id NOT IN (SELECT msg_id FROM trashed)";
 constexpr char kNotHeld[] = "m.id NOT IN (SELECT msg_id FROM held)";
 constexpr char kArchived[] = "m.id IN (SELECT ml.msg_id FROM msg_labels ml JOIN labels l ON l.id = ml.label_id "
                              "WHERE l.system = 1 AND l.name_norm = 'archive')";
+// Sent mail with our own address among its recipients: it was delivered to
+// us too, so it belongs in the Inbox as well as in Sent (ADR 0007 amendment).
+constexpr char kSentToSelf[] = "(m.direction = 1 AND m.state = 12 AND m.id IN (SELECT r.msg_id FROM recipients r "
+                               "WHERE lower(r.addr) = (SELECT lower(trim(value)) FROM config WHERE key = 'addr')))";
 
 QString ftsQuery(const QString &text)
 {
@@ -77,7 +81,8 @@ QByteArray Search::tagClause(const QString &tag)
 {
     const QByteArray notTrashed(kNotTrashed);
     if (tag == tag::Inbox)
-        return "m.direction = 0 AND " + notTrashed + " AND " + kNotHeld + " AND NOT " + kArchived;
+        return "(m.direction = 0 OR " + QByteArray(kSentToSelf) + ") AND " + notTrashed + " AND " + kNotHeld
+            + " AND NOT " + kArchived;
     if (tag == tag::Unverified)
         return "m.id IN (SELECT msg_id FROM held) AND " + notTrashed;
     if (tag == tag::Sent)

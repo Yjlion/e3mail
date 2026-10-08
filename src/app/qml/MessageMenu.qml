@@ -9,7 +9,10 @@ Menu {
     property int messageId
     property bool unread
     MenuItem { text: menu.unread ? qsTr("Mark as read") : qsTr("Mark as unread"); onTriggered: MailApp.markRead(menu.messageId, menu.unread) }
-    MenuItem { text: qsTr("Archive"); onTriggered: MailApp.archive(menu.messageId, true) }
+    MenuItem {
+        text: MailApp.currentTag === "archive" ? qsTr("Move to Inbox") : qsTr("Archive")
+        onTriggered: MailApp.archive(menu.messageId, MailApp.currentTag !== "archive")
+    }
     MenuItem {
         text: MailApp.currentTag === "trash" ? qsTr("Restore") : qsTr("Move to Trash")
         onTriggered: MailApp.currentTag === "trash" ? MailApp.restore(menu.messageId) : MailApp.trash(menu.messageId)

@@ -80,6 +80,14 @@ Rectangle {
             Keys.onUpPressed: if (currentIndex > 0) MailApp.selectMessage(MailApp.messages.idAt(currentIndex - 1))
             Keys.onDownPressed: if (currentIndex < count - 1) MailApp.selectMessage(MailApp.messages.idAt(currentIndex + 1))
             Keys.onDeletePressed: if (MailApp.selectedMessageId) MailApp.trash(MailApp.selectedMessageId)
+            // E archives, or in Archive moves back to the Inbox.
+            Keys.onPressed: (event) => {
+                if (event.key === Qt.Key_E && event.modifiers === Qt.NoModifier && MailApp.selectedMessageId
+                        && MailApp.currentTag !== "trash") {
+                    MailApp.archive(MailApp.selectedMessageId, MailApp.currentTag !== "archive")
+                    event.accepted = true
+                }
+            }
 
             delegate: MessageRow {
                 width: ListView.view.width

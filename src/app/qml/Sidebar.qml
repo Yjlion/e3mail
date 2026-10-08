@@ -22,7 +22,8 @@ Rectangle {
         for (let i = 0; i < MailApp.labels.length; ++i)
             if (MailApp.labels[i].id === MailApp.currentLabelId) return MailApp.labels[i].name
         const tags = { inbox: qsTr("Inbox"), unverified: qsTr("Unverified"), sent: qsTr("Sent"),
-                       drafts: qsTr("Drafts"), archive: qsTr("Archive"), trash: qsTr("Trash") }
+                       drafts: qsTr("Drafts"), archive: qsTr("Archive"), all: qsTr("All mail"),
+                       trash: qsTr("Trash") }
         return tags[MailApp.currentTag] || "e3mail"
     }
 
@@ -115,6 +116,11 @@ Rectangle {
                 text: qsTr("Archive")
                 active: page === "mail" && MailApp.currentTag === "archive"
                 onClicked: showTag("archive")
+            }
+            NavItem {
+                text: qsTr("All mail")
+                active: page === "mail" && MailApp.currentTag === "all"
+                onClicked: showTag("all")
             }
             NavItem {
                 text: qsTr("Trash")

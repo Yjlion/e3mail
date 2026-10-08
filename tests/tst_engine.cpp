@@ -392,10 +392,12 @@ private Q_SLOTS:
         QByteArray wire = m_srv->envelopes().last().data;
         QVERIFY(wire.contains("multipart/encrypted"));
         QVERIFY(!wire.contains("milk"));
-        // Its copy coming back is the same message, not a second one.
+        // Its copy coming back is the same message, not a second one; it
+        // shows in Sent and, being addressed to us, in the Inbox.
         sync(alice);
         QCOMPARE(mail::Search::count(alice->ctx(), tag::Sent, false), 1);
-        QCOMPARE(mail::Search::count(alice->ctx(), tag::Inbox, false), 0);
+        QCOMPARE(mail::Search::count(alice->ctx(), tag::Inbox, false), 1);
+        QCOMPARE(alice->ctx().db.queryInt("SELECT count(*) FROM messages").value_or(0), 1);
 
         // With a stranger along, the stranger decides, and only the stranger
         // is missing a key.
@@ -415,6 +417,60 @@ private Q_SLOTS:
         wire = m_srv->envelopes().last().data;
         QVERIFY(wire.contains("multipart/encrypted"));
         QVERIFY(!wire.contains("secret plans"));
+    }
+
+    void sentToSelfInInbox()
+    {
+        Account *alice = makeAccount(QStringLiteral("alice@x.test"), QStringLiteral("imap"));
+        makeAccount(QStringLiteral("bob@x.test"), QStringLiteral("imap"));
+        sync(alice);
+        auto ids = [&](const QString &t) {
+            QList<qint64> out;
+            for (const auto &s : mail::Search::list(alice->ctx(), SearchQuery::forTag(t)))
+                out.append(s.id);
+            return out;
+        };
+
+        // To self, Cc to self, Bcc to self: each is in Sent and in the Inbox.
+        const qint64 to = mail::Compose::queue(alice->ctx(), draft(QStringLiteral("ALICE@x.test"), QStringLiteral("to"),
+                                                                   QStringLiteral("a")));
+        Draft cc = draft(QStringLiteral("bob@x.test"), QStringLiteral("cc"), QStringLiteral("b"));
+        cc.cc = {{QString(), QStringLiteral("alice@x.test")}};
+        const qint64 ccId = mail::Compose::queue(alice->ctx(), cc);
+        Draft bcc = draft(QStringLiteral("bob@x.test"), QStringLiteral("bcc"), QStringLiteral("c"));
+        bcc.bcc = {{QString(), QStringLiteral("alice@x.test")}};
+        const qint64 bccId = mail::Compose::queue(alice->ctx(), bcc);
+        // Mail to someone else stays out of the Inbox.
+        const qint64 other = mail::Compose::queue(alice->ctx(), draft(QStringLiteral("bob@x.test"), QStringLiteral("o"),
+                                                                      QStringLiteral("d")));
+        // Not yet sent: only in Sent (as pending).
+        QVERIFY(!ids(tag::Inbox).contains(to));
+        sync(alice);
+        sync(alice);
+
+        const auto inbox = ids(tag::Inbox);
+        QVERIFY(inbox.contains(to));
+        QVERIFY(inbox.contains(ccId));
+        QVERIFY(inbox.contains(bccId));
+        QVERIFY(!inbox.contains(other));
+        QCOMPARE(ids(tag::Sent).size(), 4);
+        // Written by us, so it arrives read.
+        QCOMPARE(mail::Search::count(alice->ctx(), tag::Inbox, true), 0);
+
+        // Archiving takes it out of the Inbox only; All mail holds everything.
+        mail::Organize::archive(alice->ctx(), to, true);
+        QVERIFY(!ids(tag::Inbox).contains(to));
+        QVERIFY(ids(tag::Archive).contains(to));
+        QVERIFY(ids(tag::Sent).contains(to));
+        const auto all = ids(tag::All);
+        for (const qint64 id : {to, ccId, bccId, other})
+            QVERIFY(all.contains(id));
+
+        // Trash takes it out of everything but Trash.
+        mail::Organize::trash(alice->ctx(), ccId, TrashReason::User);
+        QVERIFY(!ids(tag::Inbox).contains(ccId));
+        QVERIFY(!ids(tag::Sent).contains(ccId));
+        QVERIFY(!ids(tag::All).contains(ccId));
     }
 
     void blocklistTrashesOnArrival()
