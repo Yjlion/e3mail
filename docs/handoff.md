@@ -329,13 +329,18 @@ service. Passwords go to the Android Keystore through QtKeychain.
   - the sidebar with All mail.
 - The translations are complete in all ten languages (machine-made, like
   the rest).
+- The release workflow through `workflow_dispatch` (run 37828323535), with
+  the signing secrets set. All five packages built, after one re-run: the
+  first Windows attempt got HTTP 500 downloading `vcpkg.exe`. Both APKs are
+  signed by `CN=e3mail`, the repository's key, with certificate SHA-256
+  `18:DD:0C:5D:…:72:02:A4`, and their checksums match. The Android jobs took
+  4 minutes, on the dependency cache CI had built. Nothing was published:
+  there was no tag.
 
 **Not verified:**
 - `scripts/e2e.py`: Docker was not reachable from this session (permission
   denied on the socket), so mail to self was not tried against
   `server/compose`. The fake server covers it.
-- The release workflow's Android job has not run. No `workflow_dispatch`
-  and no tag were run from here, and the signing secrets are not set yet.
 - Saving to a `content://` URI on Android, for any of the exports.
 - Saving any file from a real file dialog; offscreen there is none.
 - Opening a decrypted `.eml` in Thunderbird or another client.
@@ -579,9 +584,10 @@ passes either way. Not investigated.
 5. Verify signed-only mail.
 6. Try notifications on a real Windows and macOS desktop, and import real
    vCard exports (Google, Apple, Thunderbird).
-7. Set the Android signing secrets (ADR 0016 amendment), run the release
-   workflow by hand, and install the arm64 APK on a phone; then try each
-   export there (Android's file picker returns `content://`).
+7. Publish a release with the APKs: bump the version (Android installs an
+   update only with a higher version code) and push a tag. Install the
+   arm64 APK on a phone and try each export there (Android's file picker
+   returns `content://`).
 8. Android on a real phone: rendering, typing, the keyboard covering setup's
    Connect button, then a real account (receive, send, a notification, the
    Keystore). Setup needs a way to accept a self-signed test certificate, or
