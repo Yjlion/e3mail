@@ -210,6 +210,26 @@ through its whitelist. Formatted drafts now reopen formatted.
 session; clicking a real notification; any vCard from a real address book
 (Google, Apple, Thunderbird exports) beyond the hand-written test cards.
 
+## Newsletters render (2026-10-07)
+
+A forwarded Proton newsletter showed its text in a column a few words wide,
+with its logos and banner listed as attachments. Two causes, both fixed:
+
+- **Nested layout tables.** Qt's rich text sizes a nested table by its
+  narrowest content. The sanitizer now turns layout tables (`role=
+  "presentation"`, or any table holding another table) into blocks; tables of
+  data stay tables. Stored mail is sanitized when shown, so old mail benefits.
+- **Inline images** (`cid:`) were replaced by alt text. They now show, through
+  an `image://cid/` provider fed from the stored parts ([ADR 0009
+  amendment](adr/0009-two-barriers-for-message-content.md)), and are no longer
+  listed as attachments.
+
+**Verified:** the message rendered through the real app, from Dovecot on the
+test server, before and after (top and bottom of the message looked at);
+`tst_mime` covers the table rule and the `cid:` rule.
+**Not verified:** other senders' newsletters; a row of icons in layout cells
+now stacks vertically, which is readable but not the sender's layout.
+
 ## Known gaps
 
 - **Signed-only mail** (`multipart/signed` without encryption) is shown, but

@@ -14,3 +14,20 @@ reader's IP address. So:
 The composer works the same way in reverse: what it sends is re-emitted from
 the document model through a whitelist, with a plain-text alternative. It is
 never the editor's own serialisation.
+
+## Amendment — 2026-10-07: images the message carries
+
+Images a message carries itself (`multipart/related`, referenced as `cid:`)
+are shown in place. They are the message's own stored parts, so showing them
+fetches nothing and tells the sender nothing; both barriers stand.
+
+- The sanitizer keeps an `<img>` only when its source is `cid:`, with a
+  numeric width capped at 600 and its alt text; every other image is still
+  replaced by its alt text and counted as blocked when remote.
+- The app resolves `cid:` to an `image://cid/` provider that serves decoded
+  parts from memory. It decodes only PNG, JPEG, GIF and WebP, at most 5 MiB,
+  and refuses images claiming more than 40 million pixels. The QML engine's
+  network manager is unchanged: it still refuses everything.
+- Decoding a stranger's image is new attack surface (Qt's image plugins).
+  Before this, those bytes were only ever written to a file the person chose.
+- A part shown inline is not listed again as an attachment.

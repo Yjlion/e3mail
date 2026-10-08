@@ -271,6 +271,40 @@ private Q_SLOTS:
         QCOMPARE(s.remoteBlocked, 3); // img, table background (the style element is dropped with its content)
     }
 
+    // Newsletters lay out with nested tables, which Qt's rich text squeezes
+    // into a narrow column: those become blocks. Tables of data stay tables.
+    void layoutTablesBecomeBlocks()
+    {
+        const QString h = sanitizeHtml(QStringLiteral(
+                                           "<table role=\"presentation\"><tr><td>hero</td></tr></table>"
+                                           "<table width=\"100%\"><tbody><tr><td>outer"
+                                           "<table><tr><td>inner layout</td></tr></table>"
+                                           "</td></tr></tbody></table>"
+                                           "<table><tr><th>Plan</th><td colspan=\"2\">Price</td></tr></table>"))
+                              .html;
+        QVERIFY2(h.startsWith(QLatin1String("<div><div><div>hero</div></div></div>")), qPrintable(h));
+        QVERIFY(!h.contains(QLatin1String("tbody")));
+        // The table holding another one is layout and becomes blocks; the
+        // inner one holds no table and stays a table.
+        QVERIFY(h.contains(QLatin1String("<div><div><div>outer<table><tr><td>inner layout</td></tr></table></div></div></div>")));
+        // A table of data, holding no table, stays a table.
+        QVERIFY(h.contains(QLatin1String("<table><tr><th>Plan</th><td colspan=\"2\">Price</td></tr></table>")));
+    }
+
+    // Images the message carries itself keep a cid: source for the app to
+    // resolve; remote images still become their alt text.
+    void inlineImagesKeepCid()
+    {
+        const SanitizedHtml s = sanitizeHtml(QStringLiteral(
+            "<img src=\"CID:logo@x\" width=\"1200px\" alt=\"Logo\" onerror=\"evil()\">"
+            "<img src=\"cid:a&quot;b\" style=\"x\">"
+            "<img src=\"https://t.example/p.gif\" alt=\"pixel\">"
+            "<img src=\"data:image/png;base64,AAAA\" alt=\"data\">"));
+        QCOMPARE(s.html, QStringLiteral("<img src=\"cid:logo@x\" width=\"600\" alt=\"Logo\">"
+                                        "<img src=\"cid:a&quot;b\">[pixel][data]"));
+        QCOMPARE(s.remoteBlocked, 1);
+    }
+
     void sanitizerEscapesText()
     {
         const SanitizedHtml s = sanitizeHtml(QStringLiteral("a &lt;script&gt; b <unknown attr=1>x</unknown>"));

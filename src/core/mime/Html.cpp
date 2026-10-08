@@ -10,6 +10,9 @@ namespace e3::mime {
 
 namespace {
 
+// Wider inline images are scaled down to this, keeping their proportions.
+constexpr int kMaxImageWidth = 600;
+
 struct Token
 {
     enum Kind { Text, Open, Close, SelfClose } kind;
@@ -285,7 +288,39 @@ SanitizedHtml sanitizeHtml(const QString &html)
     QList<QString> open; // emitted open tags, to close what the sender left open
     QList<bool> anchorStack;
 
-    for (const Token &t : tokens) {
+    // Layout tables become blocks. Newsletters are built from tables nested
+    // for layout (role="presentation", or one table inside another), and
+    // Qt's rich text sizes a nested table by its narrowest content: the text
+    // collapsed into a column a few words wide. Tables of data, which do not
+    // hold other tables, stay tables.
+    QSet<qsizetype> layoutTables;
+    {
+        QList<qsizetype> stack;
+        for (qsizetype i = 0; i < tokens.size(); ++i) {
+            const Token &t = tokens[i];
+            if (t.name != QLatin1String("table"))
+                continue;
+            if (t.kind == Token::Open) {
+                for (const auto &[name, value] : t.attrs) {
+                    const QString role = value.trimmed().toLower();
+                    if (name == QLatin1String("role") && (role == QLatin1String("presentation") || role == QLatin1String("none")))
+                        layoutTables.insert(i);
+                }
+                for (qsizetype outer : std::as_const(stack))
+                    layoutTables.insert(outer);
+                stack.append(i);
+            } else if (t.kind == Token::Close && !stack.isEmpty()) {
+                stack.removeLast();
+            }
+        }
+    }
+    QList<bool> tableIsLayout; // innermost last
+    static const QSet<QString> tableParts = {QStringLiteral("table"), QStringLiteral("thead"), QStringLiteral("tbody"),
+                                             QStringLiteral("tfoot"), QStringLiteral("tr"), QStringLiteral("td"),
+                                             QStringLiteral("th")};
+
+    for (qsizetype ti = 0; ti < tokens.size(); ++ti) {
+        const Token &t = tokens[ti];
         if (dropDepth > 0) {
             if (t.name == dropTag && t.kind == Token::Open)
                 ++dropDepth;
@@ -317,16 +352,46 @@ SanitizedHtml sanitizeHtml(const QString &html)
             continue;
         }
         if (t.name == QLatin1String("img") && t.kind != Token::Close) {
-            QString alt;
+            QString alt, src;
+            int width = 0;
             for (const auto &[name, value] : t.attrs) {
                 if (name == QLatin1String("alt"))
                     alt = value;
+                else if (name == QLatin1String("src"))
+                    src = value.trimmed();
+                else if (name == QLatin1String("width"))
+                    width = QString(value).remove(QLatin1String("px")).trimmed().toInt();
+            }
+            // An image carried in the message itself (multipart/related) is
+            // not remote: showing it fetches nothing. The app resolves cid:
+            // to the stored part; nothing else ever gets a src.
+            if (src.startsWith(QLatin1String("cid:"), Qt::CaseInsensitive) && src.size() > 4) {
+                out += QLatin1String("<img src=\"cid:") + escapeHtml(src.mid(4).trimmed()) + u'"';
+                if (width > 0)
+                    out += QLatin1String(" width=\"") + QString::number(qMin(width, kMaxImageWidth)) + u'"';
+                if (!alt.trimmed().isEmpty())
+                    out += QLatin1String(" alt=\"") + escapeHtml(alt.trimmed()) + u'"';
+                out += u'>';
+                continue;
             }
             if (!alt.trimmed().isEmpty())
                 out += QLatin1String("[") + escapeHtml(alt.trimmed()) + QLatin1String("]");
             continue;
         }
-        const QString tag = mapTag(t.name);
+        QString tag = mapTag(t.name);
+        if (tableParts.contains(t.name)) {
+            if (t.name == QLatin1String("table") && t.kind == Token::Open)
+                tableIsLayout.append(layoutTables.contains(ti));
+            const bool layout = !tableIsLayout.isEmpty() && tableIsLayout.last();
+            if (t.name == QLatin1String("table") && t.kind == Token::Close && !tableIsLayout.isEmpty())
+                tableIsLayout.removeLast();
+            if (layout) {
+                // thead, tbody and tfoot only group rows: unwrapped.
+                if (t.name == QLatin1String("thead") || t.name == QLatin1String("tbody") || t.name == QLatin1String("tfoot"))
+                    continue;
+                tag = QStringLiteral("div");
+            }
+        }
         if (tag.isEmpty()) {
             // Unwrapped: keep a line break where a block would have been.
             if (blockElements().contains(t.name) && t.kind != Token::Open)
@@ -360,7 +425,7 @@ SanitizedHtml sanitizeHtml(const QString &html)
             continue;
         }
         QString attrs;
-        if (tag == QLatin1String("td") || tag == QLatin1String("th")) {
+        if (t.name == tag && (tag == QLatin1String("td") || tag == QLatin1String("th"))) {
             for (const auto &[name, value] : t.attrs) {
                 if ((name == QLatin1String("colspan") || name == QLatin1String("rowspan")) && value.toInt() > 0)
                     attrs += u' ' + name + QLatin1String("=\"") + QString::number(qMin(value.toInt(), 100)) + u'"';
