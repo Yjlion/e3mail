@@ -409,8 +409,9 @@ service. Passwords go to the Android Keystore through QtKeychain.
 - The signature menu in the composer: it is a popup, so no screenshot shows
   it, and the swap was tested on `SignatureRange`, not through the view.
 - Signed-only mail from a real client (Thunderbird, Delta Chat, K-9). The
-  fixtures are made here and by GnuPG. `scripts/e2e.py`: Docker's socket was
-  not reachable again (permission denied).
+  fixtures are made here and by GnuPG. `scripts/e2e.py` against
+  `server/compose` passes with this work (after adding the user to the
+  `docker` group), but it sends no signed-only mail.
 - Signatures syncing over anything but the loopback transport.
 
 ## Known gaps
