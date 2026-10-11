@@ -5,29 +5,16 @@ and what is still open. When one starts, it gets an ADR (or an amendment) and
 a section in [`docs/handoff.md`](docs/handoff.md); remove it from here when it
 is done.
 
-## Multi-client sync over Iroh
+## Multi-client sync: what is left
 
-Phase 8, slices 2 and 3 of [DESIGN.md](docs/DESIGN.md);
-[ADR 0010](docs/adr/0010-multi-client-over-iroh.md) and
-[ADR 0013](docs/adr/0013-op-merge-rules.md).
-
-**There already:**
-- The op-log, its merge rules, tombstones and deferred ops (`src/core/sync/`).
-- `SyncSession` (anti-entropy) and the `DeviceTransport` interface Iroh sits
-  behind.
-- `tst_sync`, with two devices over a loopback transport.
-
-**To build:**
-- A Rust crate in `src/p2p/` (Iroh and `iroh-blobs`), built with Corrosion.
-- The Rust toolchain in CI on all three desktop platforms, and on Android.
-- A `SyncSession` wired into `Account`.
-- Pairing by QR code with an encrypted snapshot.
-- The mailbox fallback, for devices that are never online together.
+Phase 8 is built (see `docs/handoff.md`, ADR 0010 and its amendments).
 
 **Open:**
+- Scanning the pairing QR code with a phone's camera; the code is pasted.
 - How Android keeps a peer reachable with no background service
-  (ADR 0016).
-- Whether the relay is Iroh's public one or one the person runs.
+  (ADR 0016). Until then the mailbox fallback carries its changes.
+- Running a relay (`iroh-relay`) beside `server/compose`, and trying two
+  machines on different networks.
 
 ## Encrypted backups to cloud storage
 

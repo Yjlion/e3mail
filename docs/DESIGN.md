@@ -145,7 +145,7 @@ deletion rule are in place and tested over a loopback transport; Iroh is next.
 | P5 | Organisation: threads, tags, search, Unverified, Trash, blocklist, importance | ✅ |
 | P6 | Desktop app (QML) | ✅ |
 | P7 | Packaging and CI: `.deb`, AppImage, NSIS, portable zip, `.dmg` | ✅ CI green on all three; release workflow not yet run |
-| P8 | Multi-client over Iroh | sync core done; transport next |
+| P8 | Multi-client over Iroh | done: transport, pairing, mailbox fallback (2026-10-11) |
 | P9 | SecureJoin and QR (Delta Chat compatible) | |
 | P10 | Address book: details, phones, vCard import and export, CSV export | ✅ (categories not built) |
 | P11 | At rest: SQLCipher passphrase, blob encryption, encrypted backup | |

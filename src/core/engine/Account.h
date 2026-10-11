@@ -117,6 +117,10 @@ public:
     // Sends paired devices what they lack, soon.
     void pushSoon();
     bool isDeviceConnected(const QString &device) const;
+    // Mails this device's ops to itself now if a paired device that is not
+    // connected needs them (the mailbox fallback); otherwise five minutes
+    // after a change. True if a mail was queued.
+    bool mailFallbackNow();
     // Removes a paired device here and, through a device.unpair op, on the
     // others; it is refused from then on.
     void removeDevice(const QString &device);
@@ -149,6 +153,7 @@ private:
     std::unique_ptr<sync::SyncSession> m_sync;
     QTimer m_push; // gathers changes into one push
     QTimer m_dial; // dials paired devices that are not connected
+    QTimer m_fallback; // the mailbox fallback, some minutes after a change
 };
 
 } // namespace e3

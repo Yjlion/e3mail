@@ -53,6 +53,9 @@ public:
     static QByteArray build(const OutgoingMail &mail);
 
     static QByteArray newBoundary();
+    // The Content-Type and body of a PGP/MIME encrypted message (RFC 3156)
+    // around an armoured OpenPGP message; follows a header block.
+    static QByteArray encryptedBody(const QByteArray &armored);
 };
 
 } // namespace e3::mime

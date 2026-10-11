@@ -4,6 +4,7 @@
 #include "OpApply.h"
 
 #include <QObject>
+#include <QJsonObject>
 #include <QSet>
 
 namespace e3::sync {
@@ -33,6 +34,13 @@ public:
     void push();
 
     static constexpr int kBatch = 500;
+
+    // The wire form of an op, here and in the mailbox fallback.
+    static QJsonObject opToWire(const Op &o);
+    static Op opFromWire(const QJsonObject &w);
+    // What a device was last known to hold (devices.have_json).
+    static void storeHave(MailContext &ctx, const QString &device, const OpApply::Versions &have);
+    static OpApply::Versions storedHave(MailContext &ctx, const QString &device);
 
 Q_SIGNALS:
     // The mailbox changed because of another device.

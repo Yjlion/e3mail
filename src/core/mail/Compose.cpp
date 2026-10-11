@@ -214,17 +214,7 @@ qint64 Compose::queue(MailContext &ctx, const Draft &draft)
         const QByteArray inner = mime::Builder::contentEntity(mail, true);
         const QByteArray armored = ctx.pgp.encrypt(inner, ready.recipientFprs + QStringList{selfFpr}, selfFpr);
         const QString hidden = QStringLiteral("...");
-        const QByteArray boundary = mime::Builder::newBoundary();
-        raw = mime::Builder::headerBlock(mail, &hidden);
-        raw += "Content-Type: multipart/encrypted; protocol=\"application/pgp-encrypted\"; boundary=\"" + boundary
-            + "\"\r\n\r\nThis is an OpenPGP/MIME encrypted message (RFC 4880 and 3156).\r\n--" + boundary
-            + "\r\nContent-Type: application/pgp-encrypted\r\nContent-Description: PGP/MIME version identification"
-              "\r\n\r\nVersion: 1\r\n\r\n--"
-            + boundary
-            + "\r\nContent-Type: application/octet-stream; name=\"encrypted.asc\"\r\n"
-              "Content-Description: OpenPGP encrypted message\r\n"
-              "Content-Disposition: inline; filename=\"encrypted.asc\"\r\n\r\n"
-            + armored + "\r\n--" + boundary + "--\r\n";
+        raw = mime::Builder::headerBlock(mail, &hidden) + mime::Builder::encryptedBody(armored);
     } else {
         raw = mime::Builder::build(mail);
     }

@@ -14,6 +14,7 @@
 #include "store/Config.h"
 #include "store/Database.h"
 #include "store/OpLog.h"
+#include "sync/MailboxFallback.h"
 #include "sync/OpApply.h"
 #include "util/Log.h"
 
@@ -273,6 +274,11 @@ Ingest::Result Ingest::process(MailContext &ctx, const QByteArray &raw)
         return result;
     }
 
+    // Device sync by mail: its ops, applied before the message is stored
+    // (hidden), outside the transaction that stores it.
+    if (hidden && isEncryptedPart(outer) && decryptError.isEmpty())
+        sync::MailboxFallback::receive(ctx, extract(content).text, validSigners);
+
     const QList<mime::Address> fromList = mime::parseAddressList(headers.raw("From"));
     const mime::Address from = fromList.value(0);
     const QList<mime::Address> to = mime::parseAddressList(headers.raw("To"));
@@ -447,7 +453,10 @@ Ingest::Result Ingest::process(MailContext &ctx, const QByteArray &raw)
             result.held = true;
         }
     }
-    ctx.ops.record(op::MessageAdded, {{QStringLiteral("mid"), messageId}, {QStringLiteral("raw"), rawBlob}});
+    // Device-sync mail reaches every device from the server; passing it on
+    // would only be more ops to sync.
+    if (!hidden)
+        ctx.ops.record(op::MessageAdded, {{QStringLiteral("mid"), messageId}, {QStringLiteral("raw"), rawBlob}});
     // What other devices already did to it, if their ops came first.
     sync::OpApply::replayFor(ctx, messageId);
     tx.commit();

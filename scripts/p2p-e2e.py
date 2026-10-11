@@ -26,6 +26,8 @@ ENV = dict(os.environ, E3MAIL_NO_KEYCHAIN="1", QT_LOGGING_RULES="e3.*.info=false
 def check(cond, what):
     print(("  ok    " if cond else "  FAIL  ") + what)
     if not cond:
+        for log in LOGS:
+            print(log)
         sys.exit(1)
 
 
@@ -65,11 +67,19 @@ def read_json(stream):
     return json.loads("".join(lines))
 
 
+LOGS = []
+
+
 def run_both(a, b, seconds):
-    procs = [subprocess.Popen(d.cmd("run", str(seconds)), env=ENV, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+    """Both devices running at once, as two apps would; their sync logs are
+    printed if a check fails."""
+    env = dict(ENV, QT_LOGGING_RULES="e3.*.info=false;e3.sync.info=true;e3.engine.info=true",
+               QT_FORCE_STDERR_LOGGING="1")
+    procs = [subprocess.Popen(d.cmd("run", str(seconds)), env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                               text=True) for d in (a, b)]
-    for p in procs:
-        p.wait(timeout=seconds + 60)
+    for d, p in zip((a, b), procs):
+        _, err = p.communicate(timeout=seconds + 60)
+        LOGS.append(f"--- {os.path.basename(d.dir)}, run {len(LOGS) // 2 + 1}\n{err}")
 
 
 def main():

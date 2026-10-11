@@ -159,6 +159,24 @@ private Q_SLOTS:
         QTRY_VERIFY_WITH_TIMEOUT(m_b->ctx().db.queryInt("SELECT count(*) FROM blocklist").value_or(0) == 1, 15000);
     }
 
+    // Both dial at once: they settle on one connection, and nothing sent on
+    // the one they drop is lost.
+    void simultaneousDials()
+    {
+        for (int round = 0; round < 5; ++round) {
+            iroh(m_a)->dialPaired();
+            iroh(m_b)->dialPaired();
+            QTRY_VERIFY_WITH_TIMEOUT(iroh(m_a)->isConnected(device(m_b)) && iroh(m_b)->isConnected(device(m_a)), 15000);
+            const QString pattern = QStringLiteral("round%1@z.test").arg(round);
+            mail::Contacts::block(m_a->ctx(), pattern);
+            m_a->notifyChanged();
+            QTRY_VERIFY_WITH_TIMEOUT(mail::Contacts::isBlocked(m_b->ctx(), pattern), 15000);
+            m_b->stopDevices();
+            QTRY_VERIFY_WITH_TIMEOUT(!iroh(m_a)->isConnected(device(m_b)), 15000);
+            QVERIFY(m_b->startDevices());
+        }
+    }
+
     // A removed device is dropped at once and refused from then on.
     void removedDeviceIsRefused()
     {

@@ -58,10 +58,9 @@ bytes move. [ADR 0013](adr/0013-op-merge-rules.md) has the rules.
 `scripts/e2e.py` against `server/compose` passes with this change, so
 single-device delete-after-download is unchanged on real servers.
 
-**Not built yet:** the Rust crate and Corrosion, pairing (QR and the
-encrypted snapshot; tests clone the account directory instead), the mailbox
-fallback, any UI, and wiring a `SyncSession` into `Account`. Nothing in the
-app syncs yet.
+**Not built yet** (at the time): the Rust crate, pairing, the mailbox
+fallback, any UI, and the wiring into `Account`. All of these are built as of
+2026-10-11; see the sections below.
 
 ## Languages and ICU (2026-10-06)
 
@@ -568,6 +567,48 @@ relay: n0's public relays, one the person runs, or none.
   and the other devices learn of the removal, but what the removed device
   shows then has not been looked at.
 
+## P8 slice 3, second half: the mailbox fallback (2026-10-11)
+
+Devices that are never online together sync through the mailbox
+([ADR 0010 amendment](adr/0010-multi-client-over-iroh.md)). Five minutes
+after a change, if a paired device is away and lacks this device's newest
+ops, `sync::MailboxFallback` queues a mail to the account's own address:
+`X-E3-Sync`, encrypted to the account's key and signed with it, holding the
+sender's own ops (up to 500) and its whole version map. Ingest hides it and
+applies its ops only if the account's own key signed it and the sender is a
+paired device. Phase 8 is done.
+
+Two fixes came out of this work:
+- **A replaced connection lost what was sent on it.** When both devices
+  dialed at once and the newer connection won, `SyncSession` was not told,
+  so ops sent on the closing connection counted as delivered and were never
+  sent again. `scripts/p2p-e2e.py` failed about one run in five because of
+  it. The switch now looks like a reconnect.
+- **Hidden sync mail is no longer recorded as `msg.add`**: every device
+  gets it from the server.
+
+**Verified here:**
+- `tst_sync::mailboxFallback`: two devices that never connect; A's read
+  state reaches B by mail, the mail is hidden, a second call sends nothing,
+  B's answer tells A what it holds, nobody mails again, and the server lets
+  go of everything but the last sync mail.
+  `mailboxFallbackInBatches`: 600 ops go as 500, an answer, then the rest
+  (fails without the answer to a full mail). `forgedSyncMailIsIgnored`: a
+  sync mail Bob signed, claiming to be A, trashes nothing.
+- `tst_p2p::simultaneousDials`: five rounds of both dialing at once; each
+  change arrives. Without the reconnect fix it failed every time.
+- `scripts/p2p-e2e.py`: ten runs in a row passed after the fix.
+  `scripts/e2e.py` passes.
+
+**Not verified:**
+- The fallback against `server/compose`: the live script runs both devices
+  at once, so it never needs the mailbox. It was tested against the fake
+  server only.
+- The five-minute timer in the running app: tests call `mailFallbackNow()`.
+- The last sync mail stays on the server until the devices next exchange
+  anything; how many pile up over weeks of one device being away has not
+  been measured.
+
 ## Known gaps
 
 - **Signed-only mail** is checked only for PGP/MIME (`multipart/signed`);
@@ -586,7 +627,8 @@ relay: n0's public relays, one the person runs, or none.
   Its rendering, typing and mail flow are unverified (see "Android" above).
   CI packages are debug-signed; release packages use the key in the
   repository's secrets once it is set (ADR 0016 amendment).
-- **Sync**: a message another device sent while it was still pending in that
+- **Sync**: devices have only been tried on one machine, with the relay off;
+  the pairing code is pasted, not scanned. A message another device sent while it was still pending in that
   device's outbox arrives as Sent. Mail whose raw copy expired under
   raw-message retention never reaches a new device unless the server still
   has it, and sent mail then never does. A label renamed on one device comes

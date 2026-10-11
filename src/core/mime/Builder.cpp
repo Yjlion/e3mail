@@ -69,6 +69,20 @@ void appendImportance(QByteArray &out, int importance)
 
 } // namespace
 
+QByteArray Builder::encryptedBody(const QByteArray &armored)
+{
+    const QByteArray boundary = newBoundary();
+    return "Content-Type: multipart/encrypted; protocol=\"application/pgp-encrypted\"; boundary=\"" + boundary
+        + "\"\r\n\r\nThis is an OpenPGP/MIME encrypted message (RFC 4880 and 3156).\r\n--" + boundary
+        + "\r\nContent-Type: application/pgp-encrypted\r\nContent-Description: PGP/MIME version identification"
+          "\r\n\r\nVersion: 1\r\n\r\n--"
+        + boundary
+        + "\r\nContent-Type: application/octet-stream; name=\"encrypted.asc\"\r\n"
+          "Content-Description: OpenPGP encrypted message\r\n"
+          "Content-Disposition: inline; filename=\"encrypted.asc\"\r\n\r\n"
+        + armored + "\r\n--" + boundary + "--\r\n";
+}
+
 QByteArray Builder::newBoundary()
 {
     const quint64 a = QRandomGenerator::system()->generate64();

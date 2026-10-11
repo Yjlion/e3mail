@@ -76,3 +76,27 @@ fails under delete-after-download and cannot work over POP3.
   `device.pair` op that tells every other device (ADR 0013 amendment).
 - Frames 16 and up are pairing's: request, denied, manifest, get, chunk,
   done.
+
+## Amendment — 2026-10-11: the mailbox fallback
+
+- **When.** Five minutes after a change, if a paired device is not
+  connected and is not known to hold this device's newest ops, the device
+  mails them to its own address. What a device holds is known from the last
+  connection's hello or from its last sync mail (`devices.have_json`).
+- **What.** An ordinary message from and to the account's address, header
+  `X-E3-Sync: 1`, encrypted to the account's key and signed with it. Inside,
+  JSON: the sender's device id, its own ops from what the furthest-behind
+  absent device holds (at most 500), and the sender's whole version map.
+  Each mail stands on its own, whichever arrives first.
+- **Receiving.** Ingest hides it, as it hid `X-E3-Sync` mail already, and
+  applies its ops only if the account's own key signed it and the sender is
+  a paired device. It is not passed on as a message (`msg.add`): every device
+  gets it from the server.
+- **Answers.** A mail needs no answer: what the receiver holds rides along
+  with its next mail. Only a full mail (500 ops) asks for one, so the rest
+  can follow from where the receiver says it is. Fetching a sync mail is not
+  itself news, or each fetch would be mailed, fetched and acknowledged
+  forever.
+- **The server copy** is an ordinary server message: deleted once every
+  device has acknowledged it, which for the last sync mail waits until the
+  devices next exchange anything.

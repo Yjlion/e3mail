@@ -197,7 +197,11 @@ void IrohTransport::onHello(quint64 conn, const QByteArray &data)
         e3p2p_close(m_node, oldConn);
         c.device = device;
         m_byDevice.insert(device, conn);
-        return; // still connected: SyncSession goes on over the new one
+        // What went out on the old connection may be lost with it: start
+        // over on the new one, as after a reconnect.
+        Q_EMIT disconnected(device);
+        Q_EMIT connected(device);
+        return;
     }
     c.device = device;
     m_byDevice.insert(device, conn);

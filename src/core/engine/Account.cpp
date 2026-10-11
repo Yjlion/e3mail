@@ -12,6 +12,7 @@
 #include "store/Database.h"
 #include "store/OpLog.h"
 #include "store/Schema.h"
+#include "sync/MailboxFallback.h"
 #include "sync/SyncSession.h"
 #ifdef E3MAIL_HAVE_P2P
 #include "sync/IrohTransport.h"
@@ -19,6 +20,7 @@
 #include "util/Log.h"
 
 #include <QDir>
+#include <QSet>
 #include <QtConcurrent>
 
 namespace e3 {
@@ -59,6 +61,9 @@ Account::Account(int id, const QString &dir, QObject *parent) : QObject(parent),
     });
     // Whatever changed here, the other devices hear of it.
     connect(this, &Account::mailChanged, this, &Account::pushSoon);
+    m_fallback.setSingleShot(true);
+    m_fallback.setInterval(5 * 60 * 1000);
+    connect(&m_fallback, &QTimer::timeout, this, &Account::mailFallbackNow);
 }
 
 Account::~Account()
@@ -153,8 +158,31 @@ void Account::removeDevice(const QString &device)
     Q_EMIT statusChanged();
 }
 
+bool Account::mailFallbackNow()
+{
+    QSet<QString> connected;
+#ifdef E3MAIL_HAVE_P2P
+    if (auto *t = qobject_cast<sync::IrohTransport *>(m_transport.get())) {
+        const QStringList c = t->connectedDevices();
+        connected = QSet<QString>(c.cbegin(), c.cend());
+    }
+#endif
+    try {
+        if (!sync::MailboxFallback::queueIfDue(*m_ctx, connected))
+            return false;
+    } catch (const std::exception &e) {
+        qCWarning(lcEngine) << "device sync by mail failed:" << e.what();
+        return false;
+    }
+    if (m_worker)
+        m_worker->wake(); // it sends it; otherwise the next pass will
+    return true;
+}
+
 void Account::pushSoon()
 {
+    if (!m_fallback.isActive() && m_db->queryInt("SELECT 1 FROM devices LIMIT 1"))
+        m_fallback.start();
     if (m_sync)
         m_push.start();
 }
