@@ -289,6 +289,25 @@ private Q_SLOTS:
         a->stop();
     }
 
+    // Trap 38: stopping must not wait for a server that has stopped
+    // answering. The fake server runs on this thread, which stop() blocks.
+    void stopDoesNotWaitForTheServer()
+    {
+        Account *a = makeAccount(QStringLiteral("hang@x.test"), QStringLiteral("imap"));
+        a->start();
+        QTRY_VERIFY_WITH_TIMEOUT(a->status() == QLatin1String("online"), 10000);
+        QTest::qWait(300); // into IDLE
+        m_srv->stalled = true;
+        // The worker leaves IDLE for this mail and then waits for an answer
+        // that never comes.
+        m_srv->deliver(QStringLiteral("hang@x.test"), "From: a@b.test\r\nSubject: x\r\n\r\nx\r\n");
+        QTest::qWait(500);
+        QElapsedTimer t;
+        t.start();
+        a->stop();
+        QVERIFY2(t.elapsed() < 5000, qPrintable(QStringLiteral("stop took %1 ms").arg(t.elapsed())));
+    }
+
     void addressBook()
     {
         Account *bob = makeAccount(QStringLiteral("bob@x.test"), QStringLiteral("imap"));

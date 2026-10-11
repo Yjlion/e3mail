@@ -63,10 +63,18 @@ void SyncSocket::waitUntil(const std::function<bool()> &ready, const char *what)
     QObject::connect(m_socket.get(), &QSslSocket::errorOccurred, &loop, quit);
     QObject::connect(m_socket.get(), &QSslSocket::bytesWritten, &loop, quit);
     deadline.start(m_timeoutMs);
+    // Wake regularly to look at `abort`.
+    QTimer tick;
+    if (m_abort) {
+        QObject::connect(&tick, &QTimer::timeout, &loop, quit);
+        tick.start(250);
+    }
     while (true) {
         m_buffer += m_socket->readAll();
         if (ready())
             return;
+        if (m_abort && m_abort())
+            throw NetError(QStringLiteral("%1: stopped").arg(m_host));
         if (timedOut)
             throw NetError(QStringLiteral("%1: timed out waiting for %2").arg(m_host, QLatin1String(what)));
         if (m_socket->state() == QAbstractSocket::UnconnectedState) {
@@ -82,6 +90,7 @@ void SyncSocket::waitUntil(const std::function<bool()> &ready, const char *what)
 void SyncSocket::connectToHost(const ServerSettings &server)
 {
     m_host = server.host;
+    m_abort = server.abort;
     m_buffer.clear();
     configureTls(server);
     if (m_acceptInvalid) {

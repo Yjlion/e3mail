@@ -316,6 +316,7 @@ void MailWorker::run()
         return;
     }
     const bool pop3 = m_creds.protocol == QLatin1String("pop3");
+    m_creds.incoming.abort = m_creds.smtp.abort = [this] { return m_stop.load(); };
     int backoffMs = 15000;
     while (!m_stop) {
         m_wake = false;

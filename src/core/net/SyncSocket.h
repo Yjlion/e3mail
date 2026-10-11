@@ -41,6 +41,10 @@ struct ServerSettings
     // Only for tests and self-signed development servers; never set from the UI
     // without the user saying so.
     bool acceptInvalidCertificates = false;
+    // Polled while waiting on the server; true gives up at once. Set by the
+    // worker, so stopping an account never waits for a slow or stalled
+    // server (trap 38).
+    std::function<bool()> abort;
 };
 
 // A socket whose reads block the calling thread by spinning a local event
@@ -80,6 +84,7 @@ private:
     QString m_host;
     int m_timeoutMs;
     bool m_acceptInvalid = false;
+    std::function<bool()> m_abort;
 };
 
 } // namespace e3::net

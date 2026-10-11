@@ -124,11 +124,18 @@ static MailWorker::Credentials credentialsFrom(const Account::Settings &s)
 {
     MailWorker::Credentials c;
     c.protocol = s.protocol;
-    c.incoming = {s.inHost, s.inPort, net::securityFromString(s.inSecurity), s.inUser.isEmpty() ? s.addr : s.inUser,
-                  s.inPassword, s.acceptInvalidCertificates};
-    c.smtp = {s.smtpHost, s.smtpPort, net::securityFromString(s.smtpSecurity),
-              s.smtpUser.isEmpty() ? c.incoming.user : s.smtpUser,
-              s.smtpPassword.isEmpty() ? s.inPassword : s.smtpPassword, s.acceptInvalidCertificates};
+    c.incoming.host = s.inHost;
+    c.incoming.port = s.inPort;
+    c.incoming.security = net::securityFromString(s.inSecurity);
+    c.incoming.user = s.inUser.isEmpty() ? s.addr : s.inUser;
+    c.incoming.password = s.inPassword;
+    c.incoming.acceptInvalidCertificates = s.acceptInvalidCertificates;
+    c.smtp.host = s.smtpHost;
+    c.smtp.port = s.smtpPort;
+    c.smtp.security = net::securityFromString(s.smtpSecurity);
+    c.smtp.user = s.smtpUser.isEmpty() ? c.incoming.user : s.smtpUser;
+    c.smtp.password = s.smtpPassword.isEmpty() ? s.inPassword : s.smtpPassword;
+    c.smtp.acceptInvalidCertificates = s.acceptInvalidCertificates;
     return c;
 }
 
