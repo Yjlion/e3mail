@@ -76,3 +76,22 @@ Iroh joins the build.
   only *seen*, not one in the book, so its mail waits in Unverified.
 - Keys never travel in a contact. vCard import ignores `KEY`, and export does
   not write it: keys come only from Autocrypt and verification.
+
+## Amendment — 2026-10-10: several signatures
+
+- **Each signature is a setting of its own**, `signature:<id>`, holding
+  `{"name", "html", "text"}` as JSON, with `config.set` keyed per setting as
+  before. Two devices editing *different* signatures both keep their edit;
+  two editing the same one get the later edit, for the whole signature.
+  Removing one writes an empty value, which competes with edits by the same
+  rule, so an edit made after a removal brings it back.
+- **The default** is the setting `signature_default` (an id, or empty for
+  none). A default that names a removed signature means none.
+- **The old single `signature`** (plain text) still syncs, for devices on
+  older versions. Until it is edited it reads as the signature with the fixed
+  id `legacy`; editing or removing it writes `signature:legacy` and empties
+  `signature`. The id is fixed so that two devices converting it write the
+  same key rather than two copies.
+- Signatures hold only what the composer's whitelist emits
+  (`RichText::emit`), so a signature never carries HTML that could not be
+  sent.

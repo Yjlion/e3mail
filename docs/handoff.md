@@ -346,10 +346,77 @@ service. Passwords go to the Android Keystore through QtKeychain.
 - Opening a decrypted `.eml` in Thunderbird or another client.
 - A CSV opened in Excel, LibreOffice or Google Contacts.
 
+## Typing formats, several signatures, signed-only mail (2026-10-10)
+
+- **Formatting applies to what is typed next.** Bold, italic and the rest
+  did nothing without a selection: the composer only changed selected text.
+  QML does not expose the editor's own cursor, so `TextFormatter` keeps a
+  format chosen with nothing selected as *pending* and lays it on the next
+  text typed at that spot; what follows inherits it from the character
+  before. Enter alone carries it to the new line; moving the cursor away
+  drops it. The toolbar buttons show the format at the cursor. The toolbar
+  and editor are one component, `RichEditor.qml`, used by the composer and
+  the signature editor. `toggleFormat`, `setBlock` and `setLink` moved out
+  of `Composer`.
+- **Several signatures, formatted, one (or none) the default**
+  ([ADR 0013 amendment](adr/0013-op-merge-rules.md)). Each is a synced
+  setting `signature:<id>`; `mail::Signatures` reads and writes them. The old
+  plain signature reads as the one with id `legacy` until edited. Settings
+  lists them with a default radio, Edit, Delete and "No signature in new
+  mail"; `SignatureDialog.qml` edits one through `RichEditor`, and what is
+  saved is `RichText::emit`'s output, the same whitelist as sent mail.
+- **The composer's signature button** opens a menu of signatures and "No
+  signature". It swaps the signature the composer put in for the chosen one
+  while that signature's text is unchanged (`SignatureRange`); once edited,
+  it is left alone and the new one goes in at the cursor.
+- **Signed-only mail is verified** (it was Next #5). `multipart/signed` with
+  `application/pgp-signature`: the detached signature is checked over the
+  first part as sent, in CRLF, and checked again after the same message's
+  Autocrypt header taught the key (trap 4). `Pgp::verifyDetached` and
+  `signDetached` (the latter for tests).
+
+**Verified here:**
+- `ctest --preset dev`: 15 tests pass. New:
+  - `tst_formatting`: a real `TextArea` offscreen, typed into with key
+    events. Bold on, type, bold off, type: only the middle is bold; two
+    formats at once; pressing twice cancels; moving away drops it; Enter
+    keeps it; a selection still toggles; the state follows the cursor.
+    Turning off the merge of the pending format failed four of its six.
+  - `tst_richtext`: `RichText::insert` (formatting kept, the script
+    dropped) and `swapsAnUntouchedSignature` (text typed above and right
+    after is not part of it, an edited one is never taken). Dropping
+    `setKeepPositionOnInsert` failed it.
+  - `tst_engine::signatures` (legacy, default, removal, nine `config.set`
+    ops) and `signedOnlyIsVerified` (a good signature, a tampered body, the
+    key arriving in the same message, bare LF from the server). Removing the
+    CRLF rule, or the second verification, failed it.
+  - `tst_sync::signaturesMergeOneByOne`: two devices edit different
+    signatures at once and both edits survive; a removal travels with the
+    default. Dropping the prefix from `Preferences::isSynced` failed it.
+  - `tst_crypto::gnupgDetachedSignatures`: GnuPG's detached signature
+    verifies here and a changed text does not; ours verifies in GnuPG.
+- Screenshots looked at: the composer with the toolbar and a formatted
+  signature, a reply to HTML mail with it, Settings with the list (English,
+  Arabic, phone), the signature editor (English, Arabic, phone). New shots:
+  `composer-formatting`, `signature`, `signature-ar`, `settings-ar`,
+  `phone-signature` (pages `formatting` and `signature`).
+- Translations complete in all ten languages (machine-made).
+
+**Not verified:**
+- Typing on a real display, and above all through an input method: Android's
+  keyboard and CJK composition commit text differently from key events, and
+  whether the pending format catches that commit is untested.
+- The signature menu in the composer: it is a popup, so no screenshot shows
+  it, and the swap was tested on `SignatureRange`, not through the view.
+- Signed-only mail from a real client (Thunderbird, Delta Chat, K-9). The
+  fixtures are made here and by GnuPG. `scripts/e2e.py`: Docker's socket was
+  not reachable again (permission denied).
+- Signatures syncing over anything but the loopback transport.
+
 ## Known gaps
 
-- **Signed-only mail** (`multipart/signed` without encryption) is shown, but
-  its signature is not checked, so it reads as unsigned.
+- **Signed-only mail** is checked only for PGP/MIME (`multipart/signed`);
+  S/MIME signatures read as unsigned.
 - **Inline PGP** (`-----BEGIN PGP MESSAGE-----` in a text body) is not
   decrypted.
 - **Bcc and encryption**: Bcc recipients' key IDs are in the encrypted message,
@@ -570,6 +637,21 @@ like trap 26's 120 s socket timeout twice in one session, once on a tree
 without this work's changes. It took 2 to 3 s in eight runs after that. It
 passes either way. Not investigated.
 
+**39. The editor reports text before it moves the cursor.** Typing into a
+`TextArea` emits the document's `contentsChange` while `cursorPosition` still
+holds the old position. `TextFormatter` does not rely on the order: it drops
+a pending format on a cursor move only in a queued call, after any insertion
+has had its turn.
+
+**40. `QTest::keyClicks` takes only a `QWidget`.** For a `QQuickView`, send
+`QTest::keyClick` per character.
+
+**41. Transactions do not nest.** `Transaction` is a bare `BEGIN IMMEDIATE`.
+Code holding one calls `Preferences::write`, not `set`, to change a setting.
+
+**42. Trap 38 again.** One full `ctest` run here took 135 s instead of 16;
+the next took 16 s. Still not investigated.
+
 ## Next
 
 1. P8, slice 2: install Rust, build `src/p2p/` (Iroh, `iroh-blobs`) with
@@ -581,14 +663,14 @@ passes either way. Not investigated.
    platform.
 4. P9 SecureJoin, then an interop pass against Delta Chat's released
    `deltachat-rpc-server`, as eeemail's `scripts/interop-pass.py` does.
-5. Verify signed-only mail.
-6. Try notifications on a real Windows and macOS desktop, and import real
+5. Try notifications on a real Windows and macOS desktop, and import real
    vCard exports (Google, Apple, Thunderbird).
-7. Publish a release with the APKs: bump the version (Android installs an
+6. Publish a release with the APKs: bump the version (Android installs an
    update only with a higher version code) and push a tag. Install the
    arm64 APK on a phone and try each export there (Android's file picker
    returns `content://`).
-8. Android on a real phone: rendering, typing, the keyboard covering setup's
+7. Android on a real phone: rendering, typing (including a bold word typed
+   through the keyboard, see "Typing formats" above), the keyboard covering setup's
    Connect button, then a real account (receive, send, a notification, the
    Keystore). Setup needs a way to accept a self-signed test certificate, or
    a debuggable build with a copied account, to reach `server/compose`.
