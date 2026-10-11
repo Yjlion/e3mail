@@ -1077,6 +1077,34 @@ To: %4
         <translation>秒</translation>
     </message>
     <message>
+        <source>The sending server&apos;s certificate is not trusted, or is not the one trusted before.</source>
+        <translation>发送服务器的证书不受信任，或不是之前信任的那个。</translation>
+    </message>
+    <message>
+        <source>The incoming server&apos;s certificate is not trusted, or is not the one trusted before.</source>
+        <translation>接收服务器的证书不受信任，或不是之前信任的那个。</translation>
+    </message>
+    <message>
+        <source>Trust it only if this SHA-256 fingerprint matches the one your server&apos;s administrator gave you.</source>
+        <translation>仅当此 SHA-256 指纹与服务器管理员提供的一致时才信任它。</translation>
+    </message>
+    <message>
+        <source>Trust this certificate</source>
+        <translation>信任此证书</translation>
+    </message>
+    <message>
+        <source>Sending server: trusted certificate %1</source>
+        <translation>发送服务器：已信任证书 %1</translation>
+    </message>
+    <message>
+        <source>Incoming server: trusted certificate %1</source>
+        <translation>接收服务器：已信任证书 %1</translation>
+    </message>
+    <message>
+        <source>Forget</source>
+        <translation>忘记</translation>
+    </message>
+    <message>
         <source>%1 %2:%3 · SMTP %4:%5 · password stored in the %6</source>
         <translation>%1 %2:%3 · SMTP %4:%5 · 密码保存在：%6</translation>
     </message>
@@ -1239,6 +1267,34 @@ To: %4
         <translation>无（不安全）</translation>
     </message>
     <message>
+        <source>The certificate of %1 is not the one you trusted before.</source>
+        <translation>%1 的证书不是你之前信任的那个。</translation>
+    </message>
+    <message>
+        <source>The certificate of %1 (sending) is not trusted.</source>
+        <translation>%1（发送）的证书不受信任。</translation>
+    </message>
+    <message>
+        <source>The certificate of %1 is not trusted.</source>
+        <translation>%1 的证书不受信任。</translation>
+    </message>
+    <message>
+        <source>SHA-256 fingerprint</source>
+        <translation>SHA-256 指纹</translation>
+    </message>
+    <message>
+        <source>Issued to %1 by %2, valid until %3.</source>
+        <translation>由 %2 颁发给 %1，有效期至 %3。</translation>
+    </message>
+    <message>
+        <source>Trust it only if this fingerprint matches the one your server&apos;s administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
+        <translation>仅当此指纹与服务器管理员提供的一致时才信任它。之后 e3mail 只接受该服务器的这一个证书。</translation>
+    </message>
+    <message>
+        <source>Trust this certificate</source>
+        <translation>信任此证书</translation>
+    </message>
+    <message>
         <source>Checking…</source>
         <translation>正在检查…</translation>
     </message>
@@ -1334,6 +1390,10 @@ To: %4
     <message>
         <source>Login failed — check the password</source>
         <translation>登录失败 — 请检查密码</translation>
+    </message>
+    <message>
+        <source>Certificate not trusted — see Settings</source>
+        <translation>证书不受信任——请查看设置</translation>
     </message>
     <message>
         <source>Offline</source>

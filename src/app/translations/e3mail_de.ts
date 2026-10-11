@@ -1087,6 +1087,34 @@ An: %4
         <translation>Sekunden</translation>
     </message>
     <message>
+        <source>The sending server&apos;s certificate is not trusted, or is not the one trusted before.</source>
+        <translation>Das Zertifikat des Postausgangsservers ist nicht vertrauenswürdig oder nicht das zuvor bestätigte.</translation>
+    </message>
+    <message>
+        <source>The incoming server&apos;s certificate is not trusted, or is not the one trusted before.</source>
+        <translation>Das Zertifikat des Posteingangsservers ist nicht vertrauenswürdig oder nicht das zuvor bestätigte.</translation>
+    </message>
+    <message>
+        <source>Trust it only if this SHA-256 fingerprint matches the one your server&apos;s administrator gave you.</source>
+        <translation>Vertrauen Sie ihm nur, wenn dieser SHA-256-Fingerabdruck mit dem übereinstimmt, den Ihnen die Verwaltung Ihres Servers gegeben hat.</translation>
+    </message>
+    <message>
+        <source>Trust this certificate</source>
+        <translation>Diesem Zertifikat vertrauen</translation>
+    </message>
+    <message>
+        <source>Sending server: trusted certificate %1</source>
+        <translation>Postausgangsserver: vertrautes Zertifikat %1</translation>
+    </message>
+    <message>
+        <source>Incoming server: trusted certificate %1</source>
+        <translation>Posteingangsserver: vertrautes Zertifikat %1</translation>
+    </message>
+    <message>
+        <source>Forget</source>
+        <translation>Vergessen</translation>
+    </message>
+    <message>
         <source>%1 %2:%3 · SMTP %4:%5 · password stored in the %6</source>
         <translation>%1 %2:%3 · SMTP %4:%5 · Passwort gespeichert: %6</translation>
     </message>
@@ -1249,6 +1277,34 @@ An: %4
         <translation>Keine (unsicher)</translation>
     </message>
     <message>
+        <source>The certificate of %1 is not the one you trusted before.</source>
+        <translation>Das Zertifikat von %1 ist nicht das, dem Sie zuvor vertraut haben.</translation>
+    </message>
+    <message>
+        <source>The certificate of %1 (sending) is not trusted.</source>
+        <translation>Das Zertifikat von %1 (Postausgang) ist nicht vertrauenswürdig.</translation>
+    </message>
+    <message>
+        <source>The certificate of %1 is not trusted.</source>
+        <translation>Das Zertifikat von %1 ist nicht vertrauenswürdig.</translation>
+    </message>
+    <message>
+        <source>SHA-256 fingerprint</source>
+        <translation>SHA-256-Fingerabdruck</translation>
+    </message>
+    <message>
+        <source>Issued to %1 by %2, valid until %3.</source>
+        <translation>Ausgestellt für %1 von %2, gültig bis %3.</translation>
+    </message>
+    <message>
+        <source>Trust it only if this fingerprint matches the one your server&apos;s administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
+        <translation>Vertrauen Sie ihm nur, wenn dieser Fingerabdruck mit dem übereinstimmt, den Ihnen die Verwaltung Ihres Servers gegeben hat. Dann akzeptiert e3mail von diesem Server genau dieses Zertifikat und kein anderes.</translation>
+    </message>
+    <message>
+        <source>Trust this certificate</source>
+        <translation>Diesem Zertifikat vertrauen</translation>
+    </message>
+    <message>
         <source>Checking…</source>
         <translation>Wird geprüft…</translation>
     </message>
@@ -1345,6 +1401,10 @@ An: %4
     <message>
         <source>Login failed — check the password</source>
         <translation>Anmeldung fehlgeschlagen — Passwort prüfen</translation>
+    </message>
+    <message>
+        <source>Certificate not trusted — see Settings</source>
+        <translation>Zertifikat nicht vertrauenswürdig – siehe Einstellungen</translation>
     </message>
     <message>
         <source>Offline</source>

@@ -122,9 +122,77 @@ Rectangle {
                 }
             }
 
+            // A certificate TLS does not trust: show it and let the person
+            // decide (ADR 0017).
+            Rectangle {
+                id: certCard
+                readonly property var cert: setup.untrustedCertificate
+                Layout.fillWidth: true
+                visible: cert.fingerprint !== undefined
+                radius: Theme.radius
+                color: Theme.surface
+                border.color: Theme.bad
+                implicitHeight: certCol.implicitHeight + 24
+                ColumnLayout {
+                    id: certCol
+                    anchors.fill: parent
+                    anchors.margins: 12
+                    spacing: 6
+                    Text {
+                        Layout.fillWidth: true
+                        wrapMode: Text.Wrap
+                        color: Theme.text
+                        font.weight: Font.DemiBold
+                        text: certCard.cert.changed
+                              ? qsTr("The certificate of %1 is not the one you trusted before.").arg(certCard.cert.host || "")
+                              : certCard.cert.server === "smtp"
+                                ? qsTr("The certificate of %1 (sending) is not trusted.").arg(certCard.cert.host || "")
+                                : qsTr("The certificate of %1 is not trusted.").arg(certCard.cert.host || "")
+                    }
+                    Text {
+                        Layout.fillWidth: true
+                        wrapMode: Text.Wrap
+                        color: Theme.muted
+                        font.pixelSize: Theme.fontSmall + 1
+                        text: certCard.cert.problems || ""
+                    }
+                    Label { text: qsTr("SHA-256 fingerprint"); color: Theme.muted; font.pixelSize: Theme.fontSmall }
+                    TextEdit {
+                        Layout.fillWidth: true
+                        readOnly: true
+                        selectByMouse: true
+                        wrapMode: TextEdit.WrapAnywhere
+                        color: Theme.text
+                        font.family: "monospace"
+                        font.pixelSize: Theme.fontSmall + 1
+                        text: certCard.cert.fingerprint || ""
+                    }
+                    Text {
+                        Layout.fillWidth: true
+                        wrapMode: Text.Wrap
+                        color: Theme.muted
+                        font.pixelSize: Theme.fontSmall + 1
+                        text: qsTr("Issued to %1 by %2, valid until %3.")
+                              .arg(certCard.cert.subject || "?").arg(certCard.cert.issuer || "?").arg(certCard.cert.expires || "?")
+                    }
+                    Text {
+                        Layout.fillWidth: true
+                        wrapMode: Text.Wrap
+                        color: Theme.text
+                        font.pixelSize: Theme.fontSmall + 1
+                        text: qsTr("Trust it only if this fingerprint matches the one your server's administrator gave you. Then e3mail accepts this certificate from this server, and no other.")
+                    }
+                    Flow {
+                        Layout.fillWidth: true
+                        spacing: 6
+                        Button { text: qsTr("Trust this certificate"); enabled: !setup.busy; onClicked: setup.trustCertificate() }
+                    }
+                }
+            }
+
             Rectangle {
                 Layout.fillWidth: true
-                visible: setup.error.length > 0
+                visible: setup.error.length > 0 && !certCard.visible
                 radius: Theme.radius
                 color: Theme.badBg
                 implicitHeight: err.implicitHeight + 16

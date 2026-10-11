@@ -22,11 +22,15 @@ inline constexpr char InHost[] = "in_host";
 inline constexpr char InPort[] = "in_port";
 inline constexpr char InSecurity[] = "in_security";          // "ssl" | "starttls" | "plain"
 inline constexpr char InUser[] = "in_user";
+inline constexpr char InCertSha256[] = "in_cert_sha256";     // a pinned certificate (ADR 0017)
 // Outgoing server
 inline constexpr char SmtpHost[] = "smtp_host";
 inline constexpr char SmtpPort[] = "smtp_port";
 inline constexpr char SmtpSecurity[] = "smtp_security";
 inline constexpr char SmtpUser[] = "smtp_user";
+inline constexpr char SmtpCertSha256[] = "smtp_cert_sha256";
+// Every certificate accepted, from e3mail-cli --insecure only; never set by the app.
+inline constexpr char AcceptInvalidCerts[] = "accept_invalid_certs";
 // Fallback secret storage when no OS keyring is available. See SecretStore.
 inline constexpr char InPassword[] = "in_password";
 inline constexpr char SmtpPassword[] = "smtp_password";

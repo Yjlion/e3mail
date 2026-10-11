@@ -182,7 +182,7 @@ Rectangle {
                 Rectangle {
                     width: 8; height: 8; radius: 4
                     color: MailApp.accountStatus === "online" ? Theme.good
-                         : MailApp.accountStatus === "auth" ? Theme.bad : Theme.warn
+                         : MailApp.accountStatus === "auth" || MailApp.accountStatus === "cert" ? Theme.bad : Theme.warn
                 }
                 Text {
                     Layout.fillWidth: true
@@ -190,6 +190,7 @@ Rectangle {
                           ? qsTr("Fetching older mail… %n left", "", MailApp.olderRemaining)
                         : MailApp.accountStatus === "online" ? qsTr("Connected")
                         : MailApp.accountStatus === "auth" ? qsTr("Login failed — check the password")
+                        : MailApp.accountStatus === "cert" ? qsTr("Certificate not trusted — see Settings")
                         : qsTr("Offline")
                     color: Theme.muted
                     font.pixelSize: Theme.fontSmall

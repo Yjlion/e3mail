@@ -1097,6 +1097,34 @@ To: %4
         <translation>с</translation>
     </message>
     <message>
+        <source>The sending server&apos;s certificate is not trusted, or is not the one trusted before.</source>
+        <translation>Сертификат сервера отправки не доверенный или не тот, которому вы доверяли раньше.</translation>
+    </message>
+    <message>
+        <source>The incoming server&apos;s certificate is not trusted, or is not the one trusted before.</source>
+        <translation>Сертификат сервера входящей почты не доверенный или не тот, которому вы доверяли раньше.</translation>
+    </message>
+    <message>
+        <source>Trust it only if this SHA-256 fingerprint matches the one your server&apos;s administrator gave you.</source>
+        <translation>Доверяйте ему, только если этот отпечаток SHA-256 совпадает с тем, что дал администратор вашего сервера.</translation>
+    </message>
+    <message>
+        <source>Trust this certificate</source>
+        <translation>Доверять этому сертификату</translation>
+    </message>
+    <message>
+        <source>Sending server: trusted certificate %1</source>
+        <translation>Сервер отправки: доверенный сертификат %1</translation>
+    </message>
+    <message>
+        <source>Incoming server: trusted certificate %1</source>
+        <translation>Сервер входящей почты: доверенный сертификат %1</translation>
+    </message>
+    <message>
+        <source>Forget</source>
+        <translation>Забыть</translation>
+    </message>
+    <message>
         <source>%1 %2:%3 · SMTP %4:%5 · password stored in the %6</source>
         <translation>%1 %2:%3 · SMTP %4:%5 · пароль хранится в: %6</translation>
     </message>
@@ -1259,6 +1287,34 @@ To: %4
         <translation>Нет (небезопасно)</translation>
     </message>
     <message>
+        <source>The certificate of %1 is not the one you trusted before.</source>
+        <translation>Сертификат %1 — не тот, которому вы доверяли раньше.</translation>
+    </message>
+    <message>
+        <source>The certificate of %1 (sending) is not trusted.</source>
+        <translation>Сертификат %1 (отправка) не доверенный.</translation>
+    </message>
+    <message>
+        <source>The certificate of %1 is not trusted.</source>
+        <translation>Сертификат %1 не доверенный.</translation>
+    </message>
+    <message>
+        <source>SHA-256 fingerprint</source>
+        <translation>Отпечаток SHA-256</translation>
+    </message>
+    <message>
+        <source>Issued to %1 by %2, valid until %3.</source>
+        <translation>Выдан %1, издатель %2, действует до %3.</translation>
+    </message>
+    <message>
+        <source>Trust it only if this fingerprint matches the one your server&apos;s administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
+        <translation>Доверяйте ему, только если этот отпечаток совпадает с тем, что дал администратор вашего сервера. Тогда e3mail будет принимать от этого сервера этот сертификат и никакой другой.</translation>
+    </message>
+    <message>
+        <source>Trust this certificate</source>
+        <translation>Доверять этому сертификату</translation>
+    </message>
+    <message>
         <source>Checking…</source>
         <translation>Проверка…</translation>
     </message>
@@ -1356,6 +1412,10 @@ To: %4
     <message>
         <source>Login failed — check the password</source>
         <translation>Не удалось войти — проверьте пароль</translation>
+    </message>
+    <message>
+        <source>Certificate not trusted — see Settings</source>
+        <translation>Сертификат не доверенный — см. Настройки</translation>
     </message>
     <message>
         <source>Offline</source>

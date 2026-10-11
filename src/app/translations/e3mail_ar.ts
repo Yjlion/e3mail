@@ -1127,6 +1127,34 @@ To: %4
         <translation>ثانية</translation>
     </message>
     <message>
+        <source>The sending server&apos;s certificate is not trusted, or is not the one trusted before.</source>
+        <translation>شهادة خادم الإرسال غير موثوقة، أو ليست الشهادة التي وثقتَ بها من قبل.</translation>
+    </message>
+    <message>
+        <source>The incoming server&apos;s certificate is not trusted, or is not the one trusted before.</source>
+        <translation>شهادة خادم الوارد غير موثوقة، أو ليست الشهادة التي وثقتَ بها من قبل.</translation>
+    </message>
+    <message>
+        <source>Trust it only if this SHA-256 fingerprint matches the one your server&apos;s administrator gave you.</source>
+        <translation>لا تثق بها إلا إذا طابقت بصمة SHA-256 هذه البصمةَ التي أعطاك إياها مدير خادمك.</translation>
+    </message>
+    <message>
+        <source>Trust this certificate</source>
+        <translation>الوثوق بهذه الشهادة</translation>
+    </message>
+    <message>
+        <source>Sending server: trusted certificate %1</source>
+        <translation>خادم الإرسال: شهادة موثوقة %1</translation>
+    </message>
+    <message>
+        <source>Incoming server: trusted certificate %1</source>
+        <translation>خادم الوارد: شهادة موثوقة %1</translation>
+    </message>
+    <message>
+        <source>Forget</source>
+        <translation>نسيان</translation>
+    </message>
+    <message>
         <source>%1 %2:%3 · SMTP %4:%5 · password stored in the %6</source>
         <translation>%1 %2:%3 · SMTP %4:%5 · كلمة المرور محفوظة في: %6</translation>
     </message>
@@ -1289,6 +1317,34 @@ To: %4
         <translation>بلا (غير آمن)</translation>
     </message>
     <message>
+        <source>The certificate of %1 is not the one you trusted before.</source>
+        <translation>شهادة %1 ليست الشهادة التي وثقتَ بها من قبل.</translation>
+    </message>
+    <message>
+        <source>The certificate of %1 (sending) is not trusted.</source>
+        <translation>شهادة %1 (الإرسال) غير موثوقة.</translation>
+    </message>
+    <message>
+        <source>The certificate of %1 is not trusted.</source>
+        <translation>شهادة %1 غير موثوقة.</translation>
+    </message>
+    <message>
+        <source>SHA-256 fingerprint</source>
+        <translation>بصمة SHA-256</translation>
+    </message>
+    <message>
+        <source>Issued to %1 by %2, valid until %3.</source>
+        <translation>صادرة لـ %1 من %2، صالحة حتى %3.</translation>
+    </message>
+    <message>
+        <source>Trust it only if this fingerprint matches the one your server&apos;s administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
+        <translation>لا تثق بها إلا إذا طابقت هذه البصمةُ البصمةَ التي أعطاك إياها مدير خادمك. عندها يقبل e3mail هذه الشهادة من هذا الخادم، ولا شهادة غيرها.</translation>
+    </message>
+    <message>
+        <source>Trust this certificate</source>
+        <translation>الوثوق بهذه الشهادة</translation>
+    </message>
+    <message>
         <source>Checking…</source>
         <translation>جارٍ التحقق…</translation>
     </message>
@@ -1389,6 +1445,10 @@ To: %4
     <message>
         <source>Login failed — check the password</source>
         <translation>فشل تسجيل الدخول — تحقق من كلمة المرور</translation>
+    </message>
+    <message>
+        <source>Certificate not trusted — see Settings</source>
+        <translation>الشهادة غير موثوقة — راجع الإعدادات</translation>
     </message>
     <message>
         <source>Offline</source>

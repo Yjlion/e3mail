@@ -1087,6 +1087,34 @@ Para: %4
         <translation>segundos</translation>
     </message>
     <message>
+        <source>The sending server&apos;s certificate is not trusted, or is not the one trusted before.</source>
+        <translation>El certificado del servidor de salida no es de confianza o no es el que se aceptó antes.</translation>
+    </message>
+    <message>
+        <source>The incoming server&apos;s certificate is not trusted, or is not the one trusted before.</source>
+        <translation>El certificado del servidor de entrada no es de confianza o no es el que se aceptó antes.</translation>
+    </message>
+    <message>
+        <source>Trust it only if this SHA-256 fingerprint matches the one your server&apos;s administrator gave you.</source>
+        <translation>Confía en él solo si esta huella SHA-256 coincide con la que te dio quien administra tu servidor.</translation>
+    </message>
+    <message>
+        <source>Trust this certificate</source>
+        <translation>Confiar en este certificado</translation>
+    </message>
+    <message>
+        <source>Sending server: trusted certificate %1</source>
+        <translation>Servidor de salida: certificado de confianza %1</translation>
+    </message>
+    <message>
+        <source>Incoming server: trusted certificate %1</source>
+        <translation>Servidor de entrada: certificado de confianza %1</translation>
+    </message>
+    <message>
+        <source>Forget</source>
+        <translation>Olvidar</translation>
+    </message>
+    <message>
         <source>%1 %2:%3 · SMTP %4:%5 · password stored in the %6</source>
         <translation>%1 %2:%3 · SMTP %4:%5 · contraseña guardada en %6</translation>
     </message>
@@ -1249,6 +1277,34 @@ Para: %4
         <translation>Ninguno (inseguro)</translation>
     </message>
     <message>
+        <source>The certificate of %1 is not the one you trusted before.</source>
+        <translation>El certificado de %1 no es el que aceptaste antes.</translation>
+    </message>
+    <message>
+        <source>The certificate of %1 (sending) is not trusted.</source>
+        <translation>El certificado de %1 (salida) no es de confianza.</translation>
+    </message>
+    <message>
+        <source>The certificate of %1 is not trusted.</source>
+        <translation>El certificado de %1 no es de confianza.</translation>
+    </message>
+    <message>
+        <source>SHA-256 fingerprint</source>
+        <translation>Huella SHA-256</translation>
+    </message>
+    <message>
+        <source>Issued to %1 by %2, valid until %3.</source>
+        <translation>Emitido para %1 por %2, válido hasta el %3.</translation>
+    </message>
+    <message>
+        <source>Trust it only if this fingerprint matches the one your server&apos;s administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
+        <translation>Confía en él solo si esta huella coincide con la que te dio quien administra tu servidor. Entonces e3mail aceptará este certificado de este servidor, y ningún otro.</translation>
+    </message>
+    <message>
+        <source>Trust this certificate</source>
+        <translation>Confiar en este certificado</translation>
+    </message>
+    <message>
         <source>Checking…</source>
         <translation>Comprobando…</translation>
     </message>
@@ -1345,6 +1401,10 @@ Para: %4
     <message>
         <source>Login failed — check the password</source>
         <translation>Error de inicio de sesión — revisa la contraseña</translation>
+    </message>
+    <message>
+        <source>Certificate not trusted — see Settings</source>
+        <translation>Certificado no fiable: ver Ajustes</translation>
     </message>
     <message>
         <source>Offline</source>

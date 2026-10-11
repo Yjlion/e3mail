@@ -27,14 +27,17 @@ SERVER = "127.0.0.1"
 
 
 class Account:
-    def __init__(self, cli, root, name, protocol, port, security, smtp_port, smtp_security):
+    def __init__(self, cli, root, name, protocol, port, security, smtp_port, smtp_security, pin=None, dirname=None):
+        """With `pin`, the server's certificate is trusted by its SHA-256
+        (ADR 0017); without, every certificate is accepted (--insecure)."""
         self.cli = cli
         self.addr = f"{name}@e3.test"
-        self.dir = os.path.join(root, name)
+        self.dir = os.path.join(root, dirname or name)
+        trust = ["--in-cert", pin, "--smtp-cert", pin] if pin else ["--insecure"]
         self.run("add", "--addr", self.addr, "--password", "pw", "--name", name.title(),
                  "--protocol", protocol, "--in-host", SERVER, "--in-port", str(port),
                  "--in-security", security, "--smtp-host", SERVER, "--smtp-port", str(smtp_port),
-                 "--smtp-security", smtp_security, "--insecure")
+                 "--smtp-security", smtp_security, *trust)
 
     def run(self, *args, raw=False):
         env = dict(os.environ, E3MAIL_NO_KEYCHAIN="1", QT_LOGGING_RULES="e3.*.info=false")
@@ -137,13 +140,24 @@ def main():
     root = tempfile.mkdtemp(prefix="e3mail-e2e-")
     try:
         print("1. accounts over every transport")
+        cert = json.loads(subprocess.run([args.cli, "cert", "--protocol", "imap", "--in-host", SERVER, "--in-port", "1993",
+                                          "--in-security", "ssl"], capture_output=True, text=True, check=True).stdout)
+        check(not cert["trusted_by_tls"] and cert["subject"] == "mail.e3.test",
+              "the test server's certificate is self-signed, and e3mail-cli cert shows it")
         alice = Account(args.cli, root, "alice", "imap", 1993, "ssl", 1465, "ssl")
         bob = Account(args.cli, root, "bob", "pop3", 1995, "ssl", 1587, "starttls")
-        carol = Account(args.cli, root, "carol", "imap", 1143, "starttls", 1587, "starttls")
+        # carol trusts the certificate by its fingerprint instead of accepting any.
+        carol = Account(args.cli, root, "carol", "imap", 1143, "starttls", 1587, "starttls", pin=cert["sha256"])
         dana = Account(args.cli, root, "dana", "pop3", 1110, "starttls", 1465, "ssl")
         for a in (alice, bob, carol, dana):
             a.sync()  # the first look: anything already there is never deleted
         check(True, "IMAPS, POP3S, IMAP+STARTTLS, POP3+STARTTLS, SMTPS and submission all log in")
+        check(True, "carol logs in over STARTTLS with the certificate pinned")
+        wrong = Account(args.cli, root, "carol", "imap", 1143, "starttls", 1587, "starttls", pin="ab" * 32,
+                        dirname="carol-wrong-pin")
+        out = subprocess.run([args.cli, "--data-dir", wrong.dir, "sync"], capture_output=True, text=True,
+                             env=dict(os.environ, E3MAIL_NO_KEYCHAIN="1"))
+        check(out.returncode != 0 and "certificate" in out.stderr, "a different pinned certificate is refused")
 
         print("2. a Cc'd message with an attachment, in cleartext")
         note = os.path.join(root, "q3.csv")

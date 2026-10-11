@@ -996,7 +996,7 @@ Objet : %3
     </message>
     <message>
         <source>The chosen one goes into new mail. The composer&apos;s signature button swaps it for another.</source>
-        <translation>La signature choisie est ajoutée aux nouveaux messages. Le bouton de signature de l'éditeur la remplace par une autre.</translation>
+        <translation>La signature choisie est ajoutée aux nouveaux messages. Le bouton de signature de l&apos;éditeur la remplace par une autre.</translation>
     </message>
     <message>
         <source>Encryption</source>
@@ -1085,6 +1085,34 @@ Objet : %3
     <message>
         <source>seconds</source>
         <translation>secondes</translation>
+    </message>
+    <message>
+        <source>The sending server&apos;s certificate is not trusted, or is not the one trusted before.</source>
+        <translation>Le certificat du serveur d'envoi n'est pas reconnu, ou n'est pas celui approuvé auparavant.</translation>
+    </message>
+    <message>
+        <source>The incoming server&apos;s certificate is not trusted, or is not the one trusted before.</source>
+        <translation>Le certificat du serveur de réception n'est pas reconnu, ou n'est pas celui approuvé auparavant.</translation>
+    </message>
+    <message>
+        <source>Trust it only if this SHA-256 fingerprint matches the one your server&apos;s administrator gave you.</source>
+        <translation>Ne l'approuvez que si cette empreinte SHA-256 correspond à celle fournie par l'administrateur de votre serveur.</translation>
+    </message>
+    <message>
+        <source>Trust this certificate</source>
+        <translation>Approuver ce certificat</translation>
+    </message>
+    <message>
+        <source>Sending server: trusted certificate %1</source>
+        <translation>Serveur d'envoi : certificat approuvé %1</translation>
+    </message>
+    <message>
+        <source>Incoming server: trusted certificate %1</source>
+        <translation>Serveur de réception : certificat approuvé %1</translation>
+    </message>
+    <message>
+        <source>Forget</source>
+        <translation>Oublier</translation>
     </message>
     <message>
         <source>%1 %2:%3 · SMTP %4:%5 · password stored in the %6</source>
@@ -1249,6 +1277,34 @@ Objet : %3
         <translation>Aucun (non sécurisé)</translation>
     </message>
     <message>
+        <source>The certificate of %1 is not the one you trusted before.</source>
+        <translation>Le certificat de %1 n'est pas celui que vous aviez approuvé.</translation>
+    </message>
+    <message>
+        <source>The certificate of %1 (sending) is not trusted.</source>
+        <translation>Le certificat de %1 (envoi) n'est pas reconnu.</translation>
+    </message>
+    <message>
+        <source>The certificate of %1 is not trusted.</source>
+        <translation>Le certificat de %1 n'est pas reconnu.</translation>
+    </message>
+    <message>
+        <source>SHA-256 fingerprint</source>
+        <translation>Empreinte SHA-256</translation>
+    </message>
+    <message>
+        <source>Issued to %1 by %2, valid until %3.</source>
+        <translation>Délivré à %1 par %2, valable jusqu'au %3.</translation>
+    </message>
+    <message>
+        <source>Trust it only if this fingerprint matches the one your server&apos;s administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
+        <translation>Ne l'approuvez que si cette empreinte correspond à celle fournie par l'administrateur de votre serveur. e3mail acceptera alors ce certificat de ce serveur, et aucun autre.</translation>
+    </message>
+    <message>
+        <source>Trust this certificate</source>
+        <translation>Approuver ce certificat</translation>
+    </message>
+    <message>
         <source>Checking…</source>
         <translation>Vérification…</translation>
     </message>
@@ -1345,6 +1401,10 @@ Objet : %3
     <message>
         <source>Login failed — check the password</source>
         <translation>Échec de connexion — vérifiez le mot de passe</translation>
+    </message>
+    <message>
+        <source>Certificate not trusted — see Settings</source>
+        <translation>Certificat non reconnu — voir Réglages</translation>
     </message>
     <message>
         <source>Offline</source>

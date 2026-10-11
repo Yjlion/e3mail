@@ -450,6 +450,40 @@ service. Passwords go to the Android Keystore through QtKeychain.
 Mailvelope); a message holding more than one armoured block (only the first
 is read); PGP/MIME inside an inline message.
 
+## Self-signed servers: certificate pinning (2026-10-11)
+
+[ADR 0017](adr/0017-certificate-pinning.md). When TLS refuses a server's
+certificate, setup shows why, its SHA-256 fingerprint, subject, issuer and
+expiry, and "Trust this certificate". Trusting pins that one certificate for
+that server (`in_cert_sha256`, `smtp_cert_sha256`, never synced); any other
+certificate from it is refused, even one TLS would trust. SMTP on the same
+host with the same certificate is pinned along. A running account whose
+certificate is refused goes to status `cert`; Settings shows the new
+fingerprint with "Trust this certificate", and the pinned ones with "Forget".
+`e3mail-cli cert` prints a server's certificate; `add --in-cert/--smtp-cert`
+pin from the command line. `--insecure` stays for tests.
+
+**Verified here:**
+- `tst_net::certificatePinning` (implicit TLS and STARTTLS against a
+  `QSslServer` with the committed `tests/data/tls-cert.pem`): refused with the
+  right fingerprint, subject and reasons; accepted when pinned; refused when
+  another is pinned. `pinRefusesATrustedCertificate`: with the certificate
+  added as a CA, a different pin still refuses it. Not ignoring the pinned
+  certificate's errors failed the first; dropping the check after the
+  handshake failed the second.
+- `scripts/e2e.py`: `e3mail-cli cert` reads the test server's self-signed
+  certificate on all five ports; carol now logs in over STARTTLS with the
+  pin instead of `--insecure`; a wrong pin is refused. All passed.
+- The real setup form against `server/compose` (a temporary hook filled in
+  carol and pressed Connect, then Trust; not in the tree): the card showed
+  the server's fingerprint and Qt's reason, in English and Arabic, and
+  trusting created the account with both pins stored.
+
+**Not verified:** the Settings card for a changed certificate (no test
+server rotated its certificate); Android reaching `server/compose` through
+setup, which this was for (Next #7); a certificate chain where the first
+certificate is not the server's own.
+
 ## Known gaps
 
 - **Signed-only mail** is checked only for PGP/MIME (`multipart/signed`);
@@ -706,5 +740,5 @@ the next took 16 s. Fixed on 2026-10-11 (see "Trap 38 fixed").
 7. Android on a real phone: rendering, typing (including a bold word typed
    through the keyboard, see "Typing formats" above), the keyboard covering setup's
    Connect button, then a real account (receive, send, a notification, the
-   Keystore). Setup needs a way to accept a self-signed test certificate, or
-   a debuggable build with a copied account, to reach `server/compose`.
+   Keystore). Setup can now trust `server/compose`'s self-signed certificate
+   (ADR 0017); from the emulator the host is `10.0.2.2`.

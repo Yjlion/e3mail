@@ -3,7 +3,9 @@
 
 #include "util/Log.h"
 
+#include <QCryptographicHash>
 #include <QElapsedTimer>
+#include <QSslCertificate>
 #include <QEventLoop>
 #include <QTimer>
 
@@ -28,6 +30,34 @@ QString securityToString(Security s)
     return QStringLiteral("ssl");
 }
 
+CertError::CertError(const CertInfo &i)
+    : NetError(i.pinChanged ? QStringLiteral("%1: the server's certificate changed (now SHA-256 %2)")
+                                  .arg(i.host, formatFingerprint(i.sha256))
+                            : QStringLiteral("%1: the server's certificate is not trusted: %2 (SHA-256 %3)")
+                                  .arg(i.host, i.problems.join(QStringLiteral("; ")), formatFingerprint(i.sha256))),
+      info(i)
+{
+}
+
+QString formatFingerprint(const QByteArray &sha256Hex)
+{
+    QStringList pairs;
+    const QString hex = QString::fromLatin1(sha256Hex).toUpper();
+    for (qsizetype i = 0; i < hex.size(); i += 2)
+        pairs.append(hex.mid(i, 2));
+    return pairs.join(u':');
+}
+
+QByteArray normalizeFingerprint(const QString &text)
+{
+    QByteArray out;
+    for (const QChar c : text) {
+        if (c.isDigit() || (c.toLower() >= u'a' && c.toLower() <= u'f'))
+            out.append(char(c.toLower().unicode()));
+    }
+    return out.size() == 64 ? out : QByteArray();
+}
+
 SyncSocket::SyncSocket(int timeoutMs) : m_socket(std::make_unique<QSslSocket>()), m_timeoutMs(timeoutMs) {}
 
 SyncSocket::~SyncSocket()
@@ -38,9 +68,52 @@ SyncSocket::~SyncSocket()
 void SyncSocket::configureTls(const ServerSettings &server)
 {
     m_acceptInvalid = server.acceptInvalidCertificates;
+    m_pin = server.pinnedSha256;
     m_socket->setPeerVerifyName(server.host);
     if (m_acceptInvalid)
         m_socket->setPeerVerifyMode(QSslSocket::VerifyNone);
+}
+
+CertInfo SyncSocket::certInfo(const QSslCertificate &cert) const
+{
+    CertInfo i;
+    i.host = m_host;
+    i.port = m_port;
+    i.sha256 = cert.digest(QCryptographicHash::Sha256).toHex();
+    i.subject = cert.subjectDisplayName();
+    i.issuer = cert.issuerDisplayName();
+    i.expires = cert.expiryDate();
+    for (const QSslError &e : m_sslErrors)
+        i.problems.append(e.errorString());
+    return i;
+}
+
+// Waits for TLS, then holds the certificate to the pin, if there is one.
+void SyncSocket::handshake(const char *what)
+{
+    m_sslErrors.clear();
+    try {
+        waitUntil([this] { return m_socket->isEncrypted(); }, what);
+    } catch (const NetError &) {
+        if (!m_sslErrors.isEmpty() && !m_acceptInvalid) {
+            const QSslCertificate cert = m_sslErrors.first().certificate().isNull()
+                ? m_socket->peerCertificate()
+                : m_sslErrors.first().certificate();
+            CertInfo i = certInfo(cert);
+            i.pinChanged = !m_pin.isEmpty();
+            throw CertError(i);
+        }
+        throw;
+    }
+    if (!m_pin.isEmpty() && !m_acceptInvalid) {
+        const QSslCertificate cert = m_socket->peerCertificate();
+        if (cert.digest(QCryptographicHash::Sha256).toHex() != m_pin) {
+            CertInfo i = certInfo(cert);
+            i.pinChanged = true;
+            m_socket->abort();
+            throw CertError(i);
+        }
+    }
 }
 
 void SyncSocket::waitUntil(const std::function<bool()> &ready, const char *what)
@@ -90,17 +163,27 @@ void SyncSocket::waitUntil(const std::function<bool()> &ready, const char *what)
 void SyncSocket::connectToHost(const ServerSettings &server)
 {
     m_host = server.host;
+    m_port = server.port;
     m_abort = server.abort;
     m_buffer.clear();
     configureTls(server);
-    if (m_acceptInvalid) {
-        QObject::connect(m_socket.get(), &QSslSocket::sslErrors, m_socket.get(),
-                         [s = m_socket.get()](const QList<QSslError> &) { s->ignoreSslErrors(); });
-    }
+    QObject::disconnect(m_socket.get(), &QSslSocket::sslErrors, nullptr, nullptr);
+    QObject::connect(m_socket.get(), &QSslSocket::sslErrors, m_socket.get(), [this](const QList<QSslError> &errors) {
+        m_sslErrors = errors;
+        if (m_acceptInvalid) {
+            m_socket->ignoreSslErrors();
+            return;
+        }
+        // The pinned certificate is trusted whatever TLS says of it, and only
+        // that certificate.
+        const QSslCertificate cert = m_socket->peerCertificate();
+        if (!m_pin.isEmpty() && !cert.isNull() && cert.digest(QCryptographicHash::Sha256).toHex() == m_pin)
+            m_socket->ignoreSslErrors(errors);
+    });
     qCDebug(lcNet) << "connecting" << server.host << server.port << securityToString(server.security);
     if (server.security == Security::Ssl) {
         m_socket->connectToHostEncrypted(server.host, server.port);
-        waitUntil([this] { return m_socket->isEncrypted(); }, "TLS handshake");
+        handshake("TLS handshake");
     } else {
         m_socket->connectToHost(server.host, server.port);
         waitUntil([this] { return m_socket->state() == QAbstractSocket::ConnectedState; }, "connection");
@@ -111,7 +194,7 @@ void SyncSocket::startTls()
 {
     m_buffer.clear();
     m_socket->startClientEncryption();
-    waitUntil([this] { return m_socket->isEncrypted(); }, "STARTTLS handshake");
+    handshake("STARTTLS handshake");
 }
 
 bool SyncSocket::isEncrypted() const

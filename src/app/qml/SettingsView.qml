@@ -196,6 +196,58 @@ Rectangle {
                 SpinBox { from: 30; to: 3600; stepSize: 30; editable: true; value: view.s.pollSeconds || 300; onValueModified: MailApp.setSetting("pollSeconds", value) }
                 RowText { text: qsTr("seconds"); color: Theme.muted }
             }
+            // The worker refused a certificate: not trusted, or not the one
+            // pinned (ADR 0017).
+            Rectangle {
+                Layout.fillWidth: true
+                visible: MailApp.refusedCertificate.fingerprint !== undefined
+                radius: Theme.radius
+                color: Theme.badBg
+                implicitHeight: refusedCol.implicitHeight + 20
+                ColumnLayout {
+                    id: refusedCol
+                    anchors.fill: parent
+                    anchors.margins: 10
+                    spacing: 6
+                    Text {
+                        Layout.fillWidth: true
+                        wrapMode: Text.Wrap
+                        color: Theme.bad
+                        text: MailApp.refusedCertificate.server === "smtp"
+                              ? qsTr("The sending server's certificate is not trusted, or is not the one trusted before.")
+                              : qsTr("The incoming server's certificate is not trusted, or is not the one trusted before.")
+                    }
+                    TextEdit {
+                        Layout.fillWidth: true
+                        readOnly: true
+                        selectByMouse: true
+                        wrapMode: TextEdit.WrapAnywhere
+                        color: Theme.text
+                        font.family: "monospace"
+                        font.pixelSize: Theme.fontSmall + 1
+                        text: MailApp.refusedCertificate.fingerprint || ""
+                    }
+                    Note { text: qsTr("Trust it only if this SHA-256 fingerprint matches the one your server's administrator gave you.") }
+                    Button { text: qsTr("Trust this certificate"); onClicked: { MailApp.trustRefusedCertificate(); view.reload() } }
+                }
+            }
+            Repeater {
+                model: [{ k: "in", f: view.s.inCert || "" }, { k: "smtp", f: view.s.smtpCert || "" }]
+                RowLayout {
+                    required property var modelData
+                    visible: modelData.f.length > 0
+                    Layout.fillWidth: true
+                    Text {
+                        Layout.fillWidth: true
+                        wrapMode: Text.WrapAnywhere
+                        color: Theme.muted
+                        font.pixelSize: Theme.fontSmall + 1
+                        text: (modelData.k === "smtp" ? qsTr("Sending server: trusted certificate %1")
+                                                      : qsTr("Incoming server: trusted certificate %1")).arg(modelData.f)
+                    }
+                    Button { text: qsTr("Forget"); flat: true; onClicked: { MailApp.forgetCertificate(modelData.k); view.reload() } }
+                }
+            }
             Note {
                 text: qsTr("%1 %2:%3 · SMTP %4:%5 · password stored in the %6")
                       .arg((view.s.protocol || "").toUpperCase()).arg(view.s.inHost || "").arg(view.s.inPort || "")

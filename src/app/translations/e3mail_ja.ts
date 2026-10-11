@@ -1077,6 +1077,34 @@ To: %4
         <translation>秒</translation>
     </message>
     <message>
+        <source>The sending server&apos;s certificate is not trusted, or is not the one trusted before.</source>
+        <translation>送信サーバーの証明書は信頼されていないか、以前に信頼したものではありません。</translation>
+    </message>
+    <message>
+        <source>The incoming server&apos;s certificate is not trusted, or is not the one trusted before.</source>
+        <translation>受信サーバーの証明書は信頼されていないか、以前に信頼したものではありません。</translation>
+    </message>
+    <message>
+        <source>Trust it only if this SHA-256 fingerprint matches the one your server&apos;s administrator gave you.</source>
+        <translation>この SHA-256 フィンガープリントがサーバー管理者から受け取ったものと一致する場合にのみ信頼してください。</translation>
+    </message>
+    <message>
+        <source>Trust this certificate</source>
+        <translation>この証明書を信頼</translation>
+    </message>
+    <message>
+        <source>Sending server: trusted certificate %1</source>
+        <translation>送信サーバー: 信頼済みの証明書 %1</translation>
+    </message>
+    <message>
+        <source>Incoming server: trusted certificate %1</source>
+        <translation>受信サーバー: 信頼済みの証明書 %1</translation>
+    </message>
+    <message>
+        <source>Forget</source>
+        <translation>解除</translation>
+    </message>
+    <message>
         <source>%1 %2:%3 · SMTP %4:%5 · password stored in the %6</source>
         <translation>%1 %2:%3 · SMTP %4:%5 · パスワードの保存先: %6</translation>
     </message>
@@ -1239,6 +1267,34 @@ To: %4
         <translation>なし (安全ではありません)</translation>
     </message>
     <message>
+        <source>The certificate of %1 is not the one you trusted before.</source>
+        <translation>%1 の証明書は、以前に信頼したものではありません。</translation>
+    </message>
+    <message>
+        <source>The certificate of %1 (sending) is not trusted.</source>
+        <translation>%1（送信）の証明書は信頼されていません。</translation>
+    </message>
+    <message>
+        <source>The certificate of %1 is not trusted.</source>
+        <translation>%1 の証明書は信頼されていません。</translation>
+    </message>
+    <message>
+        <source>SHA-256 fingerprint</source>
+        <translation>SHA-256 フィンガープリント</translation>
+    </message>
+    <message>
+        <source>Issued to %1 by %2, valid until %3.</source>
+        <translation>%2 が %1 に発行、有効期限 %3。</translation>
+    </message>
+    <message>
+        <source>Trust it only if this fingerprint matches the one your server&apos;s administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
+        <translation>このフィンガープリントがサーバー管理者から受け取ったものと一致する場合にのみ信頼してください。以後 e3mail はこのサーバーからはこの証明書だけを受け入れます。</translation>
+    </message>
+    <message>
+        <source>Trust this certificate</source>
+        <translation>この証明書を信頼</translation>
+    </message>
+    <message>
         <source>Checking…</source>
         <translation>確認中…</translation>
     </message>
@@ -1334,6 +1390,10 @@ To: %4
     <message>
         <source>Login failed — check the password</source>
         <translation>ログインに失敗しました — パスワードを確認してください</translation>
+    </message>
+    <message>
+        <source>Certificate not trusted — see Settings</source>
+        <translation>証明書が信頼されていません — 設定を参照</translation>
     </message>
     <message>
         <source>Offline</source>

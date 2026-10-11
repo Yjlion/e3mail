@@ -1087,6 +1087,34 @@ To: %4
         <translation>סעקונדעס</translation>
     </message>
     <message>
+        <source>The sending server&apos;s certificate is not trusted, or is not the one trusted before.</source>
+        <translation>דער סערטיפֿיקאַט פֿון שיקן־סערווער איז ניט באַגלייבט, אָדער ניט דער וואָס מע האָט פֿריִער באַגלייבט.</translation>
+    </message>
+    <message>
+        <source>The incoming server&apos;s certificate is not trusted, or is not the one trusted before.</source>
+        <translation>דער סערטיפֿיקאַט פֿון אַרײַנקומענדיקן סערווער איז ניט באַגלייבט, אָדער ניט דער וואָס מע האָט פֿריִער באַגלייבט.</translation>
+    </message>
+    <message>
+        <source>Trust it only if this SHA-256 fingerprint matches the one your server&apos;s administrator gave you.</source>
+        <translation>באַגלייבט אים נאָר אויב דער SHA-256 פֿינגערדרוק שטימט מיטן וואָס דער אַדמיניסטראַטאָר פֿון אײַער סערווער האָט אײַך געגעבן.</translation>
+    </message>
+    <message>
+        <source>Trust this certificate</source>
+        <translation>באַגלייבן דעם סערטיפֿיקאַט</translation>
+    </message>
+    <message>
+        <source>Sending server: trusted certificate %1</source>
+        <translation>שיקן־סערווער: באַגלייבטער סערטיפֿיקאַט %1</translation>
+    </message>
+    <message>
+        <source>Incoming server: trusted certificate %1</source>
+        <translation>אַרײַנקומענדיקער סערווער: באַגלייבטער סערטיפֿיקאַט %1</translation>
+    </message>
+    <message>
+        <source>Forget</source>
+        <translation>פֿאַרגעסן</translation>
+    </message>
+    <message>
         <source>%1 %2:%3 · SMTP %4:%5 · password stored in the %6</source>
         <translation>%1 %2:%3 · SMTP %4:%5 · די פּאַראָל איז אָפּגעהיט אין: %6</translation>
     </message>
@@ -1249,6 +1277,34 @@ To: %4
         <translation>קיינער (ניט זיכער)</translation>
     </message>
     <message>
+        <source>The certificate of %1 is not the one you trusted before.</source>
+        <translation>דער סערטיפֿיקאַט פֿון %1 איז ניט דער וואָס איר האָט פֿריִער באַגלייבט.</translation>
+    </message>
+    <message>
+        <source>The certificate of %1 (sending) is not trusted.</source>
+        <translation>דער סערטיפֿיקאַט פֿון %1 (שיקן) איז ניט באַגלייבט.</translation>
+    </message>
+    <message>
+        <source>The certificate of %1 is not trusted.</source>
+        <translation>דער סערטיפֿיקאַט פֿון %1 איז ניט באַגלייבט.</translation>
+    </message>
+    <message>
+        <source>SHA-256 fingerprint</source>
+        <translation>SHA-256 פֿינגערדרוק</translation>
+    </message>
+    <message>
+        <source>Issued to %1 by %2, valid until %3.</source>
+        <translation>אַרויסגעגעבן פֿאַר %1 פֿון %2, גילטיק ביז %3.</translation>
+    </message>
+    <message>
+        <source>Trust it only if this fingerprint matches the one your server&apos;s administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
+        <translation>באַגלייבט אים נאָר אויב דער פֿינגערדרוק שטימט מיטן וואָס דער אַדמיניסטראַטאָר פֿון אײַער סערווער האָט אײַך געגעבן. דעמאָלט נעמט e3mail אָן פֿון דעם סערווער דעם סערטיפֿיקאַט, און קיין אַנדערן ניט.</translation>
+    </message>
+    <message>
+        <source>Trust this certificate</source>
+        <translation>באַגלייבן דעם סערטיפֿיקאַט</translation>
+    </message>
+    <message>
         <source>Checking…</source>
         <translation>קוקט איבער…</translation>
     </message>
@@ -1345,6 +1401,10 @@ To: %4
     <message>
         <source>Login failed — check the password</source>
         <translation>אַרײַנלאָגירן איז דורכגעפֿאַלן — קוקט איבער די פּאַראָל</translation>
+    </message>
+    <message>
+        <source>Certificate not trusted — see Settings</source>
+        <translation>סערטיפֿיקאַט ניט באַגלייבט — זעט איינשטעלונגען</translation>
     </message>
     <message>
         <source>Offline</source>

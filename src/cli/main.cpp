@@ -17,6 +17,9 @@
 #include "mail/Preferences.h"
 #include "mail/Search.h"
 #include "mail/VCard.h"
+#include "net/Imap.h"
+#include "net/Pop3.h"
+#include "net/Smtp.h"
 #include "store/BlobStore.h"
 #include "store/Config.h"
 #include "store/Database.h"
@@ -132,7 +135,10 @@ int main(int argc, char **argv)
         "                                 (vcard-export is the same)\n"
         "  config <key> [value]           read or write an account setting\n"
         "  housekeeping                   run deadlines now\n"
-        "  key                            this account's public key, armoured"));
+        "  key                            this account's public key, armoured\n"
+        "  cert --in-host --in-port --in-security [--protocol imap|pop3|smtp]\n"
+        "                                 a server's certificate and its SHA-256, to check before\n"
+        "                                 trusting it with add --in-cert / --smtp-cert"));
     p.addHelpOption();
     p.addVersionOption();
     const QList<QCommandLineOption> opts = {
@@ -149,6 +155,8 @@ int main(int argc, char **argv)
         {QStringLiteral("smtp-port"), QStringLiteral("SMTP port."), QStringLiteral("port")},
         {QStringLiteral("smtp-security"), QStringLiteral("ssl, starttls or plain."), QStringLiteral("mode")},
         {QStringLiteral("insecure"), QStringLiteral("Accept invalid TLS certificates (test servers only).")},
+        {QStringLiteral("in-cert"), QStringLiteral("Trust this certificate (SHA-256) for the incoming server."), QStringLiteral("sha256")},
+        {QStringLiteral("smtp-cert"), QStringLiteral("Trust this certificate (SHA-256) for the SMTP server."), QStringLiteral("sha256")},
         {QStringLiteral("tag"), QStringLiteral("inbox, unverified, sent, drafts, archive, trash, all."), QStringLiteral("tag"), QStringLiteral("inbox")},
         {QStringLiteral("search"), QStringLiteral("Full-text search."), QStringLiteral("text")},
         {QStringLiteral("raw"), QStringLiteral("Show the original message.")},
@@ -188,6 +196,35 @@ int main(int argc, char **argv)
                               {QStringLiteral("needs_review"), r.needsReview},
                               {QStringLiteral("incoming"), incoming},
                               {QStringLiteral("smtp"), serverJson(r.smtp)}});
+            return 0;
+        }
+        if (cmd == QLatin1String("cert")) {
+            // A server's certificate, to compare before trusting it.
+            net::ServerSettings s;
+            s.host = p.value(QStringLiteral("in-host"));
+            s.port = quint16(p.value(QStringLiteral("in-port")).toUInt());
+            s.security = net::securityFromString(p.value(QStringLiteral("in-security")));
+            s.pinnedSha256 = QByteArray(64, '0'); // matches nothing, so the certificate is always reported
+            if (s.host.isEmpty() || !s.port || s.security == net::Security::Plain)
+                fail(QStringLiteral("cert needs --in-host, --in-port and --in-security ssl or starttls"));
+            const QString protocol = p.value(QStringLiteral("protocol"));
+            try {
+                if (protocol == QLatin1String("smtp"))
+                    net::SmtpClient().connect(s);
+                else if (protocol == QLatin1String("pop3"))
+                    net::Pop3Client().connect(s);
+                else
+                    net::ImapClient().connect(s);
+                fail(QStringLiteral("no certificate was presented"));
+            } catch (const net::CertError &e) {
+                print(QJsonObject{{QStringLiteral("sha256"), QString::fromLatin1(e.info.sha256)},
+                                  {QStringLiteral("fingerprint"), net::formatFingerprint(e.info.sha256)},
+                                  {QStringLiteral("subject"), e.info.subject},
+                                  {QStringLiteral("issuer"), e.info.issuer},
+                                  {QStringLiteral("expires"), e.info.expires.toUTC().toString(Qt::ISODate)},
+                                  {QStringLiteral("problems"), QJsonArray::fromStringList(e.info.problems)},
+                                  {QStringLiteral("trusted_by_tls"), e.info.problems.isEmpty()}});
+            }
             return 0;
         }
         AccountManager mgr(Paths::dataDir());
@@ -234,6 +271,14 @@ int main(int argc, char **argv)
                 s.smtpUser = guess.smtp.username;
             s.inPassword = p.value(QStringLiteral("password"));
             s.acceptInvalidCertificates = p.isSet(QStringLiteral("insecure"));
+            for (const auto &[opt, pin] : {std::pair{QStringLiteral("in-cert"), &s.inCertSha256},
+                                           std::pair{QStringLiteral("smtp-cert"), &s.smtpCertSha256}}) {
+                if (!p.isSet(opt))
+                    continue;
+                *pin = net::normalizeFingerprint(p.value(opt));
+                if (pin->isEmpty())
+                    fail(QStringLiteral("--%1 needs a SHA-256 fingerprint (64 hex digits)").arg(opt));
+            }
             Account *acc = mgr.create();
             acc->configure(s);
             print(QJsonObject{{QStringLiteral("id"), acc->id()}, {QStringLiteral("addr"), acc->addr()},

@@ -220,6 +220,26 @@ QString MailApp::accountStatus() const
     return account() ? account()->status() : QString();
 }
 
+QVariantMap MailApp::refusedCertificate() const
+{
+    if (!account() || account()->refusedSha256().isEmpty())
+        return {};
+    return {{QStringLiteral("server"), account()->refusedServer()},
+            {QStringLiteral("fingerprint"), net::formatFingerprint(account()->refusedSha256())}};
+}
+
+void MailApp::trustRefusedCertificate()
+{
+    if (account())
+        account()->trustRefusedCertificate();
+}
+
+void MailApp::forgetCertificate(const QString &server)
+{
+    if (account())
+        account()->forgetCertificate(server);
+}
+
 QString MailApp::accountStatusDetail() const
 {
     return account() ? account()->statusDetail() : QString();
@@ -856,6 +876,8 @@ QVariantMap MailApp::settings() const
             {QStringLiteral("smtpPort"), s.smtpPort},
             {QStringLiteral("smtpSecurity"), s.smtpSecurity},
             {QStringLiteral("secretLocation"), account()->secretLocation()},
+            {QStringLiteral("inCert"), net::formatFingerprint(c.get(cfg::InCertSha256).toLatin1())},
+            {QStringLiteral("smtpCert"), net::formatFingerprint(c.get(cfg::SmtpCertSha256).toLatin1())},
             {QStringLiteral("encryptionMode"), c.getInt(cfg::EncryptionMode)},
             {QStringLiteral("serverRetention"), c.get(cfg::ServerRetention)},
             {QStringLiteral("serverKeepDays"), c.getInt(cfg::ServerKeepDays)},

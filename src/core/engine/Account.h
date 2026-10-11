@@ -9,6 +9,7 @@
 #include <QPointer>
 
 #include <memory>
+#include <optional>
 
 namespace e3 {
 
@@ -42,6 +43,20 @@ public:
         QString smtpUser;
         QString smtpPassword; // empty: same as incoming
         bool acceptInvalidCertificates = false;
+        // Certificates trusted for these servers although TLS does not
+        // trust them (ADR 0017); empty for none.
+        QByteArray inCertSha256;
+        QByteArray smtpCertSha256;
+    };
+
+    // What checking a server found: nothing (it works), an error, or a
+    // certificate that needs a person's decision.
+    struct CheckResult
+    {
+        QString error;
+        QString server; // "in" or "smtp"
+        std::optional<net::CertInfo> cert;
+        bool ok() const { return error.isEmpty(); }
     };
 
     Account(int id, const QString &dir, QObject *parent = nullptr);
@@ -63,7 +78,7 @@ public:
 
     // Tries both servers with these settings on a pool thread. The future's
     // result is empty on success, or what went wrong.
-    static QFuture<QString> check(const Settings &s);
+    static QFuture<CheckResult> check(const Settings &s);
 
     void start();
     void stop();
@@ -73,6 +88,15 @@ public:
     // Older mail the first sync still has to download; 0 when done.
     int olderRemaining() const { return m_olderRemaining; }
     QString statusDetail() const { return m_statusDetail; }
+
+    // The certificate the worker last refused, while status() is "cert":
+    // which server, and its SHA-256. Trusting pins it and restarts.
+    QString refusedServer() const { return m_refusedServer; }
+    QByteArray refusedSha256() const { return m_refusedSha256; }
+    void trustRefusedCertificate();
+    // Back to TLS's own judgement for that server ("in" or "smtp").
+    void forgetCertificate(const QString &server);
+    void restart();
 
     MailContext &ctx() { return *m_ctx; }
     // UI-side mutations call this so every view refreshes.
@@ -96,6 +120,8 @@ private:
     QString m_status = QStringLiteral("offline");
     int m_olderRemaining = 0;
     QString m_statusDetail;
+    QString m_refusedServer;
+    QByteArray m_refusedSha256;
 };
 
 } // namespace e3

@@ -1087,6 +1087,34 @@ To: %4
         <translation>שניות</translation>
     </message>
     <message>
+        <source>The sending server&apos;s certificate is not trusted, or is not the one trusted before.</source>
+        <translation>התעודה של שרת השליחה אינה מהימנה, או שאינה זו שאושרה קודם.</translation>
+    </message>
+    <message>
+        <source>The incoming server&apos;s certificate is not trusted, or is not the one trusted before.</source>
+        <translation>התעודה של שרת הדואר הנכנס אינה מהימנה, או שאינה זו שאושרה קודם.</translation>
+    </message>
+    <message>
+        <source>Trust it only if this SHA-256 fingerprint matches the one your server&apos;s administrator gave you.</source>
+        <translation>יש לסמוך עליה רק אם טביעת ה־SHA-256 הזו תואמת את זו שמנהל השרת מסר לך.</translation>
+    </message>
+    <message>
+        <source>Trust this certificate</source>
+        <translation>לסמוך על התעודה הזו</translation>
+    </message>
+    <message>
+        <source>Sending server: trusted certificate %1</source>
+        <translation>שרת שליחה: תעודה מהימנה %1</translation>
+    </message>
+    <message>
+        <source>Incoming server: trusted certificate %1</source>
+        <translation>שרת נכנס: תעודה מהימנה %1</translation>
+    </message>
+    <message>
+        <source>Forget</source>
+        <translation>לשכוח</translation>
+    </message>
+    <message>
         <source>%1 %2:%3 · SMTP %4:%5 · password stored in the %6</source>
         <translation>%1 %2:%3 · SMTP %4:%5 · הסיסמה שמורה ב: %6</translation>
     </message>
@@ -1249,6 +1277,34 @@ To: %4
         <translation>ללא (לא מאובטח)</translation>
     </message>
     <message>
+        <source>The certificate of %1 is not the one you trusted before.</source>
+        <translation>התעודה של %1 אינה זו שאישרת קודם.</translation>
+    </message>
+    <message>
+        <source>The certificate of %1 (sending) is not trusted.</source>
+        <translation>התעודה של %1 (שליחה) אינה מהימנה.</translation>
+    </message>
+    <message>
+        <source>The certificate of %1 is not trusted.</source>
+        <translation>התעודה של %1 אינה מהימנה.</translation>
+    </message>
+    <message>
+        <source>SHA-256 fingerprint</source>
+        <translation>טביעת SHA-256</translation>
+    </message>
+    <message>
+        <source>Issued to %1 by %2, valid until %3.</source>
+        <translation>הונפקה ל־%1 על ידי %2, בתוקף עד %3.</translation>
+    </message>
+    <message>
+        <source>Trust it only if this fingerprint matches the one your server&apos;s administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
+        <translation>יש לסמוך עליה רק אם טביעת האצבע הזו תואמת את זו שמנהל השרת מסר לך. אז e3mail יקבל מהשרת הזה את התעודה הזו, ולא שום תעודה אחרת.</translation>
+    </message>
+    <message>
+        <source>Trust this certificate</source>
+        <translation>לסמוך על התעודה הזו</translation>
+    </message>
+    <message>
         <source>Checking…</source>
         <translation>בבדיקה…</translation>
     </message>
@@ -1345,6 +1401,10 @@ To: %4
     <message>
         <source>Login failed — check the password</source>
         <translation>הכניסה נכשלה — יש לבדוק את הסיסמה</translation>
+    </message>
+    <message>
+        <source>Certificate not trusted — see Settings</source>
+        <translation>התעודה אינה מהימנה — ראו הגדרות</translation>
     </message>
     <message>
         <source>Offline</source>

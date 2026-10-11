@@ -78,7 +78,9 @@ void Account::configure(const Settings &s)
     m_config->setInt(cfg::SmtpPort, s.smtpPort);
     m_config->set(cfg::SmtpSecurity, s.smtpSecurity);
     m_config->set(cfg::SmtpUser, s.smtpUser.isEmpty() ? m_config->get(cfg::InUser) : s.smtpUser.trimmed());
-    m_config->setInt("accept_invalid_certs", s.acceptInvalidCertificates);
+    m_config->setInt(cfg::AcceptInvalidCerts, s.acceptInvalidCertificates);
+    m_config->set(cfg::InCertSha256, QString::fromLatin1(s.inCertSha256));
+    m_config->set(cfg::SmtpCertSha256, QString::fromLatin1(s.smtpCertSha256));
     m_config->setInt(cfg::Configured, 1);
     tx.commit();
 
@@ -109,7 +111,9 @@ Account::Settings Account::settings() const
     s.smtpPort = quint16(m_config->getInt(cfg::SmtpPort));
     s.smtpSecurity = m_config->get(cfg::SmtpSecurity);
     s.smtpUser = m_config->get(cfg::SmtpUser);
-    s.acceptInvalidCertificates = m_config->getBool("accept_invalid_certs");
+    s.acceptInvalidCertificates = m_config->getBool(cfg::AcceptInvalidCerts);
+    s.inCertSha256 = m_config->get(cfg::InCertSha256).toLatin1();
+    s.smtpCertSha256 = m_config->get(cfg::SmtpCertSha256).toLatin1();
     if (m_config->isSet(cfg::InPassword)) {
         s.inPassword = m_config->get(cfg::InPassword);
         s.smtpPassword = m_config->get(cfg::SmtpPassword);
@@ -130,12 +134,14 @@ static MailWorker::Credentials credentialsFrom(const Account::Settings &s)
     c.incoming.user = s.inUser.isEmpty() ? s.addr : s.inUser;
     c.incoming.password = s.inPassword;
     c.incoming.acceptInvalidCertificates = s.acceptInvalidCertificates;
+    c.incoming.pinnedSha256 = s.inCertSha256;
     c.smtp.host = s.smtpHost;
     c.smtp.port = s.smtpPort;
     c.smtp.security = net::securityFromString(s.smtpSecurity);
     c.smtp.user = s.smtpUser.isEmpty() ? c.incoming.user : s.smtpUser;
     c.smtp.password = s.smtpPassword.isEmpty() ? s.inPassword : s.smtpPassword;
     c.smtp.acceptInvalidCertificates = s.acceptInvalidCertificates;
+    c.smtp.pinnedSha256 = s.smtpCertSha256;
     return c;
 }
 
@@ -144,10 +150,12 @@ MailWorker::Credentials Account::credentials() const
     return credentialsFrom(settings());
 }
 
-QFuture<QString> Account::check(const Settings &s)
+QFuture<Account::CheckResult> Account::check(const Settings &s)
 {
     const MailWorker::Credentials c = credentialsFrom(s);
-    return QtConcurrent::run([c]() -> QString {
+    return QtConcurrent::run([c]() -> CheckResult {
+        CheckResult r;
+        r.server = QStringLiteral("in");
         try {
             if (c.protocol == QLatin1String("pop3")) {
                 net::Pop3Client pop;
@@ -159,13 +167,18 @@ QFuture<QString> Account::check(const Settings &s)
                 imap.select();
                 imap.logout();
             }
+            r.server = QStringLiteral("smtp");
             net::SmtpClient smtp;
             smtp.connect(c.smtp);
             smtp.quit();
-            return QString();
+            r.server.clear();
+        } catch (const net::CertError &e) {
+            r.error = QString::fromUtf8(e.what());
+            r.cert = e.info;
         } catch (const std::exception &e) {
-            return QString::fromUtf8(e.what());
+            r.error = QString::fromUtf8(e.what());
         }
+        return r;
     });
 }
 
@@ -183,12 +196,43 @@ void Account::start()
         m_olderRemaining = remaining;
         Q_EMIT statusChanged();
     });
+    connect(m_worker, &MailWorker::certificateRefused, this, [this](const QString &server, const QByteArray &sha) {
+        m_refusedServer = server;
+        m_refusedSha256 = sha;
+    });
     connect(m_worker, &MailWorker::status, this, [this](const QString &state, const QString &detail) {
+        if (state != QLatin1String("cert")) {
+            m_refusedServer.clear();
+            m_refusedSha256.clear();
+        }
         m_status = state;
         m_statusDetail = detail;
         Q_EMIT statusChanged();
     });
     m_worker->start();
+}
+
+void Account::restart()
+{
+    stop();
+    start();
+}
+
+void Account::trustRefusedCertificate()
+{
+    if (m_refusedSha256.isEmpty())
+        return;
+    m_config->set(m_refusedServer == QLatin1String("smtp") ? cfg::SmtpCertSha256 : cfg::InCertSha256,
+                  QString::fromLatin1(m_refusedSha256));
+    m_refusedServer.clear();
+    m_refusedSha256.clear();
+    restart();
+}
+
+void Account::forgetCertificate(const QString &server)
+{
+    m_config->set(server == QLatin1String("smtp") ? cfg::SmtpCertSha256 : cfg::InCertSha256, QString());
+    restart();
 }
 
 void Account::stop()

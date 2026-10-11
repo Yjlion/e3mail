@@ -42,6 +42,8 @@ class MailApp : public QObject
     Q_PROPERTY(QString accountStatusDetail READ accountStatusDetail NOTIFY statusChanged)
     // Older mail the first sync is still downloading, newest first.
     Q_PROPERTY(int olderRemaining READ olderRemaining NOTIFY statusChanged)
+    // While the status is "cert": {server, fingerprint}; otherwise empty.
+    Q_PROPERTY(QVariantMap refusedCertificate READ refusedCertificate NOTIFY statusChanged)
     Q_PROPERTY(QString currentTag READ currentTag NOTIFY viewChanged)
     Q_PROPERTY(qint64 currentLabelId READ currentLabelId NOTIFY viewChanged)
     Q_PROPERTY(QString searchText READ searchText NOTIFY viewChanged)
@@ -150,6 +152,10 @@ public:
     Q_INVOKABLE QStringList completeAddress(const QString &prefix) const;
 
     Q_INVOKABLE QVariantMap settings() const;
+    QVariantMap refusedCertificate() const;
+    Q_INVOKABLE void trustRefusedCertificate();
+    // "in" or "smtp": back to TLS's own judgement.
+    Q_INVOKABLE void forgetCertificate(const QString &server);
     Q_INVOKABLE void setSetting(const QString &key, const QVariant &value);
 
     QVariantList signatures() const { return m_signatures; }
