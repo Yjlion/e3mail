@@ -112,6 +112,10 @@ int main(int argc, char *argv[])
         else if (p.value(page) == QLatin1String("reply")) // to the message --open selected
             QMetaObject::invokeMethod(root, "compose", Q_ARG(QVariant, QStringLiteral("reply")),
                                       Q_ARG(QVariant, mailApp.selectedMessageId()));
+        else if (p.value(page) == QLatin1String("formatting")) // compose, with the toolbar
+            QMetaObject::invokeMethod(root, "composeFormatted");
+        else if (p.value(page) == QLatin1String("signature")) // the default one, in its editor
+            QMetaObject::invokeMethod(root, "editSignature");
         else if (p.value(page) == QLatin1String("menu")) // the narrow layout's drawer
             QMetaObject::invokeMethod(root, "openMenu");
         else if (p.value(page) == QLatin1String("source")) // of the message --open selected

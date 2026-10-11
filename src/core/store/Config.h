@@ -13,7 +13,9 @@ namespace cfg {
 // Identity
 inline constexpr char Addr[] = "addr";
 inline constexpr char DisplayName[] = "display_name";
-inline constexpr char Signature[] = "signature";
+inline constexpr char Signature[] = "signature";             // before signatures were named; see Signatures
+inline constexpr char SignaturePrefix[] = "signature:";      // + id: {"name", "html", "text"}, empty when removed
+inline constexpr char SignatureDefault[] = "signature_default"; // an id, or empty for none
 // Incoming server
 inline constexpr char Protocol[] = "protocol";               // "imap" | "pop3"
 inline constexpr char InHost[] = "in_host";

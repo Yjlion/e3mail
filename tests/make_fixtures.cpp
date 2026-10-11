@@ -8,6 +8,7 @@
 #include "FakeMailServer.h"
 #include "engine/AccountManager.h"
 #include "mail/Compose.h"
+#include "mail/Signatures.h"
 #include "mail/Contacts.h"
 #include "mail/Organize.h"
 #include "mail/Search.h"
@@ -91,7 +92,10 @@ int main(int argc, char **argv)
     AccountManager peers(dir + QStringLiteral("/peers"));
     AccountManager mgr(dir);
     Account *ada = make(mgr, QStringLiteral("ada@example.org"), QStringLiteral("Ada Lovelace"), QStringLiteral("imap"));
-    ada->ctx().config.set(cfg::Signature, QStringLiteral("Ada Lovelace\nAnalytical Engines, London"));
+    mail::Signatures::save(ada->ctx(), {QString(), QStringLiteral("Work"),
+                                        QStringLiteral("<p><b>Ada Lovelace</b><br><i>Analytical Engines</i>, London</p>"),
+                                        QStringLiteral("Ada Lovelace\nAnalytical Engines, London")});
+    mail::Signatures::save(ada->ctx(), {QString(), QStringLiteral("Personal"), QString(), QStringLiteral("Ada")});
     Account *mira = make(peers, QStringLiteral("mira@example.org"), QStringLiteral("Mira Dorn"), QStringLiteral("imap"));
     Account *tomas = make(peers, QStringLiteral("tomas@example.net"), QStringLiteral("Tomas Reyes"), QStringLiteral("pop3"));
     Account *stranger = make(peers, QStringLiteral("offers@deals.example"), QStringLiteral("Great Deals"), QStringLiteral("imap"));

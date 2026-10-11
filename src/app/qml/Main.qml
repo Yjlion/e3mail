@@ -45,6 +45,10 @@ ApplicationWindow {
     function openMenu() { drawer.open() }
     // For screenshots (--page source): the selected message's source.
     function showSource() { readingPane.showSource(MailApp.selectedMessageId) }
+    // For screenshots (--page formatting): a new message with the toolbar.
+    function composeFormatted() { compose("new", 0); composerView.formatting = true }
+    // For screenshots (--page signature): the default signature, editing.
+    function editSignature() { page = "settings"; settingsView.editSignature(MailApp.defaultSignature) }
     onClosing: (close) => { if (narrow && back()) close.accepted = false }
 
     Shortcut { sequence: StandardKey.New; onActivated: window.compose("new", 0) }
@@ -140,7 +144,7 @@ ApplicationWindow {
                     onClosed: window.page = "mail"
                 }
                 ContactsView { id: contactsView }
-                SettingsView { onAddAccount: window.page = "setup" }
+                SettingsView { id: settingsView; onAddAccount: window.page = "setup" }
                 SetupView {
                     cancellable: true
                     onFinished: window.page = "mail"

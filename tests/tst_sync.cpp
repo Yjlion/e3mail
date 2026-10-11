@@ -7,6 +7,7 @@
 #include "mail/Organize.h"
 #include "mail/Preferences.h"
 #include "mail/Search.h"
+#include "mail/Signatures.h"
 #include "store/Config.h"
 #include "store/Database.h"
 #include "store/OpLog.h"
@@ -387,6 +388,41 @@ private Q_SLOTS:
     // not.
     // The address book travels: details are last writer wins, and a removal
     // competes with every other change to that contact.
+    void signaturesMergeOneByOne()
+    {
+        auto &a = m_a->ctx();
+        auto &b = m_b->ctx();
+        const QString home = mail::Signatures::save(a, {QString(), QStringLiteral("Home"), QString(), QStringLiteral("A")});
+        connectDevices();
+        QVERIFY(mail::Signatures::get(b, home));
+        QCOMPARE(mail::Signatures::get(b, home)->text, QStringLiteral("A"));
+        QCOMPARE(mail::Signatures::defaultId(b), home);
+
+        // Each device edits a different signature at the same time: both
+        // edits survive, because each signature is a setting of its own.
+        const QString work = mail::Signatures::save(b, {QString(), QStringLiteral("Work"), QString(), QStringLiteral("W")});
+        auto h = *mail::Signatures::get(a, home);
+        h.text = QStringLiteral("A, edited");
+        mail::Signatures::save(a, h);
+        m_syncA->push();
+        m_syncB->push();
+        m_net->settle();
+        for (auto *x : {&a, &b}) {
+            QCOMPARE(mail::Signatures::list(*x).size(), 2);
+            QVERIFY(mail::Signatures::get(*x, home) && mail::Signatures::get(*x, work));
+            QCOMPARE(mail::Signatures::get(*x, home)->text, QStringLiteral("A, edited"));
+            QCOMPARE(mail::Signatures::get(*x, work)->text, QStringLiteral("W"));
+        }
+
+        // Removed on one, gone on both, default included.
+        QTest::qWait(5);
+        mail::Signatures::remove(b, home);
+        m_syncB->push();
+        m_net->settle();
+        QVERIFY(!mail::Signatures::get(a, home));
+        QVERIFY(mail::Signatures::defaultId(a).isEmpty());
+    }
+
     void addressBookTravels()
     {
         auto &a = m_a->ctx();

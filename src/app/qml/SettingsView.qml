@@ -94,16 +94,48 @@ Rectangle {
                 text: view.s.displayName || ""
                 onEditingFinished: MailApp.setSetting("displayName", text)
             }
-            Label { text: qsTr("Signature"); color: Theme.muted }
-            TextArea {
-                Layout.fillWidth: true
-                Layout.preferredHeight: 80
-                text: view.s.signature || ""
-                color: Theme.text
-                wrapMode: TextEdit.Wrap
-                onEditingFinished: MailApp.setSetting("signature", text)
-                background: Rectangle { radius: Theme.radius; color: Theme.surface; border.color: Theme.border }
+            Label { text: qsTr("Signatures"); color: Theme.muted }
+            ButtonGroup { id: defaultGroup }
+            Repeater {
+                model: MailApp.signatures
+                RowLayout {
+                    required property var modelData
+                    Layout.fillWidth: true
+                    spacing: 4
+                    RadioButton {
+                        ButtonGroup.group: defaultGroup
+                        checked: modelData.isDefault
+                        onClicked: MailApp.defaultSignature = modelData.id
+                        ToolTip.visible: hovered
+                        ToolTip.delay: 500
+                        ToolTip.text: qsTr("Put this one in new mail")
+                        Accessible.name: qsTr("Default: %1").arg(modelData.name)
+                    }
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        spacing: 0
+                        Label { Layout.fillWidth: true; text: modelData.name; color: Theme.text; elide: Text.ElideRight }
+                        Label {
+                            Layout.fillWidth: true
+                            text: modelData.preview
+                            color: Theme.muted
+                            font.pixelSize: Theme.fontSmall
+                            elide: Text.ElideRight
+                        }
+                    }
+                    Button { text: qsTr("Edit"); flat: true; onClicked: signatureDialog.edit(modelData.id) }
+                    IconButton { iconName: "trash"; tip: qsTr("Delete %1").arg(modelData.name); onClicked: MailApp.removeSignature(modelData.id) }
+                }
             }
+            RadioButton {
+                visible: MailApp.signatures.length > 0
+                ButtonGroup.group: defaultGroup
+                checked: MailApp.defaultSignature === ""
+                onClicked: MailApp.defaultSignature = ""
+                text: qsTr("No signature in new mail")
+            }
+            Button { text: qsTr("Add a signature…"); onClicked: signatureDialog.edit("") }
+            Note { text: qsTr("The chosen one goes into new mail. The composer's signature button swaps it for another.") }
 
             Heading { text: qsTr("Encryption") }
             ChoiceBox {
@@ -206,6 +238,9 @@ Rectangle {
             Note { text: qsTr("e3mail %1 · unaudited development software").arg(MailApp.version) }
         }
     }
+
+    SignatureDialog { id: signatureDialog }
+    function editSignature(id) { signatureDialog.edit(id) }
 
     Dialog {
         id: removeConfirm

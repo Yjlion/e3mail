@@ -3,6 +3,7 @@
 
 #include <QString>
 
+class QTextCursor;
 class QTextDocument;
 
 // What the composer sends is re-emitted from the document model, never taken
@@ -29,5 +30,9 @@ Output emit(const QTextDocument *doc);
 // `emit` writes them back; what the whitelist lacks keeps its text, and
 // images are left out.
 void load(QTextDocument *doc, const QString &html);
+
+// Puts HTML (through `load`) or, when it is empty, plain text in at the
+// cursor, which ends up after it. A signature, in the composer.
+void insert(QTextCursor &cursor, const QString &html, const QString &text);
 
 } // namespace RichText

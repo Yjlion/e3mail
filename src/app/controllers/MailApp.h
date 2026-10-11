@@ -5,6 +5,7 @@
 
 #include <QObject>
 #include <QPointer>
+#include <QQuickTextDocument>
 #include <QTimer>
 #include <QUrl>
 #include <QVariant>
@@ -47,6 +48,10 @@ class MailApp : public QObject
     Q_PROPERTY(MessageListModel *messages READ messages CONSTANT)
     Q_PROPERTY(QVariantList labels READ labels NOTIFY labelsChanged)
     Q_PROPERTY(QVariantMap counts READ counts NOTIFY countsChanged)
+    // [{id, name, preview, isDefault}], sorted by name.
+    Q_PROPERTY(QVariantList signatures READ signatures NOTIFY signaturesChanged)
+    // An id, or empty for no signature on new mail.
+    Q_PROPERTY(QString defaultSignature READ defaultSignature WRITE setDefaultSignature NOTIFY signaturesChanged)
     Q_PROPERTY(qint64 selectedMessageId READ selectedMessageId NOTIFY selectionChanged)
     Q_PROPERTY(QVariantList thread READ thread NOTIFY selectionChanged)
     // The chosen interface language; empty follows the system.
@@ -146,7 +151,16 @@ public:
 
     Q_INVOKABLE QVariantMap settings() const;
     Q_INVOKABLE void setSetting(const QString &key, const QVariant &value);
-    Q_INVOKABLE QString signature() const;
+
+    QVariantList signatures() const { return m_signatures; }
+    QString defaultSignature() const;
+    void setDefaultSignature(const QString &id);
+    // The signature editor's document: filled from, and saved to, a
+    // signature. saveSignature returns the id (new when `id` is empty).
+    Q_INVOKABLE void loadSignature(const QString &id, QQuickTextDocument *doc) const;
+    Q_INVOKABLE QString saveSignature(const QString &id, const QString &name, QQuickTextDocument *doc);
+    Q_INVOKABLE void removeSignature(const QString &id);
+    Q_INVOKABLE QString signatureName(const QString &id) const;
 
     QString language() const;
     void setLanguage(const QString &code);
@@ -163,6 +177,7 @@ Q_SIGNALS:
     void viewChanged();
     void labelsChanged();
     void countsChanged();
+    void signaturesChanged();
     void selectionChanged();
     void notify(const QString &message);
     void newMailArrived(const QString &from, const QString &subject);
@@ -178,6 +193,7 @@ private:
     void reloadLabels();
     void reloadCounts();
     void reloadThread();
+    void reloadSignatures();
     QVariantMap messageMap(qint64 id) const;
     void scheduleRefresh();
     void wireNotifications();
@@ -191,6 +207,7 @@ private:
     QString m_search;
     QVariantList m_labels;
     QVariantMap m_counts;
+    QVariantList m_signatures;
     qint64 m_selected = 0;
     QVariantList m_thread;
     QTimer m_refresh;

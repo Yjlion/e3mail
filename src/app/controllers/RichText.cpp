@@ -7,6 +7,7 @@
 #include <QTextBlock>
 #include <QTextCursor>
 #include <QTextDocument>
+#include <QTextDocumentFragment>
 #include <QTextFragment>
 #include <QTextList>
 
@@ -171,7 +172,7 @@ void load(QTextDocument *doc, const QString &html)
         const int role = bf.intProperty(QTextFormat::BlockQuoteLevel) > 0 ? Quote
             : bf.nonBreakableLines()                                     ? Code
                                                                           : Paragraph;
-        // As Composer::setBlock lays them out.
+        // As TextFormatter::block lays them out.
         bf.setProperty(RoleProperty, role);
         bf.clearProperty(QTextFormat::BlockQuoteLevel);
         bf.setLeftMargin(role == Quote ? 16 : 0);
@@ -218,6 +219,17 @@ void load(QTextDocument *doc, const QString &html)
          f = doc->find(QString(QChar::ObjectReplacementCharacter), f))
         f.removeSelectedText();
     c.endEditBlock();
+}
+
+void insert(QTextCursor &cursor, const QString &html, const QString &text)
+{
+    if (html.isEmpty()) {
+        cursor.insertText(text);
+        return;
+    }
+    QTextDocument scratch;
+    load(&scratch, html);
+    cursor.insertFragment(QTextDocumentFragment(&scratch));
 }
 
 } // namespace RichText

@@ -8,6 +8,7 @@
 #include "mail/Organize.h"
 #include "mail/Policy.h"
 #include "mail/Search.h"
+#include "mail/Signatures.h"
 #include "mail/VCard.h"
 #include "mime/Part.h"
 #include "store/OpLog.h"
@@ -339,6 +340,61 @@ private Q_SLOTS:
         QCOMPARE(c.organization, QStringLiteral("Navy"));
         QVERIFY(mail::Contacts::isTrusted(ctx, QStringLiteral("ada@b.test")));
         QCOMPARE(mail::Contacts::get(ctx, QStringLiteral("ada2@b.test"))->phones.value(0).number, QStringLiteral("+44"));
+    }
+
+    void signatures()
+    {
+        Account *bob = makeAccount(QStringLiteral("bob@x.test"), QStringLiteral("imap"));
+        auto &ctx = bob->ctx();
+        const auto settingOps = [&ctx] {
+            return *ctx.db.queryInt("SELECT count(*) FROM ops WHERE kind=?", op::Setting);
+        };
+        QVERIFY(mail::Signatures::list(ctx).isEmpty());
+        QVERIFY(mail::Signatures::defaultId(ctx).isEmpty());
+
+        // The plain signature of earlier versions reads as one, and is the
+        // default until someone chooses.
+        ctx.config.set(cfg::Signature, QStringLiteral("Bob\nx.test"));
+        QCOMPARE(mail::Signatures::list(ctx).size(), 1);
+        QCOMPARE(mail::Signatures::defaultId(ctx), mail::Signatures::LegacyId);
+        auto old = *mail::Signatures::get(ctx, mail::Signatures::LegacyId);
+        QCOMPARE(old.text, QStringLiteral("Bob\nx.test"));
+
+        // Adding a second keeps the old one the default, now written down.
+        const QString work = mail::Signatures::save(
+            ctx, {QString(), QStringLiteral("Work"), QStringLiteral("<p><b>Bob</b></p>"), QStringLiteral("Bob")});
+        QCOMPARE(mail::Signatures::list(ctx).size(), 2);
+        QCOMPARE(mail::Signatures::defaultId(ctx), mail::Signatures::LegacyId);
+
+        // Editing the old one converts it, under its fixed id.
+        old.text = QStringLiteral("Bob B.");
+        QCOMPARE(mail::Signatures::save(ctx, old), mail::Signatures::LegacyId);
+        QVERIFY(ctx.config.get(cfg::Signature).isEmpty());
+        QCOMPARE(mail::Signatures::get(ctx, mail::Signatures::LegacyId)->text, QStringLiteral("Bob B."));
+        QCOMPARE(mail::Signatures::defaultId(ctx), mail::Signatures::LegacyId);
+
+        // Sorted by name; the default can be changed, or be none.
+        const QStringList names = [&] {
+            QStringList n;
+            for (const auto &x : mail::Signatures::list(ctx))
+                n << x.name;
+            return n;
+        }();
+        QCOMPARE(names, (QStringList{QStringLiteral("Signature"), QStringLiteral("Work")}));
+        mail::Signatures::setDefault(ctx, work);
+        QCOMPARE(mail::Signatures::defaultSignature(ctx)->html, QStringLiteral("<p><b>Bob</b></p>"));
+        mail::Signatures::setDefault(ctx, QString());
+        QVERIFY(!mail::Signatures::defaultSignature(ctx));
+
+        // Removing the default leaves none.
+        mail::Signatures::setDefault(ctx, work);
+        mail::Signatures::remove(ctx, work);
+        QVERIFY(!mail::Signatures::get(ctx, work));
+        QVERIFY(mail::Signatures::defaultId(ctx).isEmpty());
+        QCOMPARE(mail::Signatures::list(ctx).size(), 1);
+
+        // Every change travelled as a setting.
+        QCOMPARE(settingOps(), 9);
     }
 
     void repliesQuoteHtmlAsHtml()

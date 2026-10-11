@@ -21,7 +21,7 @@ endfunction()
 
 file(GLOB E3_TEST_SOURCES CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/tst_*.cpp)
 if(NOT E3MAIL_BUILD_APP)
-    list(FILTER E3_TEST_SOURCES EXCLUDE REGEX "tst_richtext|tst_notifier")
+    list(FILTER E3_TEST_SOURCES EXCLUDE REGEX "tst_richtext|tst_notifier|tst_formatting")
 endif()
 foreach(src ${E3_TEST_SOURCES})
     get_filename_component(stem ${src} NAME_WE)
@@ -47,6 +47,9 @@ if(E3MAIL_BUILD_APP)
     endif()
     target_link_libraries(tst_richtext PRIVATE e3richtext Qt6::Gui)
     target_link_libraries(tst_notifier PRIVATE e3notifier)
+    # The editor's formatter, driven through a real TextArea.
+    target_sources(tst_formatting PRIVATE ${PROJECT_SOURCE_DIR}/src/app/controllers/TextFormatter.cpp)
+    target_link_libraries(tst_formatting PRIVATE e3richtext Qt6::Quick Qt6::QuickControls2)
     # Boots the real QML application offscreen against an empty data
     # directory: every QML file must load and every type must resolve.
     add_test(NAME app_smoke

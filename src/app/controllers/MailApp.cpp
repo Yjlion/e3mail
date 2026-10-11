@@ -4,6 +4,7 @@
 #include "Languages.h"
 #include "InlineImages.h"
 #include "NotifierBackends.h"
+#include "RichText.h"
 
 #include "crypto/Pgp.h"
 #include "engine/AccountManager.h"
@@ -13,6 +14,7 @@
 #include "mail/Organize.h"
 #include "mail/Preferences.h"
 #include "mail/Search.h"
+#include "mail/Signatures.h"
 #include "mail/VCard.h"
 #include "mime/Html.h"
 #include "mime/Part.h"
@@ -31,6 +33,7 @@
 #include <QRegularExpression>
 #include <QSaveFile>
 #include <QSet>
+#include <QTextDocument>
 
 using namespace e3;
 
@@ -289,6 +292,7 @@ void MailApp::refresh()
     reloadLabels();
     reloadCounts();
     reloadThread();
+    reloadSignatures();
 }
 
 void MailApp::reloadMessages()
@@ -844,7 +848,6 @@ QVariantMap MailApp::settings() const
     const Account::Settings s = account()->settings();
     return {{QStringLiteral("addr"), s.addr},
             {QStringLiteral("displayName"), s.displayName},
-            {QStringLiteral("signature"), c.get(cfg::Signature)},
             {QStringLiteral("protocol"), s.protocol},
             {QStringLiteral("inHost"), s.inHost},
             {QStringLiteral("inPort"), s.inPort},
@@ -900,7 +903,6 @@ void MailApp::setSetting(const QString &key, const QVariant &value)
     // Only these are writable from the UI; server settings go through setup.
     static const QHash<QString, const char *> keys = {
         {QStringLiteral("displayName"), cfg::DisplayName},
-        {QStringLiteral("signature"), cfg::Signature},
         {QStringLiteral("encryptionMode"), cfg::EncryptionMode},
         {QStringLiteral("serverRetention"), cfg::ServerRetention},
         {QStringLiteral("serverKeepDays"), cfg::ServerKeepDays},
@@ -920,7 +922,85 @@ void MailApp::setSetting(const QString &key, const QVariant &value)
     account()->notifyChanged();
 }
 
-QString MailApp::signature() const
+void MailApp::reloadSignatures()
 {
-    return account() ? account()->ctx().config.get(cfg::Signature) : QString();
+    QVariantList out;
+    if (account()) {
+        auto &ctx = account()->ctx();
+        const QString def = mail::Signatures::defaultId(ctx);
+        for (const mail::Signature &s : mail::Signatures::list(ctx)) {
+            const QString first = s.text.trimmed().section(u'\n', 0, 0).trimmed();
+            out.append(QVariantMap{{QStringLiteral("id"), s.id},
+                                   {QStringLiteral("name"), s.name},
+                                   {QStringLiteral("preview"), first},
+                                   {QStringLiteral("isDefault"), s.id == def}});
+        }
+    }
+    if (out != m_signatures) {
+        m_signatures = out;
+        Q_EMIT signaturesChanged();
+    }
+}
+
+QString MailApp::defaultSignature() const
+{
+    for (const QVariant &v : m_signatures) {
+        const QVariantMap m = v.toMap();
+        if (m.value(QStringLiteral("isDefault")).toBool())
+            return m.value(QStringLiteral("id")).toString();
+    }
+    return {};
+}
+
+void MailApp::setDefaultSignature(const QString &id)
+{
+    if (!account() || id == defaultSignature())
+        return;
+    mail::Signatures::setDefault(account()->ctx(), id);
+    reloadSignatures();
+}
+
+void MailApp::loadSignature(const QString &id, QQuickTextDocument *doc) const
+{
+    if (!doc)
+        return;
+    QTextDocument *td = doc->textDocument();
+    td->clear();
+    const auto s = account() ? mail::Signatures::get(account()->ctx(), id) : std::nullopt;
+    if (!s)
+        return;
+    if (s->html.isEmpty())
+        td->setPlainText(s->text);
+    else
+        RichText::load(td, s->html);
+}
+
+QString MailApp::saveSignature(const QString &id, const QString &name, QQuickTextDocument *doc)
+{
+    if (!account() || !doc)
+        return {};
+    // The composer's whitelist decides what a signature may hold, so it is
+    // exactly what can be sent.
+    const RichText::Output out = RichText::emit(doc->textDocument());
+    if (out.text.trimmed().isEmpty() && out.html.isEmpty()) {
+        removeSignature(id);
+        return {};
+    }
+    const QString saved = mail::Signatures::save(account()->ctx(), {id, name, out.html, out.text});
+    reloadSignatures();
+    return saved;
+}
+
+void MailApp::removeSignature(const QString &id)
+{
+    if (!account() || id.isEmpty())
+        return;
+    mail::Signatures::remove(account()->ctx(), id);
+    reloadSignatures();
+}
+
+QString MailApp::signatureName(const QString &id) const
+{
+    const auto s = account() ? mail::Signatures::get(account()->ctx(), id) : std::nullopt;
+    return s ? s->name : QString();
 }

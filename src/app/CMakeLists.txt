@@ -1,5 +1,7 @@
-# The composer's whitelist emitter, separate so tests can reach it.
-add_library(e3richtext STATIC controllers/RichText.cpp controllers/RichText.h)
+# The composer's whitelist emitter and its signature tracking, separate so
+# tests can reach them.
+add_library(e3richtext STATIC controllers/RichText.cpp controllers/RichText.h
+    controllers/SignatureRange.cpp controllers/SignatureRange.h)
 target_include_directories(e3richtext PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/controllers)
 target_link_libraries(e3richtext PUBLIC e3core Qt6::Gui)
 e3mail_set_warnings(e3richtext)
@@ -32,6 +34,7 @@ qt_add_qml_module(e3mail
         controllers/InlineImages.cpp controllers/InlineImages.h
         controllers/Languages.cpp controllers/Languages.h
         controllers/Composer.cpp controllers/Composer.h
+        controllers/TextFormatter.cpp controllers/TextFormatter.h
         controllers/SetupController.cpp controllers/SetupController.h
         controllers/SourceHighlighter.cpp controllers/SourceHighlighter.h
         controllers/FileIo.cpp controllers/FileIo.h
