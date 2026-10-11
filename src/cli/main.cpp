@@ -5,12 +5,14 @@
 // send-and-fetch pass and returns, so scripts and tests can step accounts
 // deterministically.
 
+#include "crypto/Pgp.h"
 #include "engine/AccountManager.h"
 #include "engine/Autoconfig.h"
 #include "mail/Compose.h"
 #include "mail/Contacts.h"
 #include "mail/ContactsCsv.h"
 #include "mail/Export.h"
+#include "mail/Keyring.h"
 #include "mail/Organize.h"
 #include "mail/Preferences.h"
 #include "mail/Search.h"
@@ -129,7 +131,8 @@ int main(int argc, char **argv)
         "  contacts-export [file]         export the address book as vCard 4.0, or CSV with --csv\n"
         "                                 (vcard-export is the same)\n"
         "  config <key> [value]           read or write an account setting\n"
-        "  housekeeping                   run deadlines now"));
+        "  housekeeping                   run deadlines now\n"
+        "  key                            this account's public key, armoured"));
     p.addHelpOption();
     p.addVersionOption();
     const QList<QCommandLineOption> opts = {
@@ -389,6 +392,9 @@ int main(int argc, char **argv)
             if (args.size() > 2)
                 mail::Preferences::set(ctx, key.constData(), args.value(2));
             print(QJsonObject{{QString::fromUtf8(key), ctx.config.get(key.constData())}});
+        } else if (cmd == QLatin1String("key")) {
+            const QString fpr = mail::Keyring::selfFingerprint(ctx);
+            std::fputs(ctx.pgp.exportPublic(fpr, true).constData(), stdout);
         } else if (cmd == QLatin1String("housekeeping")) {
             const auto r = mail::Organize::housekeeping(ctx);
             print(QJsonObject{{QStringLiteral("purged"), r.purged}, {QStringLiteral("swept"), r.swept},

@@ -185,13 +185,15 @@ QStringList Pgp::import(const QByteArray &data)
     return primaries;
 }
 
-QByteArray Pgp::exportPublic(const QString &fpr) const
+QByteArray Pgp::exportPublic(const QString &fpr, bool armored) const
 {
     const Key key = locate(m_ffi, "fingerprint", fpr);
     if (!key)
         throw PgpError(QStringLiteral("no key %1").arg(fpr));
     const Output out = memoryOutput();
-    check(rnp_key_export(key.get(), out.get(), RNP_KEY_EXPORT_PUBLIC | RNP_KEY_EXPORT_SUBKEYS), "rnp_key_export");
+    check(rnp_key_export(key.get(), out.get(),
+                         RNP_KEY_EXPORT_PUBLIC | RNP_KEY_EXPORT_SUBKEYS | (armored ? RNP_KEY_EXPORT_ARMORED : 0)),
+          "rnp_key_export");
     return bytesOf(out.get());
 }
 

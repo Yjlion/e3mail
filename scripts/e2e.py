@@ -13,6 +13,7 @@ The server's mailboxes should be empty when this starts; it uses alice (IMAP),
 bob (POP3), carol (IMAP over STARTTLS) and dana (POP3 over STARTTLS).
 """
 import argparse
+import base64
 import json
 import os
 import shutil
@@ -74,6 +75,58 @@ def eventually(fn, what, timeout=20):
             return
         time.sleep(1)
     check(False, what)
+
+
+def gpg(home, *args, data=None):
+    out = subprocess.run(["gpg", "--homedir", home, "--batch", "--yes", "--trust-model", "always", *args],
+                         input=data, capture_output=True)
+    if out.returncode != 0:
+        raise SystemExit(f"FAIL gpg {' '.join(args)}: {out.stderr.decode(errors='replace')}")
+    return out.stdout
+
+
+def deliver(user, raw):
+    subprocess.run(["docker", "exec", "-i", CONTAINER, "/usr/lib/dovecot/dovecot-lda", "-d", f"{user}@e3.test"],
+                   input=raw, check=True)
+
+
+def gnupg_mail(alice, root):
+    """A stranger using GnuPG writes to alice in the three ways other clients
+    sign; each must arrive signed, and none may show its armour."""
+    home = os.path.join(root, "gnupg")
+    os.makedirs(home, mode=0o700)
+    gpg(home, "--passphrase", "", "--quick-gen-key", "x@e3.test", "ed25519", "sign", "never")
+    gpg(home, "--import", data=alice.run("key", raw=True).encode())
+    alice_fpr = gpg(home, "--with-colons", "--list-keys", alice.addr).decode().split("fpr:::::::::")[1].split(":")[0]
+    keydata = base64.b64encode(gpg(home, "--export", "x@e3.test")).decode()
+    autocrypt = "Autocrypt: addr=x@e3.test; prefer-encrypt=mutual; keydata=\n " + \
+        "\n ".join(keydata[i:i + 72] for i in range(0, len(keydata), 72))
+
+    def message(subject, content_type, body):
+        return (f"From: X <x@e3.test>\nTo: {alice.addr}\nSubject: {subject}\n{autocrypt}\n"
+                f"MIME-Version: 1.0\nContent-Type: {content_type}\n\n").encode() + body
+
+    part = b"Content-Type: text/plain; charset=utf-8\r\n\r\nsigned through dovecot\r\n"
+    sig = gpg(home, "--armor", "--detach-sign", data=part)
+    deliver("alice", message("pgp-mime signed", 'multipart/signed; micalg=pgp-sha512; '
+                             'protocol="application/pgp-signature"; boundary="b1"',
+                             b"--b1\r\n" + part + b"\r\n--b1\r\nContent-Type: application/pgp-signature\r\n\r\n"
+                             + sig + b"\r\n--b1--\r\n"))
+    deliver("alice", message("clearsigned", "text/plain; charset=utf-8",
+                             gpg(home, "--clearsign", data=b"clearsigned through dovecot\n")))
+    deliver("alice", message("inline encrypted", "text/plain; charset=utf-8",
+                             b"Above the armour.\n" + gpg(home, "--armor", "--encrypt", "--sign", "-r", alice_fpr,
+                                                          data="inline secret, größe\n".encode())))
+    alice.sync()
+    for subject, text, encrypted in [("pgp-mime signed", "signed through dovecot", False),
+                                     ("clearsigned", "clearsigned through dovecot", False),
+                                     ("inline encrypted", "inline secret, größe", True)]:
+        m = alice.find("unverified", subject)
+        check(m is not None, f"{subject}: arrived (in Unverified, from a stranger)")
+        body = alice.run("show", str(m["id"]))["body"]
+        check(m["signed"] and m["encrypted"] == encrypted and not m["verified"],
+              f"{subject}: signed{', encrypted' if encrypted else ''}, not verified")
+        check(text in body and "BEGIN PGP" not in body, f"{subject}: the text, without armour")
 
 
 def main():
@@ -138,6 +191,9 @@ def main():
         dana.sync()
         check(dana.find("unverified", "pre") is not None, "dana sees mail that was there before")
         check(on_server("dana") == 1, "and it stays on the server")
+
+        print("5. mail signed by GnuPG: PGP/MIME, cleartext-signed, inline encrypted")
+        gnupg_mail(alice, root)
         print("all passed")
     finally:
         if args.keep:

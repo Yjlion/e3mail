@@ -38,7 +38,7 @@ public:
     // that were present in the data.
     QStringList import(const QByteArray &data);
 
-    QByteArray exportPublic(const QString &fpr) const;
+    QByteArray exportPublic(const QString &fpr, bool armored = false) const;
     QByteArray exportSecret(const QString &fpr) const;
     // The minimal key Autocrypt wants: primary, one user id, encryption subkey.
     QByteArray exportAutocrypt(const QString &fpr, const QString &addr) const;

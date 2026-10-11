@@ -414,12 +414,47 @@ service. Passwords go to the Android Keystore through QtKeychain.
   `docker` group), but it sends no signed-only mail.
 - Signatures syncing over anything but the loopback transport.
 
+## Trap 38 fixed, inline PGP, GnuPG through Dovecot (2026-10-11)
+
+- **Stopping no longer waits for the server.** Trap 38 was real: stopping an
+  account blocked the main thread in `wait()` while the worker sat in a
+  socket wait that only the 120 s timeout ended (the retention pass, or the
+  IDLE handshake). In the tests the fake server lives on that blocked
+  thread. `SyncSocket` waits now poll `ServerSettings::abort`, which the
+  worker sets to its stop flag. The fake server forgets dead idlers and
+  announces mail that came between SELECT and IDLE.
+- **Inline PGP** is decrypted and verified: the first armoured block in the
+  text part (a PGP message or a cleartext-signed text) is replaced by what
+  it holds, decoded in the part's charset, with the text around it kept.
+  An HTML alternative showing the same armour is dropped. Verification is
+  tried again after the message's own Autocrypt header taught the key.
+  "Save decrypted" writes the text.
+- `e3mail-cli key` prints the account's public key, armoured.
+
+**Verified here:**
+- `tst_engine::stopDoesNotWaitForTheServer`: a stalled fake server, then
+  `stop()` returns in about 1 s. Without the fix it took 119.5 s, trap 38
+  exactly. The engine suite ran five times in 4.0 to 4.5 s.
+- `tst_engine::inlinePgp`: encrypted and signed in Latin-1 with text around
+  it, cleartext-signed, the same tampered, a stranger's key, and an HTML
+  alternative; the decrypted export. Turning off the inline step, or its
+  second try, failed it.
+- `tst_crypto::gnupgClearsigned`: GnuPG's `--clearsign`, read with and
+  without the signer's key, dash-escaping undone, a tampered text unsigned.
+- `scripts/e2e.py` against `server/compose`, all passed, with a new step 5:
+  a GnuPG sender's PGP/MIME signed, cleartext-signed and inline encrypted
+  mail, delivered by Dovecot's LDA, each arrives signed (and encrypted),
+  not verified, and without armour.
+
+**Not verified:** inline PGP from a real client (Enigmail-era Thunderbird,
+Mailvelope); a message holding more than one armoured block (only the first
+is read); PGP/MIME inside an inline message.
+
 ## Known gaps
 
 - **Signed-only mail** is checked only for PGP/MIME (`multipart/signed`);
   S/MIME signatures read as unsigned.
-- **Inline PGP** (`-----BEGIN PGP MESSAGE-----` in a text body) is not
-  decrypted.
+- **Inline PGP**: only the first armoured block of the text part is read.
 - **Bcc and encryption**: Bcc recipients' key IDs are in the encrypted message,
   so recipients who inspect it can tell that Bcc recipients exist
   (ADR 0004).
@@ -651,7 +686,7 @@ has had its turn.
 Code holding one calls `Preferences::write`, not `set`, to change a setting.
 
 **42. Trap 38 again.** One full `ctest` run here took 135 s instead of 16;
-the next took 16 s. Still not investigated.
+the next took 16 s. Fixed on 2026-10-11 (see "Trap 38 fixed").
 
 ## Next
 
@@ -659,17 +694,15 @@ the next took 16 s. Still not investigated.
    Corrosion behind `DeviceTransport`, add the toolchain to CI on all three
    platforms, and wire `SyncSession` into `Account`.
 2. P8, slice 3: QR pairing with the encrypted snapshot; the mailbox fallback.
-3. Publish v0.1.1: move its tag to a commit that has the release fixes
-   (nothing was published under it), then install each package on its own
-   platform.
+3. Install each published package on its own platform. Pre-releases
+   v0.1.1 to v0.1.5 are on GitHub (v0.1.5 with both APKs); v0.1.0 is still
+   marked Latest.
 4. P9 SecureJoin, then an interop pass against Delta Chat's released
    `deltachat-rpc-server`, as eeemail's `scripts/interop-pass.py` does.
 5. Try notifications on a real Windows and macOS desktop, and import real
    vCard exports (Google, Apple, Thunderbird).
-6. Publish a release with the APKs: bump the version (Android installs an
-   update only with a higher version code) and push a tag. Install the
-   arm64 APK on a phone and try each export there (Android's file picker
-   returns `content://`).
+6. Install v0.1.5's arm64 APK on a phone and try each export there
+   (Android's file picker returns `content://`).
 7. Android on a real phone: rendering, typing (including a bold word typed
    through the keyboard, see "Typing formats" above), the keyboard covering setup's
    Connect button, then a real account (receive, send, a notification, the
