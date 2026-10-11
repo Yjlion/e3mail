@@ -62,10 +62,6 @@ To: %4
         <translation>تعذّرت قراءة %1.</translation>
     </message>
     <message>
-        <source>No signature is set. Add one in Settings.</source>
-        <translation>لم يُضبط توقيع. أضِف توقيعًا من الإعدادات.</translation>
-    </message>
-    <message>
         <source>Add a recipient.</source>
         <translation>أضِف مستلمًا.</translation>
     </message>
@@ -109,46 +105,6 @@ To: %4
         <translation>الموضوع</translation>
     </message>
     <message>
-        <source>Bold</source>
-        <translation>عريض</translation>
-    </message>
-    <message>
-        <source>Italic</source>
-        <translation>مائل</translation>
-    </message>
-    <message>
-        <source>Underline</source>
-        <translation>تسطير</translation>
-    </message>
-    <message>
-        <source>Strikethrough</source>
-        <translation>يتوسطه خط</translation>
-    </message>
-    <message>
-        <source>Heading</source>
-        <translation>عنوان</translation>
-    </message>
-    <message>
-        <source>Quote</source>
-        <translation>اقتباس</translation>
-    </message>
-    <message>
-        <source>Bulleted list</source>
-        <translation>قائمة نقطية</translation>
-    </message>
-    <message>
-        <source>Numbered list</source>
-        <translation>قائمة مرقّمة</translation>
-    </message>
-    <message>
-        <source>Code</source>
-        <translation>شيفرة</translation>
-    </message>
-    <message>
-        <source>Link</source>
-        <translation>رابط</translation>
-    </message>
-    <message>
         <source>Write your message</source>
         <translation>اكتب رسالتك</translation>
     </message>
@@ -169,8 +125,16 @@ To: %4
         <translation>إرفاق ملفات</translation>
     </message>
     <message>
-        <source>Insert signature</source>
-        <translation>إدراج التوقيع</translation>
+        <source>Signature</source>
+        <translation>التوقيع</translation>
+    </message>
+    <message>
+        <source>No signature is set. Add one in Settings.</source>
+        <translation>لم يُضبط توقيع. أضِف توقيعًا من الإعدادات.</translation>
+    </message>
+    <message>
+        <source>No signature</source>
+        <translation>بلا توقيع</translation>
     </message>
     <message>
         <source>Mark as important</source>
@@ -199,14 +163,6 @@ To: %4
     <message>
         <source>Discard</source>
         <translation>تجاهل</translation>
-    </message>
-    <message>
-        <source>Link to</source>
-        <translation>رابط إلى</translation>
-    </message>
-    <message>
-        <source>example.com or name@example.com</source>
-        <translation>example.com أو name@example.com</translation>
     </message>
 </context>
 <context>
@@ -931,6 +887,57 @@ To: %4
     </message>
 </context>
 <context>
+    <name>RichEditor</name>
+    <message>
+        <source>Bold</source>
+        <translation>عريض</translation>
+    </message>
+    <message>
+        <source>Italic</source>
+        <translation>مائل</translation>
+    </message>
+    <message>
+        <source>Underline</source>
+        <translation>تسطير</translation>
+    </message>
+    <message>
+        <source>Strikethrough</source>
+        <translation>يتوسطه خط</translation>
+    </message>
+    <message>
+        <source>Heading</source>
+        <translation>عنوان</translation>
+    </message>
+    <message>
+        <source>Quote</source>
+        <translation>اقتباس</translation>
+    </message>
+    <message>
+        <source>Bulleted list</source>
+        <translation>قائمة نقطية</translation>
+    </message>
+    <message>
+        <source>Numbered list</source>
+        <translation>قائمة مرقّمة</translation>
+    </message>
+    <message>
+        <source>Code</source>
+        <translation>شيفرة</translation>
+    </message>
+    <message>
+        <source>Link</source>
+        <translation>رابط</translation>
+    </message>
+    <message>
+        <source>Link to</source>
+        <translation>رابط إلى</translation>
+    </message>
+    <message>
+        <source>example.com or name@example.com</source>
+        <translation>example.com أو name@example.com</translation>
+    </message>
+</context>
+<context>
     <name>SaveMessage</name>
     <message>
         <source>Save decrypted</source>
@@ -1000,8 +1007,36 @@ To: %4
         <translation>الاسم</translation>
     </message>
     <message>
-        <source>Signature</source>
-        <translation>التوقيع</translation>
+        <source>Signatures</source>
+        <translation>التواقيع</translation>
+    </message>
+    <message>
+        <source>Put this one in new mail</source>
+        <translation>ضع هذا التوقيع في الرسائل الجديدة</translation>
+    </message>
+    <message>
+        <source>Default: %1</source>
+        <translation>الافتراضي: %1</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>تعديل</translation>
+    </message>
+    <message>
+        <source>Delete %1</source>
+        <translation>حذف %1</translation>
+    </message>
+    <message>
+        <source>No signature in new mail</source>
+        <translation>بلا توقيع في الرسائل الجديدة</translation>
+    </message>
+    <message>
+        <source>Add a signature…</source>
+        <translation>إضافة توقيع…</translation>
+    </message>
+    <message>
+        <source>The chosen one goes into new mail. The composer&apos;s signature button swaps it for another.</source>
+        <translation>يُضاف التوقيع المختار إلى الرسائل الجديدة. يستبدله زر التوقيع في نافذة الكتابة بتوقيع آخر.</translation>
     </message>
     <message>
         <source>Encryption</source>
@@ -1358,6 +1393,32 @@ To: %4
     <message>
         <source>Offline</source>
         <translation>غير متصل</translation>
+    </message>
+</context>
+<context>
+    <name>SignatureDialog</name>
+    <message>
+        <source>Edit signature</source>
+        <translation>تعديل التوقيع</translation>
+    </message>
+    <message>
+        <source>New signature</source>
+        <translation>توقيع جديد</translation>
+    </message>
+    <message>
+        <source>Name, such as Work</source>
+        <translation>الاسم، مثل «العمل»</translation>
+    </message>
+    <message>
+        <source>Your signature</source>
+        <translation>توقيعك</translation>
+    </message>
+</context>
+<context>
+    <name>Signatures</name>
+    <message>
+        <source>Signature</source>
+        <translation>التوقيع</translation>
     </message>
 </context>
 <context>

@@ -62,10 +62,6 @@ Objet : %3
         <translation>Impossible de lire %1.</translation>
     </message>
     <message>
-        <source>No signature is set. Add one in Settings.</source>
-        <translation>Aucune signature n’est définie. Ajoutez-en une dans les Réglages.</translation>
-    </message>
-    <message>
         <source>Add a recipient.</source>
         <translation>Ajoutez un destinataire.</translation>
     </message>
@@ -109,46 +105,6 @@ Objet : %3
         <translation>Objet</translation>
     </message>
     <message>
-        <source>Bold</source>
-        <translation>Gras</translation>
-    </message>
-    <message>
-        <source>Italic</source>
-        <translation>Italique</translation>
-    </message>
-    <message>
-        <source>Underline</source>
-        <translation>Souligné</translation>
-    </message>
-    <message>
-        <source>Strikethrough</source>
-        <translation>Barré</translation>
-    </message>
-    <message>
-        <source>Heading</source>
-        <translation>Titre</translation>
-    </message>
-    <message>
-        <source>Quote</source>
-        <translation>Citation</translation>
-    </message>
-    <message>
-        <source>Bulleted list</source>
-        <translation>Liste à puces</translation>
-    </message>
-    <message>
-        <source>Numbered list</source>
-        <translation>Liste numérotée</translation>
-    </message>
-    <message>
-        <source>Code</source>
-        <translation>Code</translation>
-    </message>
-    <message>
-        <source>Link</source>
-        <translation>Lien</translation>
-    </message>
-    <message>
         <source>Write your message</source>
         <translation>Rédigez votre message</translation>
     </message>
@@ -169,8 +125,16 @@ Objet : %3
         <translation>Joindre des fichiers</translation>
     </message>
     <message>
-        <source>Insert signature</source>
-        <translation>Insérer la signature</translation>
+        <source>Signature</source>
+        <translation>Signature</translation>
+    </message>
+    <message>
+        <source>No signature is set. Add one in Settings.</source>
+        <translation>Aucune signature n’est définie. Ajoutez-en une dans les Réglages.</translation>
+    </message>
+    <message>
+        <source>No signature</source>
+        <translation>Aucune signature</translation>
     </message>
     <message>
         <source>Mark as important</source>
@@ -199,14 +163,6 @@ Objet : %3
     <message>
         <source>Discard</source>
         <translation>Abandonner</translation>
-    </message>
-    <message>
-        <source>Link to</source>
-        <translation>Lien vers</translation>
-    </message>
-    <message>
-        <source>example.com or name@example.com</source>
-        <translation>exemple.fr ou nom@exemple.fr</translation>
     </message>
 </context>
 <context>
@@ -891,6 +847,57 @@ Objet : %3
     </message>
 </context>
 <context>
+    <name>RichEditor</name>
+    <message>
+        <source>Bold</source>
+        <translation>Gras</translation>
+    </message>
+    <message>
+        <source>Italic</source>
+        <translation>Italique</translation>
+    </message>
+    <message>
+        <source>Underline</source>
+        <translation>Souligné</translation>
+    </message>
+    <message>
+        <source>Strikethrough</source>
+        <translation>Barré</translation>
+    </message>
+    <message>
+        <source>Heading</source>
+        <translation>Titre</translation>
+    </message>
+    <message>
+        <source>Quote</source>
+        <translation>Citation</translation>
+    </message>
+    <message>
+        <source>Bulleted list</source>
+        <translation>Liste à puces</translation>
+    </message>
+    <message>
+        <source>Numbered list</source>
+        <translation>Liste numérotée</translation>
+    </message>
+    <message>
+        <source>Code</source>
+        <translation>Code</translation>
+    </message>
+    <message>
+        <source>Link</source>
+        <translation>Lien</translation>
+    </message>
+    <message>
+        <source>Link to</source>
+        <translation>Lien vers</translation>
+    </message>
+    <message>
+        <source>example.com or name@example.com</source>
+        <translation>exemple.fr ou nom@exemple.fr</translation>
+    </message>
+</context>
+<context>
     <name>SaveMessage</name>
     <message>
         <source>Save decrypted</source>
@@ -960,8 +967,36 @@ Objet : %3
         <translation>Nom</translation>
     </message>
     <message>
-        <source>Signature</source>
-        <translation>Signature</translation>
+        <source>Signatures</source>
+        <translation>Signatures</translation>
+    </message>
+    <message>
+        <source>Put this one in new mail</source>
+        <translation>Mettre celle-ci dans les nouveaux messages</translation>
+    </message>
+    <message>
+        <source>Default: %1</source>
+        <translation>Par défaut : %1</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>Modifier</translation>
+    </message>
+    <message>
+        <source>Delete %1</source>
+        <translation>Supprimer %1</translation>
+    </message>
+    <message>
+        <source>No signature in new mail</source>
+        <translation>Aucune signature dans les nouveaux messages</translation>
+    </message>
+    <message>
+        <source>Add a signature…</source>
+        <translation>Ajouter une signature…</translation>
+    </message>
+    <message>
+        <source>The chosen one goes into new mail. The composer&apos;s signature button swaps it for another.</source>
+        <translation>La signature choisie est ajoutée aux nouveaux messages. Le bouton de signature de l'éditeur la remplace par une autre.</translation>
     </message>
     <message>
         <source>Encryption</source>
@@ -1314,6 +1349,32 @@ Objet : %3
     <message>
         <source>Offline</source>
         <translation>Hors ligne</translation>
+    </message>
+</context>
+<context>
+    <name>SignatureDialog</name>
+    <message>
+        <source>Edit signature</source>
+        <translation>Modifier la signature</translation>
+    </message>
+    <message>
+        <source>New signature</source>
+        <translation>Nouvelle signature</translation>
+    </message>
+    <message>
+        <source>Name, such as Work</source>
+        <translation>Nom, par exemple Travail</translation>
+    </message>
+    <message>
+        <source>Your signature</source>
+        <translation>Votre signature</translation>
+    </message>
+</context>
+<context>
+    <name>Signatures</name>
+    <message>
+        <source>Signature</source>
+        <translation>Signature</translation>
     </message>
 </context>
 <context>

@@ -62,10 +62,6 @@ To: %4
         <translation>מע קען ניט לייענען %1.</translation>
     </message>
     <message>
-        <source>No signature is set. Add one in Settings.</source>
-        <translation>קיין אונטערשריפֿט איז ניט באַשטימט. לייגט צו איינע אין די איינשטעלונגען.</translation>
-    </message>
-    <message>
         <source>Add a recipient.</source>
         <translation>לייגט צו אַן אָנבאַקומער.</translation>
     </message>
@@ -109,46 +105,6 @@ To: %4
         <translation>טעמע</translation>
     </message>
     <message>
-        <source>Bold</source>
-        <translation>פֿעט</translation>
-    </message>
-    <message>
-        <source>Italic</source>
-        <translation>קורסיוו</translation>
-    </message>
-    <message>
-        <source>Underline</source>
-        <translation>אונטערגעשטראָכן</translation>
-    </message>
-    <message>
-        <source>Strikethrough</source>
-        <translation>דורכגעשטראָכן</translation>
-    </message>
-    <message>
-        <source>Heading</source>
-        <translation>קעפּל</translation>
-    </message>
-    <message>
-        <source>Quote</source>
-        <translation>ציטאַט</translation>
-    </message>
-    <message>
-        <source>Bulleted list</source>
-        <translation>רשימה מיט פּינטלעך</translation>
-    </message>
-    <message>
-        <source>Numbered list</source>
-        <translation>נומערירטע רשימה</translation>
-    </message>
-    <message>
-        <source>Code</source>
-        <translation>קאָד</translation>
-    </message>
-    <message>
-        <source>Link</source>
-        <translation>לינק</translation>
-    </message>
-    <message>
         <source>Write your message</source>
         <translation>שרײַבט אײַער בריוו</translation>
     </message>
@@ -169,8 +125,16 @@ To: %4
         <translation>צולייגן טעקעס</translation>
     </message>
     <message>
-        <source>Insert signature</source>
-        <translation>אַרײַנלייגן די אונטערשריפֿט</translation>
+        <source>Signature</source>
+        <translation>אונטערשריפֿט</translation>
+    </message>
+    <message>
+        <source>No signature is set. Add one in Settings.</source>
+        <translation>קיין אונטערשריפֿט איז ניט באַשטימט. לייגט צו איינע אין די איינשטעלונגען.</translation>
+    </message>
+    <message>
+        <source>No signature</source>
+        <translation>קיין אונטערשריפֿט</translation>
     </message>
     <message>
         <source>Mark as important</source>
@@ -199,14 +163,6 @@ To: %4
     <message>
         <source>Discard</source>
         <translation>אַוועקוואַרפֿן</translation>
-    </message>
-    <message>
-        <source>Link to</source>
-        <translation>לינק צו</translation>
-    </message>
-    <message>
-        <source>example.com or name@example.com</source>
-        <translation>example.com אָדער name@example.com</translation>
     </message>
 </context>
 <context>
@@ -891,6 +847,57 @@ To: %4
     </message>
 </context>
 <context>
+    <name>RichEditor</name>
+    <message>
+        <source>Bold</source>
+        <translation>פֿעט</translation>
+    </message>
+    <message>
+        <source>Italic</source>
+        <translation>קורסיוו</translation>
+    </message>
+    <message>
+        <source>Underline</source>
+        <translation>אונטערגעשטראָכן</translation>
+    </message>
+    <message>
+        <source>Strikethrough</source>
+        <translation>דורכגעשטראָכן</translation>
+    </message>
+    <message>
+        <source>Heading</source>
+        <translation>קעפּל</translation>
+    </message>
+    <message>
+        <source>Quote</source>
+        <translation>ציטאַט</translation>
+    </message>
+    <message>
+        <source>Bulleted list</source>
+        <translation>רשימה מיט פּינטלעך</translation>
+    </message>
+    <message>
+        <source>Numbered list</source>
+        <translation>נומערירטע רשימה</translation>
+    </message>
+    <message>
+        <source>Code</source>
+        <translation>קאָד</translation>
+    </message>
+    <message>
+        <source>Link</source>
+        <translation>לינק</translation>
+    </message>
+    <message>
+        <source>Link to</source>
+        <translation>לינק צו</translation>
+    </message>
+    <message>
+        <source>example.com or name@example.com</source>
+        <translation>example.com אָדער name@example.com</translation>
+    </message>
+</context>
+<context>
     <name>SaveMessage</name>
     <message>
         <source>Save decrypted</source>
@@ -960,8 +967,36 @@ To: %4
         <translation>נאָמען</translation>
     </message>
     <message>
-        <source>Signature</source>
-        <translation>אונטערשריפֿט</translation>
+        <source>Signatures</source>
+        <translation>אונטערשריפֿטן</translation>
+    </message>
+    <message>
+        <source>Put this one in new mail</source>
+        <translation>לייגט די אַרײַן אין נײַע בריוו</translation>
+    </message>
+    <message>
+        <source>Default: %1</source>
+        <translation>אויטאָמאַטיש: %1</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>רעדאַגירן</translation>
+    </message>
+    <message>
+        <source>Delete %1</source>
+        <translation>אויסמעקן %1</translation>
+    </message>
+    <message>
+        <source>No signature in new mail</source>
+        <translation>קיין אונטערשריפֿט אין נײַע בריוו</translation>
+    </message>
+    <message>
+        <source>Add a signature…</source>
+        <translation>צולייגן אַן אונטערשריפֿט…</translation>
+    </message>
+    <message>
+        <source>The chosen one goes into new mail. The composer&apos;s signature button swaps it for another.</source>
+        <translation>די אויסגעקליבענע גייט אַרײַן אין נײַע בריוו. דער אונטערשריפֿט־קנעפּל בײַם שרײַבן בײַט זי אויף אַן אַנדערע.</translation>
     </message>
     <message>
         <source>Encryption</source>
@@ -1314,6 +1349,32 @@ To: %4
     <message>
         <source>Offline</source>
         <translation>ניט פֿאַרבונדן</translation>
+    </message>
+</context>
+<context>
+    <name>SignatureDialog</name>
+    <message>
+        <source>Edit signature</source>
+        <translation>רעדאַגירן דעם אונטערשריפֿט</translation>
+    </message>
+    <message>
+        <source>New signature</source>
+        <translation>נײַער אונטערשריפֿט</translation>
+    </message>
+    <message>
+        <source>Name, such as Work</source>
+        <translation>נאָמען, למשל „אַרבעט“</translation>
+    </message>
+    <message>
+        <source>Your signature</source>
+        <translation>דײַן אונטערשריפֿט</translation>
+    </message>
+</context>
+<context>
+    <name>Signatures</name>
+    <message>
+        <source>Signature</source>
+        <translation>אונטערשריפֿט</translation>
     </message>
 </context>
 <context>

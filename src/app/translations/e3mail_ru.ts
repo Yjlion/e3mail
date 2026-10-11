@@ -62,10 +62,6 @@ To: %4
         <translation>Не удаётся прочитать %1.</translation>
     </message>
     <message>
-        <source>No signature is set. Add one in Settings.</source>
-        <translation>Подпись не задана. Добавьте её в настройках.</translation>
-    </message>
-    <message>
         <source>Add a recipient.</source>
         <translation>Добавьте получателя.</translation>
     </message>
@@ -109,46 +105,6 @@ To: %4
         <translation>Тема</translation>
     </message>
     <message>
-        <source>Bold</source>
-        <translation>Жирный</translation>
-    </message>
-    <message>
-        <source>Italic</source>
-        <translation>Курсив</translation>
-    </message>
-    <message>
-        <source>Underline</source>
-        <translation>Подчёркнутый</translation>
-    </message>
-    <message>
-        <source>Strikethrough</source>
-        <translation>Зачёркнутый</translation>
-    </message>
-    <message>
-        <source>Heading</source>
-        <translation>Заголовок</translation>
-    </message>
-    <message>
-        <source>Quote</source>
-        <translation>Цитата</translation>
-    </message>
-    <message>
-        <source>Bulleted list</source>
-        <translation>Маркированный список</translation>
-    </message>
-    <message>
-        <source>Numbered list</source>
-        <translation>Нумерованный список</translation>
-    </message>
-    <message>
-        <source>Code</source>
-        <translation>Код</translation>
-    </message>
-    <message>
-        <source>Link</source>
-        <translation>Ссылка</translation>
-    </message>
-    <message>
         <source>Write your message</source>
         <translation>Напишите сообщение</translation>
     </message>
@@ -169,8 +125,16 @@ To: %4
         <translation>Прикрепить файлы</translation>
     </message>
     <message>
-        <source>Insert signature</source>
-        <translation>Вставить подпись</translation>
+        <source>Signature</source>
+        <translation>Подпись</translation>
+    </message>
+    <message>
+        <source>No signature is set. Add one in Settings.</source>
+        <translation>Подпись не задана. Добавьте её в настройках.</translation>
+    </message>
+    <message>
+        <source>No signature</source>
+        <translation>Без подписи</translation>
     </message>
     <message>
         <source>Mark as important</source>
@@ -199,14 +163,6 @@ To: %4
     <message>
         <source>Discard</source>
         <translation>Отменить</translation>
-    </message>
-    <message>
-        <source>Link to</source>
-        <translation>Ссылка на</translation>
-    </message>
-    <message>
-        <source>example.com or name@example.com</source>
-        <translation>example.com или имя@example.com</translation>
     </message>
 </context>
 <context>
@@ -901,6 +857,57 @@ To: %4
     </message>
 </context>
 <context>
+    <name>RichEditor</name>
+    <message>
+        <source>Bold</source>
+        <translation>Жирный</translation>
+    </message>
+    <message>
+        <source>Italic</source>
+        <translation>Курсив</translation>
+    </message>
+    <message>
+        <source>Underline</source>
+        <translation>Подчёркнутый</translation>
+    </message>
+    <message>
+        <source>Strikethrough</source>
+        <translation>Зачёркнутый</translation>
+    </message>
+    <message>
+        <source>Heading</source>
+        <translation>Заголовок</translation>
+    </message>
+    <message>
+        <source>Quote</source>
+        <translation>Цитата</translation>
+    </message>
+    <message>
+        <source>Bulleted list</source>
+        <translation>Маркированный список</translation>
+    </message>
+    <message>
+        <source>Numbered list</source>
+        <translation>Нумерованный список</translation>
+    </message>
+    <message>
+        <source>Code</source>
+        <translation>Код</translation>
+    </message>
+    <message>
+        <source>Link</source>
+        <translation>Ссылка</translation>
+    </message>
+    <message>
+        <source>Link to</source>
+        <translation>Ссылка на</translation>
+    </message>
+    <message>
+        <source>example.com or name@example.com</source>
+        <translation>example.com или имя@example.com</translation>
+    </message>
+</context>
+<context>
     <name>SaveMessage</name>
     <message>
         <source>Save decrypted</source>
@@ -970,8 +977,36 @@ To: %4
         <translation>Имя</translation>
     </message>
     <message>
-        <source>Signature</source>
-        <translation>Подпись</translation>
+        <source>Signatures</source>
+        <translation>Подписи</translation>
+    </message>
+    <message>
+        <source>Put this one in new mail</source>
+        <translation>Добавлять эту в новые письма</translation>
+    </message>
+    <message>
+        <source>Default: %1</source>
+        <translation>По умолчанию: %1</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>Изменить</translation>
+    </message>
+    <message>
+        <source>Delete %1</source>
+        <translation>Удалить %1</translation>
+    </message>
+    <message>
+        <source>No signature in new mail</source>
+        <translation>Без подписи в новых письмах</translation>
+    </message>
+    <message>
+        <source>Add a signature…</source>
+        <translation>Добавить подпись…</translation>
+    </message>
+    <message>
+        <source>The chosen one goes into new mail. The composer&apos;s signature button swaps it for another.</source>
+        <translation>Выбранная подпись добавляется в новые письма. Кнопка подписи в редакторе заменяет её другой.</translation>
     </message>
     <message>
         <source>Encryption</source>
@@ -1325,6 +1360,32 @@ To: %4
     <message>
         <source>Offline</source>
         <translation>Не в сети</translation>
+    </message>
+</context>
+<context>
+    <name>SignatureDialog</name>
+    <message>
+        <source>Edit signature</source>
+        <translation>Изменить подпись</translation>
+    </message>
+    <message>
+        <source>New signature</source>
+        <translation>Новая подпись</translation>
+    </message>
+    <message>
+        <source>Name, such as Work</source>
+        <translation>Название, например «Работа»</translation>
+    </message>
+    <message>
+        <source>Your signature</source>
+        <translation>Ваша подпись</translation>
+    </message>
+</context>
+<context>
+    <name>Signatures</name>
+    <message>
+        <source>Signature</source>
+        <translation>Подпись</translation>
     </message>
 </context>
 <context>

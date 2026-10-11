@@ -62,10 +62,6 @@ Para: %4
         <translation>No se puede leer %1.</translation>
     </message>
     <message>
-        <source>No signature is set. Add one in Settings.</source>
-        <translation>No hay firma definida. Añade una en Ajustes.</translation>
-    </message>
-    <message>
         <source>Add a recipient.</source>
         <translation>Añade un destinatario.</translation>
     </message>
@@ -109,46 +105,6 @@ Para: %4
         <translation>Asunto</translation>
     </message>
     <message>
-        <source>Bold</source>
-        <translation>Negrita</translation>
-    </message>
-    <message>
-        <source>Italic</source>
-        <translation>Cursiva</translation>
-    </message>
-    <message>
-        <source>Underline</source>
-        <translation>Subrayado</translation>
-    </message>
-    <message>
-        <source>Strikethrough</source>
-        <translation>Tachado</translation>
-    </message>
-    <message>
-        <source>Heading</source>
-        <translation>Encabezado</translation>
-    </message>
-    <message>
-        <source>Quote</source>
-        <translation>Cita</translation>
-    </message>
-    <message>
-        <source>Bulleted list</source>
-        <translation>Lista con viñetas</translation>
-    </message>
-    <message>
-        <source>Numbered list</source>
-        <translation>Lista numerada</translation>
-    </message>
-    <message>
-        <source>Code</source>
-        <translation>Código</translation>
-    </message>
-    <message>
-        <source>Link</source>
-        <translation>Enlace</translation>
-    </message>
-    <message>
         <source>Write your message</source>
         <translation>Escribe tu mensaje</translation>
     </message>
@@ -169,8 +125,16 @@ Para: %4
         <translation>Adjuntar archivos</translation>
     </message>
     <message>
-        <source>Insert signature</source>
-        <translation>Insertar firma</translation>
+        <source>Signature</source>
+        <translation>Firma</translation>
+    </message>
+    <message>
+        <source>No signature is set. Add one in Settings.</source>
+        <translation>No hay firma definida. Añade una en Ajustes.</translation>
+    </message>
+    <message>
+        <source>No signature</source>
+        <translation>Sin firma</translation>
     </message>
     <message>
         <source>Mark as important</source>
@@ -199,14 +163,6 @@ Para: %4
     <message>
         <source>Discard</source>
         <translation>Descartar</translation>
-    </message>
-    <message>
-        <source>Link to</source>
-        <translation>Enlace a</translation>
-    </message>
-    <message>
-        <source>example.com or name@example.com</source>
-        <translation>ejemplo.es o nombre@ejemplo.es</translation>
     </message>
 </context>
 <context>
@@ -891,6 +847,57 @@ Para: %4
     </message>
 </context>
 <context>
+    <name>RichEditor</name>
+    <message>
+        <source>Bold</source>
+        <translation>Negrita</translation>
+    </message>
+    <message>
+        <source>Italic</source>
+        <translation>Cursiva</translation>
+    </message>
+    <message>
+        <source>Underline</source>
+        <translation>Subrayado</translation>
+    </message>
+    <message>
+        <source>Strikethrough</source>
+        <translation>Tachado</translation>
+    </message>
+    <message>
+        <source>Heading</source>
+        <translation>Encabezado</translation>
+    </message>
+    <message>
+        <source>Quote</source>
+        <translation>Cita</translation>
+    </message>
+    <message>
+        <source>Bulleted list</source>
+        <translation>Lista con viñetas</translation>
+    </message>
+    <message>
+        <source>Numbered list</source>
+        <translation>Lista numerada</translation>
+    </message>
+    <message>
+        <source>Code</source>
+        <translation>Código</translation>
+    </message>
+    <message>
+        <source>Link</source>
+        <translation>Enlace</translation>
+    </message>
+    <message>
+        <source>Link to</source>
+        <translation>Enlace a</translation>
+    </message>
+    <message>
+        <source>example.com or name@example.com</source>
+        <translation>ejemplo.es o nombre@ejemplo.es</translation>
+    </message>
+</context>
+<context>
     <name>SaveMessage</name>
     <message>
         <source>Save decrypted</source>
@@ -960,8 +967,36 @@ Para: %4
         <translation>Nombre</translation>
     </message>
     <message>
-        <source>Signature</source>
-        <translation>Firma</translation>
+        <source>Signatures</source>
+        <translation>Firmas</translation>
+    </message>
+    <message>
+        <source>Put this one in new mail</source>
+        <translation>Poner esta en los mensajes nuevos</translation>
+    </message>
+    <message>
+        <source>Default: %1</source>
+        <translation>Predeterminada: %1</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>Editar</translation>
+    </message>
+    <message>
+        <source>Delete %1</source>
+        <translation>Eliminar %1</translation>
+    </message>
+    <message>
+        <source>No signature in new mail</source>
+        <translation>Sin firma en los mensajes nuevos</translation>
+    </message>
+    <message>
+        <source>Add a signature…</source>
+        <translation>Añadir una firma…</translation>
+    </message>
+    <message>
+        <source>The chosen one goes into new mail. The composer&apos;s signature button swaps it for another.</source>
+        <translation>La elegida se pone en los mensajes nuevos. El botón de firma del editor la cambia por otra.</translation>
     </message>
     <message>
         <source>Encryption</source>
@@ -1314,6 +1349,32 @@ Para: %4
     <message>
         <source>Offline</source>
         <translation>Sin conexión</translation>
+    </message>
+</context>
+<context>
+    <name>SignatureDialog</name>
+    <message>
+        <source>Edit signature</source>
+        <translation>Editar firma</translation>
+    </message>
+    <message>
+        <source>New signature</source>
+        <translation>Nueva firma</translation>
+    </message>
+    <message>
+        <source>Name, such as Work</source>
+        <translation>Nombre, por ejemplo Trabajo</translation>
+    </message>
+    <message>
+        <source>Your signature</source>
+        <translation>Tu firma</translation>
+    </message>
+</context>
+<context>
+    <name>Signatures</name>
+    <message>
+        <source>Signature</source>
+        <translation>Firma</translation>
     </message>
 </context>
 <context>

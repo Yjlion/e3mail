@@ -62,10 +62,6 @@ To: %4
         <translation>无法读取 %1。</translation>
     </message>
     <message>
-        <source>No signature is set. Add one in Settings.</source>
-        <translation>尚未设置签名。请在设置中添加。</translation>
-    </message>
-    <message>
         <source>Add a recipient.</source>
         <translation>请添加收件人。</translation>
     </message>
@@ -109,46 +105,6 @@ To: %4
         <translation>主题</translation>
     </message>
     <message>
-        <source>Bold</source>
-        <translation>粗体</translation>
-    </message>
-    <message>
-        <source>Italic</source>
-        <translation>斜体</translation>
-    </message>
-    <message>
-        <source>Underline</source>
-        <translation>下划线</translation>
-    </message>
-    <message>
-        <source>Strikethrough</source>
-        <translation>删除线</translation>
-    </message>
-    <message>
-        <source>Heading</source>
-        <translation>标题</translation>
-    </message>
-    <message>
-        <source>Quote</source>
-        <translation>引用</translation>
-    </message>
-    <message>
-        <source>Bulleted list</source>
-        <translation>项目符号列表</translation>
-    </message>
-    <message>
-        <source>Numbered list</source>
-        <translation>编号列表</translation>
-    </message>
-    <message>
-        <source>Code</source>
-        <translation>代码</translation>
-    </message>
-    <message>
-        <source>Link</source>
-        <translation>链接</translation>
-    </message>
-    <message>
         <source>Write your message</source>
         <translation>撰写邮件</translation>
     </message>
@@ -169,8 +125,16 @@ To: %4
         <translation>添加附件</translation>
     </message>
     <message>
-        <source>Insert signature</source>
-        <translation>插入签名</translation>
+        <source>Signature</source>
+        <translation>签名</translation>
+    </message>
+    <message>
+        <source>No signature is set. Add one in Settings.</source>
+        <translation>尚未设置签名。请在设置中添加。</translation>
+    </message>
+    <message>
+        <source>No signature</source>
+        <translation>无签名</translation>
     </message>
     <message>
         <source>Mark as important</source>
@@ -199,14 +163,6 @@ To: %4
     <message>
         <source>Discard</source>
         <translation>丢弃</translation>
-    </message>
-    <message>
-        <source>Link to</source>
-        <translation>链接到</translation>
-    </message>
-    <message>
-        <source>example.com or name@example.com</source>
-        <translation>example.com 或 name@example.com</translation>
     </message>
 </context>
 <context>
@@ -881,6 +837,57 @@ To: %4
     </message>
 </context>
 <context>
+    <name>RichEditor</name>
+    <message>
+        <source>Bold</source>
+        <translation>粗体</translation>
+    </message>
+    <message>
+        <source>Italic</source>
+        <translation>斜体</translation>
+    </message>
+    <message>
+        <source>Underline</source>
+        <translation>下划线</translation>
+    </message>
+    <message>
+        <source>Strikethrough</source>
+        <translation>删除线</translation>
+    </message>
+    <message>
+        <source>Heading</source>
+        <translation>标题</translation>
+    </message>
+    <message>
+        <source>Quote</source>
+        <translation>引用</translation>
+    </message>
+    <message>
+        <source>Bulleted list</source>
+        <translation>项目符号列表</translation>
+    </message>
+    <message>
+        <source>Numbered list</source>
+        <translation>编号列表</translation>
+    </message>
+    <message>
+        <source>Code</source>
+        <translation>代码</translation>
+    </message>
+    <message>
+        <source>Link</source>
+        <translation>链接</translation>
+    </message>
+    <message>
+        <source>Link to</source>
+        <translation>链接到</translation>
+    </message>
+    <message>
+        <source>example.com or name@example.com</source>
+        <translation>example.com 或 name@example.com</translation>
+    </message>
+</context>
+<context>
     <name>SaveMessage</name>
     <message>
         <source>Save decrypted</source>
@@ -950,8 +957,36 @@ To: %4
         <translation>姓名</translation>
     </message>
     <message>
-        <source>Signature</source>
+        <source>Signatures</source>
         <translation>签名</translation>
+    </message>
+    <message>
+        <source>Put this one in new mail</source>
+        <translation>在新邮件中使用此签名</translation>
+    </message>
+    <message>
+        <source>Default: %1</source>
+        <translation>默认：%1</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>编辑</translation>
+    </message>
+    <message>
+        <source>Delete %1</source>
+        <translation>删除 %1</translation>
+    </message>
+    <message>
+        <source>No signature in new mail</source>
+        <translation>新邮件不加签名</translation>
+    </message>
+    <message>
+        <source>Add a signature…</source>
+        <translation>添加签名…</translation>
+    </message>
+    <message>
+        <source>The chosen one goes into new mail. The composer&apos;s signature button swaps it for another.</source>
+        <translation>所选签名会加入新邮件。撰写时可用签名按钮换成另一个。</translation>
     </message>
     <message>
         <source>Encryption</source>
@@ -1303,6 +1338,32 @@ To: %4
     <message>
         <source>Offline</source>
         <translation>离线</translation>
+    </message>
+</context>
+<context>
+    <name>SignatureDialog</name>
+    <message>
+        <source>Edit signature</source>
+        <translation>编辑签名</translation>
+    </message>
+    <message>
+        <source>New signature</source>
+        <translation>新建签名</translation>
+    </message>
+    <message>
+        <source>Name, such as Work</source>
+        <translation>名称，例如“工作”</translation>
+    </message>
+    <message>
+        <source>Your signature</source>
+        <translation>你的签名</translation>
+    </message>
+</context>
+<context>
+    <name>Signatures</name>
+    <message>
+        <source>Signature</source>
+        <translation>签名</translation>
     </message>
 </context>
 <context>

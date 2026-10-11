@@ -62,10 +62,6 @@ An: %4
         <translation>%1 kann nicht gelesen werden.</translation>
     </message>
     <message>
-        <source>No signature is set. Add one in Settings.</source>
-        <translation>Es ist keine Signatur festgelegt. Fügen Sie eine in den Einstellungen hinzu.</translation>
-    </message>
-    <message>
         <source>Add a recipient.</source>
         <translation>Fügen Sie einen Empfänger hinzu.</translation>
     </message>
@@ -109,46 +105,6 @@ An: %4
         <translation>Betreff</translation>
     </message>
     <message>
-        <source>Bold</source>
-        <translation>Fett</translation>
-    </message>
-    <message>
-        <source>Italic</source>
-        <translation>Kursiv</translation>
-    </message>
-    <message>
-        <source>Underline</source>
-        <translation>Unterstrichen</translation>
-    </message>
-    <message>
-        <source>Strikethrough</source>
-        <translation>Durchgestrichen</translation>
-    </message>
-    <message>
-        <source>Heading</source>
-        <translation>Überschrift</translation>
-    </message>
-    <message>
-        <source>Quote</source>
-        <translation>Zitat</translation>
-    </message>
-    <message>
-        <source>Bulleted list</source>
-        <translation>Aufzählung</translation>
-    </message>
-    <message>
-        <source>Numbered list</source>
-        <translation>Nummerierte Liste</translation>
-    </message>
-    <message>
-        <source>Code</source>
-        <translation>Code</translation>
-    </message>
-    <message>
-        <source>Link</source>
-        <translation>Link</translation>
-    </message>
-    <message>
         <source>Write your message</source>
         <translation>Nachricht schreiben</translation>
     </message>
@@ -169,8 +125,16 @@ An: %4
         <translation>Dateien anhängen</translation>
     </message>
     <message>
-        <source>Insert signature</source>
-        <translation>Signatur einfügen</translation>
+        <source>Signature</source>
+        <translation>Signatur</translation>
+    </message>
+    <message>
+        <source>No signature is set. Add one in Settings.</source>
+        <translation>Es ist keine Signatur festgelegt. Fügen Sie eine in den Einstellungen hinzu.</translation>
+    </message>
+    <message>
+        <source>No signature</source>
+        <translation>Keine Signatur</translation>
     </message>
     <message>
         <source>Mark as important</source>
@@ -199,14 +163,6 @@ An: %4
     <message>
         <source>Discard</source>
         <translation>Verwerfen</translation>
-    </message>
-    <message>
-        <source>Link to</source>
-        <translation>Link zu</translation>
-    </message>
-    <message>
-        <source>example.com or name@example.com</source>
-        <translation>beispiel.de oder name@beispiel.de</translation>
     </message>
 </context>
 <context>
@@ -891,6 +847,57 @@ An: %4
     </message>
 </context>
 <context>
+    <name>RichEditor</name>
+    <message>
+        <source>Bold</source>
+        <translation>Fett</translation>
+    </message>
+    <message>
+        <source>Italic</source>
+        <translation>Kursiv</translation>
+    </message>
+    <message>
+        <source>Underline</source>
+        <translation>Unterstrichen</translation>
+    </message>
+    <message>
+        <source>Strikethrough</source>
+        <translation>Durchgestrichen</translation>
+    </message>
+    <message>
+        <source>Heading</source>
+        <translation>Überschrift</translation>
+    </message>
+    <message>
+        <source>Quote</source>
+        <translation>Zitat</translation>
+    </message>
+    <message>
+        <source>Bulleted list</source>
+        <translation>Aufzählung</translation>
+    </message>
+    <message>
+        <source>Numbered list</source>
+        <translation>Nummerierte Liste</translation>
+    </message>
+    <message>
+        <source>Code</source>
+        <translation>Code</translation>
+    </message>
+    <message>
+        <source>Link</source>
+        <translation>Link</translation>
+    </message>
+    <message>
+        <source>Link to</source>
+        <translation>Link zu</translation>
+    </message>
+    <message>
+        <source>example.com or name@example.com</source>
+        <translation>beispiel.de oder name@beispiel.de</translation>
+    </message>
+</context>
+<context>
     <name>SaveMessage</name>
     <message>
         <source>Save decrypted</source>
@@ -960,8 +967,36 @@ An: %4
         <translation>Name</translation>
     </message>
     <message>
-        <source>Signature</source>
-        <translation>Signatur</translation>
+        <source>Signatures</source>
+        <translation>Signaturen</translation>
+    </message>
+    <message>
+        <source>Put this one in new mail</source>
+        <translation>Diese in neue Nachrichten einfügen</translation>
+    </message>
+    <message>
+        <source>Default: %1</source>
+        <translation>Standard: %1</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>Bearbeiten</translation>
+    </message>
+    <message>
+        <source>Delete %1</source>
+        <translation>%1 löschen</translation>
+    </message>
+    <message>
+        <source>No signature in new mail</source>
+        <translation>Keine Signatur in neuen Nachrichten</translation>
+    </message>
+    <message>
+        <source>Add a signature…</source>
+        <translation>Signatur hinzufügen…</translation>
+    </message>
+    <message>
+        <source>The chosen one goes into new mail. The composer&apos;s signature button swaps it for another.</source>
+        <translation>Die gewählte Signatur kommt in neue Nachrichten. Mit der Signatur-Schaltfläche beim Verfassen lässt sie sich gegen eine andere tauschen.</translation>
     </message>
     <message>
         <source>Encryption</source>
@@ -1314,6 +1349,32 @@ An: %4
     <message>
         <source>Offline</source>
         <translation>Offline</translation>
+    </message>
+</context>
+<context>
+    <name>SignatureDialog</name>
+    <message>
+        <source>Edit signature</source>
+        <translation>Signatur bearbeiten</translation>
+    </message>
+    <message>
+        <source>New signature</source>
+        <translation>Neue Signatur</translation>
+    </message>
+    <message>
+        <source>Name, such as Work</source>
+        <translation>Name, etwa „Arbeit“</translation>
+    </message>
+    <message>
+        <source>Your signature</source>
+        <translation>Ihre Signatur</translation>
+    </message>
+</context>
+<context>
+    <name>Signatures</name>
+    <message>
+        <source>Signature</source>
+        <translation>Signatur</translation>
     </message>
 </context>
 <context>

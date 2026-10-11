@@ -62,10 +62,6 @@ To: %4
         <translation>%1 を読み込めません。</translation>
     </message>
     <message>
-        <source>No signature is set. Add one in Settings.</source>
-        <translation>署名が設定されていません。設定で追加してください。</translation>
-    </message>
-    <message>
         <source>Add a recipient.</source>
         <translation>宛先を追加してください。</translation>
     </message>
@@ -109,46 +105,6 @@ To: %4
         <translation>件名</translation>
     </message>
     <message>
-        <source>Bold</source>
-        <translation>太字</translation>
-    </message>
-    <message>
-        <source>Italic</source>
-        <translation>斜体</translation>
-    </message>
-    <message>
-        <source>Underline</source>
-        <translation>下線</translation>
-    </message>
-    <message>
-        <source>Strikethrough</source>
-        <translation>取り消し線</translation>
-    </message>
-    <message>
-        <source>Heading</source>
-        <translation>見出し</translation>
-    </message>
-    <message>
-        <source>Quote</source>
-        <translation>引用</translation>
-    </message>
-    <message>
-        <source>Bulleted list</source>
-        <translation>箇条書き</translation>
-    </message>
-    <message>
-        <source>Numbered list</source>
-        <translation>番号付きリスト</translation>
-    </message>
-    <message>
-        <source>Code</source>
-        <translation>コード</translation>
-    </message>
-    <message>
-        <source>Link</source>
-        <translation>リンク</translation>
-    </message>
-    <message>
         <source>Write your message</source>
         <translation>メッセージを入力</translation>
     </message>
@@ -169,8 +125,16 @@ To: %4
         <translation>ファイルを添付</translation>
     </message>
     <message>
-        <source>Insert signature</source>
-        <translation>署名を挿入</translation>
+        <source>Signature</source>
+        <translation>署名</translation>
+    </message>
+    <message>
+        <source>No signature is set. Add one in Settings.</source>
+        <translation>署名が設定されていません。設定で追加してください。</translation>
+    </message>
+    <message>
+        <source>No signature</source>
+        <translation>署名なし</translation>
     </message>
     <message>
         <source>Mark as important</source>
@@ -199,14 +163,6 @@ To: %4
     <message>
         <source>Discard</source>
         <translation>破棄</translation>
-    </message>
-    <message>
-        <source>Link to</source>
-        <translation>リンク先</translation>
-    </message>
-    <message>
-        <source>example.com or name@example.com</source>
-        <translation>example.com または name@example.com</translation>
     </message>
 </context>
 <context>
@@ -881,6 +837,57 @@ To: %4
     </message>
 </context>
 <context>
+    <name>RichEditor</name>
+    <message>
+        <source>Bold</source>
+        <translation>太字</translation>
+    </message>
+    <message>
+        <source>Italic</source>
+        <translation>斜体</translation>
+    </message>
+    <message>
+        <source>Underline</source>
+        <translation>下線</translation>
+    </message>
+    <message>
+        <source>Strikethrough</source>
+        <translation>取り消し線</translation>
+    </message>
+    <message>
+        <source>Heading</source>
+        <translation>見出し</translation>
+    </message>
+    <message>
+        <source>Quote</source>
+        <translation>引用</translation>
+    </message>
+    <message>
+        <source>Bulleted list</source>
+        <translation>箇条書き</translation>
+    </message>
+    <message>
+        <source>Numbered list</source>
+        <translation>番号付きリスト</translation>
+    </message>
+    <message>
+        <source>Code</source>
+        <translation>コード</translation>
+    </message>
+    <message>
+        <source>Link</source>
+        <translation>リンク</translation>
+    </message>
+    <message>
+        <source>Link to</source>
+        <translation>リンク先</translation>
+    </message>
+    <message>
+        <source>example.com or name@example.com</source>
+        <translation>example.com または name@example.com</translation>
+    </message>
+</context>
+<context>
     <name>SaveMessage</name>
     <message>
         <source>Save decrypted</source>
@@ -950,8 +957,36 @@ To: %4
         <translation>名前</translation>
     </message>
     <message>
-        <source>Signature</source>
+        <source>Signatures</source>
         <translation>署名</translation>
+    </message>
+    <message>
+        <source>Put this one in new mail</source>
+        <translation>新しいメールにこれを入れる</translation>
+    </message>
+    <message>
+        <source>Default: %1</source>
+        <translation>既定: %1</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>編集</translation>
+    </message>
+    <message>
+        <source>Delete %1</source>
+        <translation>%1 を削除</translation>
+    </message>
+    <message>
+        <source>No signature in new mail</source>
+        <translation>新しいメールに署名を入れない</translation>
+    </message>
+    <message>
+        <source>Add a signature…</source>
+        <translation>署名を追加…</translation>
+    </message>
+    <message>
+        <source>The chosen one goes into new mail. The composer&apos;s signature button swaps it for another.</source>
+        <translation>選んだ署名が新しいメールに入ります。作成画面の署名ボタンで別の署名に替えられます。</translation>
     </message>
     <message>
         <source>Encryption</source>
@@ -1303,6 +1338,32 @@ To: %4
     <message>
         <source>Offline</source>
         <translation>オフライン</translation>
+    </message>
+</context>
+<context>
+    <name>SignatureDialog</name>
+    <message>
+        <source>Edit signature</source>
+        <translation>署名を編集</translation>
+    </message>
+    <message>
+        <source>New signature</source>
+        <translation>新しい署名</translation>
+    </message>
+    <message>
+        <source>Name, such as Work</source>
+        <translation>名前（例: 仕事）</translation>
+    </message>
+    <message>
+        <source>Your signature</source>
+        <translation>あなたの署名</translation>
+    </message>
+</context>
+<context>
+    <name>Signatures</name>
+    <message>
+        <source>Signature</source>
+        <translation>署名</translation>
     </message>
 </context>
 <context>
