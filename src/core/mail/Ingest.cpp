@@ -37,6 +37,28 @@ bool isEncryptedPart(const mime::Part &p)
         && p.typeParams.value("protocol").toLower() == QLatin1String("application/pgp-encrypted");
 }
 
+// Signed without encryption, or signed inside it (RFC 3156).
+bool isSignedPart(const mime::Part &p)
+{
+    return p.mimeType == "multipart/signed" && p.children.size() == 2
+        && p.typeParams.value("protocol").toLower() == QLatin1String("application/pgp-signature");
+}
+
+// Good signers of a multipart/signed. The signature covers the first part
+// exactly as sent, headers included, with CRLF line endings.
+QStringList signersOf(MailContext &ctx, const mime::Part &signedPart)
+{
+    QByteArray data = signedPart.children[0].raw;
+    data.replace("\r\n", "\n");
+    data.replace("\n", "\r\n");
+    try {
+        return ctx.pgp.verifyDetached(data, signedPart.children[1].body);
+    } catch (const crypto::PgpError &e) {
+        qCWarning(lcMail) << "cannot read a signature:" << e.what();
+        return {};
+    }
+}
+
 void walk(const mime::Part &p, Ingest::Content &out, bool inAlternative)
 {
     if (p.isMultipart()) {
@@ -181,6 +203,13 @@ Ingest::Result Ingest::process(MailContext &ctx, const QByteArray &raw)
         }
     }
 
+    std::optional<mime::Part> signedPart;
+    if (decryptError.isEmpty() && isSignedPart(content)) {
+        signedPart = content;
+        content = signedPart->children[0];
+        validSigners += signersOf(ctx, *signedPart);
+    }
+
     QString messageId = mime::parseMessageIds(headers.raw("Message-ID")).value(0);
     if (messageId.isEmpty()) {
         // Stable across fetches, so a refetch is still a duplicate.
@@ -281,6 +310,8 @@ Ingest::Result Ingest::process(MailContext &ctx, const QByteArray &raw)
         } catch (const crypto::PgpError &) {
         }
     }
+    if (signedPart && validSigners.isEmpty())
+        validSigners = signersOf(ctx, *signedPart);
     QString signedFpr;
     bool verified = false;
     if (const auto sender = Contacts::get(ctx, from.addr)) {

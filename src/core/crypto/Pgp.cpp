@@ -97,6 +97,33 @@ QString primaryFingerprintOf(rnp_key_handle_t key)
 
 } // namespace
 
+namespace {
+
+// Primary fingerprints of the good signatures, and of the rest.
+void signersOf(rnp_op_verify_t op, QStringList &valid, QStringList &invalid)
+{
+    size_t count = 0;
+    rnp_op_verify_get_signature_count(op, &count);
+    for (size_t i = 0; i < count; ++i) {
+        rnp_op_verify_signature_t sig = nullptr;
+        if (rnp_op_verify_get_signature_at(op, i, &sig) != RNP_SUCCESS)
+            continue;
+        const rnp_result_t status = rnp_op_verify_signature_get_status(sig);
+        rnp_key_handle_t keyHandle = nullptr;
+        QString fpr;
+        if (rnp_op_verify_signature_get_key(sig, &keyHandle) == RNP_SUCCESS && keyHandle) {
+            const Key key(keyHandle);
+            fpr = primaryFingerprintOf(key.get());
+        }
+        if (status == RNP_SUCCESS && !fpr.isEmpty())
+            valid.append(fpr);
+        else if (!fpr.isEmpty())
+            invalid.append(fpr);
+    }
+}
+
+} // namespace
+
 QString Pgp::normalizeFingerprint(const QString &fpr)
 {
     QString out = fpr.toUpper();
@@ -296,25 +323,41 @@ Pgp::Decrypted Pgp::decrypt(const QByteArray &data) const
         check(rc, "decrypt"); // it was the decryption key that was missing
 
     result.data = bytesOf(out.get());
-    size_t count = 0;
-    rnp_op_verify_get_signature_count(op, &count);
-    for (size_t i = 0; i < count; ++i) {
-        rnp_op_verify_signature_t sig = nullptr;
-        if (rnp_op_verify_get_signature_at(op, i, &sig) != RNP_SUCCESS)
-            continue;
-        const rnp_result_t status = rnp_op_verify_signature_get_status(sig);
-        rnp_key_handle_t keyHandle = nullptr;
-        QString fpr;
-        if (rnp_op_verify_signature_get_key(sig, &keyHandle) == RNP_SUCCESS && keyHandle) {
-            const Key key(keyHandle);
-            fpr = primaryFingerprintOf(key.get());
-        }
-        if (status == RNP_SUCCESS && !fpr.isEmpty())
-            result.validSigners.append(fpr);
-        else if (!fpr.isEmpty())
-            result.invalidSigners.append(fpr);
-    }
+    signersOf(op, result.validSigners, result.invalidSigners);
     return result;
+}
+
+QByteArray Pgp::signDetached(const QByteArray &data, const QString &signer) const
+{
+    const Input in = inputFrom(data);
+    const Output out = memoryOutput();
+    rnp_op_sign_t op = nullptr;
+    check(rnp_op_sign_detached_create(&op, m_ffi, in.get(), out.get()), "rnp_op_sign_detached_create");
+    const std::unique_ptr<rnp_op_sign_st, decltype(&rnp_op_sign_destroy)> guard(op, &rnp_op_sign_destroy);
+    const Key key = locate(m_ffi, "fingerprint", signer);
+    if (!key)
+        throw PgpError(QStringLiteral("no signing key %1").arg(signer));
+    check(rnp_op_sign_add_signature(op, key.get(), nullptr), "rnp_op_sign_add_signature");
+    check(rnp_op_sign_set_armor(op, true), "rnp_op_sign_set_armor");
+    check(rnp_op_sign_execute(op), "sign");
+    return bytesOf(out.get());
+}
+
+QStringList Pgp::verifyDetached(const QByteArray &data, const QByteArray &signature) const
+{
+    const Input in = inputFrom(data);
+    const Input sig = inputFrom(signature);
+    rnp_op_verify_t op = nullptr;
+    check(rnp_op_verify_detached_create(&op, m_ffi, in.get(), sig.get()), "rnp_op_verify_detached_create");
+    const std::unique_ptr<rnp_op_verify_st, decltype(&rnp_op_verify_destroy)> guard(op, &rnp_op_verify_destroy);
+    const rnp_result_t rc = rnp_op_verify_execute(op);
+    // A bad or unknown signature is an answer, not a failure.
+    if (rc != RNP_SUCCESS && rc != RNP_ERROR_SIGNATURE_INVALID && rc != RNP_ERROR_KEY_NOT_FOUND
+        && rc != RNP_ERROR_SIGNATURE_EXPIRED)
+        check(rc, "verify");
+    QStringList valid, invalid;
+    signersOf(op, valid, invalid);
+    return valid;
 }
 
 } // namespace e3::crypto

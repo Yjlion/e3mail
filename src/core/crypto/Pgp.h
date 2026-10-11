@@ -61,6 +61,12 @@ public:
     // Decrypts and verifies. Throws when the data cannot be decrypted.
     Decrypted decrypt(const QByteArray &data) const;
 
+    // A detached signature (multipart/signed, RFC 3156), ASCII-armored.
+    QByteArray signDetached(const QByteArray &data, const QString &signer) const;
+    // Primary fingerprints of the good signatures over `data`. Throws only
+    // when the signature cannot be read at all.
+    QStringList verifyDetached(const QByteArray &data, const QByteArray &signature) const;
+
     static QString normalizeFingerprint(const QString &fpr);
 
 private:

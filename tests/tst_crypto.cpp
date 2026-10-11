@@ -13,6 +13,26 @@ class TestCrypto : public QObject
 {
     Q_OBJECT
 
+    // Our keys are unprotected, so no passphrase options. The home directory
+    // is given relative to gpg's working directory: the MSYS gpg that Git for
+    // Windows ships reads "C:\..." as a relative path.
+    static std::pair<int, QByteArray> gpgRun(const QString &gpg, const QString &home, const QStringList &args,
+                                             const QByteArray &input = {})
+    {
+        QProcess p;
+        p.setWorkingDirectory(home);
+        p.start(gpg, QStringList{QStringLiteral("--homedir"), QStringLiteral("."), QStringLiteral("--batch"),
+                                 QStringLiteral("--yes")}
+                    + args);
+        p.write(input);
+        p.closeWriteChannel();
+        p.waitForFinished(60000);
+        const QByteArray out = p.readAllStandardOutput() + p.readAllStandardError();
+        if (p.exitCode() != 0)
+            qWarning("gpg %s exited %d: %s", qPrintable(args.join(u' ')), p.exitCode(), out.constData());
+        return {p.exitCode(), out};
+    }
+
 private Q_SLOTS:
     void roundTripBetweenTwoKeyrings()
     {
@@ -83,22 +103,8 @@ private Q_SLOTS:
         if (gpg.isEmpty())
             QSKIP("gpg not installed");
         QTemporaryDir home;
-        // Our keys are unprotected, so no passphrase options. The home
-        // directory is given relative to gpg's working directory: the MSYS
-        // gpg that Git for Windows ships reads "C:\..." as a relative path.
-        auto run = [&](const QStringList &args, const QByteArray &input = {}) {
-            QProcess p;
-            p.setWorkingDirectory(home.path());
-            p.start(gpg, QStringList{QStringLiteral("--homedir"), QStringLiteral("."), QStringLiteral("--batch"),
-                                     QStringLiteral("--yes")}
-                        + args);
-            p.write(input);
-            p.closeWriteChannel();
-            p.waitForFinished(60000);
-            const QByteArray out = p.readAllStandardOutput() + p.readAllStandardError();
-            if (p.exitCode() != 0)
-                qWarning("gpg %s exited %d: %s", qPrintable(args.join(u' ')), p.exitCode(), out.constData());
-            return std::make_pair(p.exitCode(), out);
+        const auto run = [&](const QStringList &args, const QByteArray &input = {}) {
+            return gpgRun(gpg, home.path(), args, input);
         };
         Pgp us, them;
         const QString ours = us.generate(QStringLiteral("<us@x.test>"));
@@ -112,6 +118,47 @@ private Q_SLOTS:
         QVERIFY(out.contains("interop body"));
         QVERIFY(out.contains("DECRYPTION_OKAY"));
         QVERIFY(out.contains("VALIDSIG"));
+    }
+
+    // Detached signatures (multipart/signed) both ways.
+    void gnupgDetachedSignatures()
+    {
+        const QString gpg = QStandardPaths::findExecutable(QStringLiteral("gpg"));
+        if (gpg.isEmpty())
+            QSKIP("gpg not installed");
+        QTemporaryDir home;
+        const auto run = [&](const QStringList &args, const QByteArray &input = {}) {
+            return gpgRun(gpg, home.path(), args, input);
+        };
+        Pgp us, them;
+        const QString ours = us.generate(QStringLiteral("<us@x.test>"));
+        const QString theirs = them.generate(QStringLiteral("<them@x.test>"));
+        QCOMPARE(run({QStringLiteral("--import")}, them.exportSecret(theirs)).first, 0);
+        QCOMPARE(run({QStringLiteral("--import")}, us.exportPublic(ours)).first, 0);
+        us.import(them.exportPublic(theirs));
+        const QByteArray part = "Content-Type: text/plain; charset=utf-8\r\n\r\nsigned by gpg\r\n";
+        QFile f(home.filePath(QStringLiteral("part.txt")));
+        QVERIFY(f.open(QIODevice::WriteOnly));
+        f.write(part);
+        f.close();
+
+        // Theirs, read by us.
+        const auto [code, sig] = run({QStringLiteral("--armor"), QStringLiteral("--local-user"), theirs,
+                                      QStringLiteral("--detach-sign"), QStringLiteral("--output"), QStringLiteral("-"),
+                                      QStringLiteral("part.txt")});
+        QCOMPARE(code, 0);
+        QCOMPARE(us.verifyDetached(part, sig), QStringList{theirs});
+        QVERIFY(us.verifyDetached(QByteArray(part).replace("gpg", "GPG"), sig).isEmpty());
+
+        // Ours, read by them.
+        QFile s(home.filePath(QStringLiteral("part.asc")));
+        QVERIFY(s.open(QIODevice::WriteOnly));
+        s.write(us.signDetached(part, ours));
+        s.close();
+        const auto [vcode, vout] = run({QStringLiteral("--status-fd"), QStringLiteral("2"), QStringLiteral("--verify"),
+                                        QStringLiteral("part.asc"), QStringLiteral("part.txt")});
+        QVERIFY2(vcode == 0, vout.constData());
+        QVERIFY(vout.contains("VALIDSIG"));
     }
 };
 

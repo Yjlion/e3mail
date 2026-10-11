@@ -1,10 +1,13 @@
 // SPDX-License-Identifier: MPL-2.0
 #include "FakeMailServer.h"
+#include "crypto/Autocrypt.h"
+#include "crypto/Pgp.h"
 #include "engine/AccountManager.h"
 #include "engine/MailWorker.h"
 #include "mail/Compose.h"
 #include "mail/Contacts.h"
 #include "mail/Export.h"
+#include "mail/Keyring.h"
 #include "mail/Organize.h"
 #include "mail/Policy.h"
 #include "mail/Search.h"
@@ -538,6 +541,52 @@ private Q_SLOTS:
         QVERIFY(!ids(tag::Inbox).contains(ccId));
         QVERIFY(!ids(tag::Sent).contains(ccId));
         QVERIFY(!ids(tag::All).contains(ccId));
+    }
+
+    // multipart/signed without encryption (RFC 3156), as other clients send
+    // it: the signature covers the first part, headers and all, in CRLF.
+    void signedOnlyIsVerified()
+    {
+        Account *ada = makeAccount(QStringLiteral("ada@x.test"), QStringLiteral("imap"));
+        Account *bob = makeAccount(QStringLiteral("bob@x.test"), QStringLiteral("imap"));
+        sync(bob);
+        const QString fpr = mail::Keyring::selfFingerprint(ada->ctx());
+        const QByteArray keydata = ada->ctx().pgp.exportAutocrypt(fpr, QStringLiteral("ada@x.test"));
+        const QByteArray autocrypt = crypto::Autocrypt::format(QStringLiteral("ada@x.test"), keydata, false);
+
+        const auto message = [&](const QByteArray &id, const QByteArray &body, bool tamper, bool lf) {
+            QByteArray signedPart = "Content-Type: text/plain; charset=utf-8\r\n\r\n" + body + "\r\n";
+            const QByteArray sig = ada->ctx().pgp.signDetached(signedPart, fpr);
+            if (tamper)
+                signedPart.replace("pay", "PAY");
+            QByteArray raw = "From: Ada <ada@x.test>\r\nTo: bob@x.test\r\nSubject: signed\r\nMessage-ID: <" + id
+                + "@x.test>\r\nAutocrypt: " + autocrypt + "\r\nMIME-Version: 1.0\r\n"
+                + "Content-Type: multipart/signed; micalg=pgp-sha256; protocol=\"application/pgp-signature\"; "
+                  "boundary=\"b1\"\r\n\r\n--b1\r\n"
+                + signedPart + "\r\n--b1\r\nContent-Type: application/pgp-signature\r\n\r\n" + sig + "\r\n--b1--\r\n";
+            // Some servers hand mail out with bare LF; the signature still holds.
+            if (lf)
+                raw.replace("\r\n", "\n");
+            return raw;
+        };
+        const auto detail = [&](const QString &id) {
+            const auto row = bob->ctx().db.queryInt("SELECT id FROM messages WHERE message_id=?", id);
+            return *mail::Search::detail(bob->ctx(), *row);
+        };
+
+        // The first one carries the key that signed it (trap 4).
+        m_srv->deliver(QStringLiteral("bob@x.test"), message("s1", "please pay the invoice", false, false));
+        m_srv->deliver(QStringLiteral("bob@x.test"), message("s2", "please pay the invoice", true, false));
+        m_srv->deliver(QStringLiteral("bob@x.test"), message("s3", "line one\r\nline two", false, true));
+        sync(bob);
+
+        const auto first = detail(QStringLiteral("s1@x.test"));
+        QVERIFY(first.signedBySender);
+        QVERIFY(!first.encrypted);
+        QVERIFY(first.bodyText.contains(QLatin1String("please pay")));
+        QVERIFY(first.attachments.isEmpty()); // the signature is not one
+        QVERIFY(!detail(QStringLiteral("s2@x.test")).signedBySender);
+        QVERIFY(detail(QStringLiteral("s3@x.test")).signedBySender);
     }
 
     void blocklistTrashesOnArrival()
