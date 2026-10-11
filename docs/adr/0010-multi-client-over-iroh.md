@@ -51,3 +51,28 @@ fails under delete-after-download and cannot work over POP3.
   events are polled after a waker, which `IrohTransport` turns into a queued
   call on its own thread.
 - `E3MAIL_P2P=OFF` builds without Rust and without device sync.
+
+## Amendment — 2026-10-11: pairing
+
+- **The code.** The device that has the account makes a one-time code,
+  valid ten minutes: `E3PAIR1:` and base64url of its endpoint address, a
+  random 128-bit token, the account's address and its relay setting. It is
+  shown as a QR code and as text; the new device pastes it (camera scanning
+  is not built). While the code is out, the endpoint lets any peer connect.
+- **A person allows it.** The new device sends the token and a name; the
+  existing device asks "“Laptop” wants to become a device of this account"
+  and sends nothing until someone allows it. Holding the code is not enough,
+  and a code serves one device.
+- **The copy is pulled.** The new device asks for the database (a
+  `VACUUM INTO` copy without this device's own settings) and every blob in
+  1 MiB pieces, eight at a time, so a large mailbox is never in memory on
+  either side. The database is checked against the SHA-256 in the manifest,
+  each blob against its name. The passwords travel in the manifest, inside
+  the authenticated QUIC connection, and go to the new device's keyring.
+- **The new device** gets its own device id and Iroh key, records the
+  existing device as its first peer, and records a `server.ack` for every
+  server message the copy holds, so the others do not keep them on the
+  server waiting for it. The existing device records it, with a
+  `device.pair` op that tells every other device (ADR 0013 amendment).
+- Frames 16 and up are pairing's: request, denied, manifest, get, chunk,
+  done.

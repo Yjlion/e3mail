@@ -116,6 +116,10 @@ public:
     sync::DeviceTransport *deviceTransport() const { return m_transport.get(); }
     // Sends paired devices what they lack, soon.
     void pushSoon();
+    bool isDeviceConnected(const QString &device) const;
+    // Removes a paired device here and, through a device.unpair op, on the
+    // others; it is refused from then on.
+    void removeDevice(const QString &device);
 
     MailContext &ctx() { return *m_ctx; }
     // UI-side mutations call this so every view refreshes.

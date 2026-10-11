@@ -14,10 +14,10 @@ that supersedes it, or a dated amendment block inside it, and add a row here.
 | [0007](0007-tags-not-folders.md) | Tags, not folders | Accepted; amended 2026-10-08 (mail to oneself, All mail) |
 | [0008](0008-strangers-wait-and-trash-is-the-only-destroyer.md) | Strangers wait in Unverified; Trash is the only destroyer | Accepted |
 | [0009](0009-two-barriers-for-message-content.md) | Two barriers between message content and the network | Accepted; amended 2026-10-07 (inline images) |
-| [0010](0010-multi-client-over-iroh.md) | Devices sync with each other over Iroh | Accepted, Phase 8; amended 2026-10-11 (the transport) |
+| [0010](0010-multi-client-over-iroh.md) | Devices sync with each other over Iroh | Accepted, Phase 8; amended 2026-10-11 (the transport, pairing) |
 | [0011](0011-linear-protocol-code-over-an-event-loop.md) | Linear protocol code over a local event loop | Accepted |
 | [0012](0012-passwords-in-the-os-keyring.md) | Passwords in the OS keyring, with an honest fallback | Accepted |
-| [0013](0013-op-merge-rules.md) | How devices merge the op-log | Accepted, Phase 8; amended 2026-10-07 (address book), 2026-10-10 (signatures) |
+| [0013](0013-op-merge-rules.md) | How devices merge the op-log | Accepted, Phase 8; amended 2026-10-07 (address book), 2026-10-10 (signatures), 2026-10-11 (devices) |
 | [0014](0014-languages-icu-and-qt-linguist.md) | Languages: ICU for charsets and dates, Qt Linguist for the interface | Accepted |
 | [0015](0015-finding-server-settings.md) | Finding server settings: provider, ISPDB, Autodiscover, DNS, guess | Accepted |
 | [0016](0016-android.md) | Android: the same app, one pane at a time, only while it runs | Accepted; amended 2026-10-08 (release signing) |

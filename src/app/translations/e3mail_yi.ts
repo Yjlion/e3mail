@@ -390,6 +390,45 @@ To: %4
     </message>
 </context>
 <context>
+    <name>JoinDialog</name>
+    <message>
+        <source>Copy an account from another device</source>
+        <translation>קאָפּירן אַ חשבון פֿון אַן אַנדער מכשיר</translation>
+    </message>
+    <message>
+        <source>On the device that has the account, open Settings, Devices, “Pair a new device”, and enter the code it shows here.</source>
+        <translation>אויפֿן מכשיר וואָס האָט דעם חשבון, עפֿנט איינשטעלונגען, מכשירים, „פֿאַרבינדן אַ נײַעם מכשיר“, און לייגט דאָ אַרײַן דעם קאָד וואָס ער ווײַזט.</translation>
+    </message>
+    <message>
+        <source>Code</source>
+        <translation>קאָד</translation>
+    </message>
+    <message>
+        <source>For %1</source>
+        <translation>פֿאַר %1</translation>
+    </message>
+    <message>
+        <source>This is not a pairing code.</source>
+        <translation>דאָס איז ניט קיין פֿאַרבינדונג־קאָד.</translation>
+    </message>
+    <message>
+        <source>This device’s name</source>
+        <translation>דער נאָמען פֿון דעם מכשיר</translation>
+    </message>
+    <message>
+        <source>Waiting for the other device to allow it…</source>
+        <translation>מע וואַרט אויף דער דערלויבעניש פֿונעם אַנדערן מכשיר…</translation>
+    </message>
+    <message>
+        <source>Copy the account</source>
+        <translation>קאָפּירן דעם חשבון</translation>
+    </message>
+    <message>
+        <source>That code cannot be used here. Is this account already on this device?</source>
+        <translation>מע קען דעם קאָד דאָ ניט ניצן. איז דער חשבון שוין אויף דעם מכשיר?</translation>
+    </message>
+</context>
+<context>
     <name>LabelDialog</name>
     <message>
         <source>Edit tag</source>
@@ -421,6 +460,10 @@ To: %4
 </context>
 <context>
     <name>MailApp</name>
+    <message>
+        <source>Unnamed device</source>
+        <translation>מכשיר אָן נאָמען</translation>
+    </message>
     <message>
         <source>(no subject)</source>
         <translation>(אָן טעמע)</translation>
@@ -763,6 +806,53 @@ To: %4
     <message>
         <source>From %1</source>
         <translation>פֿון %1</translation>
+    </message>
+</context>
+<context>
+    <name>PairDialog</name>
+    <message>
+        <source>This device could not start its connection to other devices.</source>
+        <translation>דער מכשיר האָט ניט געקענט אָנהייבן זײַן פֿאַרבינדונג מיט אַנדערע מכשירים.</translation>
+    </message>
+    <message>
+        <source>Pair a new device</source>
+        <translation>פֿאַרבינדן אַ נײַעם מכשיר</translation>
+    </message>
+    <message>
+        <source>On the new device, choose “Copy an account from another device” when adding a mailbox, and enter this code. It works once, for ten minutes.</source>
+        <translation>אויפֿן נײַעם מכשיר, ווען איר לייגט צו אַ בריווקאַסטן, קלײַבט „קאָפּירן אַ חשבון פֿון אַן אַנדער מכשיר“ און לייגט אַרײַן דעם קאָד. ער אַרבעט איין מאָל, צען מינוט.</translation>
+    </message>
+    <message>
+        <source>Pairing code as a QR code</source>
+        <translation>פֿאַרבינדונג־קאָד ווי אַ QR־קאָד</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>קאָפּירן</translation>
+    </message>
+    <message>
+        <source>“%1” wants to become a device of this account. It will get a copy of all your mail, your contacts, your key and your password.</source>
+        <translation>„%1“ וויל ווערן אַ מכשיר פֿון דעם חשבון. ער וועט באַקומען אַ קאָפּיע פֿון אײַער גאַנצער פּאָסט, קאָנטאַקטן, שליסל און פּאַראָל.</translation>
+    </message>
+    <message>
+        <source>Allow it only if you are setting up that device yourself, now.</source>
+        <translation>דערלויבט עס נאָר אויב איר שטעלט אַליין איצט אײַן יענעם מכשיר.</translation>
+    </message>
+    <message>
+        <source>Allow</source>
+        <translation>דערלויבן</translation>
+    </message>
+    <message>
+        <source>Refuse</source>
+        <translation>אָפּזאָגן</translation>
+    </message>
+    <message>
+        <source>Sending a copy to “%1”…</source>
+        <translation>מע שיקט אַ קאָפּיע צו „%1“…</translation>
+    </message>
+    <message>
+        <source>“%1” is now a device of this account.</source>
+        <translation>„%1“ איז איצט אַ מכשיר פֿון דעם חשבון.</translation>
     </message>
 </context>
 <context>
@@ -1155,6 +1245,58 @@ To: %4
         <translation>בלאָקירן</translation>
     </message>
     <message>
+        <source>Devices</source>
+        <translation>מכשירים</translation>
+    </message>
+    <message>
+        <source>This build of e3mail cannot sync with other devices.</source>
+        <translation>די ווערסיע פֿון e3mail קען זיך ניט סינכראָניזירן מיט אַנדערע מכשירים.</translation>
+    </message>
+    <message>
+        <source>This device</source>
+        <translation>דער מכשיר</translation>
+    </message>
+    <message>
+        <source>Connected</source>
+        <translation>פֿאַרבונדן</translation>
+    </message>
+    <message>
+        <source>Last seen %1</source>
+        <translation>לעצט געזען %1</translation>
+    </message>
+    <message>
+        <source>Not seen yet</source>
+        <translation>נאָך ניט געזען</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>אַוועקנעמען</translation>
+    </message>
+    <message>
+        <source>Pair a new device…</source>
+        <translation>פֿאַרבינדן אַ נײַעם מכשיר…</translation>
+    </message>
+    <message>
+        <source>Relay</source>
+        <translation>רעלע</translation>
+    </message>
+    <message>
+        <source>n0&apos;s public relays</source>
+        <translation>די עפֿנטלעכע רעלעס פֿון n0</translation>
+    </message>
+    <message>
+        <source>A relay I run</source>
+        <translation>אַ רעלע וואָס איך פֿיר</translation>
+    </message>
+    <message>
+        <source>None: only on the same network</source>
+        <translation>קיינער: נאָר אין דער זעלבער נעץ</translation>
+    </message>
+    <message>
+        <source>Devices of this account sync directly with each other, end-to-end encrypted. When they cannot reach each other, a relay passes the encrypted traffic along; it cannot read it.</source>
+        <translation>די מכשירים פֿון דעם חשבון סינכראָניזירן זיך גלײַך איינער מיטן אַנדערן, פֿאַרשליסלט פֿון עק צו עק. ווען זיי קענען זיך ניט דערגרייכן, גיט אַ רעלע איבער דעם פֿאַרשליסלטן פֿאַרקער; לייענען קען ער אים ניט.</translation>
+    </message>
+    <message>
         <source>Data</source>
         <translation>דאַטן</translation>
     </message>
@@ -1185,6 +1327,10 @@ To: %4
     <message>
         <source>Remove %1?</source>
         <translation>אַוועקנעמען %1?</translation>
+    </message>
+    <message>
+        <source>It stops syncing with this account&apos;s other devices. What is already on it stays there.</source>
+        <translation>ער הערט אויף זיך סינכראָניזירן מיט די אַנדערע מכשירים פֿון דעם חשבון. וואָס איז שוין אויף אים, בלײַבט דאָרט.</translation>
     </message>
     <message>
         <source>Every message, contact and key of this mailbox is deleted from this device.</source>
@@ -1315,6 +1461,10 @@ To: %4
     <message>
         <source>Cancel</source>
         <translation>אָפּשטעלן</translation>
+    </message>
+    <message>
+        <source>Copy an account from another device…</source>
+        <translation>קאָפּירן אַ חשבון פֿון אַן אַנדער מכשיר…</translation>
     </message>
 </context>
 <context>
@@ -1492,6 +1642,68 @@ To: %4
     <message>
         <source>Create a tag…</source>
         <translation>שאַפֿן אַן עטיקעט…</translation>
+    </message>
+</context>
+<context>
+    <name>e3::PairingJoin</name>
+    <message>
+        <source>The code could not be read.</source>
+        <translation>מע האָט ניט געקענט לייענען דעם קאָד.</translation>
+    </message>
+    <message>
+        <source>The connection to the other device was lost: %1</source>
+        <translation>די פֿאַרבינדונג מיטן אַנדערן מכשיר איז פֿאַרלוירן געגאַנגען: %1</translation>
+    </message>
+    <message>
+        <source>The other device did not allow it.</source>
+        <translation>דער אַנדערער מכשיר האָט עס ניט דערלויבט.</translation>
+    </message>
+    <message>
+        <source>The other device offered a different account.</source>
+        <translation>דער אַנדערער מכשיר האָט פֿאָרגעלייגט אַן אַנדער חשבון.</translation>
+    </message>
+    <message>
+        <source>Cannot write here.</source>
+        <translation>מע קען דאָ ניט שרײַבן.</translation>
+    </message>
+    <message>
+        <source>The other device sent something unexpected.</source>
+        <translation>דער אַנדערער מכשיר האָט געשיקט עפּעס אומגעריכטס.</translation>
+    </message>
+    <message>
+        <source>A file arrived damaged.</source>
+        <translation>אַ טעקע איז אָנגעקומען צעבראָכן.</translation>
+    </message>
+    <message>
+        <source>The copy of the mailbox arrived damaged.</source>
+        <translation>די קאָפּיע פֿונעם בריווקאַסטן איז אָנגעקומען צעבראָכן.</translation>
+    </message>
+</context>
+<context>
+    <name>e3::PairingOffer</name>
+    <message>
+        <source>The code expired.</source>
+        <translation>דער קאָד איז אויסגעגאַנגען.</translation>
+    </message>
+    <message>
+        <source>The other device went away.</source>
+        <translation>דער אַנדערער מכשיר איז אַוועק.</translation>
+    </message>
+    <message>
+        <source>Another device</source>
+        <translation>אַן אַנדער מכשיר</translation>
+    </message>
+    <message>
+        <source>Pairing was refused on this device.</source>
+        <translation>די פֿאַרבינדונג איז אָפּגעזאָגט געוואָרן אויף דעם מכשיר.</translation>
+    </message>
+    <message>
+        <source>A file asked for is not here.</source>
+        <translation>אַ פֿאַרלאַנגטע טעקע איז ניטאָ דאָ.</translation>
+    </message>
+    <message>
+        <source>The copy of the mailbox could not be read.</source>
+        <translation>מע האָט ניט געקענט לייענען די קאָפּיע פֿונעם בריווקאַסטן.</translation>
     </message>
 </context>
 </TS>

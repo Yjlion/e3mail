@@ -13,6 +13,10 @@ target_include_directories(e3notifier PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/control
 target_link_libraries(e3notifier PUBLIC Qt6::Core)
 e3mail_set_warnings(e3notifier)
 
+# Project Nayuki's QR code generator (MIT), as published.
+add_library(qrcodegen STATIC third_party/qrcodegen/qrcodegen.cpp third_party/qrcodegen/qrcodegen.hpp)
+target_include_directories(qrcodegen PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/qrcodegen)
+
 qt_add_executable(e3mail WIN32 MACOSX_BUNDLE
     main.cpp
     NetworkBarrier.cpp NetworkBarrier.h
@@ -38,6 +42,7 @@ qt_add_qml_module(e3mail
         controllers/SetupController.cpp controllers/SetupController.h
         controllers/SourceHighlighter.cpp controllers/SourceHighlighter.h
         controllers/FileIo.cpp controllers/FileIo.h
+        controllers/QrImageProvider.cpp controllers/QrImageProvider.h
         models/MessageListModel.cpp models/MessageListModel.h
 )
 
@@ -55,7 +60,7 @@ qt_add_translations(TARGETS e3mail
 target_include_directories(e3mail PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/controllers ${CMAKE_CURRENT_SOURCE_DIR}/models)
 target_link_libraries(e3mail PRIVATE
-    e3core e3richtext e3notifier Qt6::Gui Qt6::Qml Qt6::Quick Qt6::QuickControls2 Qt6::Svg)
+    e3core e3richtext e3notifier qrcodegen Qt6::Gui Qt6::Qml Qt6::Quick Qt6::QuickControls2 Qt6::Svg)
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     target_link_libraries(e3mail PRIVATE Qt6::DBus)
 elseif(NOT ANDROID)

@@ -72,6 +72,9 @@ inline const QString ContactRemove = QStringLiteral("contact.remove");
 inline const QString KeyLearned = QStringLiteral("key.learned");
 inline const QString ServerAck = QStringLiteral("server.ack");
 inline const QString Setting = QStringLiteral("config.set");
+// Another device joined or left the account (ADR 0013, amended 2026-10-11).
+inline const QString DevicePair = QStringLiteral("device.pair");
+inline const QString DeviceUnpair = QStringLiteral("device.unpair");
 } // namespace op
 
 } // namespace e3

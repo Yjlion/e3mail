@@ -96,6 +96,13 @@ int main(int argc, char **argv)
                                         QStringLiteral("<p><b>Ada Lovelace</b><br><i>Analytical Engines</i>, London</p>"),
                                         QStringLiteral("Ada Lovelace\nAnalytical Engines, London")});
     mail::Signatures::save(ada->ctx(), {QString(), QStringLiteral("Personal"), QString(), QStringLiteral("Ada")});
+    // Another device of Ada's, and no relay: screenshots never go online.
+    ada->ctx().config.set(cfg::P2pRelay, QStringLiteral("off"));
+    ada->ctx().config.set(cfg::P2pLoopback, QStringLiteral("1"));
+    ada->ctx().config.set(cfg::DeviceName, QStringLiteral("Desktop"));
+    ada->ctx().db.run("INSERT INTO devices(id, name, paired_at, node_id, last_seen) VALUES(?, ?, ?, ?, ?)",
+                      QStringLiteral("laptop"), QStringLiteral("Laptop"), QDateTime::currentMSecsSinceEpoch(),
+                      QString(64, u'a'), QDateTime::currentMSecsSinceEpoch() - 3 * 3600 * 1000);
     Account *mira = make(peers, QStringLiteral("mira@example.org"), QStringLiteral("Mira Dorn"), QStringLiteral("imap"));
     Account *tomas = make(peers, QStringLiteral("tomas@example.net"), QStringLiteral("Tomas Reyes"), QStringLiteral("pop3"));
     Account *stranger = make(peers, QStringLiteral("offers@deals.example"), QStringLiteral("Great Deals"), QStringLiteral("imap"));

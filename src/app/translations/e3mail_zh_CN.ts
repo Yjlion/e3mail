@@ -390,6 +390,45 @@ To: %4
     </message>
 </context>
 <context>
+    <name>JoinDialog</name>
+    <message>
+        <source>Copy an account from another device</source>
+        <translation>从另一台设备复制账户</translation>
+    </message>
+    <message>
+        <source>On the device that has the account, open Settings, Devices, “Pair a new device”, and enter the code it shows here.</source>
+        <translation>在已有该账户的设备上，打开“设置”→“设备”→“配对新设备”，并在此输入它显示的代码。</translation>
+    </message>
+    <message>
+        <source>Code</source>
+        <translation>代码</translation>
+    </message>
+    <message>
+        <source>For %1</source>
+        <translation>用于 %1</translation>
+    </message>
+    <message>
+        <source>This is not a pairing code.</source>
+        <translation>这不是配对代码。</translation>
+    </message>
+    <message>
+        <source>This device’s name</source>
+        <translation>此设备的名称</translation>
+    </message>
+    <message>
+        <source>Waiting for the other device to allow it…</source>
+        <translation>等待另一台设备允许…</translation>
+    </message>
+    <message>
+        <source>Copy the account</source>
+        <translation>复制账户</translation>
+    </message>
+    <message>
+        <source>That code cannot be used here. Is this account already on this device?</source>
+        <translation>此代码无法在此使用。该账户是否已在此设备上？</translation>
+    </message>
+</context>
+<context>
     <name>LabelDialog</name>
     <message>
         <source>Edit tag</source>
@@ -421,6 +460,10 @@ To: %4
 </context>
 <context>
     <name>MailApp</name>
+    <message>
+        <source>Unnamed device</source>
+        <translation>未命名设备</translation>
+    </message>
     <message>
         <source>(no subject)</source>
         <translation>（无主题）</translation>
@@ -753,6 +796,53 @@ To: %4
     <message>
         <source>From %1</source>
         <translation>来自 %1</translation>
+    </message>
+</context>
+<context>
+    <name>PairDialog</name>
+    <message>
+        <source>This device could not start its connection to other devices.</source>
+        <translation>此设备无法启动与其他设备的连接。</translation>
+    </message>
+    <message>
+        <source>Pair a new device</source>
+        <translation>配对新设备</translation>
+    </message>
+    <message>
+        <source>On the new device, choose “Copy an account from another device” when adding a mailbox, and enter this code. It works once, for ten minutes.</source>
+        <translation>在新设备上添加邮箱时选择“从另一台设备复制账户”，并输入此代码。它只能使用一次，十分钟内有效。</translation>
+    </message>
+    <message>
+        <source>Pairing code as a QR code</source>
+        <translation>配对代码的二维码</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>复制</translation>
+    </message>
+    <message>
+        <source>“%1” wants to become a device of this account. It will get a copy of all your mail, your contacts, your key and your password.</source>
+        <translation>“%1”想成为此账户的设备。它将获得你全部邮件、联系人、密钥和密码的副本。</translation>
+    </message>
+    <message>
+        <source>Allow it only if you are setting up that device yourself, now.</source>
+        <translation>只有当你正在亲自设置那台设备时才允许。</translation>
+    </message>
+    <message>
+        <source>Allow</source>
+        <translation>允许</translation>
+    </message>
+    <message>
+        <source>Refuse</source>
+        <translation>拒绝</translation>
+    </message>
+    <message>
+        <source>Sending a copy to “%1”…</source>
+        <translation>正在向“%1”发送副本…</translation>
+    </message>
+    <message>
+        <source>“%1” is now a device of this account.</source>
+        <translation>“%1”现在是此账户的设备。</translation>
     </message>
 </context>
 <context>
@@ -1145,6 +1235,58 @@ To: %4
         <translation>屏蔽</translation>
     </message>
     <message>
+        <source>Devices</source>
+        <translation>设备</translation>
+    </message>
+    <message>
+        <source>This build of e3mail cannot sync with other devices.</source>
+        <translation>此版本的 e3mail 无法与其他设备同步。</translation>
+    </message>
+    <message>
+        <source>This device</source>
+        <translation>此设备</translation>
+    </message>
+    <message>
+        <source>Connected</source>
+        <translation>已连接</translation>
+    </message>
+    <message>
+        <source>Last seen %1</source>
+        <translation>上次在线 %1</translation>
+    </message>
+    <message>
+        <source>Not seen yet</source>
+        <translation>尚未在线</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>移除</translation>
+    </message>
+    <message>
+        <source>Pair a new device…</source>
+        <translation>配对新设备…</translation>
+    </message>
+    <message>
+        <source>Relay</source>
+        <translation>中继</translation>
+    </message>
+    <message>
+        <source>n0&apos;s public relays</source>
+        <translation>n0 的公共中继</translation>
+    </message>
+    <message>
+        <source>A relay I run</source>
+        <translation>我自己运行的中继</translation>
+    </message>
+    <message>
+        <source>None: only on the same network</source>
+        <translation>无：仅限同一网络</translation>
+    </message>
+    <message>
+        <source>Devices of this account sync directly with each other, end-to-end encrypted. When they cannot reach each other, a relay passes the encrypted traffic along; it cannot read it.</source>
+        <translation>此账户的设备之间直接同步，端到端加密。当它们无法直接连接时，由中继转发加密流量；中继无法读取内容。</translation>
+    </message>
+    <message>
         <source>Data</source>
         <translation>数据</translation>
     </message>
@@ -1175,6 +1317,10 @@ To: %4
     <message>
         <source>Remove %1?</source>
         <translation>移除 %1？</translation>
+    </message>
+    <message>
+        <source>It stops syncing with this account&apos;s other devices. What is already on it stays there.</source>
+        <translation>它将不再与此账户的其他设备同步。已在其上的内容会保留。</translation>
     </message>
     <message>
         <source>Every message, contact and key of this mailbox is deleted from this device.</source>
@@ -1305,6 +1451,10 @@ To: %4
     <message>
         <source>Cancel</source>
         <translation>取消</translation>
+    </message>
+    <message>
+        <source>Copy an account from another device…</source>
+        <translation>从另一台设备复制账户…</translation>
     </message>
 </context>
 <context>
@@ -1481,6 +1631,68 @@ To: %4
     <message>
         <source>Create a tag…</source>
         <translation>创建标签…</translation>
+    </message>
+</context>
+<context>
+    <name>e3::PairingJoin</name>
+    <message>
+        <source>The code could not be read.</source>
+        <translation>无法读取代码。</translation>
+    </message>
+    <message>
+        <source>The connection to the other device was lost: %1</source>
+        <translation>与另一台设备的连接已断开：%1</translation>
+    </message>
+    <message>
+        <source>The other device did not allow it.</source>
+        <translation>另一台设备没有允许。</translation>
+    </message>
+    <message>
+        <source>The other device offered a different account.</source>
+        <translation>另一台设备提供了不同的账户。</translation>
+    </message>
+    <message>
+        <source>Cannot write here.</source>
+        <translation>无法在此写入。</translation>
+    </message>
+    <message>
+        <source>The other device sent something unexpected.</source>
+        <translation>另一台设备发送了意外的内容。</translation>
+    </message>
+    <message>
+        <source>A file arrived damaged.</source>
+        <translation>有一个文件在传输中损坏。</translation>
+    </message>
+    <message>
+        <source>The copy of the mailbox arrived damaged.</source>
+        <translation>邮箱副本在传输中损坏。</translation>
+    </message>
+</context>
+<context>
+    <name>e3::PairingOffer</name>
+    <message>
+        <source>The code expired.</source>
+        <translation>代码已过期。</translation>
+    </message>
+    <message>
+        <source>The other device went away.</source>
+        <translation>另一台设备已离开。</translation>
+    </message>
+    <message>
+        <source>Another device</source>
+        <translation>另一台设备</translation>
+    </message>
+    <message>
+        <source>Pairing was refused on this device.</source>
+        <translation>此设备拒绝了配对。</translation>
+    </message>
+    <message>
+        <source>A file asked for is not here.</source>
+        <translation>请求的文件不在此处。</translation>
+    </message>
+    <message>
+        <source>The copy of the mailbox could not be read.</source>
+        <translation>无法读取邮箱副本。</translation>
     </message>
 </context>
 </TS>

@@ -58,6 +58,8 @@ inline constexpr char Configured[] = "configured";
 // Devices (ADR 0010). Per device: never synced, never copied when pairing.
 inline constexpr char P2pSecret[] = "p2p_secret";            // this device's Iroh key, hex
 inline constexpr char P2pRelay[] = "p2p_relay";              // "default" | "off" | a relay URL
+inline constexpr char P2pPort[] = "p2p_port";                // a fixed UDP port, or 0 for any
+inline constexpr char P2pLoopback[] = "p2p_loopback";        // 1: this machine only (tests, screenshots)
 inline constexpr char DeviceName[] = "device_name";          // what other devices call this one
 } // namespace cfg
 

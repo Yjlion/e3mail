@@ -24,7 +24,8 @@ IrohTransport::IrohTransport(Database &db, const QString &self, const Options &o
                                                      : E3P2P_RELAY_DEFAULT;
     const QByteArray url = options.relayUrl.toUtf8();
     m_node = e3p2p_start(reinterpret_cast<const uint8_t *>(options.secret.constData()), relay,
-                         url.isEmpty() ? nullptr : url.constData(), &IrohTransport::wake, this);
+                         url.isEmpty() ? nullptr : url.constData(), options.port, options.loopback ? 1 : 0,
+                         &IrohTransport::wake, this);
     if (!m_node) {
         qCWarning(lcSync) << "cannot start the device endpoint";
         return;
@@ -74,9 +75,20 @@ void IrohTransport::refreshPeers()
 {
     if (!m_node)
         return;
+    QSet<QString> now;
     Statement st(m_db, "SELECT node_id FROM devices WHERE node_id IS NOT NULL");
     while (st.step())
-        e3p2p_allow(m_node, st.text(0).toLatin1().constData(), 1);
+        now.insert(st.text(0));
+    for (const QString &n : now - m_allowed)
+        e3p2p_allow(m_node, n.toLatin1().constData(), 1);
+    for (const QString &gone : m_allowed - now) {
+        e3p2p_allow(m_node, gone.toLatin1().constData(), 0);
+        for (auto it = m_conns.cbegin(); it != m_conns.cend(); ++it) {
+            if (it->peer == gone)
+                e3p2p_close(m_node, it.key());
+        }
+    }
+    m_allowed = now;
 }
 
 void IrohTransport::acceptAny(bool on)
@@ -144,7 +156,10 @@ void IrohTransport::poll()
             c.peer = peer;
             c.incoming = incoming;
             // Say who we are; the device is known once the other side has too.
-            sendFrame(conn, Hello, QJsonDocument(QJsonObject{{QStringLiteral("device"), m_self}}).toJson(QJsonDocument::Compact));
+            // with where we can be reached now, for the next time.
+            sendFrame(conn, Hello, QJsonDocument(QJsonObject{{QStringLiteral("device"), m_self},
+                                                             {QStringLiteral("addr"), addr()}})
+                                       .toJson(QJsonDocument::Compact));
             Q_EMIT strangerConnected(conn, peer, incoming);
             break;
         }
@@ -186,6 +201,9 @@ void IrohTransport::onHello(quint64 conn, const QByteArray &data)
     }
     c.device = device;
     m_byDevice.insert(device, conn);
+    const QString addr = QJsonDocument::fromJson(data).object().value(QLatin1String("addr")).toString();
+    if (!addr.isEmpty())
+        m_db.run("UPDATE devices SET addr=? WHERE id=?", addr, device);
     qCInfo(lcSync) << "device connected:" << device;
     Q_EMIT connected(device);
 }

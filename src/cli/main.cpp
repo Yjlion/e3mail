@@ -8,6 +8,9 @@
 #include "crypto/Pgp.h"
 #include "engine/AccountManager.h"
 #include "engine/Autoconfig.h"
+#ifdef E3MAIL_HAVE_P2P
+#include "engine/Pairing.h"
+#endif
 #include "mail/Compose.h"
 #include "mail/Contacts.h"
 #include "mail/ContactsCsv.h"
@@ -23,6 +26,7 @@
 #include "store/BlobStore.h"
 #include "store/Config.h"
 #include "store/Database.h"
+#include "store/OpLog.h"
 #include "util/Paths.h"
 
 #include <QCommandLineParser>
@@ -30,10 +34,13 @@
 #include <QCoreApplication>
 #include <QFile>
 #include <QFileInfo>
+#include <QDateTime>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QMimeDatabase>
+#include <QSysInfo>
+#include <QTimer>
 
 #include <cstdio>
 
@@ -136,6 +143,11 @@ int main(int argc, char **argv)
         "  config <key> [value]           read or write an account setting\n"
         "  housekeeping                   run deadlines now\n"
         "  key                            this account's public key, armoured\n"
+        "  run [seconds]                  run the account as the app does (mail and device sync) for a while\n"
+        "  devices                        this device and the devices paired with it\n"
+        "  pair-offer [--yes]             print a code for a new device, wait for it, and send it a copy\n"
+        "  pair-join <code> [--device-name name]\n"
+        "                                 become a device of the account the code is for\n"
         "  cert --in-host --in-port --in-security [--protocol imap|pop3|smtp]\n"
         "                                 a server's certificate and its SHA-256, to check before\n"
         "                                 trusting it with add --in-cert / --smtp-cert"));
@@ -155,6 +167,8 @@ int main(int argc, char **argv)
         {QStringLiteral("smtp-port"), QStringLiteral("SMTP port."), QStringLiteral("port")},
         {QStringLiteral("smtp-security"), QStringLiteral("ssl, starttls or plain."), QStringLiteral("mode")},
         {QStringLiteral("insecure"), QStringLiteral("Accept invalid TLS certificates (test servers only).")},
+        {QStringLiteral("yes"), QStringLiteral("With pair-offer: allow the device that asks, without asking.")},
+        {QStringLiteral("device-name"), QStringLiteral("With pair-join: what the other devices call this one."), QStringLiteral("name")},
         {QStringLiteral("in-cert"), QStringLiteral("Trust this certificate (SHA-256) for the incoming server."), QStringLiteral("sha256")},
         {QStringLiteral("smtp-cert"), QStringLiteral("Trust this certificate (SHA-256) for the SMTP server."), QStringLiteral("sha256")},
         {QStringLiteral("tag"), QStringLiteral("inbox, unverified, sent, drafts, archive, trash, all."), QStringLiteral("tag"), QStringLiteral("inbox")},
@@ -285,6 +299,29 @@ int main(int argc, char **argv)
                               {QStringLiteral("password_stored_in"), acc->secretLocation()}});
             return 0;
         }
+
+#ifdef E3MAIL_HAVE_P2P
+        if (cmd == QLatin1String("pair-join")) {
+            const QString name = p.isSet(QStringLiteral("device-name")) ? p.value(QStringLiteral("device-name"))
+                                                                        : QSysInfo::machineHostName();
+            PairingJoin join(mgr, args.value(1), name);
+            if (!join.isValid())
+                fail(QStringLiteral("not a pairing code, or this account is already here"));
+            QEventLoop loop;
+            int code = 1;
+            QObject::connect(&join, &PairingJoin::waiting, &loop, [&] {
+                std::fprintf(stderr, "waiting for %s to be allowed on the other device\n", qPrintable(join.account()));
+            });
+            QObject::connect(&join, &PairingJoin::finished, &loop, [&](bool ok, const QString &message, int id) {
+                print(QJsonObject{{QStringLiteral("paired"), ok}, {QStringLiteral("message"), message},
+                                  {QStringLiteral("id"), id}});
+                code = ok ? 0 : 1;
+                loop.quit();
+            });
+            loop.exec();
+            return code;
+        }
+#endif
 
         Account *acc = p.isSet(QStringLiteral("account")) ? mgr.account(p.value(QStringLiteral("account")).toInt())
                                                           : mgr.selected();
@@ -437,6 +474,56 @@ int main(int argc, char **argv)
             if (args.size() > 2)
                 mail::Preferences::set(ctx, key.constData(), args.value(2));
             print(QJsonObject{{QString::fromUtf8(key), ctx.config.get(key.constData())}});
+        } else if (cmd == QLatin1String("run")) {
+            const int seconds = args.size() > 1 ? args.value(1).toInt() : 30;
+            acc->start();
+            QEventLoop loop;
+            QTimer::singleShot(seconds * 1000, &loop, &QEventLoop::quit);
+            loop.exec();
+            acc->stop();
+            acc->stopDevices();
+            print(QJsonObject{{QStringLiteral("status"), acc->status()}, {QStringLiteral("detail"), acc->statusDetail()}});
+        } else if (cmd == QLatin1String("devices")) {
+            QJsonArray devices;
+            Statement st(ctx.db, "SELECT id, name, node_id, last_seen FROM devices ORDER BY paired_at");
+            while (st.step())
+                devices.append(QJsonObject{{QStringLiteral("device"), st.text(0)},
+                                           {QStringLiteral("name"), st.text(1)},
+                                           {QStringLiteral("endpoint"), st.text(2)},
+                                           {QStringLiteral("last_seen"), st.isNull(3) ? QJsonValue()
+                                                : QJsonValue(QDateTime::fromMSecsSinceEpoch(st.int64(3)).toUTC().toString(Qt::ISODate))}});
+            print(QJsonObject{{QStringLiteral("device"), ctx.ops.deviceId()},
+                              {QStringLiteral("name"), ctx.config.get(cfg::DeviceName)},
+                              {QStringLiteral("sync_built_in"), Account::devicesAvailable()},
+                              {QStringLiteral("devices"), devices}});
+#ifdef E3MAIL_HAVE_P2P
+        } else if (cmd == QLatin1String("pair-offer")) {
+            PairingOffer offer(*acc);
+            if (!offer.isReady())
+                fail(QStringLiteral("the device endpoint did not start"));
+            print(QJsonObject{{QStringLiteral("code"), offer.code()}});
+            std::fflush(stdout);
+            QEventLoop loop;
+            int code = 1;
+            QObject::connect(&offer, &PairingOffer::requested, &loop, [&](const QString &name) {
+                bool yes = p.isSet(QStringLiteral("yes"));
+                if (!yes) {
+                    std::fprintf(stderr, "Allow \"%s\" to become a device of %s? [y/N] ", qPrintable(name),
+                                 qPrintable(acc->addr()));
+                    char answer[8] = {};
+                    yes = std::fgets(answer, sizeof answer, stdin) && (answer[0] == 'y' || answer[0] == 'Y');
+                }
+                yes ? offer.allow() : offer.deny();
+            });
+            QObject::connect(&offer, &PairingOffer::finished, &loop, [&](bool ok, const QString &message) {
+                print(QJsonObject{{QStringLiteral("paired"), ok}, {QStringLiteral("message"), message}});
+                code = ok ? 0 : 1;
+                // Let the new device's first sync start before leaving.
+                QTimer::singleShot(ok ? 3000 : 0, &loop, &QEventLoop::quit);
+            });
+            loop.exec();
+            return code;
+#endif
         } else if (cmd == QLatin1String("key")) {
             const QString fpr = mail::Keyring::selfFingerprint(ctx);
             std::fputs(ctx.pgp.exportPublic(fpr, true).constData(), stdout);

@@ -524,6 +524,50 @@ on that device.
   no flow control beyond QUIC's; a mailbox of several gigabytes has not been
   tried.
 
+## P8 slice 3, first half: pairing (2026-10-11)
+
+A new device joins an account with a code ([ADR 0010 amendment](adr/0010-multi-client-over-iroh.md)).
+Settings, Devices, "Pair a new device…" shows a QR code and the same code as
+text; on the new device, setup offers "Copy an account from another
+device…", where the code is pasted. The existing device asks whether to let
+"Laptop" in; then the new device pulls the database and every blob, checked
+by SHA-256, plus the passwords, and becomes a device of its own (id, Iroh
+key, name). A `device.pair` op tells the other devices, and Remove sends
+`device.unpair` and drops the device at once (ADR 0013 amendment). Settings
+lists the devices, online or last seen, the device's own name, and the
+relay: n0's public relays, one the person runs, or none.
+
+`engine/Pairing` holds both sides. `e3mail-cli` gains `devices`,
+`pair-offer [--yes]`, `pair-join <code>` and `run [seconds]`, and
+`scripts/p2p-e2e.py` uses them.
+
+**Verified here:**
+- `tst_p2p` (9 tests, relay off, loopback only): a full pairing (the new
+  device has the mail, decrypts it, has its own id, key and name, the
+  password, and server acks for what the copy holds; A records it and B
+  learns of it through `device.pair`; then A's read state reaches it); the
+  code refused a second time; Deny refused; a wrong token never asked
+  about; a blob changed on disk refused by its hash; a removed device
+  dropped and refused. Thirty runs in a row without a failure, after
+  trap 45.
+- `scripts/p2p-e2e.py` against `server/compose`, three runs, all passed:
+  two `e3mail-cli` processes pair with a code; the server keeps alice's new
+  message until the second device has it; it reaches B; A's accept and
+  archive reach B; then the server copy is deleted.
+- `scripts/e2e.py` still passes.
+- Screenshots: Devices (English, Arabic, phone), the pairing dialog with its
+  QR code (English, Arabic, phone), the join dialog.
+
+**Not verified:**
+- Scanning the QR code: there is no camera scanning; the code is pasted. No
+  phone has read the QR code shown on screen.
+- Pairing over n0's relay, or between two machines.
+- A large mailbox: the copy is pulled in 1 MiB pieces, eight at a time,
+  measured only on small fixtures.
+- Removing a device while it is offline: it is refused when it comes back,
+  and the other devices learn of the removal, but what the removed device
+  shows then has not been looked at.
+
 ## Known gaps
 
 - **Signed-only mail** is checked only for PGP/MIME (`multipart/signed`);
@@ -772,11 +816,29 @@ sets the NDK's per-target wrapper (`<triple><api>-clang`) instead.
 there by hand (2.6 GB after one `cargo test`). It is in `.gitignore`; CMake
 builds in `build/`.
 
+**45. Rust may call the waker after `e3p2p_stop` returned.** Shutting the
+runtime down in the background lets a connection task finish later and call
+the waker on an `IrohTransport` already freed; it crashed one run in nine.
+The waker now sits behind a lock that `e3p2p_stop` clears first. Separately,
+a pairing failure must not delete the transport from inside its own poll
+(heap corruption): it is `deleteLater`.
+
+**46. Screenshots must not picture this machine.** The join dialog's
+default device name is the host name, and a pairing code holds the
+endpoint's addresses. `scripts/screenshots.sh` sets `E3MAIL_DEVICE_NAME`,
+and the fixtures' endpoint is loopback-only (`p2p_loopback`), as in the
+tests.
+
+**47. A Qt Test that hangs survives `timeout`.** On SIGTERM QtTest tries to
+print a stack trace with gdb and waits. Use `QTEST_DISABLE_STACK_DUMP=1` and
+`timeout -s KILL` when running a suite that might hang.
+
 ## Next
 
 1. Push and watch CI with Rust on all three desktop platforms and Android;
    connect two machines on different networks through n0's relay.
-2. P8, slice 3: QR pairing with the encrypted snapshot; the mailbox fallback.
+2. Scan the pairing QR code with a phone's camera (Qt Multimedia and a QR
+   decoder in the Android build); the code is pasted for now.
 3. Install each published package on its own platform. Pre-releases
    v0.1.1 to v0.1.5 are on GitHub (v0.1.5 with both APKs); v0.1.0 is still
    marked Latest.

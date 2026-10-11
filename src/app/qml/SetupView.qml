@@ -218,6 +218,18 @@ Rectangle {
                 BusyIndicator { running: setup.busy; visible: running; implicitWidth: 28; implicitHeight: 28 }
                 Button { visible: view.cancellable; text: qsTr("Cancel"); flat: true; onClicked: view.cancelled() }
             }
+            Button {
+                visible: MailApp.devicesAvailable
+                Layout.topMargin: 8
+                flat: true
+                text: qsTr("Copy an account from another device…")
+                onClicked: joinDialog.open()
+            }
         }
+    }
+    function openJoin() { joinDialog.open() }
+    JoinDialog {
+        id: joinDialog
+        onJoined: view.finished()
     }
 }

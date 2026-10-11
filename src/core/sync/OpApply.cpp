@@ -11,6 +11,7 @@
 #include "util/Hlc.h"
 #include "util/Log.h"
 
+#include <QDateTime>
 #include <QJsonDocument>
 #include <QSet>
 
@@ -210,6 +211,20 @@ bool applyOne(MailContext &ctx, const Op &o, OpApply::Result *r)
         mail::Contacts::touch(ctx, addr, QString(), ContactOrigin::Manual);
         ctx.db.run("UPDATE contacts SET fingerprint=?, verified=1 WHERE addr=?", str(o, "fpr"),
                    mime::normalizeAddr(addr));
+        return true;
+    }
+    if (o.kind == op::DevicePair || o.kind == op::DeviceUnpair) {
+        // A device is never told about itself: it knows it is paired, and it
+        // learns it was removed by being refused.
+        const QString device = str(o, "device");
+        if (device.isEmpty() || device == ctx.ops.deviceId())
+            return false;
+        if (o.kind == op::DevicePair)
+            ctx.db.run("INSERT INTO devices(id, name, paired_at, node_id) VALUES(?, ?, ?, ?) "
+                       "ON CONFLICT(id) DO UPDATE SET name=excluded.name, node_id=excluded.node_id",
+                       device, str(o, "name"), QDateTime::currentMSecsSinceEpoch(), str(o, "node"));
+        else
+            ctx.db.run("DELETE FROM devices WHERE id=?", device);
         return true;
     }
     if (o.kind == op::ServerAck) {

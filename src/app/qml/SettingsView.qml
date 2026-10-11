@@ -276,6 +276,69 @@ Rectangle {
                 Button { text: qsTr("Block"); onClicked: { MailApp.block(blockField.text); blockField.text = ""; view.reload() } }
             }
 
+            Heading { id: devicesHeading; text: qsTr("Devices") }
+            Note {
+                visible: !MailApp.devicesAvailable
+                text: qsTr("This build of e3mail cannot sync with other devices.")
+            }
+            ColumnLayout {
+                Layout.fillWidth: true
+                visible: MailApp.devicesAvailable
+                spacing: 6
+                Label { text: qsTr("This device"); color: Theme.muted }
+                Field {
+                    Layout.fillWidth: true
+                    text: MailApp.deviceName
+                    placeholderText: MailApp.defaultDeviceName()
+                    onEditingFinished: MailApp.deviceName = text
+                }
+                Repeater {
+                    model: MailApp.devices
+                    RowLayout {
+                        required property var modelData
+                        Layout.fillWidth: true
+                        spacing: 8
+                        Rectangle { width: 8; height: 8; radius: 4; color: modelData.online ? Theme.good : Theme.muted }
+                        ColumnLayout {
+                            Layout.fillWidth: true
+                            spacing: 0
+                            Label { Layout.fillWidth: true; text: modelData.name; color: Theme.text; elide: Text.ElideRight }
+                            Label {
+                                Layout.fillWidth: true
+                                color: Theme.muted
+                                font.pixelSize: Theme.fontSmall
+                                elide: Text.ElideRight
+                                text: modelData.online ? qsTr("Connected")
+                                      : modelData.lastSeen.length ? qsTr("Last seen %1").arg(modelData.lastSeen)
+                                      : qsTr("Not seen yet")
+                            }
+                        }
+                        Button { text: qsTr("Remove"); flat: true; onClicked: { removeDeviceConfirm.device = modelData; removeDeviceConfirm.open() } }
+                    }
+                }
+                Button { text: qsTr("Pair a new device…"); onClicked: pairDialog.begin() }
+                Label { text: qsTr("Relay"); color: Theme.muted }
+                ChoiceBox {
+                    id: relayBox
+                    Layout.fillWidth: true
+                    model: [{ v: "default", t: qsTr("n0's public relays") },
+                            { v: "custom", t: qsTr("A relay I run") },
+                            { v: "off", t: qsTr("None: only on the same network") }]
+                    textRole: "t"; valueRole: "v"
+                    selected: MailApp.relay === "default" || MailApp.relay === "off" ? ["default", "custom", "off"].indexOf(MailApp.relay) : 1
+                    onActivated: { if (currentValue !== "custom") MailApp.relay = currentValue; else relayUrl.forceActiveFocus() }
+                }
+                Field {
+                    id: relayUrl
+                    Layout.fillWidth: true
+                    visible: relayBox.currentValue === "custom"
+                    placeholderText: "https://relay.example.org"
+                    text: MailApp.relay.startsWith("http") ? MailApp.relay : ""
+                    onEditingFinished: if (text.startsWith("https://") || text.startsWith("http://")) MailApp.relay = text
+                }
+                Note { text: qsTr("Devices of this account sync directly with each other, end-to-end encrypted. When they cannot reach each other, a relay passes the encrypted traffic along; it cannot read it.") }
+            }
+
             Heading { text: qsTr("Data") }
             Note { text: qsTr("Your mail lives only here: %1. Back this folder up — the server keeps no copy.").arg(view.s.dataDir || "") }
             Note { visible: MailApp.portable; text: qsTr("Portable mode: data is kept beside the program.") }
@@ -292,6 +355,26 @@ Rectangle {
     }
 
     SignatureDialog { id: signatureDialog }
+    PairDialog { id: pairDialog }
+    function pairDevice() { pairDialog.begin() }
+    // After layout, which has not happened when the page has just opened.
+    function showDevices() { scrollToDevices.start() }
+    Timer { id: scrollToDevices; interval: 300; onTriggered: flick.contentY = Math.max(0, devicesHeading.y - 12) }
+    Dialog {
+        id: removeDeviceConfirm
+        property var device: ({})
+        parent: Overlay.overlay
+        anchors.centerIn: parent
+        modal: true
+        title: qsTr("Remove %1?").arg(device.name || "")
+        standardButtons: Dialog.Yes | Dialog.Cancel
+        Label {
+            width: Math.min(implicitWidth, Window.width - 96)
+            wrapMode: Text.Wrap
+            text: qsTr("It stops syncing with this account's other devices. What is already on it stays there.")
+        }
+        onAccepted: MailApp.removeDevice(device.id)
+    }
     function editSignature(id) { signatureDialog.edit(id) }
 
     Dialog {

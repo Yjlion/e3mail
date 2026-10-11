@@ -47,12 +47,15 @@ Account::Account(int id, const QString &dir, QObject *parent) : QObject(parent),
         if (m_sync)
             m_sync->push();
     });
-    m_dial.setInterval(60 * 1000);
+    // Paired devices that are away are dialed again: soon at first (one may
+    // just be starting), then less often, up to once a minute.
+    m_dial.setSingleShot(true);
     connect(&m_dial, &QTimer::timeout, this, [this] {
 #ifdef E3MAIL_HAVE_P2P
         if (auto *t = qobject_cast<sync::IrohTransport *>(m_transport.get()))
             t->dialPaired();
 #endif
+        m_dial.start(qMin(m_dial.interval() * 2, 60 * 1000));
     });
     // Whatever changed here, the other devices hear of it.
     connect(this, &Account::mailChanged, this, &Account::pushSoon);
@@ -85,6 +88,8 @@ bool Account::startDevices()
     }
     sync::IrohTransport::Options o;
     o.secret = secret;
+    o.port = quint16(m_config->getInt(cfg::P2pPort));
+    o.loopback = m_config->getBool(cfg::P2pLoopback);
     const QString relay = m_config->get(cfg::P2pRelay);
     if (relay == QLatin1String("off")) {
         o.relay = sync::IrohTransport::Relay::Off;
@@ -96,11 +101,18 @@ bool Account::startDevices()
     if (!t->isRunning())
         return false;
     m_sync = std::make_unique<sync::SyncSession>(*m_ctx, *t);
-    connect(m_sync.get(), &sync::SyncSession::changed, this, &Account::mailChanged);
     sync::IrohTransport *raw = t.get();
+    connect(m_sync.get(), &sync::SyncSession::changed, this, [this, raw] {
+        raw->refreshPeers(); // another device may have joined (device.pair)
+        Q_EMIT mailChanged();
+    });
+    connect(raw, &sync::DeviceTransport::connected, this, &Account::statusChanged);
+    connect(raw, &sync::DeviceTransport::disconnected, this, &Account::statusChanged);
     m_transport = std::move(t);
     raw->dialPaired();
-    m_dial.start();
+    m_dial.start(5000);
+    // A device that went away is looked for soon again.
+    connect(raw, &sync::DeviceTransport::disconnected, this, [this] { m_dial.start(5000); });
     qCInfo(lcEngine) << "devices: endpoint" << raw->nodeId();
     return true;
 #else
@@ -113,6 +125,32 @@ void Account::stopDevices()
     m_dial.stop();
     m_sync.reset();
     m_transport.reset();
+}
+
+bool Account::isDeviceConnected(const QString &device) const
+{
+#ifdef E3MAIL_HAVE_P2P
+    if (auto *t = qobject_cast<sync::IrohTransport *>(m_transport.get()))
+        return t->isConnected(device);
+#endif
+    Q_UNUSED(device)
+    return false;
+}
+
+void Account::removeDevice(const QString &device)
+{
+    {
+        Transaction tx(*m_db);
+        m_db->run("DELETE FROM devices WHERE id=?", device);
+        m_ops->record(op::DeviceUnpair, {{QStringLiteral("device"), device}});
+        tx.commit();
+    }
+#ifdef E3MAIL_HAVE_P2P
+    if (auto *t = qobject_cast<sync::IrohTransport *>(m_transport.get()))
+        t->refreshPeers();
+#endif
+    notifyChanged();
+    Q_EMIT statusChanged();
 }
 
 void Account::pushSoon()

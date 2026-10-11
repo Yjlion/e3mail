@@ -42,6 +42,13 @@ class MailApp : public QObject
     Q_PROPERTY(QString accountStatusDetail READ accountStatusDetail NOTIFY statusChanged)
     // Older mail the first sync is still downloading, newest first.
     Q_PROPERTY(int olderRemaining READ olderRemaining NOTIFY statusChanged)
+    // Other devices of this account (ADR 0010).
+    Q_PROPERTY(bool devicesAvailable READ devicesAvailable CONSTANT)
+    // [{id, name, online, lastSeen}]
+    Q_PROPERTY(QVariantList devices READ devices NOTIFY devicesChanged)
+    Q_PROPERTY(QString deviceName READ deviceName WRITE setDeviceName NOTIFY devicesChanged)
+    // "default", "off", or a relay URL.
+    Q_PROPERTY(QString relay READ relay WRITE setRelay NOTIFY devicesChanged)
     // While the status is "cert": {server, fingerprint}; otherwise empty.
     Q_PROPERTY(QVariantMap refusedCertificate READ refusedCertificate NOTIFY statusChanged)
     Q_PROPERTY(QString currentTag READ currentTag NOTIFY viewChanged)
@@ -153,6 +160,27 @@ public:
 
     Q_INVOKABLE QVariantMap settings() const;
     QVariantMap refusedCertificate() const;
+
+    bool devicesAvailable() const;
+    QVariantList devices() const;
+    QString deviceName() const;
+    void setDeviceName(const QString &name);
+    QString relay() const;
+    void setRelay(const QString &relay);
+    // Pairing, on the device that has the account: a code to show, or
+    // empty if the endpoint did not start. Then pairingRequested, allow or
+    // deny, and pairingFinished.
+    Q_INVOKABLE QString startPairing();
+    Q_INVOKABLE void allowPairing();
+    Q_INVOKABLE void denyPairing();
+    Q_INVOKABLE void cancelPairing();
+    Q_INVOKABLE void removeDevice(const QString &id);
+    // On the new device: the account a code is for (empty if it is not a
+    // code), and joining it.
+    Q_INVOKABLE QString codeAccount(const QString &code) const;
+    Q_INVOKABLE bool joinDevice(const QString &code, const QString &deviceName);
+    Q_INVOKABLE void cancelJoin();
+    Q_INVOKABLE QString defaultDeviceName() const;
     Q_INVOKABLE void trustRefusedCertificate();
     // "in" or "smtp": back to TLS's own judgement.
     Q_INVOKABLE void forgetCertificate(const QString &server);
@@ -184,6 +212,13 @@ Q_SIGNALS:
     void labelsChanged();
     void countsChanged();
     void signaturesChanged();
+    void devicesChanged();
+    void pairingRequested(const QString &deviceName);
+    void pairingProgress(int percent);
+    void pairingFinished(bool ok, const QString &message);
+    void joinWaiting();
+    void joinProgress(int percent);
+    void joinFinished(bool ok, const QString &message);
     void selectionChanged();
     void notify(const QString &message);
     void newMailArrived(const QString &from, const QString &subject);
@@ -214,6 +249,8 @@ private:
     QVariantList m_labels;
     QVariantMap m_counts;
     QVariantList m_signatures;
+    QPointer<QObject> m_offer; // a PairingOffer
+    QPointer<QObject> m_join;  // a PairingJoin
     qint64 m_selected = 0;
     QVariantList m_thread;
     QTimer m_refresh;

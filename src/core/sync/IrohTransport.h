@@ -40,6 +40,8 @@ public:
         QByteArray secret; // 32 bytes
         Relay relay = Relay::Default;
         QString relayUrl;
+        quint16 port = 0; // 0: any
+        bool loopback = false; // this machine only: tests and screenshots
     };
 
     // `db` is read for the paired devices; `self` is this device's id.
@@ -53,7 +55,8 @@ public:
     bool waitOnline(int ms);
     static QByteArray generateSecret();
 
-    // Lets in exactly the paired devices' endpoints; call after pairing.
+    // Lets in exactly the paired devices' endpoints, and drops the
+    // connection of one no longer paired; call after pairing or removing.
     void refreshPeers();
     // Dials every paired device not connected now.
     void dialPaired();
@@ -100,6 +103,7 @@ private:
     QHash<quint64, Conn> m_conns;
     QHash<QString, quint64> m_byDevice;
     QSet<quint64> m_dialing; // our own dials, still connecting
+    QSet<QString> m_allowed; // endpoints let in
 };
 
 } // namespace e3::sync

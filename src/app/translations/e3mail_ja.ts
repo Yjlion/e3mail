@@ -390,6 +390,45 @@ To: %4
     </message>
 </context>
 <context>
+    <name>JoinDialog</name>
+    <message>
+        <source>Copy an account from another device</source>
+        <translation>別のデバイスからアカウントをコピー</translation>
+    </message>
+    <message>
+        <source>On the device that has the account, open Settings, Devices, “Pair a new device”, and enter the code it shows here.</source>
+        <translation>アカウントがあるデバイスで「設定」→「デバイス」→「新しいデバイスをペアリング」を開き、表示されたコードをここに入力してください。</translation>
+    </message>
+    <message>
+        <source>Code</source>
+        <translation>コード</translation>
+    </message>
+    <message>
+        <source>For %1</source>
+        <translation>%1 用</translation>
+    </message>
+    <message>
+        <source>This is not a pairing code.</source>
+        <translation>これはペアリングコードではありません。</translation>
+    </message>
+    <message>
+        <source>This device’s name</source>
+        <translation>このデバイスの名前</translation>
+    </message>
+    <message>
+        <source>Waiting for the other device to allow it…</source>
+        <translation>もう一方のデバイスの許可を待っています…</translation>
+    </message>
+    <message>
+        <source>Copy the account</source>
+        <translation>アカウントをコピー</translation>
+    </message>
+    <message>
+        <source>That code cannot be used here. Is this account already on this device?</source>
+        <translation>このコードはここでは使えません。このアカウントはすでにこのデバイスにありませんか？</translation>
+    </message>
+</context>
+<context>
     <name>LabelDialog</name>
     <message>
         <source>Edit tag</source>
@@ -421,6 +460,10 @@ To: %4
 </context>
 <context>
     <name>MailApp</name>
+    <message>
+        <source>Unnamed device</source>
+        <translation>名前のないデバイス</translation>
+    </message>
     <message>
         <source>(no subject)</source>
         <translation>(件名なし)</translation>
@@ -753,6 +796,53 @@ To: %4
     <message>
         <source>From %1</source>
         <translation>%1 から</translation>
+    </message>
+</context>
+<context>
+    <name>PairDialog</name>
+    <message>
+        <source>This device could not start its connection to other devices.</source>
+        <translation>このデバイスは他のデバイスへの接続を開始できませんでした。</translation>
+    </message>
+    <message>
+        <source>Pair a new device</source>
+        <translation>新しいデバイスをペアリング</translation>
+    </message>
+    <message>
+        <source>On the new device, choose “Copy an account from another device” when adding a mailbox, and enter this code. It works once, for ten minutes.</source>
+        <translation>新しいデバイスでメールボックスを追加するときに「別のデバイスからアカウントをコピー」を選び、このコードを入力してください。1 回だけ、10 分間有効です。</translation>
+    </message>
+    <message>
+        <source>Pairing code as a QR code</source>
+        <translation>ペアリングコードの QR コード</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>コピー</translation>
+    </message>
+    <message>
+        <source>“%1” wants to become a device of this account. It will get a copy of all your mail, your contacts, your key and your password.</source>
+        <translation>「%1」がこのアカウントのデバイスになろうとしています。すべてのメール、連絡先、鍵、パスワードのコピーを受け取ります。</translation>
+    </message>
+    <message>
+        <source>Allow it only if you are setting up that device yourself, now.</source>
+        <translation>いまご自身でそのデバイスを設定している場合にのみ許可してください。</translation>
+    </message>
+    <message>
+        <source>Allow</source>
+        <translation>許可</translation>
+    </message>
+    <message>
+        <source>Refuse</source>
+        <translation>拒否</translation>
+    </message>
+    <message>
+        <source>Sending a copy to “%1”…</source>
+        <translation>「%1」にコピーを送信しています…</translation>
+    </message>
+    <message>
+        <source>“%1” is now a device of this account.</source>
+        <translation>「%1」はこのアカウントのデバイスになりました。</translation>
     </message>
 </context>
 <context>
@@ -1145,6 +1235,58 @@ To: %4
         <translation>ブロック</translation>
     </message>
     <message>
+        <source>Devices</source>
+        <translation>デバイス</translation>
+    </message>
+    <message>
+        <source>This build of e3mail cannot sync with other devices.</source>
+        <translation>このビルドの e3mail は他のデバイスと同期できません。</translation>
+    </message>
+    <message>
+        <source>This device</source>
+        <translation>このデバイス</translation>
+    </message>
+    <message>
+        <source>Connected</source>
+        <translation>接続済み</translation>
+    </message>
+    <message>
+        <source>Last seen %1</source>
+        <translation>最終確認 %1</translation>
+    </message>
+    <message>
+        <source>Not seen yet</source>
+        <translation>まだ確認されていません</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>削除</translation>
+    </message>
+    <message>
+        <source>Pair a new device…</source>
+        <translation>新しいデバイスをペアリング…</translation>
+    </message>
+    <message>
+        <source>Relay</source>
+        <translation>リレー</translation>
+    </message>
+    <message>
+        <source>n0&apos;s public relays</source>
+        <translation>n0 の公開リレー</translation>
+    </message>
+    <message>
+        <source>A relay I run</source>
+        <translation>自分で運用するリレー</translation>
+    </message>
+    <message>
+        <source>None: only on the same network</source>
+        <translation>なし: 同じネットワーク内のみ</translation>
+    </message>
+    <message>
+        <source>Devices of this account sync directly with each other, end-to-end encrypted. When they cannot reach each other, a relay passes the encrypted traffic along; it cannot read it.</source>
+        <translation>このアカウントのデバイスはエンドツーエンドで暗号化して直接同期します。互いに届かないときはリレーが暗号化された通信を中継しますが、内容は読めません。</translation>
+    </message>
+    <message>
         <source>Data</source>
         <translation>データ</translation>
     </message>
@@ -1175,6 +1317,10 @@ To: %4
     <message>
         <source>Remove %1?</source>
         <translation>%1 を削除しますか?</translation>
+    </message>
+    <message>
+        <source>It stops syncing with this account&apos;s other devices. What is already on it stays there.</source>
+        <translation>このアカウントの他のデバイスとの同期を止めます。すでにあるものはそのまま残ります。</translation>
     </message>
     <message>
         <source>Every message, contact and key of this mailbox is deleted from this device.</source>
@@ -1305,6 +1451,10 @@ To: %4
     <message>
         <source>Cancel</source>
         <translation>キャンセル</translation>
+    </message>
+    <message>
+        <source>Copy an account from another device…</source>
+        <translation>別のデバイスからアカウントをコピー…</translation>
     </message>
 </context>
 <context>
@@ -1481,6 +1631,68 @@ To: %4
     <message>
         <source>Create a tag…</source>
         <translation>タグを作成…</translation>
+    </message>
+</context>
+<context>
+    <name>e3::PairingJoin</name>
+    <message>
+        <source>The code could not be read.</source>
+        <translation>コードを読み取れませんでした。</translation>
+    </message>
+    <message>
+        <source>The connection to the other device was lost: %1</source>
+        <translation>もう一方のデバイスとの接続が切れました: %1</translation>
+    </message>
+    <message>
+        <source>The other device did not allow it.</source>
+        <translation>もう一方のデバイスが許可しませんでした。</translation>
+    </message>
+    <message>
+        <source>The other device offered a different account.</source>
+        <translation>もう一方のデバイスが別のアカウントを提示しました。</translation>
+    </message>
+    <message>
+        <source>Cannot write here.</source>
+        <translation>ここに書き込めません。</translation>
+    </message>
+    <message>
+        <source>The other device sent something unexpected.</source>
+        <translation>もう一方のデバイスが予期しないものを送ってきました。</translation>
+    </message>
+    <message>
+        <source>A file arrived damaged.</source>
+        <translation>ファイルが壊れた状態で届きました。</translation>
+    </message>
+    <message>
+        <source>The copy of the mailbox arrived damaged.</source>
+        <translation>メールボックスのコピーが壊れた状態で届きました。</translation>
+    </message>
+</context>
+<context>
+    <name>e3::PairingOffer</name>
+    <message>
+        <source>The code expired.</source>
+        <translation>コードの有効期限が切れました。</translation>
+    </message>
+    <message>
+        <source>The other device went away.</source>
+        <translation>もう一方のデバイスが切断されました。</translation>
+    </message>
+    <message>
+        <source>Another device</source>
+        <translation>別のデバイス</translation>
+    </message>
+    <message>
+        <source>Pairing was refused on this device.</source>
+        <translation>このデバイスでペアリングが拒否されました。</translation>
+    </message>
+    <message>
+        <source>A file asked for is not here.</source>
+        <translation>要求されたファイルがここにありません。</translation>
+    </message>
+    <message>
+        <source>The copy of the mailbox could not be read.</source>
+        <translation>メールボックスのコピーを読み取れませんでした。</translation>
     </message>
 </context>
 </TS>

@@ -390,6 +390,45 @@ To: %4
     </message>
 </context>
 <context>
+    <name>JoinDialog</name>
+    <message>
+        <source>Copy an account from another device</source>
+        <translation>نسخ حساب من جهاز آخر</translation>
+    </message>
+    <message>
+        <source>On the device that has the account, open Settings, Devices, “Pair a new device”, and enter the code it shows here.</source>
+        <translation>على الجهاز الذي يحوي الحساب، افتح الإعدادات، ثم الأجهزة، ثم «إقران جهاز جديد»، وأدخل هنا الرمز الذي يعرضه.</translation>
+    </message>
+    <message>
+        <source>Code</source>
+        <translation>شيفرة</translation>
+    </message>
+    <message>
+        <source>For %1</source>
+        <translation>لـ %1</translation>
+    </message>
+    <message>
+        <source>This is not a pairing code.</source>
+        <translation>هذا ليس رمز إقران.</translation>
+    </message>
+    <message>
+        <source>This device’s name</source>
+        <translation>اسم هذا الجهاز</translation>
+    </message>
+    <message>
+        <source>Waiting for the other device to allow it…</source>
+        <translation>بانتظار سماح الجهاز الآخر…</translation>
+    </message>
+    <message>
+        <source>Copy the account</source>
+        <translation>نسخ الحساب</translation>
+    </message>
+    <message>
+        <source>That code cannot be used here. Is this account already on this device?</source>
+        <translation>لا يمكن استخدام هذا الرمز هنا. هل الحساب موجود على هذا الجهاز بالفعل؟</translation>
+    </message>
+</context>
+<context>
     <name>LabelDialog</name>
     <message>
         <source>Edit tag</source>
@@ -421,6 +460,10 @@ To: %4
 </context>
 <context>
     <name>MailApp</name>
+    <message>
+        <source>Unnamed device</source>
+        <translation>جهاز بلا اسم</translation>
+    </message>
     <message>
         <source>(no subject)</source>
         <translation>(بلا موضوع)</translation>
@@ -803,6 +846,53 @@ To: %4
     <message>
         <source>From %1</source>
         <translation>من %1</translation>
+    </message>
+</context>
+<context>
+    <name>PairDialog</name>
+    <message>
+        <source>This device could not start its connection to other devices.</source>
+        <translation>تعذّر على هذا الجهاز بدء اتصاله بالأجهزة الأخرى.</translation>
+    </message>
+    <message>
+        <source>Pair a new device</source>
+        <translation>إقران جهاز جديد</translation>
+    </message>
+    <message>
+        <source>On the new device, choose “Copy an account from another device” when adding a mailbox, and enter this code. It works once, for ten minutes.</source>
+        <translation>على الجهاز الجديد، اختر «نسخ حساب من جهاز آخر» عند إضافة صندوق بريد، وأدخل هذا الرمز. يصلح مرة واحدة، لمدة عشر دقائق.</translation>
+    </message>
+    <message>
+        <source>Pairing code as a QR code</source>
+        <translation>رمز الإقران كرمز QR</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>نسخ</translation>
+    </message>
+    <message>
+        <source>“%1” wants to become a device of this account. It will get a copy of all your mail, your contacts, your key and your password.</source>
+        <translation>«%1» يريد أن يصبح جهازًا لهذا الحساب. سيحصل على نسخة من كل بريدك وجهات اتصالك ومفتاحك وكلمة مرورك.</translation>
+    </message>
+    <message>
+        <source>Allow it only if you are setting up that device yourself, now.</source>
+        <translation>لا تسمح إلا إذا كنت تُعدّ ذلك الجهاز بنفسك الآن.</translation>
+    </message>
+    <message>
+        <source>Allow</source>
+        <translation>سماح</translation>
+    </message>
+    <message>
+        <source>Refuse</source>
+        <translation>رفض</translation>
+    </message>
+    <message>
+        <source>Sending a copy to “%1”…</source>
+        <translation>جارٍ إرسال نسخة إلى «%1»…</translation>
+    </message>
+    <message>
+        <source>“%1” is now a device of this account.</source>
+        <translation>أصبح «%1» جهازًا لهذا الحساب.</translation>
     </message>
 </context>
 <context>
@@ -1195,6 +1285,58 @@ To: %4
         <translation>حظر</translation>
     </message>
     <message>
+        <source>Devices</source>
+        <translation>الأجهزة</translation>
+    </message>
+    <message>
+        <source>This build of e3mail cannot sync with other devices.</source>
+        <translation>لا يستطيع هذا الإصدار من e3mail المزامنة مع أجهزة أخرى.</translation>
+    </message>
+    <message>
+        <source>This device</source>
+        <translation>هذا الجهاز</translation>
+    </message>
+    <message>
+        <source>Connected</source>
+        <translation>متصل</translation>
+    </message>
+    <message>
+        <source>Last seen %1</source>
+        <translation>آخر ظهور %1</translation>
+    </message>
+    <message>
+        <source>Not seen yet</source>
+        <translation>لم يظهر بعد</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>إزالة</translation>
+    </message>
+    <message>
+        <source>Pair a new device…</source>
+        <translation>إقران جهاز جديد…</translation>
+    </message>
+    <message>
+        <source>Relay</source>
+        <translation>المُرحِّل</translation>
+    </message>
+    <message>
+        <source>n0&apos;s public relays</source>
+        <translation>مرحِّلات n0 العامة</translation>
+    </message>
+    <message>
+        <source>A relay I run</source>
+        <translation>مرحِّل أديره بنفسي</translation>
+    </message>
+    <message>
+        <source>None: only on the same network</source>
+        <translation>لا شيء: على الشبكة نفسها فقط</translation>
+    </message>
+    <message>
+        <source>Devices of this account sync directly with each other, end-to-end encrypted. When they cannot reach each other, a relay passes the encrypted traffic along; it cannot read it.</source>
+        <translation>تتزامن أجهزة هذا الحساب مباشرة فيما بينها بتشفير تام بين الطرفين. وحين يتعذّر وصول بعضها إلى بعض، ينقل مُرحِّل الحركة المشفّرة دون أن يستطيع قراءتها.</translation>
+    </message>
+    <message>
         <source>Data</source>
         <translation>البيانات</translation>
     </message>
@@ -1225,6 +1367,10 @@ To: %4
     <message>
         <source>Remove %1?</source>
         <translation>إزالة %1؟</translation>
+    </message>
+    <message>
+        <source>It stops syncing with this account&apos;s other devices. What is already on it stays there.</source>
+        <translation>سيتوقف عن المزامنة مع أجهزة هذا الحساب الأخرى. ما عليه بالفعل يبقى هناك.</translation>
     </message>
     <message>
         <source>Every message, contact and key of this mailbox is deleted from this device.</source>
@@ -1355,6 +1501,10 @@ To: %4
     <message>
         <source>Cancel</source>
         <translation>إلغاء</translation>
+    </message>
+    <message>
+        <source>Copy an account from another device…</source>
+        <translation>نسخ حساب من جهاز آخر…</translation>
     </message>
 </context>
 <context>
@@ -1536,6 +1686,68 @@ To: %4
     <message>
         <source>Create a tag…</source>
         <translation>إنشاء وسم…</translation>
+    </message>
+</context>
+<context>
+    <name>e3::PairingJoin</name>
+    <message>
+        <source>The code could not be read.</source>
+        <translation>تعذّرت قراءة الرمز.</translation>
+    </message>
+    <message>
+        <source>The connection to the other device was lost: %1</source>
+        <translation>انقطع الاتصال بالجهاز الآخر: %1</translation>
+    </message>
+    <message>
+        <source>The other device did not allow it.</source>
+        <translation>لم يسمح الجهاز الآخر بذلك.</translation>
+    </message>
+    <message>
+        <source>The other device offered a different account.</source>
+        <translation>عرض الجهاز الآخر حسابًا مختلفًا.</translation>
+    </message>
+    <message>
+        <source>Cannot write here.</source>
+        <translation>تتعذّر الكتابة هنا.</translation>
+    </message>
+    <message>
+        <source>The other device sent something unexpected.</source>
+        <translation>أرسل الجهاز الآخر شيئًا غير متوقع.</translation>
+    </message>
+    <message>
+        <source>A file arrived damaged.</source>
+        <translation>وصل ملف تالفًا.</translation>
+    </message>
+    <message>
+        <source>The copy of the mailbox arrived damaged.</source>
+        <translation>وصلت نسخة صندوق البريد تالفة.</translation>
+    </message>
+</context>
+<context>
+    <name>e3::PairingOffer</name>
+    <message>
+        <source>The code expired.</source>
+        <translation>انتهت صلاحية الرمز.</translation>
+    </message>
+    <message>
+        <source>The other device went away.</source>
+        <translation>غاب الجهاز الآخر.</translation>
+    </message>
+    <message>
+        <source>Another device</source>
+        <translation>جهاز آخر</translation>
+    </message>
+    <message>
+        <source>Pairing was refused on this device.</source>
+        <translation>رُفض الإقران على هذا الجهاز.</translation>
+    </message>
+    <message>
+        <source>A file asked for is not here.</source>
+        <translation>ملف مطلوب غير موجود هنا.</translation>
+    </message>
+    <message>
+        <source>The copy of the mailbox could not be read.</source>
+        <translation>تعذّرت قراءة نسخة صندوق البريد.</translation>
     </message>
 </context>
 </TS>

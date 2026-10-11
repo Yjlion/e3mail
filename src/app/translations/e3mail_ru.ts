@@ -390,6 +390,45 @@ To: %4
     </message>
 </context>
 <context>
+    <name>JoinDialog</name>
+    <message>
+        <source>Copy an account from another device</source>
+        <translation>Скопировать учётную запись с другого устройства</translation>
+    </message>
+    <message>
+        <source>On the device that has the account, open Settings, Devices, “Pair a new device”, and enter the code it shows here.</source>
+        <translation>На устройстве, где есть учётная запись, откройте Настройки, Устройства, «Привязать новое устройство» и введите здесь показанный код.</translation>
+    </message>
+    <message>
+        <source>Code</source>
+        <translation>Код</translation>
+    </message>
+    <message>
+        <source>For %1</source>
+        <translation>Для %1</translation>
+    </message>
+    <message>
+        <source>This is not a pairing code.</source>
+        <translation>Это не код привязки.</translation>
+    </message>
+    <message>
+        <source>This device’s name</source>
+        <translation>Имя этого устройства</translation>
+    </message>
+    <message>
+        <source>Waiting for the other device to allow it…</source>
+        <translation>Ожидание разрешения на другом устройстве…</translation>
+    </message>
+    <message>
+        <source>Copy the account</source>
+        <translation>Скопировать учётную запись</translation>
+    </message>
+    <message>
+        <source>That code cannot be used here. Is this account already on this device?</source>
+        <translation>Этот код здесь нельзя использовать. Может, учётная запись уже есть на этом устройстве?</translation>
+    </message>
+</context>
+<context>
     <name>LabelDialog</name>
     <message>
         <source>Edit tag</source>
@@ -421,6 +460,10 @@ To: %4
 </context>
 <context>
     <name>MailApp</name>
+    <message>
+        <source>Unnamed device</source>
+        <translation>Устройство без имени</translation>
+    </message>
     <message>
         <source>(no subject)</source>
         <translation>(без темы)</translation>
@@ -773,6 +816,53 @@ To: %4
     <message>
         <source>From %1</source>
         <translation>От %1</translation>
+    </message>
+</context>
+<context>
+    <name>PairDialog</name>
+    <message>
+        <source>This device could not start its connection to other devices.</source>
+        <translation>Это устройство не смогло начать соединение с другими устройствами.</translation>
+    </message>
+    <message>
+        <source>Pair a new device</source>
+        <translation>Привязать новое устройство</translation>
+    </message>
+    <message>
+        <source>On the new device, choose “Copy an account from another device” when adding a mailbox, and enter this code. It works once, for ten minutes.</source>
+        <translation>На новом устройстве при добавлении ящика выберите «Скопировать учётную запись с другого устройства» и введите этот код. Он действует один раз, десять минут.</translation>
+    </message>
+    <message>
+        <source>Pairing code as a QR code</source>
+        <translation>Код привязки в виде QR-кода</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Копировать</translation>
+    </message>
+    <message>
+        <source>“%1” wants to become a device of this account. It will get a copy of all your mail, your contacts, your key and your password.</source>
+        <translation>«%1» хочет стать устройством этой учётной записи. Оно получит копию всей вашей почты, контактов, ключа и пароля.</translation>
+    </message>
+    <message>
+        <source>Allow it only if you are setting up that device yourself, now.</source>
+        <translation>Разрешайте, только если вы сами настраиваете это устройство прямо сейчас.</translation>
+    </message>
+    <message>
+        <source>Allow</source>
+        <translation>Разрешить</translation>
+    </message>
+    <message>
+        <source>Refuse</source>
+        <translation>Отклонить</translation>
+    </message>
+    <message>
+        <source>Sending a copy to “%1”…</source>
+        <translation>Отправка копии на «%1»…</translation>
+    </message>
+    <message>
+        <source>“%1” is now a device of this account.</source>
+        <translation>«%1» теперь устройство этой учётной записи.</translation>
     </message>
 </context>
 <context>
@@ -1165,6 +1255,58 @@ To: %4
         <translation>Заблокировать</translation>
     </message>
     <message>
+        <source>Devices</source>
+        <translation>Устройства</translation>
+    </message>
+    <message>
+        <source>This build of e3mail cannot sync with other devices.</source>
+        <translation>Эта сборка e3mail не умеет синхронизироваться с другими устройствами.</translation>
+    </message>
+    <message>
+        <source>This device</source>
+        <translation>Это устройство</translation>
+    </message>
+    <message>
+        <source>Connected</source>
+        <translation>Подключено</translation>
+    </message>
+    <message>
+        <source>Last seen %1</source>
+        <translation>Последний раз: %1</translation>
+    </message>
+    <message>
+        <source>Not seen yet</source>
+        <translation>Ещё не появлялось</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Убрать</translation>
+    </message>
+    <message>
+        <source>Pair a new device…</source>
+        <translation>Привязать новое устройство…</translation>
+    </message>
+    <message>
+        <source>Relay</source>
+        <translation>Ретранслятор</translation>
+    </message>
+    <message>
+        <source>n0&apos;s public relays</source>
+        <translation>Публичные ретрансляторы n0</translation>
+    </message>
+    <message>
+        <source>A relay I run</source>
+        <translation>Мой собственный ретранслятор</translation>
+    </message>
+    <message>
+        <source>None: only on the same network</source>
+        <translation>Нет: только в одной сети</translation>
+    </message>
+    <message>
+        <source>Devices of this account sync directly with each other, end-to-end encrypted. When they cannot reach each other, a relay passes the encrypted traffic along; it cannot read it.</source>
+        <translation>Устройства этой учётной записи синхронизируются напрямую, со сквозным шифрованием. Когда они не могут связаться, ретранслятор передаёт зашифрованный трафик; прочитать его он не может.</translation>
+    </message>
+    <message>
         <source>Data</source>
         <translation>Данные</translation>
     </message>
@@ -1195,6 +1337,10 @@ To: %4
     <message>
         <source>Remove %1?</source>
         <translation>Удалить %1?</translation>
+    </message>
+    <message>
+        <source>It stops syncing with this account&apos;s other devices. What is already on it stays there.</source>
+        <translation>Оно перестанет синхронизироваться с другими устройствами этой учётной записи. То, что уже на нём, останется.</translation>
     </message>
     <message>
         <source>Every message, contact and key of this mailbox is deleted from this device.</source>
@@ -1325,6 +1471,10 @@ To: %4
     <message>
         <source>Cancel</source>
         <translation>Отмена</translation>
+    </message>
+    <message>
+        <source>Copy an account from another device…</source>
+        <translation>Скопировать учётную запись с другого устройства…</translation>
     </message>
 </context>
 <context>
@@ -1503,6 +1653,68 @@ To: %4
     <message>
         <source>Create a tag…</source>
         <translation>Создать метку…</translation>
+    </message>
+</context>
+<context>
+    <name>e3::PairingJoin</name>
+    <message>
+        <source>The code could not be read.</source>
+        <translation>Не удалось прочитать код.</translation>
+    </message>
+    <message>
+        <source>The connection to the other device was lost: %1</source>
+        <translation>Соединение с другим устройством прервалось: %1</translation>
+    </message>
+    <message>
+        <source>The other device did not allow it.</source>
+        <translation>Другое устройство не разрешило.</translation>
+    </message>
+    <message>
+        <source>The other device offered a different account.</source>
+        <translation>Другое устройство предложило другую учётную запись.</translation>
+    </message>
+    <message>
+        <source>Cannot write here.</source>
+        <translation>Сюда нельзя записать.</translation>
+    </message>
+    <message>
+        <source>The other device sent something unexpected.</source>
+        <translation>Другое устройство прислало что-то неожиданное.</translation>
+    </message>
+    <message>
+        <source>A file arrived damaged.</source>
+        <translation>Файл пришёл повреждённым.</translation>
+    </message>
+    <message>
+        <source>The copy of the mailbox arrived damaged.</source>
+        <translation>Копия ящика пришла повреждённой.</translation>
+    </message>
+</context>
+<context>
+    <name>e3::PairingOffer</name>
+    <message>
+        <source>The code expired.</source>
+        <translation>Срок действия кода истёк.</translation>
+    </message>
+    <message>
+        <source>The other device went away.</source>
+        <translation>Другое устройство пропало.</translation>
+    </message>
+    <message>
+        <source>Another device</source>
+        <translation>Другое устройство</translation>
+    </message>
+    <message>
+        <source>Pairing was refused on this device.</source>
+        <translation>Привязка отклонена на этом устройстве.</translation>
+    </message>
+    <message>
+        <source>A file asked for is not here.</source>
+        <translation>Запрошенного файла здесь нет.</translation>
+    </message>
+    <message>
+        <source>The copy of the mailbox could not be read.</source>
+        <translation>Не удалось прочитать копию ящика.</translation>
     </message>
 </context>
 </TS>

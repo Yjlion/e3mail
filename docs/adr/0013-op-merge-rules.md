@@ -95,3 +95,12 @@ Iroh joins the build.
 - Signatures hold only what the composer's whitelist emits
   (`RichText::emit`), so a signature never carries HTML that could not be
   sent.
+
+## Amendment — 2026-10-11: devices
+
+- **`device.pair`** `{device, node, name}` and **`device.unpair`**
+  `{device}` share the key `device:<id>`, last writer wins. Applying one adds
+  or removes the row in `devices`, which is both who may connect and whose
+  `server.ack` server deletion waits for.
+- A device ignores ops about itself: it knows it is paired, and learns it
+  was removed by being refused.

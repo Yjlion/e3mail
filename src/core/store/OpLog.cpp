@@ -59,6 +59,8 @@ QString OpLog::mergeKey(const QString &kind, const QJsonObject &p)
         return QStringLiteral("cremove:") + s("addr");
     if (kind == op::Setting)
         return QStringLiteral("cfg:") + s("key");
+    if (kind == op::DevicePair || kind == op::DeviceUnpair)
+        return QStringLiteral("device:") + s("device");
     return {};
 }
 

@@ -31,8 +31,8 @@ typedef struct e3p2p_event {
 typedef void (*e3p2p_waker)(void *ctx);
 
 void e3p2p_generate_secret(uint8_t out[32]);
-e3p2p_node *e3p2p_start(const uint8_t secret[32], int32_t relay, const char *relay_url, e3p2p_waker waker,
-                        void *waker_ctx);
+e3p2p_node *e3p2p_start(const uint8_t secret[32], int32_t relay, const char *relay_url, uint16_t port,
+                        int32_t loopback, e3p2p_waker waker, void *waker_ctx);
 void e3p2p_stop(e3p2p_node *node);
 void e3p2p_node_id(const e3p2p_node *node, char out[65]);
 char *e3p2p_addr(const e3p2p_node *node); /* free with e3p2p_string_free */

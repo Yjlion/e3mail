@@ -60,8 +60,9 @@ type Waker = extern "C" fn(*mut c_void);
 
 struct Shared {
     events: Mutex<VecDeque<Event>>,
-    waker: Option<Waker>,
-    waker_ctx: usize,
+    // Cleared by e3p2p_stop under the lock: once it returns, the waker is
+    // never called again, even by a task still finishing on another thread.
+    waker: Mutex<Option<(Waker, usize)>>,
     conns: Mutex<HashMap<u64, mpsc::UnboundedSender<Vec<u8>>>>,
     live: Mutex<HashMap<u64, Connection>>,
     next: AtomicU64,
@@ -72,8 +73,9 @@ struct Shared {
 impl Shared {
     fn push(&self, e: Event) {
         self.events.lock().unwrap().push_back(e);
-        if let Some(w) = self.waker {
-            w(self.waker_ctx as *mut c_void);
+        let waker = self.waker.lock().unwrap();
+        if let Some((w, ctx)) = *waker {
+            w(ctx as *mut c_void);
         }
     }
 
@@ -210,13 +212,17 @@ pub extern "C" fn e3p2p_generate_secret(out: *mut u8) {
 }
 
 /// Starts an endpoint with this secret key. `relay`: RELAY_DEFAULT (n0's),
-/// RELAY_CUSTOM (`relay_url`) or RELAY_OFF. `waker` is called, from another
-/// thread, whenever events are waiting. Null on failure.
+/// RELAY_CUSTOM (`relay_url`) or RELAY_OFF. `port`: a fixed UDP port, or 0
+/// for any. `loopback`: listen on this machine only (tests and screenshots,
+/// which must neither reach out nor show real addresses). `waker` is called, from another thread, whenever events are
+/// waiting. Null on failure.
 #[unsafe(no_mangle)]
 pub extern "C" fn e3p2p_start(
     secret: *const u8,
     relay: i32,
     relay_url: *const c_char,
+    port: u16,
+    loopback: i32,
     waker: Option<Waker>,
     waker_ctx: *mut c_void,
 ) -> *mut e3p2p_node {
@@ -235,8 +241,7 @@ pub extern "C" fn e3p2p_start(
     };
     let shared = Arc::new(Shared {
         events: Mutex::new(VecDeque::new()),
-        waker,
-        waker_ctx: waker_ctx as usize,
+        waker: Mutex::new(waker.map(|w| (w, waker_ctx as usize))),
         conns: Mutex::new(HashMap::new()),
         live: Mutex::new(HashMap::new()),
         next: AtomicU64::new(1),
@@ -244,12 +249,24 @@ pub extern "C" fn e3p2p_start(
         accept_any: AtomicBool::new(false),
     });
     let endpoint = rt.block_on(async {
-        Endpoint::builder(presets::N0)
+        let mut builder = Endpoint::builder(presets::N0)
             .secret_key(SecretKey::from_bytes(&bytes))
             .relay_mode(mode)
-            .alpns(vec![ALPN.to_vec()])
-            .bind()
-            .await
+            .alpns(vec![ALPN.to_vec()]);
+        if loopback != 0 {
+            builder = builder
+                .clear_ip_transports()
+                .bind_addr(format!("127.0.0.1:{port}").as_str())
+                .map_err(|e| e.to_string())?;
+        } else if port != 0 {
+            builder = builder
+                .clear_ip_transports()
+                .bind_addr(format!("0.0.0.0:{port}").as_str())
+                .map_err(|e| e.to_string())?
+                .bind_addr(format!("[::]:{port}").as_str())
+                .map_err(|e| e.to_string())?;
+        }
+        builder.bind().await.map_err(|e| e.to_string())
     });
     let Ok(endpoint) = endpoint else { return std::ptr::null_mut() };
     rt.spawn(accept_loop(endpoint.clone(), shared.clone()));
@@ -263,6 +280,7 @@ pub extern "C" fn e3p2p_stop(node: *mut e3p2p_node) {
         return;
     }
     let node = unsafe { Box::from_raw(node) };
+    *node.shared.waker.lock().unwrap() = None;
     let endpoint = node.endpoint.clone();
     let _ = node.rt.block_on(async {
         tokio::time::timeout(std::time::Duration::from_secs(2), endpoint.close()).await
@@ -414,7 +432,7 @@ mod tests {
     fn start() -> *mut e3p2p_node {
         let mut secret = [0u8; 32];
         e3p2p_generate_secret(secret.as_mut_ptr());
-        let n = e3p2p_start(secret.as_ptr(), RELAY_OFF, std::ptr::null(), Some(no_wake), std::ptr::null_mut());
+        let n = e3p2p_start(secret.as_ptr(), RELAY_OFF, std::ptr::null(), 0, 1, Some(no_wake), std::ptr::null_mut());
         assert!(!n.is_null());
         n
     }

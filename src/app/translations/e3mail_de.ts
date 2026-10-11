@@ -390,6 +390,45 @@ An: %4
     </message>
 </context>
 <context>
+    <name>JoinDialog</name>
+    <message>
+        <source>Copy an account from another device</source>
+        <translation>Konto von einem anderen Gerät übernehmen</translation>
+    </message>
+    <message>
+        <source>On the device that has the account, open Settings, Devices, “Pair a new device”, and enter the code it shows here.</source>
+        <translation>Öffnen Sie auf dem Gerät, das das Konto hat, Einstellungen, Geräte, „Neues Gerät koppeln“ und geben Sie den angezeigten Code hier ein.</translation>
+    </message>
+    <message>
+        <source>Code</source>
+        <translation>Code</translation>
+    </message>
+    <message>
+        <source>For %1</source>
+        <translation>Für %1</translation>
+    </message>
+    <message>
+        <source>This is not a pairing code.</source>
+        <translation>Das ist kein Kopplungscode.</translation>
+    </message>
+    <message>
+        <source>This device’s name</source>
+        <translation>Name dieses Geräts</translation>
+    </message>
+    <message>
+        <source>Waiting for the other device to allow it…</source>
+        <translation>Warten, bis das andere Gerät zustimmt…</translation>
+    </message>
+    <message>
+        <source>Copy the account</source>
+        <translation>Konto übernehmen</translation>
+    </message>
+    <message>
+        <source>That code cannot be used here. Is this account already on this device?</source>
+        <translation>Dieser Code ist hier nicht verwendbar. Ist das Konto schon auf diesem Gerät?</translation>
+    </message>
+</context>
+<context>
     <name>LabelDialog</name>
     <message>
         <source>Edit tag</source>
@@ -421,6 +460,10 @@ An: %4
 </context>
 <context>
     <name>MailApp</name>
+    <message>
+        <source>Unnamed device</source>
+        <translation>Unbenanntes Gerät</translation>
+    </message>
     <message>
         <source>(no subject)</source>
         <translation>(kein Betreff)</translation>
@@ -763,6 +806,53 @@ An: %4
     <message>
         <source>From %1</source>
         <translation>Von %1</translation>
+    </message>
+</context>
+<context>
+    <name>PairDialog</name>
+    <message>
+        <source>This device could not start its connection to other devices.</source>
+        <translation>Dieses Gerät konnte keine Verbindung zu anderen Geräten aufbauen.</translation>
+    </message>
+    <message>
+        <source>Pair a new device</source>
+        <translation>Neues Gerät koppeln</translation>
+    </message>
+    <message>
+        <source>On the new device, choose “Copy an account from another device” when adding a mailbox, and enter this code. It works once, for ten minutes.</source>
+        <translation>Wählen Sie auf dem neuen Gerät beim Hinzufügen eines Postfachs „Konto von einem anderen Gerät übernehmen“ und geben Sie diesen Code ein. Er gilt einmal, zehn Minuten lang.</translation>
+    </message>
+    <message>
+        <source>Pairing code as a QR code</source>
+        <translation>Kopplungscode als QR-Code</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Kopieren</translation>
+    </message>
+    <message>
+        <source>“%1” wants to become a device of this account. It will get a copy of all your mail, your contacts, your key and your password.</source>
+        <translation>„%1“ möchte ein Gerät dieses Kontos werden. Es erhält eine Kopie Ihrer gesamten Post, Ihrer Kontakte, Ihres Schlüssels und Ihres Passworts.</translation>
+    </message>
+    <message>
+        <source>Allow it only if you are setting up that device yourself, now.</source>
+        <translation>Erlauben Sie es nur, wenn Sie dieses Gerät gerade selbst einrichten.</translation>
+    </message>
+    <message>
+        <source>Allow</source>
+        <translation>Erlauben</translation>
+    </message>
+    <message>
+        <source>Refuse</source>
+        <translation>Ablehnen</translation>
+    </message>
+    <message>
+        <source>Sending a copy to “%1”…</source>
+        <translation>Kopie wird an „%1“ gesendet…</translation>
+    </message>
+    <message>
+        <source>“%1” is now a device of this account.</source>
+        <translation>„%1“ ist jetzt ein Gerät dieses Kontos.</translation>
     </message>
 </context>
 <context>
@@ -1155,6 +1245,58 @@ An: %4
         <translation>Blockieren</translation>
     </message>
     <message>
+        <source>Devices</source>
+        <translation>Geräte</translation>
+    </message>
+    <message>
+        <source>This build of e3mail cannot sync with other devices.</source>
+        <translation>Diese Version von e3mail kann nicht mit anderen Geräten synchronisieren.</translation>
+    </message>
+    <message>
+        <source>This device</source>
+        <translation>Dieses Gerät</translation>
+    </message>
+    <message>
+        <source>Connected</source>
+        <translation>Verbunden</translation>
+    </message>
+    <message>
+        <source>Last seen %1</source>
+        <translation>Zuletzt gesehen %1</translation>
+    </message>
+    <message>
+        <source>Not seen yet</source>
+        <translation>Noch nicht gesehen</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Entfernen</translation>
+    </message>
+    <message>
+        <source>Pair a new device…</source>
+        <translation>Neues Gerät koppeln…</translation>
+    </message>
+    <message>
+        <source>Relay</source>
+        <translation>Relay</translation>
+    </message>
+    <message>
+        <source>n0&apos;s public relays</source>
+        <translation>Öffentliche Relays von n0</translation>
+    </message>
+    <message>
+        <source>A relay I run</source>
+        <translation>Ein eigenes Relay</translation>
+    </message>
+    <message>
+        <source>None: only on the same network</source>
+        <translation>Keins: nur im selben Netz</translation>
+    </message>
+    <message>
+        <source>Devices of this account sync directly with each other, end-to-end encrypted. When they cannot reach each other, a relay passes the encrypted traffic along; it cannot read it.</source>
+        <translation>Die Geräte dieses Kontos synchronisieren direkt miteinander, Ende-zu-Ende-verschlüsselt. Erreichen sie einander nicht, leitet ein Relay den verschlüsselten Verkehr weiter; lesen kann es ihn nicht.</translation>
+    </message>
+    <message>
         <source>Data</source>
         <translation>Daten</translation>
     </message>
@@ -1185,6 +1327,10 @@ An: %4
     <message>
         <source>Remove %1?</source>
         <translation>%1 entfernen?</translation>
+    </message>
+    <message>
+        <source>It stops syncing with this account&apos;s other devices. What is already on it stays there.</source>
+        <translation>Es synchronisiert nicht mehr mit den anderen Geräten dieses Kontos. Was schon darauf ist, bleibt dort.</translation>
     </message>
     <message>
         <source>Every message, contact and key of this mailbox is deleted from this device.</source>
@@ -1315,6 +1461,10 @@ An: %4
     <message>
         <source>Cancel</source>
         <translation>Abbrechen</translation>
+    </message>
+    <message>
+        <source>Copy an account from another device…</source>
+        <translation>Konto von einem anderen Gerät übernehmen…</translation>
     </message>
 </context>
 <context>
@@ -1492,6 +1642,68 @@ An: %4
     <message>
         <source>Create a tag…</source>
         <translation>Schlagwort anlegen…</translation>
+    </message>
+</context>
+<context>
+    <name>e3::PairingJoin</name>
+    <message>
+        <source>The code could not be read.</source>
+        <translation>Der Code konnte nicht gelesen werden.</translation>
+    </message>
+    <message>
+        <source>The connection to the other device was lost: %1</source>
+        <translation>Die Verbindung zum anderen Gerät ist abgebrochen: %1</translation>
+    </message>
+    <message>
+        <source>The other device did not allow it.</source>
+        <translation>Das andere Gerät hat es nicht erlaubt.</translation>
+    </message>
+    <message>
+        <source>The other device offered a different account.</source>
+        <translation>Das andere Gerät hat ein anderes Konto angeboten.</translation>
+    </message>
+    <message>
+        <source>Cannot write here.</source>
+        <translation>Hier kann nicht geschrieben werden.</translation>
+    </message>
+    <message>
+        <source>The other device sent something unexpected.</source>
+        <translation>Das andere Gerät hat etwas Unerwartetes gesendet.</translation>
+    </message>
+    <message>
+        <source>A file arrived damaged.</source>
+        <translation>Eine Datei kam beschädigt an.</translation>
+    </message>
+    <message>
+        <source>The copy of the mailbox arrived damaged.</source>
+        <translation>Die Kopie des Postfachs kam beschädigt an.</translation>
+    </message>
+</context>
+<context>
+    <name>e3::PairingOffer</name>
+    <message>
+        <source>The code expired.</source>
+        <translation>Der Code ist abgelaufen.</translation>
+    </message>
+    <message>
+        <source>The other device went away.</source>
+        <translation>Das andere Gerät ist nicht mehr erreichbar.</translation>
+    </message>
+    <message>
+        <source>Another device</source>
+        <translation>Ein anderes Gerät</translation>
+    </message>
+    <message>
+        <source>Pairing was refused on this device.</source>
+        <translation>Die Kopplung wurde auf diesem Gerät abgelehnt.</translation>
+    </message>
+    <message>
+        <source>A file asked for is not here.</source>
+        <translation>Eine angeforderte Datei ist nicht vorhanden.</translation>
+    </message>
+    <message>
+        <source>The copy of the mailbox could not be read.</source>
+        <translation>Die Kopie des Postfachs konnte nicht gelesen werden.</translation>
     </message>
 </context>
 </TS>

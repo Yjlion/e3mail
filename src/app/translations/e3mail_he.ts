@@ -390,6 +390,45 @@ To: %4
     </message>
 </context>
 <context>
+    <name>JoinDialog</name>
+    <message>
+        <source>Copy an account from another device</source>
+        <translation>העתקת חשבון ממכשיר אחר</translation>
+    </message>
+    <message>
+        <source>On the device that has the account, open Settings, Devices, “Pair a new device”, and enter the code it shows here.</source>
+        <translation>במכשיר שיש בו את החשבון, פתחו הגדרות, מכשירים, „צימוד מכשיר חדש”, והזינו כאן את הקוד שהוא מציג.</translation>
+    </message>
+    <message>
+        <source>Code</source>
+        <translation>קוד</translation>
+    </message>
+    <message>
+        <source>For %1</source>
+        <translation>עבור %1</translation>
+    </message>
+    <message>
+        <source>This is not a pairing code.</source>
+        <translation>זה אינו קוד צימוד.</translation>
+    </message>
+    <message>
+        <source>This device’s name</source>
+        <translation>שם המכשיר הזה</translation>
+    </message>
+    <message>
+        <source>Waiting for the other device to allow it…</source>
+        <translation>ממתינים לאישור המכשיר האחר…</translation>
+    </message>
+    <message>
+        <source>Copy the account</source>
+        <translation>העתקת החשבון</translation>
+    </message>
+    <message>
+        <source>That code cannot be used here. Is this account already on this device?</source>
+        <translation>לא ניתן להשתמש כאן בקוד הזה. האם החשבון כבר נמצא במכשיר הזה?</translation>
+    </message>
+</context>
+<context>
     <name>LabelDialog</name>
     <message>
         <source>Edit tag</source>
@@ -421,6 +460,10 @@ To: %4
 </context>
 <context>
     <name>MailApp</name>
+    <message>
+        <source>Unnamed device</source>
+        <translation>מכשיר ללא שם</translation>
+    </message>
     <message>
         <source>(no subject)</source>
         <translation>(ללא נושא)</translation>
@@ -763,6 +806,53 @@ To: %4
     <message>
         <source>From %1</source>
         <translation>מאת %1</translation>
+    </message>
+</context>
+<context>
+    <name>PairDialog</name>
+    <message>
+        <source>This device could not start its connection to other devices.</source>
+        <translation>המכשיר הזה לא הצליח להתחבר למכשירים אחרים.</translation>
+    </message>
+    <message>
+        <source>Pair a new device</source>
+        <translation>צימוד מכשיר חדש</translation>
+    </message>
+    <message>
+        <source>On the new device, choose “Copy an account from another device” when adding a mailbox, and enter this code. It works once, for ten minutes.</source>
+        <translation>במכשיר החדש, בעת הוספת תיבת דואר, בחרו „העתקת חשבון ממכשיר אחר” והזינו את הקוד הזה. הוא תקף פעם אחת, למשך עשר דקות.</translation>
+    </message>
+    <message>
+        <source>Pairing code as a QR code</source>
+        <translation>קוד הצימוד כקוד QR</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>העתקה</translation>
+    </message>
+    <message>
+        <source>“%1” wants to become a device of this account. It will get a copy of all your mail, your contacts, your key and your password.</source>
+        <translation>„%1” רוצה להפוך למכשיר של החשבון הזה. הוא יקבל עותק של כל הדואר, אנשי הקשר, המפתח והסיסמה שלך.</translation>
+    </message>
+    <message>
+        <source>Allow it only if you are setting up that device yourself, now.</source>
+        <translation>אשרו רק אם אתם מגדירים את המכשיר הזה בעצמכם, עכשיו.</translation>
+    </message>
+    <message>
+        <source>Allow</source>
+        <translation>אישור</translation>
+    </message>
+    <message>
+        <source>Refuse</source>
+        <translation>סירוב</translation>
+    </message>
+    <message>
+        <source>Sending a copy to “%1”…</source>
+        <translation>שולחים עותק אל „%1”…</translation>
+    </message>
+    <message>
+        <source>“%1” is now a device of this account.</source>
+        <translation>„%1” הוא עכשיו מכשיר של החשבון הזה.</translation>
     </message>
 </context>
 <context>
@@ -1155,6 +1245,58 @@ To: %4
         <translation>חסימה</translation>
     </message>
     <message>
+        <source>Devices</source>
+        <translation>מכשירים</translation>
+    </message>
+    <message>
+        <source>This build of e3mail cannot sync with other devices.</source>
+        <translation>גרסה זו של e3mail אינה יכולה להסתנכרן עם מכשירים אחרים.</translation>
+    </message>
+    <message>
+        <source>This device</source>
+        <translation>המכשיר הזה</translation>
+    </message>
+    <message>
+        <source>Connected</source>
+        <translation>מחובר</translation>
+    </message>
+    <message>
+        <source>Last seen %1</source>
+        <translation>נראה לאחרונה %1</translation>
+    </message>
+    <message>
+        <source>Not seen yet</source>
+        <translation>עדיין לא נראה</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>הסרה</translation>
+    </message>
+    <message>
+        <source>Pair a new device…</source>
+        <translation>צימוד מכשיר חדש…</translation>
+    </message>
+    <message>
+        <source>Relay</source>
+        <translation>ממסר</translation>
+    </message>
+    <message>
+        <source>n0&apos;s public relays</source>
+        <translation>הממסרים הציבוריים של n0</translation>
+    </message>
+    <message>
+        <source>A relay I run</source>
+        <translation>ממסר שאני מפעיל</translation>
+    </message>
+    <message>
+        <source>None: only on the same network</source>
+        <translation>ללא: רק באותה רשת</translation>
+    </message>
+    <message>
+        <source>Devices of this account sync directly with each other, end-to-end encrypted. When they cannot reach each other, a relay passes the encrypted traffic along; it cannot read it.</source>
+        <translation>מכשירי החשבון הזה מסתנכרנים ישירות זה עם זה, בהצפנה מקצה לקצה. כשהם לא מצליחים להגיע זה לזה, ממסר מעביר את התעבורה המוצפנת; הוא אינו יכול לקרוא אותה.</translation>
+    </message>
+    <message>
         <source>Data</source>
         <translation>נתונים</translation>
     </message>
@@ -1185,6 +1327,10 @@ To: %4
     <message>
         <source>Remove %1?</source>
         <translation>להסיר את %1?</translation>
+    </message>
+    <message>
+        <source>It stops syncing with this account&apos;s other devices. What is already on it stays there.</source>
+        <translation>הוא יפסיק להסתנכרן עם שאר מכשירי החשבון. מה שכבר נמצא בו נשאר שם.</translation>
     </message>
     <message>
         <source>Every message, contact and key of this mailbox is deleted from this device.</source>
@@ -1315,6 +1461,10 @@ To: %4
     <message>
         <source>Cancel</source>
         <translation>ביטול</translation>
+    </message>
+    <message>
+        <source>Copy an account from another device…</source>
+        <translation>העתקת חשבון ממכשיר אחר…</translation>
     </message>
 </context>
 <context>
@@ -1492,6 +1642,68 @@ To: %4
     <message>
         <source>Create a tag…</source>
         <translation>יצירת תגית…</translation>
+    </message>
+</context>
+<context>
+    <name>e3::PairingJoin</name>
+    <message>
+        <source>The code could not be read.</source>
+        <translation>לא ניתן היה לקרוא את הקוד.</translation>
+    </message>
+    <message>
+        <source>The connection to the other device was lost: %1</source>
+        <translation>החיבור למכשיר האחר אבד: %1</translation>
+    </message>
+    <message>
+        <source>The other device did not allow it.</source>
+        <translation>המכשיר האחר לא אישר.</translation>
+    </message>
+    <message>
+        <source>The other device offered a different account.</source>
+        <translation>המכשיר האחר הציע חשבון אחר.</translation>
+    </message>
+    <message>
+        <source>Cannot write here.</source>
+        <translation>לא ניתן לכתוב כאן.</translation>
+    </message>
+    <message>
+        <source>The other device sent something unexpected.</source>
+        <translation>המכשיר האחר שלח משהו לא צפוי.</translation>
+    </message>
+    <message>
+        <source>A file arrived damaged.</source>
+        <translation>קובץ הגיע פגום.</translation>
+    </message>
+    <message>
+        <source>The copy of the mailbox arrived damaged.</source>
+        <translation>העותק של תיבת הדואר הגיע פגום.</translation>
+    </message>
+</context>
+<context>
+    <name>e3::PairingOffer</name>
+    <message>
+        <source>The code expired.</source>
+        <translation>תוקף הקוד פג.</translation>
+    </message>
+    <message>
+        <source>The other device went away.</source>
+        <translation>המכשיר האחר התנתק.</translation>
+    </message>
+    <message>
+        <source>Another device</source>
+        <translation>מכשיר אחר</translation>
+    </message>
+    <message>
+        <source>Pairing was refused on this device.</source>
+        <translation>הצימוד נדחה במכשיר הזה.</translation>
+    </message>
+    <message>
+        <source>A file asked for is not here.</source>
+        <translation>קובץ שהתבקש אינו כאן.</translation>
+    </message>
+    <message>
+        <source>The copy of the mailbox could not be read.</source>
+        <translation>לא ניתן היה לקרוא את העותק של תיבת הדואר.</translation>
     </message>
 </context>
 </TS>

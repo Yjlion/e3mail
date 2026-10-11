@@ -2,7 +2,7 @@ file(GLOB_RECURSE E3CORE_SOURCES CONFIGURE_DEPENDS
     ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
 if(NOT E3MAIL_P2P)
-    list(FILTER E3CORE_SOURCES EXCLUDE REGEX "sync/IrohTransport")
+    list(FILTER E3CORE_SOURCES EXCLUDE REGEX "sync/IrohTransport|engine/Pairing")
 endif()
 
 add_library(e3core STATIC ${E3CORE_SOURCES})
