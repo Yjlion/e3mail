@@ -7,9 +7,15 @@
 #include <QFuture>
 #include <QObject>
 #include <QPointer>
+#include <QTimer>
 
 #include <memory>
 #include <optional>
+
+namespace e3::sync {
+class DeviceTransport;
+class SyncSession;
+} // namespace e3::sync
 
 namespace e3 {
 
@@ -73,6 +79,8 @@ public:
     // Stores settings and secrets and creates the account's key. Does not
     // connect; see verify().
     void configure(const Settings &s);
+    // In the OS keyring if there is one, otherwise in the database.
+    void storePasswords(const QString &inPassword, const QString &smtpPassword);
     Settings settings() const;
     MailWorker::Credentials credentials() const;
 
@@ -98,6 +106,17 @@ public:
     void forgetCertificate(const QString &server);
     void restart();
 
+    // Other devices of this account (ADR 0010). The endpoint runs while the
+    // account does and another device is paired, or while pairing.
+    static bool devicesAvailable();
+    // Starts the endpoint and the sync session if they are not running.
+    // False when this build has no Iroh, or the endpoint cannot start.
+    bool startDevices();
+    void stopDevices();
+    sync::DeviceTransport *deviceTransport() const { return m_transport.get(); }
+    // Sends paired devices what they lack, soon.
+    void pushSoon();
+
     MailContext &ctx() { return *m_ctx; }
     // UI-side mutations call this so every view refreshes.
     void notifyChanged() { Q_EMIT mailChanged(); }
@@ -122,6 +141,10 @@ private:
     QString m_statusDetail;
     QString m_refusedServer;
     QByteArray m_refusedSha256;
+    std::unique_ptr<sync::DeviceTransport> m_transport;
+    std::unique_ptr<sync::SyncSession> m_sync;
+    QTimer m_push; // gathers changes into one push
+    QTimer m_dial; // dials paired devices that are not connected
 };
 
 } // namespace e3

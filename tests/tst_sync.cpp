@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MPL-2.0
+#include "DeviceClone.h"
 #include "FakeMailServer.h"
 #include "LoopbackTransport.h"
 #include "engine/AccountManager.h"
@@ -65,32 +66,11 @@ class TestSync : public QObject
 
     static void fetch(Account *a) { MailWorker::runOnce(a->dir(), a->credentials()); }
 
-    // A second device: the account directory copied, with a new device id.
     Account *cloneDevice(Account *src)
     {
-        src->ctx().db.exec("PRAGMA wal_checkpoint(TRUNCATE)");
         const QString root = m_dir->path() + QStringLiteral("/deviceB");
-        const QString dst = root + QStringLiteral("/accounts/") + QString::number(src->id());
-        QDirIterator it(src->dir(), QDir::Files, QDirIterator::Subdirectories);
-        while (it.hasNext()) {
-            const QString from = it.next();
-            const QString to = dst + from.mid(src->dir().size());
-            QDir().mkpath(QFileInfo(to).path());
-            if (!QFile::copy(from, to))
-                return nullptr;
-        }
-        {
-            Database db(dst + QStringLiteral("/mail.db"));
-            db.run("UPDATE config SET value=? WHERE key='device_id'",
-                   QUuid::createUuid().toString(QUuid::WithoutBraces));
-        }
-        QFile f(root + QStringLiteral("/accounts/accounts.json"));
-        if (!f.open(QIODevice::WriteOnly))
+        if (!::cloneDevice(src, root))
             return nullptr;
-        f.write(QJsonDocument(QJsonObject{{QStringLiteral("accounts"), QJsonArray{src->id()}},
-                                          {QStringLiteral("next_id"), src->id() + 1}})
-                    .toJson());
-        f.close();
         m_mgrB = std::make_unique<AccountManager>(root);
         return m_mgrB->account(src->id());
     }

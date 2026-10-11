@@ -29,6 +29,13 @@ jobs:
           - { name: macOS, os: macos-14 }
     steps:
       - uses: actions/checkout@v4
+      # Sync between devices is a Rust crate (src/p2p, ADR 0010), built by
+      # cargo through Corrosion.
+      - name: Rust
+        uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src/p2p
       - uses: jurplel/install-qt-action@v4
         with:
           version: ${{ env.QT_VERSION }}
@@ -106,10 +113,18 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { abi: x86_64, qt-arch: android_x86_64, preset: android-x64 }
-          - { abi: arm64-v8a, qt-arch: android_arm64_v8a, preset: android-arm64 }
+          - { abi: x86_64, qt-arch: android_x86_64, preset: android-x64, rust-target: x86_64-linux-android }
+          - { abi: arm64-v8a, qt-arch: android_arm64_v8a, preset: android-arm64, rust-target: aarch64-linux-android }
     steps:
       - uses: actions/checkout@v4
+      - name: Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.rust-target }}
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src/p2p
+          key: ${{ matrix.rust-target }}
 
       - uses: actions/setup-java@v5
         with:

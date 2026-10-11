@@ -12,6 +12,10 @@
 #include "store/Database.h"
 #include "store/OpLog.h"
 #include "store/Schema.h"
+#include "sync/SyncSession.h"
+#ifdef E3MAIL_HAVE_P2P
+#include "sync/IrohTransport.h"
+#endif
 #include "util/Log.h"
 
 #include <QDir>
@@ -37,11 +41,84 @@ Account::Account(int id, const QString &dir, QObject *parent) : QObject(parent),
     m_ops = std::make_unique<OpLog>(*m_db);
     m_ctx = std::make_unique<MailContext>(MailContext{*m_db, *m_blobs, *m_pgp, *m_config, *m_ops});
     mail::Keyring::loadAll(*m_ctx);
+    m_push.setSingleShot(true);
+    m_push.setInterval(200);
+    connect(&m_push, &QTimer::timeout, this, [this] {
+        if (m_sync)
+            m_sync->push();
+    });
+    m_dial.setInterval(60 * 1000);
+    connect(&m_dial, &QTimer::timeout, this, [this] {
+#ifdef E3MAIL_HAVE_P2P
+        if (auto *t = qobject_cast<sync::IrohTransport *>(m_transport.get()))
+            t->dialPaired();
+#endif
+    });
+    // Whatever changed here, the other devices hear of it.
+    connect(this, &Account::mailChanged, this, &Account::pushSoon);
 }
 
 Account::~Account()
 {
     stop();
+    stopDevices();
+}
+
+bool Account::devicesAvailable()
+{
+#ifdef E3MAIL_HAVE_P2P
+    return true;
+#else
+    return false;
+#endif
+}
+
+bool Account::startDevices()
+{
+#ifdef E3MAIL_HAVE_P2P
+    if (m_transport)
+        return true;
+    QByteArray secret = QByteArray::fromHex(m_config->get(cfg::P2pSecret).toLatin1());
+    if (secret.size() != 32) {
+        secret = sync::IrohTransport::generateSecret();
+        m_config->set(cfg::P2pSecret, QString::fromLatin1(secret.toHex()));
+    }
+    sync::IrohTransport::Options o;
+    o.secret = secret;
+    const QString relay = m_config->get(cfg::P2pRelay);
+    if (relay == QLatin1String("off")) {
+        o.relay = sync::IrohTransport::Relay::Off;
+    } else if (relay.startsWith(QLatin1String("https://")) || relay.startsWith(QLatin1String("http://"))) {
+        o.relay = sync::IrohTransport::Relay::Custom;
+        o.relayUrl = relay;
+    }
+    auto t = std::make_unique<sync::IrohTransport>(*m_db, m_ops->deviceId(), o);
+    if (!t->isRunning())
+        return false;
+    m_sync = std::make_unique<sync::SyncSession>(*m_ctx, *t);
+    connect(m_sync.get(), &sync::SyncSession::changed, this, &Account::mailChanged);
+    sync::IrohTransport *raw = t.get();
+    m_transport = std::move(t);
+    raw->dialPaired();
+    m_dial.start();
+    qCInfo(lcEngine) << "devices: endpoint" << raw->nodeId();
+    return true;
+#else
+    return false;
+#endif
+}
+
+void Account::stopDevices()
+{
+    m_dial.stop();
+    m_sync.reset();
+    m_transport.reset();
+}
+
+void Account::pushSoon()
+{
+    if (m_sync)
+        m_push.start();
 }
 
 QString Account::addr() const
@@ -83,18 +160,22 @@ void Account::configure(const Settings &s)
     m_config->set(cfg::SmtpCertSha256, QString::fromLatin1(s.smtpCertSha256));
     m_config->setInt(cfg::Configured, 1);
     tx.commit();
+    storePasswords(s.inPassword, s.smtpPassword);
+    mail::Keyring::ensureSelfKey(*m_ctx, s.addr.trimmed());
+}
 
-    const QString smtpPassword = s.smtpPassword.isEmpty() ? s.inPassword : s.smtpPassword;
-    const bool inKeyring = SecretStore::write(secretKey(m_id, "in"), s.inPassword)
+void Account::storePasswords(const QString &inPassword, const QString &smtp)
+{
+    const QString smtpPassword = smtp.isEmpty() ? inPassword : smtp;
+    const bool inKeyring = SecretStore::write(secretKey(m_id, "in"), inPassword)
         && SecretStore::write(secretKey(m_id, "smtp"), smtpPassword);
     if (inKeyring) {
         m_db->run("DELETE FROM config WHERE key IN (?, ?)", cfg::InPassword, cfg::SmtpPassword);
     } else {
         qCWarning(lcEngine) << "no OS keyring; storing the password in the account database";
-        m_config->set(cfg::InPassword, s.inPassword);
+        m_config->set(cfg::InPassword, inPassword);
         m_config->set(cfg::SmtpPassword, smtpPassword);
     }
-    mail::Keyring::ensureSelfKey(*m_ctx, s.addr.trimmed());
 }
 
 Account::Settings Account::settings() const
@@ -210,6 +291,8 @@ void Account::start()
         Q_EMIT statusChanged();
     });
     m_worker->start();
+    if (m_db->queryInt("SELECT 1 FROM devices WHERE node_id IS NOT NULL LIMIT 1"))
+        startDevices();
 }
 
 void Account::restart()

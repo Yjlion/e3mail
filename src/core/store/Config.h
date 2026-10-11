@@ -55,6 +55,10 @@ inline constexpr char ImapBaseline[] = "imap_baseline";
 inline constexpr char ImapHigh[] = "imap_high";
 inline constexpr char ImapLow[] = "imap_low";
 inline constexpr char Configured[] = "configured";
+// Devices (ADR 0010). Per device: never synced, never copied when pairing.
+inline constexpr char P2pSecret[] = "p2p_secret";            // this device's Iroh key, hex
+inline constexpr char P2pRelay[] = "p2p_relay";              // "default" | "off" | a relay URL
+inline constexpr char DeviceName[] = "device_name";          // what other devices call this one
 } // namespace cfg
 
 class Config

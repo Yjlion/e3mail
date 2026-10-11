@@ -484,6 +484,46 @@ server rotated its certificate); Android reaching `server/compose` through
 setup, which this was for (Next #7); a certificate chain where the first
 certificate is not the server's own.
 
+## P8 slice 2: devices over Iroh (2026-10-11)
+
+The transport is in ([ADR 0010 amendment](adr/0010-multi-client-over-iroh.md)).
+`src/p2p/` is a Rust crate (`e3p2p`, iroh 1.3, no iroh-blobs) with a
+non-blocking C ABI (`e3p2p.h`), built by cargo through Corrosion
+(`cmake/E3mailP2p.cmake`, `E3MAIL_P2P`, on by default).
+`sync::IrohTransport` implements `DeviceTransport` over it: one QUIC
+connection per pair of devices, framed messages, a hello naming the device,
+strangers refused by the crate before a byte is read. `Account` starts it
+with the worker when a device with an endpoint is paired, pushes after every
+change (200 ms debounce), and dials paired devices every minute. Migration 4
+gives `devices` an endpoint id, an address and the peer's last version map.
+Each device's Iroh key (`p2p_secret`) and relay setting (`p2p_relay`) stay
+on that device.
+
+**Verified here:**
+- `cargo test` (the ctest `p2p_cargo`): framing; two endpoints on this
+  machine with the relay off exchange frames both ways, one of 3 MiB; a
+  stranger is closed without its frame being delivered.
+- `tst_p2p`, two devices of one account over real endpoints, relay off: a
+  message B never fetched arrives from A as a raw blob, decrypts, and A's
+  read state follows; B archives and A follows live; an unpaired endpoint
+  gets nowhere; after B's endpoint stops and starts again it is dialed back
+  and changes flow. Five runs, 2.7 s each. Letting every endpoint in (in
+  the crate) failed the stranger test.
+- `tst_sync` unchanged, now using the shared `tests/DeviceClone`.
+- `cmake --preset android-x64` builds a signed APK with the crate inside
+  (50 MB, was 43), once cargo links through the NDK's
+  `x86_64-linux-android28-clang` (trap 43).
+
+**Not verified:**
+- Any relay, or n0's address lookup: every test runs with the relay off on
+  one machine. Two machines on different networks have never connected.
+- The arm64 APK, the Android emulator with the crate, and Windows and macOS
+  builds: the CI and release workflows install Rust now, but nothing was
+  pushed, so they have not run.
+- A large first transfer: blobs travel one frame each (up to 64 MiB), with
+  no flow control beyond QUIC's; a mailbox of several gigabytes has not been
+  tried.
+
 ## Known gaps
 
 - **Signed-only mail** is checked only for PGP/MIME (`multipart/signed`);
@@ -722,11 +762,20 @@ Code holding one calls `Preferences::write`, not `set`, to change a setting.
 **42. Trap 38 again.** One full `ctest` run here took 135 s instead of 16;
 the next took 16 s. Fixed on 2026-10-11 (see "Trap 38 fixed").
 
+**43. Cargo links Android dependencies with a bare clang.** Corrosion sets
+the NDK's `clang` as cargo's linker and passes `--target` and the sysroot
+only for the final crate. iroh-relay also builds a shared library, which
+then failed with `unable to find library -llog`. `cmake/E3mailP2p.cmake`
+sets the NDK's per-target wrapper (`<triple><api>-clang`) instead.
+
+**44. A Rust target directory under `src/p2p/`** appears when cargo is run
+there by hand (2.6 GB after one `cargo test`). It is in `.gitignore`; CMake
+builds in `build/`.
+
 ## Next
 
-1. P8, slice 2: install Rust, build `src/p2p/` (Iroh, `iroh-blobs`) with
-   Corrosion behind `DeviceTransport`, add the toolchain to CI on all three
-   platforms, and wire `SyncSession` into `Account`.
+1. Push and watch CI with Rust on all three desktop platforms and Android;
+   connect two machines on different networks through n0's relay.
 2. P8, slice 3: QR pairing with the encrypted snapshot; the mailbox fallback.
 3. Install each published package on its own platform. Pre-releases
    v0.1.1 to v0.1.5 are on GitHub (v0.1.5 with both APKs); v0.1.0 is still
