@@ -59,6 +59,51 @@ QStringList signersOf(MailContext &ctx, const mime::Part &signedPart)
     }
 }
 
+// The part `walk` shows as the text, or null.
+const mime::Part *textPart(const mime::Part &p)
+{
+    if (p.isMultipart()) {
+        if (p.mimeType == "multipart/alternative") {
+            const mime::Part *text = nullptr;
+            for (const mime::Part &c : p.children) {
+                if (c.mimeType == "text/plain")
+                    text = &c;
+            }
+            if (text)
+                return text;
+        }
+        for (const mime::Part &c : p.children) {
+            if (const mime::Part *t = textPart(c))
+                return t;
+        }
+        return nullptr;
+    }
+    return p.disposition != "attachment" && p.mimeType == "text/plain" ? &p : nullptr;
+}
+
+// Inline PGP in a text body: the first armoured message or cleartext-signed
+// block, as [start, end) in the part's bytes.
+std::optional<std::pair<qsizetype, qsizetype>> armouredBlock(const QByteArray &body)
+{
+    static const QByteArray kMessage = "-----BEGIN PGP MESSAGE-----";
+    static const QByteArray kSigned = "-----BEGIN PGP SIGNED MESSAGE-----";
+    for (qsizetype pos = 0; pos < body.size();) {
+        const qsizetype nl = body.indexOf('\n', pos);
+        const qsizetype lineEnd = nl < 0 ? body.size() : nl;
+        const QByteArray line = body.mid(pos, lineEnd - pos).trimmed();
+        if (line == kMessage || line == kSigned) {
+            const QByteArray end = line == kMessage ? "-----END PGP MESSAGE-----" : "-----END PGP SIGNATURE-----";
+            const qsizetype e = body.indexOf(end, lineEnd);
+            if (e < 0)
+                return std::nullopt;
+            const qsizetype eol = body.indexOf('\n', e);
+            return std::make_pair(pos, eol < 0 ? body.size() : eol + 1);
+        }
+        pos = lineEnd + 1;
+    }
+    return std::nullopt;
+}
+
 void walk(const mime::Part &p, Ingest::Content &out, bool inAlternative)
 {
     if (p.isMultipart()) {
@@ -249,6 +294,33 @@ Ingest::Result Ingest::process(MailContext &ctx, const QByteArray &raw)
         encrypted = true;
     }
 
+    // Inline PGP, in mail without PGP/MIME: the armour in the text is
+    // replaced by what it holds. Tried again once the keys this message
+    // carries are learned, as for PGP/MIME (trap 4).
+    const mime::Part *inlinePart = !encrypted && !signedPart && decryptError.isEmpty() ? textPart(content) : nullptr;
+    const auto inlineRange = inlinePart ? armouredBlock(inlinePart->body) : std::nullopt;
+    bool inlineDone = false;
+    const auto tryInline = [&] {
+        if (!inlineRange || inlineDone)
+            return;
+        const auto [start, end] = *inlineRange;
+        try {
+            const crypto::Pgp::Decrypted d = ctx.pgp.decrypt(inlinePart->body.mid(start, end - start));
+            const QByteArray cs = inlinePart->charset();
+            QString text = mime::decodeCharset(inlinePart->body.left(start), cs) + mime::decodeCharset(d.data, cs)
+                + mime::decodeCharset(inlinePart->body.mid(end), cs);
+            text.replace(QStringLiteral("\r\n"), QStringLiteral("\n"));
+            body.text = text;
+            body.html.clear(); // an HTML alternative would still show the armour
+            encrypted = d.encrypted;
+            validSigners = d.validSigners;
+            inlineDone = true;
+        } catch (const crypto::PgpError &e) {
+            qCWarning(lcMail) << "cannot read inline PGP:" << e.what();
+        }
+    };
+    tryInline();
+
     const QString selfAddr = mime::normalizeAddr(ctx.config.get(cfg::Addr));
     const bool fromSelf = mime::normalizeAddr(from.addr) == selfAddr;
 
@@ -304,7 +376,7 @@ Ingest::Result Ingest::process(MailContext &ctx, const QByteArray &raw)
     }
     // A first encrypted message carries the key that signed it; verify again
     // now that the keyring has it.
-    if (encrypted && decryptError.isEmpty() && validSigners.isEmpty()) {
+    if (isEncryptedPart(outer) && decryptError.isEmpty() && validSigners.isEmpty()) {
         try {
             validSigners = ctx.pgp.decrypt(outer.children[1].body).validSigners;
         } catch (const crypto::PgpError &) {
@@ -312,6 +384,10 @@ Ingest::Result Ingest::process(MailContext &ctx, const QByteArray &raw)
     }
     if (signedPart && validSigners.isEmpty())
         validSigners = signersOf(ctx, *signedPart);
+    if (inlineRange && validSigners.isEmpty()) {
+        inlineDone = false;
+        tryInline();
+    }
     QString signedFpr;
     bool verified = false;
     if (const auto sender = Contacts::get(ctx, from.addr)) {

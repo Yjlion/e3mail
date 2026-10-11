@@ -343,6 +343,21 @@ QByteArray Pgp::signDetached(const QByteArray &data, const QString &signer) cons
     return bytesOf(out.get());
 }
 
+QByteArray Pgp::signCleartext(const QByteArray &text, const QString &signer) const
+{
+    const Input in = inputFrom(text);
+    const Output out = memoryOutput();
+    rnp_op_sign_t op = nullptr;
+    check(rnp_op_sign_cleartext_create(&op, m_ffi, in.get(), out.get()), "rnp_op_sign_cleartext_create");
+    const std::unique_ptr<rnp_op_sign_st, decltype(&rnp_op_sign_destroy)> guard(op, &rnp_op_sign_destroy);
+    const Key key = locate(m_ffi, "fingerprint", signer);
+    if (!key)
+        throw PgpError(QStringLiteral("no signing key %1").arg(signer));
+    check(rnp_op_sign_add_signature(op, key.get(), nullptr), "rnp_op_sign_add_signature");
+    check(rnp_op_sign_execute(op), "sign");
+    return bytesOf(out.get());
+}
+
 QStringList Pgp::verifyDetached(const QByteArray &data, const QByteArray &signature) const
 {
     const Input in = inputFrom(data);

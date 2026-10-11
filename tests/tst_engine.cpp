@@ -608,6 +608,72 @@ private Q_SLOTS:
         QVERIFY(detail(QStringLiteral("s3@x.test")).signedBySender);
     }
 
+    // Inline PGP: armour in a text body, as older clients and hand-made
+    // mail send it.
+    void inlinePgp()
+    {
+        Account *ada = makeAccount(QStringLiteral("ada@x.test"), QStringLiteral("imap"));
+        Account *bob = makeAccount(QStringLiteral("bob@x.test"), QStringLiteral("imap"));
+        sync(bob);
+        auto &apgp = ada->ctx().pgp;
+        const QString adaFpr = mail::Keyring::selfFingerprint(ada->ctx());
+        const QString bobFpr = mail::Keyring::selfFingerprint(bob->ctx());
+        apgp.import(bob->ctx().pgp.exportPublic(bobFpr));
+        const QByteArray autocrypt = crypto::Autocrypt::format(
+            QStringLiteral("ada@x.test"), apgp.exportAutocrypt(adaFpr, QStringLiteral("ada@x.test")), false);
+        crypto::Pgp stranger;
+        const QString strangerFpr = stranger.generate(QStringLiteral("<ada@x.test>"));
+
+        const auto message = [&](const QByteArray &id, const QByteArray &contentType, const QByteArray &body) {
+            return "From: Ada <ada@x.test>\r\nTo: bob@x.test\r\nSubject: inline\r\nMessage-ID: <" + id
+                + "@x.test>\r\nAutocrypt: " + autocrypt + "\r\nMIME-Version: 1.0\r\nContent-Type: " + contentType
+                + "\r\n\r\n" + body;
+        };
+        const QByteArray latin1 = "text/plain; charset=iso-8859-1";
+        // Encrypted and signed, with text around it, in Latin-1.
+        const QByteArray secret = apgp.encrypt(QStringLiteral("Geheim: Größe").toLatin1(), {bobFpr}, adaFpr);
+        m_srv->deliver(QStringLiteral("bob@x.test"),
+                       message("i1", latin1, QStringLiteral("Grüße vorher\r\n").toLatin1() + secret + "\r\nnachher\r\n"));
+        // Cleartext-signed; then the same with the text changed.
+        const QByteArray clear = apgp.signCleartext("Pay 5 EUR\r\n", adaFpr);
+        m_srv->deliver(QStringLiteral("bob@x.test"), message("i2", "text/plain", clear));
+        m_srv->deliver(QStringLiteral("bob@x.test"), message("i3", "text/plain", QByteArray(clear).replace("Pay 5", "Pay 500")));
+        // Signed by a key that is not the sender's.
+        m_srv->deliver(QStringLiteral("bob@x.test"), message("i4", "text/plain", stranger.signCleartext("hello\r\n", strangerFpr)));
+        // An HTML alternative showing the same armour.
+        m_srv->deliver(QStringLiteral("bob@x.test"),
+                       message("i5", "multipart/alternative; boundary=\"b\"",
+                               "--b\r\nContent-Type: text/plain\r\n\r\n" + clear + "\r\n--b\r\nContent-Type: text/html\r\n\r\n<pre>"
+                                   + clear + "</pre>\r\n--b--\r\n"));
+        sync(bob);
+
+        const auto detail = [&](const QString &id) {
+            const auto row = bob->ctx().db.queryInt("SELECT id FROM messages WHERE message_id=?", id);
+            return *mail::Search::detail(bob->ctx(), *row);
+        };
+        const auto i1 = detail(QStringLiteral("i1@x.test"));
+        QVERIFY(i1.encrypted);
+        QVERIFY(i1.signedBySender);
+        QCOMPARE(i1.bodyText, QStringLiteral("Grüße vorher\nGeheim: Größe\nnachher\n"));
+        // Saved decrypted, it is the text without the armour.
+        const QByteArray eml = mail::Export::decryptedEml(bob->ctx(), i1.id);
+        QVERIFY(eml.contains(QStringLiteral("Geheim: Größe").toUtf8()));
+        QVERIFY(!eml.contains("BEGIN PGP"));
+        QVERIFY(eml.contains("Subject: inline"));
+        const auto i2 = detail(QStringLiteral("i2@x.test"));
+        QVERIFY(!i2.encrypted);
+        QVERIFY(i2.signedBySender);
+        QCOMPARE(i2.bodyText.trimmed(), QStringLiteral("Pay 5 EUR"));
+        QVERIFY(!detail(QStringLiteral("i3@x.test")).signedBySender);
+        const auto i4 = detail(QStringLiteral("i4@x.test"));
+        QVERIFY(!i4.signedBySender);
+        QVERIFY(!i4.bodyText.contains(QLatin1String("BEGIN PGP")));
+        const auto i5 = detail(QStringLiteral("i5@x.test"));
+        QVERIFY(i5.signedBySender);
+        QVERIFY(i5.bodyHtml.isEmpty());
+        QVERIFY(!i5.bodyText.contains(QLatin1String("BEGIN PGP")));
+    }
+
     void blocklistTrashesOnArrival()
     {
         Account *bob = makeAccount(QStringLiteral("bob@x.test"), QStringLiteral("imap"));

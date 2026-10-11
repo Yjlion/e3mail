@@ -160,6 +160,36 @@ private Q_SLOTS:
         QVERIFY2(vcode == 0, vout.constData());
         QVERIFY(vout.contains("VALIDSIG"));
     }
+
+    // Inline PGP: GnuPG's cleartext signature reads through decrypt().
+    void gnupgClearsigned()
+    {
+        const QString gpg = QStandardPaths::findExecutable(QStringLiteral("gpg"));
+        if (gpg.isEmpty())
+            QSKIP("gpg not installed");
+        QTemporaryDir home;
+        Pgp them;
+        const QString theirs = them.generate(QStringLiteral("<them@x.test>"));
+        QCOMPARE(gpgRun(gpg, home.path(), {QStringLiteral("--import")}, them.exportSecret(theirs)).first, 0);
+        const auto [code, armour] = gpgRun(gpg, home.path(),
+                                           {QStringLiteral("--local-user"), theirs, QStringLiteral("--clearsign")},
+                                           "- a line with a dash\nPay 5 EUR\n");
+        QCOMPARE(code, 0);
+
+        // Without their key: the text, and no valid signer.
+        Pgp us;
+        const Pgp::Decrypted unknown = us.decrypt(armour);
+        QVERIFY(unknown.validSigners.isEmpty());
+        QVERIFY(!unknown.encrypted);
+        QVERIFY(unknown.data.contains("Pay 5 EUR"));
+
+        us.import(them.exportPublic(theirs));
+        const Pgp::Decrypted good = us.decrypt(armour);
+        QCOMPARE(good.validSigners, QStringList{theirs});
+        QVERIFY(good.data.startsWith("- a line with a dash")); // dash-escaping undone
+        const Pgp::Decrypted bad = us.decrypt(QByteArray(armour).replace("Pay 5", "Pay 500"));
+        QVERIFY(bad.validSigners.isEmpty());
+    }
 };
 
 QTEST_GUILESS_MAIN(TestCrypto)

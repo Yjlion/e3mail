@@ -28,6 +28,12 @@ Export::Source Export::source(MailContext &ctx, qint64 msgId)
         } catch (const std::exception &e) {
             s.decryptError = QString::fromUtf8(e.what());
         }
+    } else if (ctx.db.queryInt("SELECT encrypted FROM messages WHERE id=?", msgId).value_or(0)) {
+        // Inline PGP: what was decrypted on arrival is the text.
+        s.encrypted = true;
+        const QString text = ctx.db.queryText("SELECT body_text FROM messages WHERE id=?", msgId).value_or(QString());
+        s.inner = "Content-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\n"
+            + text.toUtf8().replace("\r\n", "\n").replace("\n", "\r\n");
     }
     return s;
 }
