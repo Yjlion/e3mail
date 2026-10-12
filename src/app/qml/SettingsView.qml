@@ -94,16 +94,48 @@ Rectangle {
                 text: view.s.displayName || ""
                 onEditingFinished: MailApp.setSetting("displayName", text)
             }
-            Label { text: qsTr("Signature"); color: Theme.muted }
-            TextArea {
-                Layout.fillWidth: true
-                Layout.preferredHeight: 80
-                text: view.s.signature || ""
-                color: Theme.text
-                wrapMode: TextEdit.Wrap
-                onEditingFinished: MailApp.setSetting("signature", text)
-                background: Rectangle { radius: Theme.radius; color: Theme.surface; border.color: Theme.border }
+            Label { text: qsTr("Signatures"); color: Theme.muted }
+            ButtonGroup { id: defaultGroup }
+            Repeater {
+                model: MailApp.signatures
+                RowLayout {
+                    required property var modelData
+                    Layout.fillWidth: true
+                    spacing: 4
+                    RadioButton {
+                        ButtonGroup.group: defaultGroup
+                        checked: modelData.isDefault
+                        onClicked: MailApp.defaultSignature = modelData.id
+                        ToolTip.visible: hovered
+                        ToolTip.delay: 500
+                        ToolTip.text: qsTr("Put this one in new mail")
+                        Accessible.name: qsTr("Default: %1").arg(modelData.name)
+                    }
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        spacing: 0
+                        Label { Layout.fillWidth: true; text: modelData.name; color: Theme.text; elide: Text.ElideRight }
+                        Label {
+                            Layout.fillWidth: true
+                            text: modelData.preview
+                            color: Theme.muted
+                            font.pixelSize: Theme.fontSmall
+                            elide: Text.ElideRight
+                        }
+                    }
+                    Button { text: qsTr("Edit"); flat: true; onClicked: signatureDialog.edit(modelData.id) }
+                    IconButton { iconName: "trash"; tip: qsTr("Delete %1").arg(modelData.name); onClicked: MailApp.removeSignature(modelData.id) }
+                }
             }
+            RadioButton {
+                visible: MailApp.signatures.length > 0
+                ButtonGroup.group: defaultGroup
+                checked: MailApp.defaultSignature === ""
+                onClicked: MailApp.defaultSignature = ""
+                text: qsTr("No signature in new mail")
+            }
+            Button { text: qsTr("Add a signature…"); onClicked: signatureDialog.edit("") }
+            Note { text: qsTr("The chosen one goes into new mail. The composer's signature button swaps it for another.") }
 
             Heading { text: qsTr("Encryption") }
             ChoiceBox {
@@ -164,6 +196,58 @@ Rectangle {
                 SpinBox { from: 30; to: 3600; stepSize: 30; editable: true; value: view.s.pollSeconds || 300; onValueModified: MailApp.setSetting("pollSeconds", value) }
                 RowText { text: qsTr("seconds"); color: Theme.muted }
             }
+            // The worker refused a certificate: not trusted, or not the one
+            // pinned (ADR 0017).
+            Rectangle {
+                Layout.fillWidth: true
+                visible: MailApp.refusedCertificate.fingerprint !== undefined
+                radius: Theme.radius
+                color: Theme.badBg
+                implicitHeight: refusedCol.implicitHeight + 20
+                ColumnLayout {
+                    id: refusedCol
+                    anchors.fill: parent
+                    anchors.margins: 10
+                    spacing: 6
+                    Text {
+                        Layout.fillWidth: true
+                        wrapMode: Text.Wrap
+                        color: Theme.bad
+                        text: MailApp.refusedCertificate.server === "smtp"
+                              ? qsTr("The sending server's certificate is not trusted, or is not the one trusted before.")
+                              : qsTr("The incoming server's certificate is not trusted, or is not the one trusted before.")
+                    }
+                    TextEdit {
+                        Layout.fillWidth: true
+                        readOnly: true
+                        selectByMouse: true
+                        wrapMode: TextEdit.WrapAnywhere
+                        color: Theme.text
+                        font.family: "monospace"
+                        font.pixelSize: Theme.fontSmall + 1
+                        text: MailApp.refusedCertificate.fingerprint || ""
+                    }
+                    Note { text: qsTr("Trust it only if this SHA-256 fingerprint matches the one your server's administrator gave you.") }
+                    Button { text: qsTr("Trust this certificate"); onClicked: { MailApp.trustRefusedCertificate(); view.reload() } }
+                }
+            }
+            Repeater {
+                model: [{ k: "in", f: view.s.inCert || "" }, { k: "smtp", f: view.s.smtpCert || "" }]
+                RowLayout {
+                    required property var modelData
+                    visible: modelData.f.length > 0
+                    Layout.fillWidth: true
+                    Text {
+                        Layout.fillWidth: true
+                        wrapMode: Text.WrapAnywhere
+                        color: Theme.muted
+                        font.pixelSize: Theme.fontSmall + 1
+                        text: (modelData.k === "smtp" ? qsTr("Sending server: trusted certificate %1")
+                                                      : qsTr("Incoming server: trusted certificate %1")).arg(modelData.f)
+                    }
+                    Button { text: qsTr("Forget"); flat: true; onClicked: { MailApp.forgetCertificate(modelData.k); view.reload() } }
+                }
+            }
             Note {
                 text: qsTr("%1 %2:%3 · SMTP %4:%5 · password stored in the %6")
                       .arg((view.s.protocol || "").toUpperCase()).arg(view.s.inHost || "").arg(view.s.inPort || "")
@@ -192,6 +276,69 @@ Rectangle {
                 Button { text: qsTr("Block"); onClicked: { MailApp.block(blockField.text); blockField.text = ""; view.reload() } }
             }
 
+            Heading { id: devicesHeading; text: qsTr("Devices") }
+            Note {
+                visible: !MailApp.devicesAvailable
+                text: qsTr("This build of e3mail cannot sync with other devices.")
+            }
+            ColumnLayout {
+                Layout.fillWidth: true
+                visible: MailApp.devicesAvailable
+                spacing: 6
+                Label { text: qsTr("This device"); color: Theme.muted }
+                Field {
+                    Layout.fillWidth: true
+                    text: MailApp.deviceName
+                    placeholderText: MailApp.defaultDeviceName()
+                    onEditingFinished: MailApp.deviceName = text
+                }
+                Repeater {
+                    model: MailApp.devices
+                    RowLayout {
+                        required property var modelData
+                        Layout.fillWidth: true
+                        spacing: 8
+                        Rectangle { width: 8; height: 8; radius: 4; color: modelData.online ? Theme.good : Theme.muted }
+                        ColumnLayout {
+                            Layout.fillWidth: true
+                            spacing: 0
+                            Label { Layout.fillWidth: true; text: modelData.name; color: Theme.text; elide: Text.ElideRight }
+                            Label {
+                                Layout.fillWidth: true
+                                color: Theme.muted
+                                font.pixelSize: Theme.fontSmall
+                                elide: Text.ElideRight
+                                text: modelData.online ? qsTr("Connected")
+                                      : modelData.lastSeen.length ? qsTr("Last seen %1").arg(modelData.lastSeen)
+                                      : qsTr("Not seen yet")
+                            }
+                        }
+                        Button { text: qsTr("Remove"); flat: true; onClicked: { removeDeviceConfirm.device = modelData; removeDeviceConfirm.open() } }
+                    }
+                }
+                Button { text: qsTr("Pair a new device…"); onClicked: pairDialog.begin() }
+                Label { text: qsTr("Relay"); color: Theme.muted }
+                ChoiceBox {
+                    id: relayBox
+                    Layout.fillWidth: true
+                    model: [{ v: "default", t: qsTr("n0's public relays") },
+                            { v: "custom", t: qsTr("A relay I run") },
+                            { v: "off", t: qsTr("None: only on the same network") }]
+                    textRole: "t"; valueRole: "v"
+                    selected: MailApp.relay === "default" || MailApp.relay === "off" ? ["default", "custom", "off"].indexOf(MailApp.relay) : 1
+                    onActivated: { if (currentValue !== "custom") MailApp.relay = currentValue; else relayUrl.forceActiveFocus() }
+                }
+                Field {
+                    id: relayUrl
+                    Layout.fillWidth: true
+                    visible: relayBox.currentValue === "custom"
+                    placeholderText: "https://relay.example.org"
+                    text: MailApp.relay.startsWith("http") ? MailApp.relay : ""
+                    onEditingFinished: if (text.startsWith("https://") || text.startsWith("http://")) MailApp.relay = text
+                }
+                Note { text: qsTr("Devices of this account sync directly with each other, end-to-end encrypted. When they cannot reach each other, a relay passes the encrypted traffic along; it cannot read it.") }
+            }
+
             Heading { text: qsTr("Data") }
             Note { text: qsTr("Your mail lives only here: %1. Back this folder up — the server keeps no copy.").arg(view.s.dataDir || "") }
             Note { visible: MailApp.portable; text: qsTr("Portable mode: data is kept beside the program.") }
@@ -206,6 +353,29 @@ Rectangle {
             Note { text: qsTr("e3mail %1 · unaudited development software").arg(MailApp.version) }
         }
     }
+
+    SignatureDialog { id: signatureDialog }
+    PairDialog { id: pairDialog }
+    function pairDevice() { pairDialog.begin() }
+    // After layout, which has not happened when the page has just opened.
+    function showDevices() { scrollToDevices.start() }
+    Timer { id: scrollToDevices; interval: 300; onTriggered: flick.contentY = Math.max(0, devicesHeading.y - 12) }
+    Dialog {
+        id: removeDeviceConfirm
+        property var device: ({})
+        parent: Overlay.overlay
+        anchors.centerIn: parent
+        modal: true
+        title: qsTr("Remove %1?").arg(device.name || "")
+        standardButtons: Dialog.Yes | Dialog.Cancel
+        Label {
+            width: Math.min(implicitWidth, Window.width - 96)
+            wrapMode: Text.Wrap
+            text: qsTr("It stops syncing with this account's other devices. What is already on it stays there.")
+        }
+        onAccepted: MailApp.removeDevice(device.id)
+    }
+    function editSignature(id) { signatureDialog.edit(id) }
 
     Dialog {
         id: removeConfirm

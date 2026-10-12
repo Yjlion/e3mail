@@ -25,3 +25,78 @@ fails under delete-after-download and cannot work over POP3.
 - A Rust toolchain joins the build in Phase 8, contained to one crate.
 - libdatachannel (C++, MPL-2.0) remains the fallback behind the same
   `DeviceTransport` interface if that cost proves too high.
+
+## Amendment — 2026-10-11: the transport as built
+
+- **iroh 1.x, without iroh-blobs.** iroh reached 1.0; iroh-blobs is still
+  0.x and follows it at a distance. Raw messages are small enough to travel
+  as frames on the sync connection, so the crate depends on iroh alone.
+- **One QUIC connection per pair of devices**, ALPN `e3mail/sync/1`, one
+  bidirectional stream carrying frames `[kind: u8][length: u32 BE][bytes]`,
+  at most 64 MiB each. Kinds: 1 hello `{"device": id}`, 2 a SyncSession
+  message, 3 blob request, 4 blob (64-byte name, then data), 5 blob missing;
+  16 and up belong to pairing.
+- **Who may connect.** Each device has its own Iroh key (`p2p_secret`, never
+  synced or copied) and records the other devices' endpoint ids
+  (`devices.node_id`, migration 4). The crate refuses any other endpoint
+  before reading a byte. A hello naming a device that is not the one paired
+  with that endpoint is ignored. When two devices dial each other at once,
+  both keep the connection dialed by the endpoint with the smaller id.
+- **Finding each other.** A device dials the address a peer was last seen at
+  (`devices.addr`), or its id alone, which n0's address lookup resolves.
+  Relays: n0's public ones by default, a URL the person runs, or none
+  (`p2p_relay`: `default`, a URL, `off`; per device). Relays and lookup only
+  ever see encrypted QUIC.
+- **The C ABI** is non-blocking (`src/p2p/e3p2p.h`): calls return at once,
+  events are polled after a waker, which `IrohTransport` turns into a queued
+  call on its own thread.
+- `E3MAIL_P2P=OFF` builds without Rust and without device sync.
+
+## Amendment — 2026-10-11: pairing
+
+- **The code.** The device that has the account makes a one-time code,
+  valid ten minutes: `E3PAIR1:` and base64url of its endpoint address, a
+  random 128-bit token, the account's address and its relay setting. It is
+  shown as a QR code and as text; the new device pastes it (camera scanning
+  is not built). While the code is out, the endpoint lets any peer connect.
+- **A person allows it.** The new device sends the token and a name; the
+  existing device asks "“Laptop” wants to become a device of this account"
+  and sends nothing until someone allows it. Holding the code is not enough,
+  and a code serves one device.
+- **The copy is pulled.** The new device asks for the database (a
+  `VACUUM INTO` copy without this device's own settings) and every blob in
+  1 MiB pieces, eight at a time, so a large mailbox is never in memory on
+  either side. The database is checked against the SHA-256 in the manifest,
+  each blob against its name. The passwords travel in the manifest, inside
+  the authenticated QUIC connection, and go to the new device's keyring.
+- **The new device** gets its own device id and Iroh key, records the
+  existing device as its first peer, and records a `server.ack` for every
+  server message the copy holds, so the others do not keep them on the
+  server waiting for it. The existing device records it, with a
+  `device.pair` op that tells every other device (ADR 0013 amendment).
+- Frames 16 and up are pairing's: request, denied, manifest, get, chunk,
+  done.
+
+## Amendment — 2026-10-11: the mailbox fallback
+
+- **When.** Five minutes after a change, if a paired device is not
+  connected and is not known to hold this device's newest ops, the device
+  mails them to its own address. What a device holds is known from the last
+  connection's hello or from its last sync mail (`devices.have_json`).
+- **What.** An ordinary message from and to the account's address, header
+  `X-E3-Sync: 1`, encrypted to the account's key and signed with it. Inside,
+  JSON: the sender's device id, its own ops from what the furthest-behind
+  absent device holds (at most 500), and the sender's whole version map.
+  Each mail stands on its own, whichever arrives first.
+- **Receiving.** Ingest hides it, as it hid `X-E3-Sync` mail already, and
+  applies its ops only if the account's own key signed it and the sender is
+  a paired device. It is not passed on as a message (`msg.add`): every device
+  gets it from the server.
+- **Answers.** A mail needs no answer: what the receiver holds rides along
+  with its next mail. Only a full mail (500 ops) asks for one, so the rest
+  can follow from where the receiver says it is. Fetching a sync mail is not
+  itself news, or each fetch would be mailed, fetched and acknowledged
+  forever.
+- **The server copy** is an ordinary server message: deleted once every
+  device has acknowledged it, which for the last sync mail waits until the
+  devices next exchange anything.

@@ -259,6 +259,17 @@ CREATE TABLE contact_phones (
     PRIMARY KEY (contact_id, idx)
 );
 )sql",
+
+    // 4 — devices over Iroh (ADR 0010, amended 2026-10-11).
+    R"sql(
+-- A paired device's Iroh endpoint id (its public key), where it was last
+-- reached, and the op versions it last said it holds (for the mailbox
+-- fallback).
+ALTER TABLE devices ADD COLUMN node_id   TEXT;
+ALTER TABLE devices ADD COLUMN addr      TEXT;
+ALTER TABLE devices ADD COLUMN have_json TEXT;
+CREATE UNIQUE INDEX devices_node ON devices(node_id) WHERE node_id IS NOT NULL;
+)sql",
 };
 
 } // namespace

@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MPL-2.0
 #pragma once
 
+#include "SignatureRange.h"
+#include "mail/Signatures.h"
 #include "mail/Types.h"
 
 #include <QObject>
@@ -10,6 +12,8 @@
 #include <QtQml/qqmlregistration.h>
 
 #include <QQuickTextDocument>
+
+#include <optional>
 
 class Composer : public QObject
 {
@@ -59,13 +63,13 @@ public:
     Q_INVOKABLE void attach(const QList<QUrl> &files);
     Q_INVOKABLE void removeAttachment(int index);
 
-    // The text document lives in QML; these act on it.
+    // The text document lives in QML; these act on it. Formatting is
+    // TextFormatter's.
     Q_INVOKABLE void loadInto(QQuickTextDocument *doc);
-    Q_INVOKABLE void toggleFormat(QQuickTextDocument *doc, int start, int end, const QString &kind);
-    Q_INVOKABLE void setBlock(QQuickTextDocument *doc, int start, int end, const QString &kind);
-    Q_INVOKABLE void setLink(QQuickTextDocument *doc, int start, int end, const QString &url);
-    Q_INVOKABLE void insertSignature(QQuickTextDocument *doc, int position);
-    Q_INVOKABLE QString formatAt(QQuickTextDocument *doc, int position) const;
+    // Swaps the signature this composer put in for another (an empty id
+    // takes it out), if it is still as it was put in; otherwise puts the
+    // signature in at `position`, leaving what was edited alone.
+    Q_INVOKABLE void useSignature(QQuickTextDocument *doc, const QString &id, int position);
 
     Q_INVOKABLE bool saveDraft(QQuickTextDocument *doc);
     Q_INVOKABLE bool send(QQuickTextDocument *doc);
@@ -91,7 +95,9 @@ private:
 
     e3::Draft m_draft;
     QString m_to, m_cc, m_bcc, m_subject, m_initialText, m_title;
-    QString m_initialHtml, m_initialSignature; // a draft or reply with HTML
+    QString m_initialHtml; // a draft or reply with HTML
+    std::optional<e3::mail::Signature> m_initialSignature;
+    SignatureRange m_signature;
     bool m_important = false;
     bool m_encrypt = false;
     bool m_userSetPadlock = false;

@@ -70,3 +70,6 @@ Testing/
 # Packages
 dist/
 *.AppImage
+
+# Rust (src/p2p): cargo run by hand builds here; CMake builds in build/
+/src/p2p/target/

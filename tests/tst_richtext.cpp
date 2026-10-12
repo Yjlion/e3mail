@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 #include "RichText.h"
+#include "SignatureRange.h"
 
 #include <QGuiApplication>
 #include <QTextBlock>
@@ -107,6 +108,55 @@ private Q_SLOTS:
         cur.insertText(QStringLiteral("<script>"), bold);
         const auto out = RichText::emit(&doc);
         QCOMPARE(out.html, QStringLiteral("<p><b>&lt;script&gt;</b></p>"));
+    }
+
+    void insertsFormattedSignature()
+    {
+        QTextDocument doc;
+        doc.setPlainText(QStringLiteral("Hi"));
+        QTextCursor c(&doc);
+        c.movePosition(QTextCursor::End);
+        c.insertBlock();
+        RichText::insert(c, QStringLiteral("<p><b>Ada</b> <a href=\"https://x.test/\">site</a><script>x</script></p>"),
+                         QStringLiteral("Ada site"));
+        const auto out = RichText::emit(&doc);
+        QCOMPARE(out.html, QStringLiteral("<p>Hi</p><p><b>Ada</b> <a href=\"https://x.test/\">site</a></p>"));
+        // Plain text goes in as lines.
+        QTextDocument plain;
+        QTextCursor p(&plain);
+        RichText::insert(p, QString(), QStringLiteral("one\ntwo"));
+        QCOMPARE(plain.blockCount(), 2);
+    }
+
+    void swapsAnUntouchedSignature()
+    {
+        QTextDocument doc;
+        QTextCursor c(&doc);
+        c.insertText(QStringLiteral("\n\n"));
+        SignatureRange sig;
+        sig.place(c, QString(), QStringLiteral("Work"));
+        c.insertText(QStringLiteral("\nquote"));
+        QCOMPARE(doc.toPlainText(), QStringLiteral("\n\n-- \nWork\nquote"));
+        // Typing above it and right after it is not part of it.
+        QTextCursor(&doc).insertText(QStringLiteral("Hello"));
+        QTextCursor after(&doc);
+        after.setPosition(doc.toPlainText().indexOf(QLatin1String("Work")) + 4);
+        after.insertText(QStringLiteral("!"));
+        QVERIFY(sig.untouched());
+
+        QTextCursor at(&doc);
+        QVERIFY(sig.take(at));
+        sig.place(at, QStringLiteral("<p><b>Home</b></p>"), QStringLiteral("Home"));
+        QCOMPARE(doc.toPlainText(), QStringLiteral("Hello\n\n-- \nHome!\nquote"));
+
+        // Once edited, it is the person's text: not taken.
+        QTextCursor edit(&doc);
+        edit.setPosition(doc.toPlainText().indexOf(QLatin1String("Home")) + 1);
+        edit.insertText(QStringLiteral("x"));
+        QVERIFY(!sig.untouched());
+        QTextCursor again(&doc);
+        QVERIFY(!sig.take(again));
+        QCOMPARE(doc.toPlainText(), QStringLiteral("Hello\n\n-- \nHxome!\nquote"));
     }
 };
 

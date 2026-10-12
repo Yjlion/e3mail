@@ -8,6 +8,7 @@
 #include "FakeMailServer.h"
 #include "engine/AccountManager.h"
 #include "mail/Compose.h"
+#include "mail/Signatures.h"
 #include "mail/Contacts.h"
 #include "mail/Organize.h"
 #include "mail/Search.h"
@@ -42,7 +43,7 @@ Account *make(AccountManager &mgr, const QString &addr, const QString &name, con
     return a;
 }
 
-void sync(Account *a)
+void fetchMail(Account *a)
 {
     MailWorker::runOnce(a->dir(), a->credentials());
 }
@@ -91,21 +92,31 @@ int main(int argc, char **argv)
     AccountManager peers(dir + QStringLiteral("/peers"));
     AccountManager mgr(dir);
     Account *ada = make(mgr, QStringLiteral("ada@example.org"), QStringLiteral("Ada Lovelace"), QStringLiteral("imap"));
-    ada->ctx().config.set(cfg::Signature, QStringLiteral("Ada Lovelace\nAnalytical Engines, London"));
+    mail::Signatures::save(ada->ctx(), {QString(), QStringLiteral("Work"),
+                                        QStringLiteral("<p><b>Ada Lovelace</b><br><i>Analytical Engines</i>, London</p>"),
+                                        QStringLiteral("Ada Lovelace\nAnalytical Engines, London")});
+    mail::Signatures::save(ada->ctx(), {QString(), QStringLiteral("Personal"), QString(), QStringLiteral("Ada")});
+    // Another device of Ada's, and no relay: screenshots never go online.
+    ada->ctx().config.set(cfg::P2pRelay, QStringLiteral("off"));
+    ada->ctx().config.set(cfg::P2pLoopback, QStringLiteral("1"));
+    ada->ctx().config.set(cfg::DeviceName, QStringLiteral("Desktop"));
+    ada->ctx().db.run("INSERT INTO devices(id, name, paired_at, node_id, last_seen) VALUES(?, ?, ?, ?, ?)",
+                      QStringLiteral("laptop"), QStringLiteral("Laptop"), QDateTime::currentMSecsSinceEpoch(),
+                      QString(64, u'a'), QDateTime::currentMSecsSinceEpoch() - 3 * 3600 * 1000);
     Account *mira = make(peers, QStringLiteral("mira@example.org"), QStringLiteral("Mira Dorn"), QStringLiteral("imap"));
     Account *tomas = make(peers, QStringLiteral("tomas@example.net"), QStringLiteral("Tomas Reyes"), QStringLiteral("pop3"));
     Account *stranger = make(peers, QStringLiteral("offers@deals.example"), QStringLiteral("Great Deals"), QStringLiteral("imap"));
     for (Account *a : {ada, mira, tomas, stranger})
-        sync(a);
+        fetchMail(a);
 
     // Ada writes first; replies come back encrypted once keys are known.
     send(ada, QStringLiteral("mira@example.org"), QStringLiteral("Thursday's numbers"),
          QStringLiteral("Hi Mira,\n\nCould you send the reconciliation before Thursday?\n\nThanks"));
     send(ada, QStringLiteral("tomas@example.net"), QStringLiteral("Keys are rotated"),
          QStringLiteral("Tomas, the new keys are in place. Can you confirm on your side?"));
-    sync(ada);
-    sync(mira);
-    sync(tomas);
+    fetchMail(ada);
+    fetchMail(mira);
+    fetchMail(tomas);
     mail::Organize::accept(mira->ctx(), QStringLiteral("ada@example.org"));
     mail::Organize::accept(tomas->ctx(), QStringLiteral("ada@example.org"));
 
@@ -113,20 +124,20 @@ int main(int argc, char **argv)
          QStringLiteral("Attaching the reconciliation. Everything balances except the second column, which is off by one."),
          latestFrom(mira, QStringLiteral("ada@example.org")), 1,
          {{QStringLiteral("reconciliation.csv"), QStringLiteral("text/csv"), "account,q3\nops,1200\nlab,830\n"}});
-    sync(mira);
+    fetchMail(mira);
     send(tomas, QString(), QString(), QStringLiteral("Done. New fingerprint is in the usual place; scan when we meet."),
          latestFrom(tomas, QStringLiteral("ada@example.org")));
-    sync(tomas);
-    sync(ada);
+    fetchMail(tomas);
+    fetchMail(ada);
 
     // Ada answers Mira, and Mira follows up: a thread of four.
     send(ada, QString(), QString(), QStringLiteral("That matches what I have. One thing on the second column: it double-counts the lab."),
          latestFrom(ada, QStringLiteral("mira@example.org")));
-    sync(ada);
-    sync(mira);
+    fetchMail(ada);
+    fetchMail(mira);
     send(mira, QString(), QString(), QStringLiteral("Good catch — fixed and re-sent to finance."),
          latestFrom(mira, QStringLiteral("ada@example.org")));
-    sync(mira);
+    fetchMail(mira);
 
     // A cleartext newsletter-style message with HTML, and a stranger.
     Draft html;
@@ -138,11 +149,11 @@ int main(int argc, char **argv)
                                "<p><img src=\"https://tracker.example/pixel.gif\" alt=\"\"></p>");
     html.encryption = SendEncryption::Plaintext;
     mail::Compose::queue(mira->ctx(), html);
-    sync(mira);
+    fetchMail(mira);
     send(stranger, QStringLiteral("ada@example.org"), QStringLiteral("You have been selected!"),
          QStringLiteral("Claim your prize today. Limited time only."));
-    sync(stranger);
-    sync(ada);
+    fetchMail(stranger);
+    fetchMail(ada);
 
     // Organise Ada's mailbox a little.
     MailContext &ctx = ada->ctx();

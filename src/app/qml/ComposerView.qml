@@ -13,6 +13,7 @@ Rectangle {
     property bool showCc: false
     property bool showBcc: false
     property bool formatting: false
+    readonly property alias body: editor.area
 
     function start(kind, msgId) {
         if (kind === "reply") composer.startReply(msgId, false)
@@ -31,15 +32,6 @@ Rectangle {
     // Close, keeping what was written as a draft.
     function close() { composer.saveDraft(body.textDocument); view.closed() }
 
-    function fmt(kind) {
-        composer.toggleFormat(body.textDocument, body.selectionStart, body.selectionEnd, kind)
-        body.forceActiveFocus()
-    }
-    function block(kind) {
-        composer.setBlock(body.textDocument, body.selectionStart, body.selectionEnd, kind)
-        body.forceActiveFocus()
-    }
-
     Composer {
         id: composer
         onSent: { MailApp.notify(qsTr("Sending…")); view.closed() }
@@ -47,9 +39,6 @@ Rectangle {
     }
 
     Shortcut { sequence: "Ctrl+Return"; enabled: view.visible && composer.canSend; onActivated: composer.send(body.textDocument) }
-    Shortcut { sequence: StandardKey.Bold; enabled: view.visible; onActivated: view.fmt("bold") }
-    Shortcut { sequence: StandardKey.Italic; enabled: view.visible; onActivated: view.fmt("italic") }
-    Shortcut { sequence: StandardKey.Underline; enabled: view.visible; onActivated: view.fmt("underline") }
 
     ColumnLayout {
         anchors.fill: parent
@@ -120,50 +109,15 @@ Rectangle {
         }
         Line {}
 
-        // Formatting toolbar, shown when asked for.
-        Flow {
-            Layout.fillWidth: true
-            Layout.maximumWidth: 900
-            Layout.topMargin: 8
-            visible: view.formatting
-            spacing: 2
-            IconButton { iconName: "bold"; tip: qsTr("Bold"); onClicked: view.fmt("bold") }
-            IconButton { iconName: "italic"; tip: qsTr("Italic"); onClicked: view.fmt("italic") }
-            IconButton { iconName: "underline"; tip: qsTr("Underline"); onClicked: view.fmt("underline") }
-            IconButton { iconName: "strike"; tip: qsTr("Strikethrough"); onClicked: view.fmt("strike") }
-            IconButton { iconName: "heading"; tip: qsTr("Heading"); onClicked: view.block("h2") }
-            IconButton { iconName: "quote"; tip: qsTr("Quote"); onClicked: view.block("quote") }
-            IconButton { iconName: "list-bullet"; tip: qsTr("Bulleted list"); onClicked: view.block("bullet") }
-            IconButton { iconName: "list-number"; tip: qsTr("Numbered list"); onClicked: view.block("numbered") }
-            IconButton { iconName: "code"; tip: qsTr("Code"); onClicked: view.fmt("code") }
-            IconButton {
-                iconName: "link"; tip: qsTr("Link")
-                enabled: body.selectedText.length > 0
-                onClicked: linkPrompt.open()
-            }
-        }
-
-        ScrollView {
+        // The body, with its formatting toolbar when asked for.
+        RichEditor {
+            id: editor
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.maximumWidth: 900
             Layout.topMargin: 8
-            TextArea {
-                id: body
-                textFormat: TextEdit.RichText
-                wrapMode: TextEdit.Wrap
-                selectByMouse: true
-                persistentSelection: true
-                color: Theme.text
-                font.pixelSize: Theme.fontBody + 1
-                placeholderText: qsTr("Write your message")
-                background: Rectangle {
-                    radius: Theme.radius
-                    color: Theme.surface
-                    border.color: body.activeFocus ? Theme.accent : Theme.border
-                }
-                padding: 12
-            }
+            toolbar: view.formatting
+            placeholderText: qsTr("Write your message")
         }
 
         // Attachments
@@ -221,7 +175,34 @@ Rectangle {
             Item { width: 8 }
             IconButton { iconName: "heading"; tip: qsTr("Formatting"); on: view.formatting; onClicked: view.formatting = !view.formatting }
             IconButton { iconName: "attach"; tip: qsTr("Attach files"); onClicked: attachDialog.open() }
-            IconButton { iconName: "signature"; tip: qsTr("Insert signature"); onClicked: composer.insertSignature(body.textDocument, body.cursorPosition) }
+            IconButton {
+                id: signatureButton
+                iconName: "signature"; tip: qsTr("Signature")
+                onClicked: {
+                    if (MailApp.signatures.length === 0) {
+                        errorText.text = qsTr("No signature is set. Add one in Settings.")
+                        errorBox.visible = true
+                    } else {
+                        signatureMenu.popup(signatureButton, 0, -signatureMenu.implicitHeight)
+                    }
+                }
+                Menu {
+                    id: signatureMenu
+                    Repeater {
+                        model: MailApp.signatures
+                        MenuItem {
+                            required property var modelData
+                            text: modelData.name
+                            onTriggered: { composer.useSignature(body.textDocument, modelData.id, body.cursorPosition); body.forceActiveFocus() }
+                        }
+                    }
+                    MenuSeparator {}
+                    MenuItem {
+                        text: qsTr("No signature")
+                        onTriggered: { composer.useSignature(body.textDocument, "", body.cursorPosition); body.forceActiveFocus() }
+                    }
+                }
+            }
             IconButton { iconName: "flag"; tip: qsTr("Mark as important"); on: composer.important; onClicked: composer.important = !composer.important }
             IconButton {
                 iconName: composer.encrypt ? "lock" : "lock-open"
@@ -263,16 +244,5 @@ Rectangle {
         id: attachDialog
         fileMode: FileDialog.OpenFiles
         onAccepted: composer.attach(selectedFiles)
-    }
-    Dialog {
-        id: linkPrompt
-        parent: Overlay.overlay
-        anchors.centerIn: parent
-        modal: true
-        title: qsTr("Link to")
-        standardButtons: Dialog.Ok | Dialog.Cancel
-        Field { id: linkField; width: Math.min(360, Window.width - 96); placeholderText: qsTr("example.com or name@example.com") }
-        onOpened: { linkField.text = ""; linkField.forceActiveFocus() }
-        onAccepted: composer.setLink(body.textDocument, body.selectionStart, body.selectionEnd, linkField.text)
     }
 }

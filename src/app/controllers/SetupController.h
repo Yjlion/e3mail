@@ -27,12 +27,17 @@ class SetupController : public QObject
     Q_PROPERTY(QString suggestionNote MEMBER m_note NOTIFY changed)
     Q_PROPERTY(bool busy READ busy NOTIFY busyChanged)
     Q_PROPERTY(QString error READ error NOTIFY busyChanged)
+    // A certificate TLS does not trust, waiting for a decision: {server
+    // ("in"/"smtp"), host, port, fingerprint, subject, issuer, expires,
+    // problems, changed}; empty when there is none (ADR 0017).
+    Q_PROPERTY(QVariantMap untrustedCertificate READ untrustedCertificate NOTIFY busyChanged)
 
 public:
     explicit SetupController(QObject *parent = nullptr);
 
     bool busy() const { return m_busy; }
     QString error() const { return m_error; }
+    QVariantMap untrustedCertificate() const { return m_cert; }
 
     // Fills the server fields from the address. Called when the address is
     // entered; the user can still edit everything.
@@ -40,6 +45,9 @@ public:
     Q_INVOKABLE void useProtocol(const QString &protocol);
     // Checks the servers, then creates and starts the account.
     Q_INVOKABLE void submit();
+    // Trusts the certificate in untrustedCertificate for its server, and
+    // checks again.
+    Q_INVOKABLE void trustCertificate();
 
 Q_SIGNALS:
     void changed();
@@ -58,6 +66,10 @@ private:
     bool m_showServers = false;
     bool m_busy = false;
     QString m_error;
+    QVariantMap m_cert;
+    // Pins, each for the host and port it was given for.
+    QByteArray m_inPin, m_smtpPin;
+    QString m_inPinFor, m_smtpPinFor;
     QString m_suggestedFor;
     bool m_looking = false;     // a lookup is running
     bool m_submitAfter = false; // Connect was pressed during it

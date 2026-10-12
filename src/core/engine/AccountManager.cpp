@@ -6,6 +6,7 @@
 
 #include <QDir>
 #include <QFile>
+#include <QFileInfo>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -88,6 +89,22 @@ Account *AccountManager::create()
 {
     const int id = m_nextId++;
     auto *a = new Account(id, m_root + u'/' + QString::number(id), this);
+    m_accounts.append(a);
+    m_selected = id;
+    save();
+    Q_EMIT accountsChanged();
+    Q_EMIT selectedChanged();
+    return a;
+}
+
+Account *AccountManager::adopt(const QString &dir)
+{
+    const int id = m_nextId;
+    const QString dst = m_root + u'/' + QString::number(id);
+    if (QFileInfo::exists(dst) || !QDir().rename(dir, dst))
+        return nullptr;
+    ++m_nextId;
+    auto *a = new Account(id, dst, this);
     m_accounts.append(a);
     m_selected = id;
     save();

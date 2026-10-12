@@ -15,6 +15,7 @@ option(E3MAIL_BUILD_APP "Build the QML desktop application" ON)
 option(E3MAIL_BUILD_CLI "Build the headless e3mail-cli" ON)
 option(E3MAIL_BUILD_TESTS "Build the test suite" ON)
 option(E3MAIL_WARNINGS_AS_ERRORS "Treat compiler warnings as errors" OFF)
+option(E3MAIL_P2P "Sync devices over Iroh (needs Rust)" ON)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
@@ -52,6 +53,9 @@ find_package(Qt6Keychain CONFIG QUIET)
 
 include(GNUInstallDirs)
 include(E3mailCompilerFlags)
+if(E3MAIL_P2P)
+    include(E3mailP2p)
+endif()
 
 add_subdirectory(src/core)
 if(E3MAIL_BUILD_CLI)

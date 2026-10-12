@@ -58,10 +58,9 @@ bytes move. [ADR 0013](adr/0013-op-merge-rules.md) has the rules.
 `scripts/e2e.py` against `server/compose` passes with this change, so
 single-device delete-after-download is unchanged on real servers.
 
-**Not built yet:** the Rust crate and Corrosion, pairing (QR and the
-encrypted snapshot; tests clone the account directory instead), the mailbox
-fallback, any UI, and wiring a `SyncSession` into `Account`. Nothing in the
-app syncs yet.
+**Not built yet** (at the time): the Rust crate, pairing, the mailbox
+fallback, any UI, and the wiring into `Account`. All of these are built as of
+2026-10-11; see the sections below.
 
 ## Languages and ICU (2026-10-06)
 
@@ -346,12 +345,276 @@ service. Passwords go to the Android Keystore through QtKeychain.
 - Opening a decrypted `.eml` in Thunderbird or another client.
 - A CSV opened in Excel, LibreOffice or Google Contacts.
 
+## Typing formats, several signatures, signed-only mail (2026-10-10)
+
+- **Formatting applies to what is typed next.** Bold, italic and the rest
+  did nothing without a selection: the composer only changed selected text.
+  QML does not expose the editor's own cursor, so `TextFormatter` keeps a
+  format chosen with nothing selected as *pending* and lays it on the next
+  text typed at that spot; what follows inherits it from the character
+  before. Enter alone carries it to the new line; moving the cursor away
+  drops it. The toolbar buttons show the format at the cursor. The toolbar
+  and editor are one component, `RichEditor.qml`, used by the composer and
+  the signature editor. `toggleFormat`, `setBlock` and `setLink` moved out
+  of `Composer`.
+- **Several signatures, formatted, one (or none) the default**
+  ([ADR 0013 amendment](adr/0013-op-merge-rules.md)). Each is a synced
+  setting `signature:<id>`; `mail::Signatures` reads and writes them. The old
+  plain signature reads as the one with id `legacy` until edited. Settings
+  lists them with a default radio, Edit, Delete and "No signature in new
+  mail"; `SignatureDialog.qml` edits one through `RichEditor`, and what is
+  saved is `RichText::emit`'s output, the same whitelist as sent mail.
+- **The composer's signature button** opens a menu of signatures and "No
+  signature". It swaps the signature the composer put in for the chosen one
+  while that signature's text is unchanged (`SignatureRange`); once edited,
+  it is left alone and the new one goes in at the cursor.
+- **Signed-only mail is verified** (it was Next #5). `multipart/signed` with
+  `application/pgp-signature`: the detached signature is checked over the
+  first part as sent, in CRLF, and checked again after the same message's
+  Autocrypt header taught the key (trap 4). `Pgp::verifyDetached` and
+  `signDetached` (the latter for tests).
+
+**Verified here:**
+- `ctest --preset dev`: 15 tests pass. New:
+  - `tst_formatting`: a real `TextArea` offscreen, typed into with key
+    events. Bold on, type, bold off, type: only the middle is bold; two
+    formats at once; pressing twice cancels; moving away drops it; Enter
+    keeps it; a selection still toggles; the state follows the cursor.
+    Turning off the merge of the pending format failed four of its six.
+  - `tst_richtext`: `RichText::insert` (formatting kept, the script
+    dropped) and `swapsAnUntouchedSignature` (text typed above and right
+    after is not part of it, an edited one is never taken). Dropping
+    `setKeepPositionOnInsert` failed it.
+  - `tst_engine::signatures` (legacy, default, removal, nine `config.set`
+    ops) and `signedOnlyIsVerified` (a good signature, a tampered body, the
+    key arriving in the same message, bare LF from the server). Removing the
+    CRLF rule, or the second verification, failed it.
+  - `tst_sync::signaturesMergeOneByOne`: two devices edit different
+    signatures at once and both edits survive; a removal travels with the
+    default. Dropping the prefix from `Preferences::isSynced` failed it.
+  - `tst_crypto::gnupgDetachedSignatures`: GnuPG's detached signature
+    verifies here and a changed text does not; ours verifies in GnuPG.
+- Screenshots looked at: the composer with the toolbar and a formatted
+  signature, a reply to HTML mail with it, Settings with the list (English,
+  Arabic, phone), the signature editor (English, Arabic, phone). New shots:
+  `composer-formatting`, `signature`, `signature-ar`, `settings-ar`,
+  `phone-signature` (pages `formatting` and `signature`).
+- Translations complete in all ten languages (machine-made).
+
+**Not verified:**
+- Typing on a real display, and above all through an input method: Android's
+  keyboard and CJK composition commit text differently from key events, and
+  whether the pending format catches that commit is untested.
+- The signature menu in the composer: it is a popup, so no screenshot shows
+  it, and the swap was tested on `SignatureRange`, not through the view.
+- Signed-only mail from a real client (Thunderbird, Delta Chat, K-9). The
+  fixtures are made here and by GnuPG. `scripts/e2e.py` against
+  `server/compose` passes with this work (after adding the user to the
+  `docker` group), but it sends no signed-only mail.
+- Signatures syncing over anything but the loopback transport.
+
+## Trap 38 fixed, inline PGP, GnuPG through Dovecot (2026-10-11)
+
+- **Stopping no longer waits for the server.** Trap 38 was real: stopping an
+  account blocked the main thread in `wait()` while the worker sat in a
+  socket wait that only the 120 s timeout ended (the retention pass, or the
+  IDLE handshake). In the tests the fake server lives on that blocked
+  thread. `SyncSocket` waits now poll `ServerSettings::abort`, which the
+  worker sets to its stop flag. The fake server forgets dead idlers and
+  announces mail that came between SELECT and IDLE.
+- **Inline PGP** is decrypted and verified: the first armoured block in the
+  text part (a PGP message or a cleartext-signed text) is replaced by what
+  it holds, decoded in the part's charset, with the text around it kept.
+  An HTML alternative showing the same armour is dropped. Verification is
+  tried again after the message's own Autocrypt header taught the key.
+  "Save decrypted" writes the text.
+- `e3mail-cli key` prints the account's public key, armoured.
+
+**Verified here:**
+- `tst_engine::stopDoesNotWaitForTheServer`: a stalled fake server, then
+  `stop()` returns in about 1 s. Without the fix it took 119.5 s, trap 38
+  exactly. The engine suite ran five times in 4.0 to 4.5 s.
+- `tst_engine::inlinePgp`: encrypted and signed in Latin-1 with text around
+  it, cleartext-signed, the same tampered, a stranger's key, and an HTML
+  alternative; the decrypted export. Turning off the inline step, or its
+  second try, failed it.
+- `tst_crypto::gnupgClearsigned`: GnuPG's `--clearsign`, read with and
+  without the signer's key, dash-escaping undone, a tampered text unsigned.
+- `scripts/e2e.py` against `server/compose`, all passed, with a new step 5:
+  a GnuPG sender's PGP/MIME signed, cleartext-signed and inline encrypted
+  mail, delivered by Dovecot's LDA, each arrives signed (and encrypted),
+  not verified, and without armour.
+
+**Not verified:** inline PGP from a real client (Enigmail-era Thunderbird,
+Mailvelope); a message holding more than one armoured block (only the first
+is read); PGP/MIME inside an inline message.
+
+## Self-signed servers: certificate pinning (2026-10-11)
+
+[ADR 0017](adr/0017-certificate-pinning.md). When TLS refuses a server's
+certificate, setup shows why, its SHA-256 fingerprint, subject, issuer and
+expiry, and "Trust this certificate". Trusting pins that one certificate for
+that server (`in_cert_sha256`, `smtp_cert_sha256`, never synced); any other
+certificate from it is refused, even one TLS would trust. SMTP on the same
+host with the same certificate is pinned along. A running account whose
+certificate is refused goes to status `cert`; Settings shows the new
+fingerprint with "Trust this certificate", and the pinned ones with "Forget".
+`e3mail-cli cert` prints a server's certificate; `add --in-cert/--smtp-cert`
+pin from the command line. `--insecure` stays for tests.
+
+**Verified here:**
+- `tst_net::certificatePinning` (implicit TLS and STARTTLS against a
+  `QSslServer` with the committed `tests/data/tls-cert.pem`): refused with the
+  right fingerprint, subject and reasons; accepted when pinned; refused when
+  another is pinned. `pinRefusesATrustedCertificate`: with the certificate
+  added as a CA, a different pin still refuses it. Not ignoring the pinned
+  certificate's errors failed the first; dropping the check after the
+  handshake failed the second.
+- `scripts/e2e.py`: `e3mail-cli cert` reads the test server's self-signed
+  certificate on all five ports; carol now logs in over STARTTLS with the
+  pin instead of `--insecure`; a wrong pin is refused. All passed.
+- The real setup form against `server/compose` (a temporary hook filled in
+  carol and pressed Connect, then Trust; not in the tree): the card showed
+  the server's fingerprint and Qt's reason, in English and Arabic, and
+  trusting created the account with both pins stored.
+
+**Not verified:** the Settings card for a changed certificate (no test
+server rotated its certificate); Android reaching `server/compose` through
+setup, which this was for (Next #7); a certificate chain where the first
+certificate is not the server's own.
+
+## P8 slice 2: devices over Iroh (2026-10-11)
+
+The transport is in ([ADR 0010 amendment](adr/0010-multi-client-over-iroh.md)).
+`src/p2p/` is a Rust crate (`e3p2p`, iroh 1.3, no iroh-blobs) with a
+non-blocking C ABI (`e3p2p.h`), built by cargo through Corrosion
+(`cmake/E3mailP2p.cmake`, `E3MAIL_P2P`, on by default).
+`sync::IrohTransport` implements `DeviceTransport` over it: one QUIC
+connection per pair of devices, framed messages, a hello naming the device,
+strangers refused by the crate before a byte is read. `Account` starts it
+with the worker when a device with an endpoint is paired, pushes after every
+change (200 ms debounce), and dials paired devices every minute. Migration 4
+gives `devices` an endpoint id, an address and the peer's last version map.
+Each device's Iroh key (`p2p_secret`) and relay setting (`p2p_relay`) stay
+on that device.
+
+**Verified here:**
+- `cargo test` (the ctest `p2p_cargo`): framing; two endpoints on this
+  machine with the relay off exchange frames both ways, one of 3 MiB; a
+  stranger is closed without its frame being delivered.
+- `tst_p2p`, two devices of one account over real endpoints, relay off: a
+  message B never fetched arrives from A as a raw blob, decrypts, and A's
+  read state follows; B archives and A follows live; an unpaired endpoint
+  gets nowhere; after B's endpoint stops and starts again it is dialed back
+  and changes flow. Five runs, 2.7 s each. Letting every endpoint in (in
+  the crate) failed the stranger test.
+- `tst_sync` unchanged, now using the shared `tests/DeviceClone`.
+- `cmake --preset android-x64` builds a signed APK with the crate inside
+  (50 MB, was 43), once cargo links through the NDK's
+  `x86_64-linux-android28-clang` (trap 43).
+
+**Not verified:**
+- Any relay, or n0's address lookup: every test runs with the relay off on
+  one machine. Two machines on different networks have never connected.
+- Installing any of it on its own platform. CI (run 38189964407, branch
+  `compose-formats-signatures`) builds and tests everything with the crate
+  on Linux, macOS and Windows, builds both APKs and boots the x86_64 one in
+  an emulator (trap 48). The release workflow has not run with Rust.
+- A large first transfer: blobs travel one frame each (up to 64 MiB), with
+  no flow control beyond QUIC's; a mailbox of several gigabytes has not been
+  tried.
+
+## P8 slice 3, first half: pairing (2026-10-11)
+
+A new device joins an account with a code ([ADR 0010 amendment](adr/0010-multi-client-over-iroh.md)).
+Settings, Devices, "Pair a new device…" shows a QR code and the same code as
+text; on the new device, setup offers "Copy an account from another
+device…", where the code is pasted. The existing device asks whether to let
+"Laptop" in; then the new device pulls the database and every blob, checked
+by SHA-256, plus the passwords, and becomes a device of its own (id, Iroh
+key, name). A `device.pair` op tells the other devices, and Remove sends
+`device.unpair` and drops the device at once (ADR 0013 amendment). Settings
+lists the devices, online or last seen, the device's own name, and the
+relay: n0's public relays, one the person runs, or none.
+
+`engine/Pairing` holds both sides. `e3mail-cli` gains `devices`,
+`pair-offer [--yes]`, `pair-join <code>` and `run [seconds]`, and
+`scripts/p2p-e2e.py` uses them.
+
+**Verified here:**
+- `tst_p2p` (9 tests, relay off, loopback only): a full pairing (the new
+  device has the mail, decrypts it, has its own id, key and name, the
+  password, and server acks for what the copy holds; A records it and B
+  learns of it through `device.pair`; then A's read state reaches it); the
+  code refused a second time; Deny refused; a wrong token never asked
+  about; a blob changed on disk refused by its hash; a removed device
+  dropped and refused. Thirty runs in a row without a failure, after
+  trap 45.
+- `scripts/p2p-e2e.py` against `server/compose`, three runs, all passed:
+  two `e3mail-cli` processes pair with a code; the server keeps alice's new
+  message until the second device has it; it reaches B; A's accept and
+  archive reach B; then the server copy is deleted.
+- `scripts/e2e.py` still passes.
+- Screenshots: Devices (English, Arabic, phone), the pairing dialog with its
+  QR code (English, Arabic, phone), the join dialog.
+
+**Not verified:**
+- Scanning the QR code: there is no camera scanning; the code is pasted. No
+  phone has read the QR code shown on screen.
+- Pairing over n0's relay, or between two machines.
+- A large mailbox: the copy is pulled in 1 MiB pieces, eight at a time,
+  measured only on small fixtures.
+- Removing a device while it is offline: it is refused when it comes back,
+  and the other devices learn of the removal, but what the removed device
+  shows then has not been looked at.
+
+## P8 slice 3, second half: the mailbox fallback (2026-10-11)
+
+Devices that are never online together sync through the mailbox
+([ADR 0010 amendment](adr/0010-multi-client-over-iroh.md)). Five minutes
+after a change, if a paired device is away and lacks this device's newest
+ops, `sync::MailboxFallback` queues a mail to the account's own address:
+`X-E3-Sync`, encrypted to the account's key and signed with it, holding the
+sender's own ops (up to 500) and its whole version map. Ingest hides it and
+applies its ops only if the account's own key signed it and the sender is a
+paired device. Phase 8 is done.
+
+Two fixes came out of this work:
+- **A replaced connection lost what was sent on it.** When both devices
+  dialed at once and the newer connection won, `SyncSession` was not told,
+  so ops sent on the closing connection counted as delivered and were never
+  sent again. `scripts/p2p-e2e.py` failed about one run in five because of
+  it. The switch now looks like a reconnect.
+- **Hidden sync mail is no longer recorded as `msg.add`**: every device
+  gets it from the server.
+
+**Verified here:**
+- `tst_sync::mailboxFallback`: two devices that never connect; A's read
+  state reaches B by mail, the mail is hidden, a second call sends nothing,
+  B's answer tells A what it holds, nobody mails again, and the server lets
+  go of everything but the last sync mail.
+  `mailboxFallbackInBatches`: 600 ops go as 500, an answer, then the rest
+  (fails without the answer to a full mail). `forgedSyncMailIsIgnored`: a
+  sync mail Bob signed, claiming to be A, trashes nothing.
+- `tst_p2p::simultaneousDials`: five rounds of both dialing at once; each
+  change arrives. Without the reconnect fix it failed every time.
+- `scripts/p2p-e2e.py`: ten runs in a row passed after the fix.
+  `scripts/e2e.py` passes.
+
+**Not verified:**
+- The fallback against `server/compose`: the live script runs both devices
+  at once, so it never needs the mailbox. It was tested against the fake
+  server only.
+- The five-minute timer in the running app: tests call `mailFallbackNow()`.
+- The last sync mail stays on the server until the devices next exchange
+  anything; how many pile up over weeks of one device being away has not
+  been measured.
+
 ## Known gaps
 
-- **Signed-only mail** (`multipart/signed` without encryption) is shown, but
-  its signature is not checked, so it reads as unsigned.
-- **Inline PGP** (`-----BEGIN PGP MESSAGE-----` in a text body) is not
-  decrypted.
+- **Signed-only mail** is checked only for PGP/MIME (`multipart/signed`);
+  S/MIME signatures read as unsigned.
+- **Inline PGP**: only the first armoured block of the text part is read.
 - **Bcc and encryption**: Bcc recipients' key IDs are in the encrypted message,
   so recipients who inspect it can tell that Bcc recipients exist
   (ADR 0004).
@@ -365,7 +628,8 @@ service. Passwords go to the Android Keystore through QtKeychain.
   Its rendering, typing and mail flow are unverified (see "Android" above).
   CI packages are debug-signed; release packages use the key in the
   repository's secrets once it is set (ADR 0016 amendment).
-- **Sync**: a message another device sent while it was still pending in that
+- **Sync**: devices have only been tried on one machine, with the relay off;
+  the pairing code is pasted, not scanned. A message another device sent while it was still pending in that
   device's outbox arrives as Sent. Mail whose raw copy expired under
   raw-message retention never reaches a new device unless the server still
   has it, and sent mail then never does. A label renamed on one device comes
@@ -570,25 +834,72 @@ like trap 26's 120 s socket timeout twice in one session, once on a tree
 without this work's changes. It took 2 to 3 s in eight runs after that. It
 passes either way. Not investigated.
 
+**39. The editor reports text before it moves the cursor.** Typing into a
+`TextArea` emits the document's `contentsChange` while `cursorPosition` still
+holds the old position. `TextFormatter` does not rely on the order: it drops
+a pending format on a cursor move only in a queued call, after any insertion
+has had its turn.
+
+**40. `QTest::keyClicks` takes only a `QWidget`.** For a `QQuickView`, send
+`QTest::keyClick` per character.
+
+**41. Transactions do not nest.** `Transaction` is a bare `BEGIN IMMEDIATE`.
+Code holding one calls `Preferences::write`, not `set`, to change a setting.
+
+**42. Trap 38 again.** One full `ctest` run here took 135 s instead of 16;
+the next took 16 s. Fixed on 2026-10-11 (see "Trap 38 fixed").
+
+**43. Cargo links Android dependencies with a bare clang.** Corrosion sets
+the NDK's `clang` as cargo's linker and passes `--target` and the sysroot
+only for the final crate. iroh-relay also builds a shared library, which
+then failed with `unable to find library -llog`. `cmake/E3mailP2p.cmake`
+sets the NDK's per-target wrapper (`<triple><api>-clang`) instead.
+
+**44. A Rust target directory under `src/p2p/`** appears when cargo is run
+there by hand (2.6 GB after one `cargo test`). It is in `.gitignore`; CMake
+builds in `build/`.
+
+**45. Rust may call the waker after `e3p2p_stop` returned.** Shutting the
+runtime down in the background lets a connection task finish later and call
+the waker on an `IrohTransport` already freed; it crashed one run in nine.
+The waker now sits behind a lock that `e3p2p_stop` clears first. Separately,
+a pairing failure must not delete the transport from inside its own poll
+(heap corruption): it is `deleteLater`.
+
+**46. Screenshots must not picture this machine.** The join dialog's
+default device name is the host name, and a pairing code holds the
+endpoint's addresses. `scripts/screenshots.sh` sets `E3MAIL_DEVICE_NAME`,
+and the fixtures' endpoint is loopback-only (`p2p_loopback`), as in the
+tests.
+
+**47. A Qt Test that hangs survives `timeout`.** On SIGTERM QtTest tries to
+print a stack trace with gdb and waits. Use `QTEST_DISABLE_STACK_DUMP=1` and
+`timeout -s KILL` when running a suite that might hang.
+
+**48. The first CI run with Rust failed twice.** macOS left CoreFoundation,
+Security and SystemConfiguration symbols unresolved: iroh's dependencies use
+them, and Corrosion adds only the standard library's. On Windows the build
+and every C++ test passed, but `cargo test` ran in Git Bash, where Git's
+`link` comes before MSVC's. `cmake/E3mailP2p.cmake` links the frameworks and
+names MSVC's linker for that test.
+
 ## Next
 
-1. P8, slice 2: install Rust, build `src/p2p/` (Iroh, `iroh-blobs`) with
-   Corrosion behind `DeviceTransport`, add the toolchain to CI on all three
-   platforms, and wire `SyncSession` into `Account`.
-2. P8, slice 3: QR pairing with the encrypted snapshot; the mailbox fallback.
-3. Publish v0.1.1: move its tag to a commit that has the release fixes
-   (nothing was published under it), then install each package on its own
-   platform.
+1. Connect two machines on different networks through n0's relay, and run
+   the release workflow with Rust.
+2. Scan the pairing QR code with a phone's camera (Qt Multimedia and a QR
+   decoder in the Android build); the code is pasted for now.
+3. Install each published package on its own platform. Pre-releases
+   v0.1.1 to v0.1.5 are on GitHub (v0.1.5 with both APKs); v0.1.0 is still
+   marked Latest.
 4. P9 SecureJoin, then an interop pass against Delta Chat's released
    `deltachat-rpc-server`, as eeemail's `scripts/interop-pass.py` does.
-5. Verify signed-only mail.
-6. Try notifications on a real Windows and macOS desktop, and import real
+5. Try notifications on a real Windows and macOS desktop, and import real
    vCard exports (Google, Apple, Thunderbird).
-7. Publish a release with the APKs: bump the version (Android installs an
-   update only with a higher version code) and push a tag. Install the
-   arm64 APK on a phone and try each export there (Android's file picker
-   returns `content://`).
-8. Android on a real phone: rendering, typing, the keyboard covering setup's
+6. Install v0.1.5's arm64 APK on a phone and try each export there
+   (Android's file picker returns `content://`).
+7. Android on a real phone: rendering, typing (including a bold word typed
+   through the keyboard, see "Typing formats" above), the keyboard covering setup's
    Connect button, then a real account (receive, send, a notification, the
-   Keystore). Setup needs a way to accept a self-signed test certificate, or
-   a debuggable build with a copied account, to reach `server/compose`.
+   Keystore). Setup can now trust `server/compose`'s self-signed certificate
+   (ADR 0017); from the emulator the host is `10.0.2.2`.

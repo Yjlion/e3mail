@@ -316,6 +316,7 @@ void MailWorker::run()
         return;
     }
     const bool pop3 = m_creds.protocol == QLatin1String("pop3");
+    m_creds.incoming.abort = m_creds.smtp.abort = [this] { return m_stop.load(); };
     int backoffMs = 15000;
     while (!m_stop) {
         m_wake = false;
@@ -340,6 +341,12 @@ void MailWorker::run()
             } else if (!m_stop && !m_wake) {
                 s->imap->idle(kIdleMs, [this] { return m_stop || m_wake; });
             }
+        } catch (const net::CertError &e) {
+            s->imap.reset();
+            const bool smtp = e.info.host == m_creds.smtp.host && e.info.port == m_creds.smtp.port;
+            Q_EMIT certificateRefused(smtp ? QStringLiteral("smtp") : QStringLiteral("in"), e.info.sha256);
+            Q_EMIT status(QStringLiteral("cert"), e.message());
+            nap(30 * 60 * 1000); // until someone decides about it and we are restarted
         } catch (const net::AuthError &e) {
             s->imap.reset();
             Q_EMIT status(QStringLiteral("auth"), e.message());

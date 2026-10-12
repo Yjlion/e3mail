@@ -16,18 +16,25 @@ bool Preferences::isSynced(const QString &key)
         QLatin1String(cfg::EncryptionMode),  QLatin1String(cfg::ServerRetention),
         QLatin1String(cfg::ServerKeepDays),  QLatin1String(cfg::TrashPurgeDays),
         QLatin1String(cfg::UnverifiedTrashDays), QLatin1String(cfg::Gating),
+        QLatin1String(cfg::SignatureDefault),
     };
-    return synced.contains(key);
+    // Each signature is a setting of its own (Signatures), so two devices
+    // editing different ones both keep their edit.
+    return synced.contains(key) || key.startsWith(QLatin1String(cfg::SignaturePrefix));
 }
 
 void Preferences::set(MailContext &ctx, const char *key, const QString &value)
 {
     Transaction tx(ctx.db);
-    const QString k = QString::fromLatin1(key);
-    apply(ctx, k, value);
-    if (isSynced(k))
-        ctx.ops.record(op::Setting, {{QStringLiteral("key"), k}, {QStringLiteral("value"), value}});
+    write(ctx, QString::fromLatin1(key), value);
     tx.commit();
+}
+
+void Preferences::write(MailContext &ctx, const QString &key, const QString &value)
+{
+    apply(ctx, key, value);
+    if (isSynced(key))
+        ctx.ops.record(op::Setting, {{QStringLiteral("key"), key}, {QStringLiteral("value"), value}});
 }
 
 void Preferences::apply(MailContext &ctx, const QString &key, const QString &value)

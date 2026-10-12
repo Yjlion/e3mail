@@ -62,10 +62,6 @@ To: %4
         <translation>تعذّرت قراءة %1.</translation>
     </message>
     <message>
-        <source>No signature is set. Add one in Settings.</source>
-        <translation>لم يُضبط توقيع. أضِف توقيعًا من الإعدادات.</translation>
-    </message>
-    <message>
         <source>Add a recipient.</source>
         <translation>أضِف مستلمًا.</translation>
     </message>
@@ -109,46 +105,6 @@ To: %4
         <translation>الموضوع</translation>
     </message>
     <message>
-        <source>Bold</source>
-        <translation>عريض</translation>
-    </message>
-    <message>
-        <source>Italic</source>
-        <translation>مائل</translation>
-    </message>
-    <message>
-        <source>Underline</source>
-        <translation>تسطير</translation>
-    </message>
-    <message>
-        <source>Strikethrough</source>
-        <translation>يتوسطه خط</translation>
-    </message>
-    <message>
-        <source>Heading</source>
-        <translation>عنوان</translation>
-    </message>
-    <message>
-        <source>Quote</source>
-        <translation>اقتباس</translation>
-    </message>
-    <message>
-        <source>Bulleted list</source>
-        <translation>قائمة نقطية</translation>
-    </message>
-    <message>
-        <source>Numbered list</source>
-        <translation>قائمة مرقّمة</translation>
-    </message>
-    <message>
-        <source>Code</source>
-        <translation>شيفرة</translation>
-    </message>
-    <message>
-        <source>Link</source>
-        <translation>رابط</translation>
-    </message>
-    <message>
         <source>Write your message</source>
         <translation>اكتب رسالتك</translation>
     </message>
@@ -169,8 +125,16 @@ To: %4
         <translation>إرفاق ملفات</translation>
     </message>
     <message>
-        <source>Insert signature</source>
-        <translation>إدراج التوقيع</translation>
+        <source>Signature</source>
+        <translation>التوقيع</translation>
+    </message>
+    <message>
+        <source>No signature is set. Add one in Settings.</source>
+        <translation>لم يُضبط توقيع. أضِف توقيعًا من الإعدادات.</translation>
+    </message>
+    <message>
+        <source>No signature</source>
+        <translation>بلا توقيع</translation>
     </message>
     <message>
         <source>Mark as important</source>
@@ -199,14 +163,6 @@ To: %4
     <message>
         <source>Discard</source>
         <translation>تجاهل</translation>
-    </message>
-    <message>
-        <source>Link to</source>
-        <translation>رابط إلى</translation>
-    </message>
-    <message>
-        <source>example.com or name@example.com</source>
-        <translation>example.com أو name@example.com</translation>
     </message>
 </context>
 <context>
@@ -434,6 +390,45 @@ To: %4
     </message>
 </context>
 <context>
+    <name>JoinDialog</name>
+    <message>
+        <source>Copy an account from another device</source>
+        <translation>نسخ حساب من جهاز آخر</translation>
+    </message>
+    <message>
+        <source>On the device that has the account, open Settings, Devices, “Pair a new device”, and enter the code it shows here.</source>
+        <translation>على الجهاز الذي يحوي الحساب، افتح الإعدادات، ثم الأجهزة، ثم «إقران جهاز جديد»، وأدخل هنا الرمز الذي يعرضه.</translation>
+    </message>
+    <message>
+        <source>Code</source>
+        <translation>شيفرة</translation>
+    </message>
+    <message>
+        <source>For %1</source>
+        <translation>لـ %1</translation>
+    </message>
+    <message>
+        <source>This is not a pairing code.</source>
+        <translation>هذا ليس رمز إقران.</translation>
+    </message>
+    <message>
+        <source>This device’s name</source>
+        <translation>اسم هذا الجهاز</translation>
+    </message>
+    <message>
+        <source>Waiting for the other device to allow it…</source>
+        <translation>بانتظار سماح الجهاز الآخر…</translation>
+    </message>
+    <message>
+        <source>Copy the account</source>
+        <translation>نسخ الحساب</translation>
+    </message>
+    <message>
+        <source>That code cannot be used here. Is this account already on this device?</source>
+        <translation>لا يمكن استخدام هذا الرمز هنا. هل الحساب موجود على هذا الجهاز بالفعل؟</translation>
+    </message>
+</context>
+<context>
     <name>LabelDialog</name>
     <message>
         <source>Edit tag</source>
@@ -465,6 +460,10 @@ To: %4
 </context>
 <context>
     <name>MailApp</name>
+    <message>
+        <source>Unnamed device</source>
+        <translation>جهاز بلا اسم</translation>
+    </message>
     <message>
         <source>(no subject)</source>
         <translation>(بلا موضوع)</translation>
@@ -850,6 +849,53 @@ To: %4
     </message>
 </context>
 <context>
+    <name>PairDialog</name>
+    <message>
+        <source>This device could not start its connection to other devices.</source>
+        <translation>تعذّر على هذا الجهاز بدء اتصاله بالأجهزة الأخرى.</translation>
+    </message>
+    <message>
+        <source>Pair a new device</source>
+        <translation>إقران جهاز جديد</translation>
+    </message>
+    <message>
+        <source>On the new device, choose “Copy an account from another device” when adding a mailbox, and enter this code. It works once, for ten minutes.</source>
+        <translation>على الجهاز الجديد، اختر «نسخ حساب من جهاز آخر» عند إضافة صندوق بريد، وأدخل هذا الرمز. يصلح مرة واحدة، لمدة عشر دقائق.</translation>
+    </message>
+    <message>
+        <source>Pairing code as a QR code</source>
+        <translation>رمز الإقران كرمز QR</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>نسخ</translation>
+    </message>
+    <message>
+        <source>“%1” wants to become a device of this account. It will get a copy of all your mail, your contacts, your key and your password.</source>
+        <translation>«%1» يريد أن يصبح جهازًا لهذا الحساب. سيحصل على نسخة من كل بريدك وجهات اتصالك ومفتاحك وكلمة مرورك.</translation>
+    </message>
+    <message>
+        <source>Allow it only if you are setting up that device yourself, now.</source>
+        <translation>لا تسمح إلا إذا كنت تُعدّ ذلك الجهاز بنفسك الآن.</translation>
+    </message>
+    <message>
+        <source>Allow</source>
+        <translation>سماح</translation>
+    </message>
+    <message>
+        <source>Refuse</source>
+        <translation>رفض</translation>
+    </message>
+    <message>
+        <source>Sending a copy to “%1”…</source>
+        <translation>جارٍ إرسال نسخة إلى «%1»…</translation>
+    </message>
+    <message>
+        <source>“%1” is now a device of this account.</source>
+        <translation>أصبح «%1» جهازًا لهذا الحساب.</translation>
+    </message>
+</context>
+<context>
     <name>Policy</name>
     <message>
         <source>Add a recipient.</source>
@@ -931,6 +977,57 @@ To: %4
     </message>
 </context>
 <context>
+    <name>RichEditor</name>
+    <message>
+        <source>Bold</source>
+        <translation>عريض</translation>
+    </message>
+    <message>
+        <source>Italic</source>
+        <translation>مائل</translation>
+    </message>
+    <message>
+        <source>Underline</source>
+        <translation>تسطير</translation>
+    </message>
+    <message>
+        <source>Strikethrough</source>
+        <translation>يتوسطه خط</translation>
+    </message>
+    <message>
+        <source>Heading</source>
+        <translation>عنوان</translation>
+    </message>
+    <message>
+        <source>Quote</source>
+        <translation>اقتباس</translation>
+    </message>
+    <message>
+        <source>Bulleted list</source>
+        <translation>قائمة نقطية</translation>
+    </message>
+    <message>
+        <source>Numbered list</source>
+        <translation>قائمة مرقّمة</translation>
+    </message>
+    <message>
+        <source>Code</source>
+        <translation>شيفرة</translation>
+    </message>
+    <message>
+        <source>Link</source>
+        <translation>رابط</translation>
+    </message>
+    <message>
+        <source>Link to</source>
+        <translation>رابط إلى</translation>
+    </message>
+    <message>
+        <source>example.com or name@example.com</source>
+        <translation>example.com أو name@example.com</translation>
+    </message>
+</context>
+<context>
     <name>SaveMessage</name>
     <message>
         <source>Save decrypted</source>
@@ -1000,8 +1097,36 @@ To: %4
         <translation>الاسم</translation>
     </message>
     <message>
-        <source>Signature</source>
-        <translation>التوقيع</translation>
+        <source>Signatures</source>
+        <translation>التواقيع</translation>
+    </message>
+    <message>
+        <source>Put this one in new mail</source>
+        <translation>ضع هذا التوقيع في الرسائل الجديدة</translation>
+    </message>
+    <message>
+        <source>Default: %1</source>
+        <translation>الافتراضي: %1</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>تعديل</translation>
+    </message>
+    <message>
+        <source>Delete %1</source>
+        <translation>حذف %1</translation>
+    </message>
+    <message>
+        <source>No signature in new mail</source>
+        <translation>بلا توقيع في الرسائل الجديدة</translation>
+    </message>
+    <message>
+        <source>Add a signature…</source>
+        <translation>إضافة توقيع…</translation>
+    </message>
+    <message>
+        <source>The chosen one goes into new mail. The composer&apos;s signature button swaps it for another.</source>
+        <translation>يُضاف التوقيع المختار إلى الرسائل الجديدة. يستبدله زر التوقيع في نافذة الكتابة بتوقيع آخر.</translation>
     </message>
     <message>
         <source>Encryption</source>
@@ -1092,6 +1217,34 @@ To: %4
         <translation>ثانية</translation>
     </message>
     <message>
+        <source>The sending server&apos;s certificate is not trusted, or is not the one trusted before.</source>
+        <translation>شهادة خادم الإرسال غير موثوقة، أو ليست الشهادة التي وثقتَ بها من قبل.</translation>
+    </message>
+    <message>
+        <source>The incoming server&apos;s certificate is not trusted, or is not the one trusted before.</source>
+        <translation>شهادة خادم الوارد غير موثوقة، أو ليست الشهادة التي وثقتَ بها من قبل.</translation>
+    </message>
+    <message>
+        <source>Trust it only if this SHA-256 fingerprint matches the one your server&apos;s administrator gave you.</source>
+        <translation>لا تثق بها إلا إذا طابقت بصمة SHA-256 هذه البصمةَ التي أعطاك إياها مدير خادمك.</translation>
+    </message>
+    <message>
+        <source>Trust this certificate</source>
+        <translation>الوثوق بهذه الشهادة</translation>
+    </message>
+    <message>
+        <source>Sending server: trusted certificate %1</source>
+        <translation>خادم الإرسال: شهادة موثوقة %1</translation>
+    </message>
+    <message>
+        <source>Incoming server: trusted certificate %1</source>
+        <translation>خادم الوارد: شهادة موثوقة %1</translation>
+    </message>
+    <message>
+        <source>Forget</source>
+        <translation>نسيان</translation>
+    </message>
+    <message>
         <source>%1 %2:%3 · SMTP %4:%5 · password stored in the %6</source>
         <translation>%1 %2:%3 · SMTP %4:%5 · كلمة المرور محفوظة في: %6</translation>
     </message>
@@ -1132,6 +1285,58 @@ To: %4
         <translation>حظر</translation>
     </message>
     <message>
+        <source>Devices</source>
+        <translation>الأجهزة</translation>
+    </message>
+    <message>
+        <source>This build of e3mail cannot sync with other devices.</source>
+        <translation>لا يستطيع هذا الإصدار من e3mail المزامنة مع أجهزة أخرى.</translation>
+    </message>
+    <message>
+        <source>This device</source>
+        <translation>هذا الجهاز</translation>
+    </message>
+    <message>
+        <source>Connected</source>
+        <translation>متصل</translation>
+    </message>
+    <message>
+        <source>Last seen %1</source>
+        <translation>آخر ظهور %1</translation>
+    </message>
+    <message>
+        <source>Not seen yet</source>
+        <translation>لم يظهر بعد</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>إزالة</translation>
+    </message>
+    <message>
+        <source>Pair a new device…</source>
+        <translation>إقران جهاز جديد…</translation>
+    </message>
+    <message>
+        <source>Relay</source>
+        <translation>المُرحِّل</translation>
+    </message>
+    <message>
+        <source>n0&apos;s public relays</source>
+        <translation>مرحِّلات n0 العامة</translation>
+    </message>
+    <message>
+        <source>A relay I run</source>
+        <translation>مرحِّل أديره بنفسي</translation>
+    </message>
+    <message>
+        <source>None: only on the same network</source>
+        <translation>لا شيء: على الشبكة نفسها فقط</translation>
+    </message>
+    <message>
+        <source>Devices of this account sync directly with each other, end-to-end encrypted. When they cannot reach each other, a relay passes the encrypted traffic along; it cannot read it.</source>
+        <translation>تتزامن أجهزة هذا الحساب مباشرة فيما بينها بتشفير تام بين الطرفين. وحين يتعذّر وصول بعضها إلى بعض، ينقل مُرحِّل الحركة المشفّرة دون أن يستطيع قراءتها.</translation>
+    </message>
+    <message>
         <source>Data</source>
         <translation>البيانات</translation>
     </message>
@@ -1162,6 +1367,10 @@ To: %4
     <message>
         <source>Remove %1?</source>
         <translation>إزالة %1؟</translation>
+    </message>
+    <message>
+        <source>It stops syncing with this account&apos;s other devices. What is already on it stays there.</source>
+        <translation>سيتوقف عن المزامنة مع أجهزة هذا الحساب الأخرى. ما عليه بالفعل يبقى هناك.</translation>
     </message>
     <message>
         <source>Every message, contact and key of this mailbox is deleted from this device.</source>
@@ -1254,6 +1463,34 @@ To: %4
         <translation>بلا (غير آمن)</translation>
     </message>
     <message>
+        <source>The certificate of %1 is not the one you trusted before.</source>
+        <translation>شهادة %1 ليست الشهادة التي وثقتَ بها من قبل.</translation>
+    </message>
+    <message>
+        <source>The certificate of %1 (sending) is not trusted.</source>
+        <translation>شهادة %1 (الإرسال) غير موثوقة.</translation>
+    </message>
+    <message>
+        <source>The certificate of %1 is not trusted.</source>
+        <translation>شهادة %1 غير موثوقة.</translation>
+    </message>
+    <message>
+        <source>SHA-256 fingerprint</source>
+        <translation>بصمة SHA-256</translation>
+    </message>
+    <message>
+        <source>Issued to %1 by %2, valid until %3.</source>
+        <translation>صادرة لـ %1 من %2، صالحة حتى %3.</translation>
+    </message>
+    <message>
+        <source>Trust it only if this fingerprint matches the one your server&apos;s administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
+        <translation>لا تثق بها إلا إذا طابقت هذه البصمةُ البصمةَ التي أعطاك إياها مدير خادمك. عندها يقبل e3mail هذه الشهادة من هذا الخادم، ولا شهادة غيرها.</translation>
+    </message>
+    <message>
+        <source>Trust this certificate</source>
+        <translation>الوثوق بهذه الشهادة</translation>
+    </message>
+    <message>
         <source>Checking…</source>
         <translation>جارٍ التحقق…</translation>
     </message>
@@ -1264,6 +1501,10 @@ To: %4
     <message>
         <source>Cancel</source>
         <translation>إلغاء</translation>
+    </message>
+    <message>
+        <source>Copy an account from another device…</source>
+        <translation>نسخ حساب من جهاز آخر…</translation>
     </message>
 </context>
 <context>
@@ -1356,8 +1597,38 @@ To: %4
         <translation>فشل تسجيل الدخول — تحقق من كلمة المرور</translation>
     </message>
     <message>
+        <source>Certificate not trusted — see Settings</source>
+        <translation>الشهادة غير موثوقة — راجع الإعدادات</translation>
+    </message>
+    <message>
         <source>Offline</source>
         <translation>غير متصل</translation>
+    </message>
+</context>
+<context>
+    <name>SignatureDialog</name>
+    <message>
+        <source>Edit signature</source>
+        <translation>تعديل التوقيع</translation>
+    </message>
+    <message>
+        <source>New signature</source>
+        <translation>توقيع جديد</translation>
+    </message>
+    <message>
+        <source>Name, such as Work</source>
+        <translation>الاسم، مثل «العمل»</translation>
+    </message>
+    <message>
+        <source>Your signature</source>
+        <translation>توقيعك</translation>
+    </message>
+</context>
+<context>
+    <name>Signatures</name>
+    <message>
+        <source>Signature</source>
+        <translation>التوقيع</translation>
     </message>
 </context>
 <context>
@@ -1415,6 +1686,68 @@ To: %4
     <message>
         <source>Create a tag…</source>
         <translation>إنشاء وسم…</translation>
+    </message>
+</context>
+<context>
+    <name>e3::PairingJoin</name>
+    <message>
+        <source>The code could not be read.</source>
+        <translation>تعذّرت قراءة الرمز.</translation>
+    </message>
+    <message>
+        <source>The connection to the other device was lost: %1</source>
+        <translation>انقطع الاتصال بالجهاز الآخر: %1</translation>
+    </message>
+    <message>
+        <source>The other device did not allow it.</source>
+        <translation>لم يسمح الجهاز الآخر بذلك.</translation>
+    </message>
+    <message>
+        <source>The other device offered a different account.</source>
+        <translation>عرض الجهاز الآخر حسابًا مختلفًا.</translation>
+    </message>
+    <message>
+        <source>Cannot write here.</source>
+        <translation>تتعذّر الكتابة هنا.</translation>
+    </message>
+    <message>
+        <source>The other device sent something unexpected.</source>
+        <translation>أرسل الجهاز الآخر شيئًا غير متوقع.</translation>
+    </message>
+    <message>
+        <source>A file arrived damaged.</source>
+        <translation>وصل ملف تالفًا.</translation>
+    </message>
+    <message>
+        <source>The copy of the mailbox arrived damaged.</source>
+        <translation>وصلت نسخة صندوق البريد تالفة.</translation>
+    </message>
+</context>
+<context>
+    <name>e3::PairingOffer</name>
+    <message>
+        <source>The code expired.</source>
+        <translation>انتهت صلاحية الرمز.</translation>
+    </message>
+    <message>
+        <source>The other device went away.</source>
+        <translation>غاب الجهاز الآخر.</translation>
+    </message>
+    <message>
+        <source>Another device</source>
+        <translation>جهاز آخر</translation>
+    </message>
+    <message>
+        <source>Pairing was refused on this device.</source>
+        <translation>رُفض الإقران على هذا الجهاز.</translation>
+    </message>
+    <message>
+        <source>A file asked for is not here.</source>
+        <translation>ملف مطلوب غير موجود هنا.</translation>
+    </message>
+    <message>
+        <source>The copy of the mailbox could not be read.</source>
+        <translation>تعذّرت قراءة نسخة صندوق البريد.</translation>
     </message>
 </context>
 </TS>

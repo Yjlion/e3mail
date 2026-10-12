@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MPL-2.0
+#include "DeviceClone.h"
 #include "FakeMailServer.h"
 #include "LoopbackTransport.h"
 #include "engine/AccountManager.h"
@@ -7,6 +8,11 @@
 #include "mail/Organize.h"
 #include "mail/Preferences.h"
 #include "mail/Search.h"
+#include "mail/Signatures.h"
+#include "crypto/Pgp.h"
+#include "mail/Keyring.h"
+#include "mime/Builder.h"
+#include "sync/MailboxFallback.h"
 #include "store/Config.h"
 #include "store/Database.h"
 #include "store/OpLog.h"
@@ -64,32 +70,11 @@ class TestSync : public QObject
 
     static void fetch(Account *a) { MailWorker::runOnce(a->dir(), a->credentials()); }
 
-    // A second device: the account directory copied, with a new device id.
     Account *cloneDevice(Account *src)
     {
-        src->ctx().db.exec("PRAGMA wal_checkpoint(TRUNCATE)");
         const QString root = m_dir->path() + QStringLiteral("/deviceB");
-        const QString dst = root + QStringLiteral("/accounts/") + QString::number(src->id());
-        QDirIterator it(src->dir(), QDir::Files, QDirIterator::Subdirectories);
-        while (it.hasNext()) {
-            const QString from = it.next();
-            const QString to = dst + from.mid(src->dir().size());
-            QDir().mkpath(QFileInfo(to).path());
-            if (!QFile::copy(from, to))
-                return nullptr;
-        }
-        {
-            Database db(dst + QStringLiteral("/mail.db"));
-            db.run("UPDATE config SET value=? WHERE key='device_id'",
-                   QUuid::createUuid().toString(QUuid::WithoutBraces));
-        }
-        QFile f(root + QStringLiteral("/accounts/accounts.json"));
-        if (!f.open(QIODevice::WriteOnly))
+        if (!::cloneDevice(src, root))
             return nullptr;
-        f.write(QJsonDocument(QJsonObject{{QStringLiteral("accounts"), QJsonArray{src->id()}},
-                                          {QStringLiteral("next_id"), src->id() + 1}})
-                    .toJson());
-        f.close();
         m_mgrB = std::make_unique<AccountManager>(root);
         return m_mgrB->account(src->id());
     }
@@ -387,6 +372,156 @@ private Q_SLOTS:
     // not.
     // The address book travels: details are last writer wins, and a removal
     // competes with every other change to that contact.
+    void signaturesMergeOneByOne()
+    {
+        auto &a = m_a->ctx();
+        auto &b = m_b->ctx();
+        const QString home = mail::Signatures::save(a, {QString(), QStringLiteral("Home"), QString(), QStringLiteral("A")});
+        connectDevices();
+        QVERIFY(mail::Signatures::get(b, home));
+        QCOMPARE(mail::Signatures::get(b, home)->text, QStringLiteral("A"));
+        QCOMPARE(mail::Signatures::defaultId(b), home);
+
+        // Each device edits a different signature at the same time: both
+        // edits survive, because each signature is a setting of its own.
+        const QString work = mail::Signatures::save(b, {QString(), QStringLiteral("Work"), QString(), QStringLiteral("W")});
+        auto h = *mail::Signatures::get(a, home);
+        h.text = QStringLiteral("A, edited");
+        mail::Signatures::save(a, h);
+        m_syncA->push();
+        m_syncB->push();
+        m_net->settle();
+        for (auto *x : {&a, &b}) {
+            QCOMPARE(mail::Signatures::list(*x).size(), 2);
+            QVERIFY(mail::Signatures::get(*x, home) && mail::Signatures::get(*x, work));
+            QCOMPARE(mail::Signatures::get(*x, home)->text, QStringLiteral("A, edited"));
+            QCOMPARE(mail::Signatures::get(*x, work)->text, QStringLiteral("W"));
+        }
+
+        // Removed on one, gone on both, default included.
+        QTest::qWait(5);
+        mail::Signatures::remove(b, home);
+        m_syncB->push();
+        m_net->settle();
+        QVERIFY(!mail::Signatures::get(a, home));
+        QVERIFY(mail::Signatures::defaultId(a).isEmpty());
+    }
+
+    // Devices that are never online together sync through the mailbox:
+    // ops mailed to self, encrypted and signed, hidden from every list.
+    void mailboxFallback()
+    {
+        auto &a = m_a->ctx();
+        auto &b = m_b->ctx();
+        bobWrites(QStringLiteral("by mail"));
+        fetch(m_a);
+        fetch(m_b);
+        const QString mid = midOf(m_a, inbox(m_a).value(0).id);
+        QVERIFY(idOf(m_b, mid));
+        QVERIFY(mail::Search::detail(b, idOf(m_b, mid))->unread);
+
+        mail::Organize::markRead(a, idOf(m_a, mid), true);
+        const qint64 mailed = a.db.queryInt("SELECT max(seq) FROM ops WHERE device=?", device(m_a)).value_or(0);
+        QVERIFY(m_a->mailFallbackNow());
+        QVERIFY(!m_a->mailFallbackNow()); // nothing new since
+        fetch(m_a); // sends it, to alice herself
+        fetch(m_b);
+        QVERIFY(!mail::Search::detail(b, idOf(m_b, mid))->unread);
+        QCOMPARE(inbox(m_b).size(), 1); // the sync mail is hidden
+        QCOMPARE(b.db.queryInt("SELECT count(*) FROM messages WHERE hidden=1").value_or(0), 1);
+
+        // B answers with what it holds, and that ends it.
+        QVERIFY(m_b->mailFallbackNow());
+        fetch(m_b);
+        fetch(m_a);
+        QVERIFY(sync::SyncSession::storedHave(a, device(m_b)).value(device(m_a)) >= mailed);
+        // Fetching sync mail is not news: no mail answers a mail forever.
+        QVERIFY(!m_a->mailFallbackNow());
+        QVERIFY(!m_b->mailFallbackNow());
+        // B's answer carried its acks, so A lets go of what both hold. Only
+        // the last sync mail waits for the next exchange.
+        fetch(m_a);
+        QCOMPARE(m_srv->mailbox(alice()).size(), 1);
+    }
+
+    // More than one mail's worth: the receiver answers a full mail, and the
+    // rest follows from where it says it is.
+    void mailboxFallbackInBatches()
+    {
+        auto &a = m_a->ctx();
+        auto &b = m_b->ctx();
+        bobWrites(QStringLiteral("toggled"));
+        fetch(m_a);
+        fetch(m_b);
+        const QString mid = midOf(m_a, inbox(m_a).value(0).id);
+        // First let both say all they have, so B has nothing of its own to
+        // send: only a full mail may make it answer.
+        for (int round = 0; round < 3; ++round) {
+            m_a->mailFallbackNow();
+            fetch(m_a);
+            fetch(m_b);
+            m_b->mailFallbackNow();
+            fetch(m_b);
+            fetch(m_a);
+        }
+        QVERIFY(!m_a->mailFallbackNow());
+        QVERIFY(!m_b->mailFallbackNow());
+        for (int i = 0; i < 600; ++i)
+            mail::Organize::markRead(a, idOf(m_a, mid), i % 2 == 0);
+        // The last toggle (i = 599) leaves it unread.
+        const auto unreadOnB = [&] { return mail::Search::detail(b, idOf(m_b, mid))->unread; };
+        const qint64 last = a.db.queryInt("SELECT max(seq) FROM ops WHERE device=? AND kind='msg.read'", device(m_a)).value_or(-1);
+        const auto behind = [&] {
+            return b.db.queryInt("SELECT max(seq) FROM ops WHERE device=?", device(m_a)).value_or(0) < last;
+        };
+        for (int round = 0; round < 3 && behind(); ++round) {
+            m_a->mailFallbackNow();
+            fetch(m_a);
+            fetch(m_b);
+            m_b->mailFallbackNow();
+            fetch(m_b);
+            fetch(m_a);
+        }
+        QVERIFY(!behind());
+        QVERIFY(unreadOnB());
+    }
+
+    // Sync mail that this account's own key did not sign is not obeyed.
+    void forgedSyncMailIsIgnored()
+    {
+        auto &b = m_b->ctx();
+        bobWrites(QStringLiteral("keep me"));
+        fetch(m_b);
+        const QString mid = midOf(m_b, inbox(m_b).value(0).id);
+        // Bob, who has Alice's key, writes as if he were her device A.
+        sync::OpApply::Versions none;
+        Op trash;
+        trash.device = device(m_a);
+        trash.seq = 1000;
+        trash.hlc = std::numeric_limits<qint64>::max() / 2;
+        trash.kind = op::Trash;
+        trash.payload = {{QStringLiteral("mid"), mid}};
+        const QByteArray payload = QJsonDocument(QJsonObject{{QStringLiteral("v"), 1},
+                                                             {QStringLiteral("d"), device(m_a)},
+                                                             {QStringLiteral("ops"), QJsonArray{sync::SyncSession::opToWire(trash)}},
+                                                             {QStringLiteral("have"), QJsonObject{}}})
+                                       .toJson(QJsonDocument::Compact);
+        mime::OutgoingMail m;
+        m.from = {QString(), alice()};
+        m.to = {{QString(), alice()}};
+        m.subject = QStringLiteral("sync");
+        m.date = QDateTime::currentDateTimeUtc();
+        m.messageId = QStringLiteral("forged@x.test");
+        m.text = QString::fromUtf8(payload);
+        m.extraHeaders.append({QByteArray("X-E3-Sync"), QByteArray("1")});
+        const QString aliceFpr = mail::Keyring::selfFingerprint(b);
+        const QString bobFpr = mail::Keyring::selfFingerprint(m_bob->ctx());
+        const QByteArray armored = m_bob->ctx().pgp.encrypt(mime::Builder::contentEntity(m), {aliceFpr}, bobFpr);
+        m_srv->deliver(alice(), mime::Builder::headerBlock(m) + mime::Builder::encryptedBody(armored));
+        fetch(m_b);
+        QVERIFY(!mail::Search::detail(b, idOf(m_b, mid))->trashed);
+    }
+
     void addressBookTravels()
     {
         auto &a = m_a->ctx();

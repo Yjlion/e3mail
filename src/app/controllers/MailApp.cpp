@@ -4,15 +4,20 @@
 #include "Languages.h"
 #include "InlineImages.h"
 #include "NotifierBackends.h"
+#include "RichText.h"
 
 #include "crypto/Pgp.h"
 #include "engine/AccountManager.h"
 #include "mail/Contacts.h"
+#ifdef E3MAIL_HAVE_P2P
+#include "engine/Pairing.h"
+#endif
 #include "mail/ContactsCsv.h"
 #include "mail/Export.h"
 #include "mail/Organize.h"
 #include "mail/Preferences.h"
 #include "mail/Search.h"
+#include "mail/Signatures.h"
 #include "mail/VCard.h"
 #include "mime/Html.h"
 #include "mime/Part.h"
@@ -31,6 +36,8 @@
 #include <QRegularExpression>
 #include <QSaveFile>
 #include <QSet>
+#include <QSysInfo>
+#include <QTextDocument>
 
 using namespace e3;
 
@@ -217,6 +224,191 @@ QString MailApp::accountStatus() const
     return account() ? account()->status() : QString();
 }
 
+QVariantMap MailApp::refusedCertificate() const
+{
+    if (!account() || account()->refusedSha256().isEmpty())
+        return {};
+    return {{QStringLiteral("server"), account()->refusedServer()},
+            {QStringLiteral("fingerprint"), net::formatFingerprint(account()->refusedSha256())}};
+}
+
+void MailApp::trustRefusedCertificate()
+{
+    if (account())
+        account()->trustRefusedCertificate();
+}
+
+void MailApp::forgetCertificate(const QString &server)
+{
+    if (account())
+        account()->forgetCertificate(server);
+}
+
+bool MailApp::devicesAvailable() const
+{
+    return Account::devicesAvailable();
+}
+
+QVariantList MailApp::devices() const
+{
+    QVariantList out;
+    if (!account())
+        return out;
+    Statement st(account()->ctx().db, "SELECT id, name, last_seen FROM devices ORDER BY paired_at");
+    while (st.step()) {
+        const QString id = st.text(0);
+        out.append(QVariantMap{
+            {QStringLiteral("id"), id},
+            {QStringLiteral("name"), st.text(1).isEmpty() ? tr("Unnamed device") : st.text(1)},
+            {QStringLiteral("online"), account()->isDeviceConnected(id)},
+            {QStringLiteral("lastSeen"), st.isNull(2) ? QString()
+                 : QLocale().toString(QDateTime::fromMSecsSinceEpoch(st.int64(2)), QLocale::ShortFormat)}});
+    }
+    return out;
+}
+
+QString MailApp::deviceName() const
+{
+    return account() ? account()->ctx().config.get(cfg::DeviceName) : QString();
+}
+
+void MailApp::setDeviceName(const QString &name)
+{
+    if (!account() || name.trimmed() == deviceName())
+        return;
+    account()->ctx().config.set(cfg::DeviceName, name.trimmed().left(64));
+    Q_EMIT devicesChanged();
+}
+
+QString MailApp::relay() const
+{
+    return account() ? account()->ctx().config.get(cfg::P2pRelay) : QString();
+}
+
+void MailApp::setRelay(const QString &relay)
+{
+    if (!account() || relay.trimmed() == this->relay())
+        return;
+    account()->ctx().config.set(cfg::P2pRelay, relay.trimmed());
+    // The endpoint starts again with it, if it was running.
+    if (account()->deviceTransport()) {
+        account()->stopDevices();
+        account()->startDevices();
+    }
+    Q_EMIT devicesChanged();
+}
+
+QString MailApp::defaultDeviceName() const
+{
+    // Set by scripts/screenshots.sh, so no real host name is pictured.
+    if (const QString set = qEnvironmentVariable("E3MAIL_DEVICE_NAME"); !set.isEmpty())
+        return set;
+    const QString host = QSysInfo::machineHostName().section(u'.', 0, 0);
+    return host.isEmpty() || host == QLatin1String("localhost") ? QSysInfo::prettyProductName() : host;
+}
+
+QString MailApp::codeAccount(const QString &code) const
+{
+#ifdef E3MAIL_HAVE_P2P
+    if (const auto c = pairing::parseCode(code))
+        return c->account;
+#endif
+    Q_UNUSED(code)
+    return {};
+}
+
+QString MailApp::startPairing()
+{
+#ifdef E3MAIL_HAVE_P2P
+    cancelPairing();
+    if (!account())
+        return {};
+    if (account()->ctx().config.get(cfg::DeviceName).isEmpty())
+        account()->ctx().config.set(cfg::DeviceName, defaultDeviceName());
+    auto *offer = new PairingOffer(*account(), this);
+    if (!offer->isReady()) {
+        offer->deleteLater();
+        return {};
+    }
+    connect(offer, &PairingOffer::requested, this, &MailApp::pairingRequested);
+    connect(offer, &PairingOffer::progress, this, &MailApp::pairingProgress);
+    connect(offer, &PairingOffer::finished, this, [this](bool ok, const QString &message) {
+        Q_EMIT pairingFinished(ok, message);
+        Q_EMIT devicesChanged();
+    });
+    m_offer = offer;
+    return offer->code();
+#else
+    return {};
+#endif
+}
+
+void MailApp::allowPairing()
+{
+#ifdef E3MAIL_HAVE_P2P
+    if (auto *o = qobject_cast<PairingOffer *>(m_offer.data()))
+        o->allow();
+#endif
+}
+
+void MailApp::denyPairing()
+{
+#ifdef E3MAIL_HAVE_P2P
+    if (auto *o = qobject_cast<PairingOffer *>(m_offer.data()))
+        o->deny();
+#endif
+}
+
+void MailApp::cancelPairing()
+{
+    if (m_offer)
+        m_offer->deleteLater();
+    m_offer = nullptr;
+}
+
+void MailApp::removeDevice(const QString &id)
+{
+    if (account())
+        account()->removeDevice(id);
+    Q_EMIT devicesChanged();
+}
+
+bool MailApp::joinDevice(const QString &code, const QString &name)
+{
+#ifdef E3MAIL_HAVE_P2P
+    cancelJoin();
+    auto *join = new PairingJoin(*m_mgr, code, name.trimmed().isEmpty() ? defaultDeviceName() : name, this);
+    if (!join->isValid()) {
+        join->deleteLater();
+        return false;
+    }
+    connect(join, &PairingJoin::waiting, this, &MailApp::joinWaiting);
+    connect(join, &PairingJoin::progress, this, &MailApp::joinProgress);
+    connect(join, &PairingJoin::finished, this, [this, join](bool ok, const QString &message, int id) {
+        if (ok) {
+            if (Account *a = m_mgr->account(id))
+                a->start();
+            accountConfigured();
+        }
+        Q_EMIT joinFinished(ok, message);
+        join->deleteLater();
+    });
+    m_join = join;
+    return true;
+#else
+    Q_UNUSED(code)
+    Q_UNUSED(name)
+    return false;
+#endif
+}
+
+void MailApp::cancelJoin()
+{
+    if (m_join)
+        m_join->deleteLater();
+    m_join = nullptr;
+}
+
 QString MailApp::accountStatusDetail() const
 {
     return account() ? account()->statusDetail() : QString();
@@ -242,6 +434,7 @@ void MailApp::switchAccount()
         connect(m_connected, &Account::mailChanged, this, &MailApp::scheduleRefresh);
         connect(m_connected, &Account::statusChanged, this, &MailApp::statusChanged);
         connect(m_connected, &Account::statusChanged, this, &MailApp::accountsChanged);
+        connect(m_connected, &Account::statusChanged, this, &MailApp::devicesChanged);
         connect(m_connected, &Account::newMail, this, [this](qint64 id) {
             if (!account())
                 return;
@@ -251,6 +444,7 @@ void MailApp::switchAccount()
     }
     Q_EMIT accountChanged();
     Q_EMIT statusChanged();
+    Q_EMIT devicesChanged();
     Q_EMIT viewChanged();
     Q_EMIT selectionChanged();
     refresh();
@@ -289,6 +483,7 @@ void MailApp::refresh()
     reloadLabels();
     reloadCounts();
     reloadThread();
+    reloadSignatures();
 }
 
 void MailApp::reloadMessages()
@@ -844,7 +1039,6 @@ QVariantMap MailApp::settings() const
     const Account::Settings s = account()->settings();
     return {{QStringLiteral("addr"), s.addr},
             {QStringLiteral("displayName"), s.displayName},
-            {QStringLiteral("signature"), c.get(cfg::Signature)},
             {QStringLiteral("protocol"), s.protocol},
             {QStringLiteral("inHost"), s.inHost},
             {QStringLiteral("inPort"), s.inPort},
@@ -853,6 +1047,8 @@ QVariantMap MailApp::settings() const
             {QStringLiteral("smtpPort"), s.smtpPort},
             {QStringLiteral("smtpSecurity"), s.smtpSecurity},
             {QStringLiteral("secretLocation"), account()->secretLocation()},
+            {QStringLiteral("inCert"), net::formatFingerprint(c.get(cfg::InCertSha256).toLatin1())},
+            {QStringLiteral("smtpCert"), net::formatFingerprint(c.get(cfg::SmtpCertSha256).toLatin1())},
             {QStringLiteral("encryptionMode"), c.getInt(cfg::EncryptionMode)},
             {QStringLiteral("serverRetention"), c.get(cfg::ServerRetention)},
             {QStringLiteral("serverKeepDays"), c.getInt(cfg::ServerKeepDays)},
@@ -900,7 +1096,6 @@ void MailApp::setSetting(const QString &key, const QVariant &value)
     // Only these are writable from the UI; server settings go through setup.
     static const QHash<QString, const char *> keys = {
         {QStringLiteral("displayName"), cfg::DisplayName},
-        {QStringLiteral("signature"), cfg::Signature},
         {QStringLiteral("encryptionMode"), cfg::EncryptionMode},
         {QStringLiteral("serverRetention"), cfg::ServerRetention},
         {QStringLiteral("serverKeepDays"), cfg::ServerKeepDays},
@@ -920,7 +1115,85 @@ void MailApp::setSetting(const QString &key, const QVariant &value)
     account()->notifyChanged();
 }
 
-QString MailApp::signature() const
+void MailApp::reloadSignatures()
 {
-    return account() ? account()->ctx().config.get(cfg::Signature) : QString();
+    QVariantList out;
+    if (account()) {
+        auto &ctx = account()->ctx();
+        const QString def = mail::Signatures::defaultId(ctx);
+        for (const mail::Signature &s : mail::Signatures::list(ctx)) {
+            const QString first = s.text.trimmed().section(u'\n', 0, 0).trimmed();
+            out.append(QVariantMap{{QStringLiteral("id"), s.id},
+                                   {QStringLiteral("name"), s.name},
+                                   {QStringLiteral("preview"), first},
+                                   {QStringLiteral("isDefault"), s.id == def}});
+        }
+    }
+    if (out != m_signatures) {
+        m_signatures = out;
+        Q_EMIT signaturesChanged();
+    }
+}
+
+QString MailApp::defaultSignature() const
+{
+    for (const QVariant &v : m_signatures) {
+        const QVariantMap m = v.toMap();
+        if (m.value(QStringLiteral("isDefault")).toBool())
+            return m.value(QStringLiteral("id")).toString();
+    }
+    return {};
+}
+
+void MailApp::setDefaultSignature(const QString &id)
+{
+    if (!account() || id == defaultSignature())
+        return;
+    mail::Signatures::setDefault(account()->ctx(), id);
+    reloadSignatures();
+}
+
+void MailApp::loadSignature(const QString &id, QQuickTextDocument *doc) const
+{
+    if (!doc)
+        return;
+    QTextDocument *td = doc->textDocument();
+    td->clear();
+    const auto s = account() ? mail::Signatures::get(account()->ctx(), id) : std::nullopt;
+    if (!s)
+        return;
+    if (s->html.isEmpty())
+        td->setPlainText(s->text);
+    else
+        RichText::load(td, s->html);
+}
+
+QString MailApp::saveSignature(const QString &id, const QString &name, QQuickTextDocument *doc)
+{
+    if (!account() || !doc)
+        return {};
+    // The composer's whitelist decides what a signature may hold, so it is
+    // exactly what can be sent.
+    const RichText::Output out = RichText::emit(doc->textDocument());
+    if (out.text.trimmed().isEmpty() && out.html.isEmpty()) {
+        removeSignature(id);
+        return {};
+    }
+    const QString saved = mail::Signatures::save(account()->ctx(), {id, name, out.html, out.text});
+    reloadSignatures();
+    return saved;
+}
+
+void MailApp::removeSignature(const QString &id)
+{
+    if (!account() || id.isEmpty())
+        return;
+    mail::Signatures::remove(account()->ctx(), id);
+    reloadSignatures();
+}
+
+QString MailApp::signatureName(const QString &id) const
+{
+    const auto s = account() ? mail::Signatures::get(account()->ctx(), id) : std::nullopt;
+    return s ? s->name : QString();
 }

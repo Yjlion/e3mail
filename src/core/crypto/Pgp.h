@@ -38,7 +38,7 @@ public:
     // that were present in the data.
     QStringList import(const QByteArray &data);
 
-    QByteArray exportPublic(const QString &fpr) const;
+    QByteArray exportPublic(const QString &fpr, bool armored = false) const;
     QByteArray exportSecret(const QString &fpr) const;
     // The minimal key Autocrypt wants: primary, one user id, encryption subkey.
     QByteArray exportAutocrypt(const QString &fpr, const QString &addr) const;
@@ -60,6 +60,14 @@ public:
     };
     // Decrypts and verifies. Throws when the data cannot be decrypted.
     Decrypted decrypt(const QByteArray &data) const;
+
+    // A cleartext-signed message (inline PGP), as older clients send.
+    QByteArray signCleartext(const QByteArray &text, const QString &signer) const;
+    // A detached signature (multipart/signed, RFC 3156), ASCII-armored.
+    QByteArray signDetached(const QByteArray &data, const QString &signer) const;
+    // Primary fingerprints of the good signatures over `data`. Throws only
+    // when the signature cannot be read at all.
+    QStringList verifyDetached(const QByteArray &data, const QByteArray &signature) const;
 
     static QString normalizeFingerprint(const QString &fpr);
 

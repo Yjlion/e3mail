@@ -45,6 +45,14 @@ ApplicationWindow {
     function openMenu() { drawer.open() }
     // For screenshots (--page source): the selected message's source.
     function showSource() { readingPane.showSource(MailApp.selectedMessageId) }
+    // For screenshots (--page formatting): a new message with the toolbar.
+    function composeFormatted() { compose("new", 0); composerView.formatting = true }
+    // For screenshots (--page signature): the default signature, editing.
+    function editSignature() { page = "settings"; settingsView.editSignature(MailApp.defaultSignature) }
+    // For screenshots (--page pair, --page join).
+    function showPairing() { page = "settings"; settingsView.pairDevice() }
+    function showDevices() { page = "settings"; settingsView.showDevices() }
+    function showJoin() { firstSetup.openJoin() }
     onClosing: (close) => { if (narrow && back()) close.accepted = false }
 
     Shortcut { sequence: StandardKey.New; onActivated: window.compose("new", 0) }
@@ -140,7 +148,7 @@ ApplicationWindow {
                     onClosed: window.page = "mail"
                 }
                 ContactsView { id: contactsView }
-                SettingsView { onAddAccount: window.page = "setup" }
+                SettingsView { id: settingsView; onAddAccount: window.page = "setup" }
                 SetupView {
                     cancellable: true
                     onFinished: window.page = "mail"
@@ -169,6 +177,7 @@ ApplicationWindow {
 
     // No account yet: the setup form is the whole window.
     SetupView {
+        id: firstSetup
         anchors.fill: parent
         visible: !MailApp.hasAccounts
         cancellable: false

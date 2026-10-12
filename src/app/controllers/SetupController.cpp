@@ -6,6 +6,7 @@
 #include "engine/Autoconfig.h"
 
 #include <QFutureWatcher>
+#include <QLocale>
 
 using namespace e3;
 
@@ -59,7 +60,25 @@ void SetupController::setBusy(bool busy, const QString &error)
 {
     m_busy = busy;
     m_error = error;
+    if (busy || error.isEmpty())
+        m_cert.clear();
     Q_EMIT busyChanged();
+}
+
+void SetupController::trustCertificate()
+{
+    if (m_cert.isEmpty())
+        return;
+    const QByteArray sha = m_cert.value(QStringLiteral("sha256")).toByteArray();
+    const QString at = m_cert.value(QStringLiteral("host")).toString() + u':' + m_cert.value(QStringLiteral("port")).toString();
+    if (m_cert.value(QStringLiteral("server")) == QLatin1String("smtp")) {
+        m_smtpPin = sha;
+        m_smtpPinFor = at;
+    } else {
+        m_inPin = sha;
+        m_inPinFor = at;
+    }
+    submit();
 }
 
 void SetupController::suggest()
@@ -118,15 +137,46 @@ void SetupController::submit()
     s.smtpHost = m_smtpHost.trimmed();
     s.smtpPort = quint16(m_smtpPort);
     s.smtpSecurity = m_smtpSecurity;
+    // A pin holds only for the server it was given for.
+    const QString inAt = s.inHost + u':' + QString::number(s.inPort);
+    const QString smtpAt = s.smtpHost + u':' + QString::number(s.smtpPort);
+    if (m_inPinFor == inAt)
+        s.inCertSha256 = m_inPin;
+    if (m_smtpPinFor == smtpAt)
+        s.smtpCertSha256 = m_smtpPin;
     setBusy(true);
-    auto *watcher = new QFutureWatcher<QString>(this);
-    connect(watcher, &QFutureWatcher<QString>::finished, this, [this, watcher, s] {
+    auto *watcher = new QFutureWatcher<Account::CheckResult>(this);
+    connect(watcher, &QFutureWatcher<Account::CheckResult>::finished, this, [this, watcher, s, inAt, smtpAt] {
         watcher->deleteLater();
-        const QString error = watcher->result();
-        if (!error.isEmpty()) {
+        const Account::CheckResult r = watcher->result();
+        if (!r.ok()) {
+            if (r.cert && r.server == QLatin1String("smtp") && !r.cert->pinChanged && r.cert->sha256 == m_inPin
+                && m_inPinFor.section(u':', 0, 0) == s.smtpHost) {
+                // The certificate just trusted for this host serves SMTP too.
+                m_smtpPin = m_inPin;
+                m_smtpPinFor = smtpAt;
+                submit();
+                return;
+            }
             m_showServers = true;
             Q_EMIT changed();
-            setBusy(false, error);
+            setBusy(false, r.error);
+            if (r.cert) {
+                const net::CertInfo &c = *r.cert;
+                QStringList problems = c.problems;
+                problems.removeDuplicates();
+                m_cert = {{QStringLiteral("server"), r.server},
+                          {QStringLiteral("host"), c.host},
+                          {QStringLiteral("port"), c.port},
+                          {QStringLiteral("sha256"), c.sha256},
+                          {QStringLiteral("fingerprint"), net::formatFingerprint(c.sha256)},
+                          {QStringLiteral("subject"), c.subject},
+                          {QStringLiteral("issuer"), c.issuer},
+                          {QStringLiteral("expires"), QLocale().toString(c.expires.date(), QLocale::ShortFormat)},
+                          {QStringLiteral("problems"), problems.join(u'\n')},
+                          {QStringLiteral("changed"), c.pinChanged}};
+                Q_EMIT busyChanged();
+            }
             return;
         }
         MailApp *app = MailApp::create(nullptr, nullptr);

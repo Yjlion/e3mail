@@ -13,18 +13,24 @@ namespace cfg {
 // Identity
 inline constexpr char Addr[] = "addr";
 inline constexpr char DisplayName[] = "display_name";
-inline constexpr char Signature[] = "signature";
+inline constexpr char Signature[] = "signature";             // before signatures were named; see Signatures
+inline constexpr char SignaturePrefix[] = "signature:";      // + id: {"name", "html", "text"}, empty when removed
+inline constexpr char SignatureDefault[] = "signature_default"; // an id, or empty for none
 // Incoming server
 inline constexpr char Protocol[] = "protocol";               // "imap" | "pop3"
 inline constexpr char InHost[] = "in_host";
 inline constexpr char InPort[] = "in_port";
 inline constexpr char InSecurity[] = "in_security";          // "ssl" | "starttls" | "plain"
 inline constexpr char InUser[] = "in_user";
+inline constexpr char InCertSha256[] = "in_cert_sha256";     // a pinned certificate (ADR 0017)
 // Outgoing server
 inline constexpr char SmtpHost[] = "smtp_host";
 inline constexpr char SmtpPort[] = "smtp_port";
 inline constexpr char SmtpSecurity[] = "smtp_security";
 inline constexpr char SmtpUser[] = "smtp_user";
+inline constexpr char SmtpCertSha256[] = "smtp_cert_sha256";
+// Every certificate accepted, from e3mail-cli --insecure only; never set by the app.
+inline constexpr char AcceptInvalidCerts[] = "accept_invalid_certs";
 // Fallback secret storage when no OS keyring is available. See SecretStore.
 inline constexpr char InPassword[] = "in_password";
 inline constexpr char SmtpPassword[] = "smtp_password";
@@ -49,6 +55,12 @@ inline constexpr char ImapBaseline[] = "imap_baseline";
 inline constexpr char ImapHigh[] = "imap_high";
 inline constexpr char ImapLow[] = "imap_low";
 inline constexpr char Configured[] = "configured";
+// Devices (ADR 0010). Per device: never synced, never copied when pairing.
+inline constexpr char P2pSecret[] = "p2p_secret";            // this device's Iroh key, hex
+inline constexpr char P2pRelay[] = "p2p_relay";              // "default" | "off" | a relay URL
+inline constexpr char P2pPort[] = "p2p_port";                // a fixed UDP port, or 0 for any
+inline constexpr char P2pLoopback[] = "p2p_loopback";        // 1: this machine only (tests, screenshots)
+inline constexpr char DeviceName[] = "device_name";          // what other devices call this one
 } // namespace cfg
 
 class Config

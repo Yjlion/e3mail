@@ -13,6 +13,7 @@ The server's mailboxes should be empty when this starts; it uses alice (IMAP),
 bob (POP3), carol (IMAP over STARTTLS) and dana (POP3 over STARTTLS).
 """
 import argparse
+import base64
 import json
 import os
 import shutil
@@ -26,14 +27,17 @@ SERVER = "127.0.0.1"
 
 
 class Account:
-    def __init__(self, cli, root, name, protocol, port, security, smtp_port, smtp_security):
+    def __init__(self, cli, root, name, protocol, port, security, smtp_port, smtp_security, pin=None, dirname=None):
+        """With `pin`, the server's certificate is trusted by its SHA-256
+        (ADR 0017); without, every certificate is accepted (--insecure)."""
         self.cli = cli
         self.addr = f"{name}@e3.test"
-        self.dir = os.path.join(root, name)
+        self.dir = os.path.join(root, dirname or name)
+        trust = ["--in-cert", pin, "--smtp-cert", pin] if pin else ["--insecure"]
         self.run("add", "--addr", self.addr, "--password", "pw", "--name", name.title(),
                  "--protocol", protocol, "--in-host", SERVER, "--in-port", str(port),
                  "--in-security", security, "--smtp-host", SERVER, "--smtp-port", str(smtp_port),
-                 "--smtp-security", smtp_security, "--insecure")
+                 "--smtp-security", smtp_security, *trust)
 
     def run(self, *args, raw=False):
         env = dict(os.environ, E3MAIL_NO_KEYCHAIN="1", QT_LOGGING_RULES="e3.*.info=false")
@@ -76,6 +80,58 @@ def eventually(fn, what, timeout=20):
     check(False, what)
 
 
+def gpg(home, *args, data=None):
+    out = subprocess.run(["gpg", "--homedir", home, "--batch", "--yes", "--trust-model", "always", *args],
+                         input=data, capture_output=True)
+    if out.returncode != 0:
+        raise SystemExit(f"FAIL gpg {' '.join(args)}: {out.stderr.decode(errors='replace')}")
+    return out.stdout
+
+
+def deliver(user, raw):
+    subprocess.run(["docker", "exec", "-i", CONTAINER, "/usr/lib/dovecot/dovecot-lda", "-d", f"{user}@e3.test"],
+                   input=raw, check=True)
+
+
+def gnupg_mail(alice, root):
+    """A stranger using GnuPG writes to alice in the three ways other clients
+    sign; each must arrive signed, and none may show its armour."""
+    home = os.path.join(root, "gnupg")
+    os.makedirs(home, mode=0o700)
+    gpg(home, "--passphrase", "", "--quick-gen-key", "x@e3.test", "ed25519", "sign", "never")
+    gpg(home, "--import", data=alice.run("key", raw=True).encode())
+    alice_fpr = gpg(home, "--with-colons", "--list-keys", alice.addr).decode().split("fpr:::::::::")[1].split(":")[0]
+    keydata = base64.b64encode(gpg(home, "--export", "x@e3.test")).decode()
+    autocrypt = "Autocrypt: addr=x@e3.test; prefer-encrypt=mutual; keydata=\n " + \
+        "\n ".join(keydata[i:i + 72] for i in range(0, len(keydata), 72))
+
+    def message(subject, content_type, body):
+        return (f"From: X <x@e3.test>\nTo: {alice.addr}\nSubject: {subject}\n{autocrypt}\n"
+                f"MIME-Version: 1.0\nContent-Type: {content_type}\n\n").encode() + body
+
+    part = b"Content-Type: text/plain; charset=utf-8\r\n\r\nsigned through dovecot\r\n"
+    sig = gpg(home, "--armor", "--detach-sign", data=part)
+    deliver("alice", message("pgp-mime signed", 'multipart/signed; micalg=pgp-sha512; '
+                             'protocol="application/pgp-signature"; boundary="b1"',
+                             b"--b1\r\n" + part + b"\r\n--b1\r\nContent-Type: application/pgp-signature\r\n\r\n"
+                             + sig + b"\r\n--b1--\r\n"))
+    deliver("alice", message("clearsigned", "text/plain; charset=utf-8",
+                             gpg(home, "--clearsign", data=b"clearsigned through dovecot\n")))
+    deliver("alice", message("inline encrypted", "text/plain; charset=utf-8",
+                             b"Above the armour.\n" + gpg(home, "--armor", "--encrypt", "--sign", "-r", alice_fpr,
+                                                          data="inline secret, größe\n".encode())))
+    alice.sync()
+    for subject, text, encrypted in [("pgp-mime signed", "signed through dovecot", False),
+                                     ("clearsigned", "clearsigned through dovecot", False),
+                                     ("inline encrypted", "inline secret, größe", True)]:
+        m = alice.find("unverified", subject)
+        check(m is not None, f"{subject}: arrived (in Unverified, from a stranger)")
+        body = alice.run("show", str(m["id"]))["body"]
+        check(m["signed"] and m["encrypted"] == encrypted and not m["verified"],
+              f"{subject}: signed{', encrypted' if encrypted else ''}, not verified")
+        check(text in body and "BEGIN PGP" not in body, f"{subject}: the text, without armour")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--cli", default="build/dev/src/cli/e3mail-cli")
@@ -84,13 +140,24 @@ def main():
     root = tempfile.mkdtemp(prefix="e3mail-e2e-")
     try:
         print("1. accounts over every transport")
+        cert = json.loads(subprocess.run([args.cli, "cert", "--protocol", "imap", "--in-host", SERVER, "--in-port", "1993",
+                                          "--in-security", "ssl"], capture_output=True, text=True, check=True).stdout)
+        check(not cert["trusted_by_tls"] and cert["subject"] == "mail.e3.test",
+              "the test server's certificate is self-signed, and e3mail-cli cert shows it")
         alice = Account(args.cli, root, "alice", "imap", 1993, "ssl", 1465, "ssl")
         bob = Account(args.cli, root, "bob", "pop3", 1995, "ssl", 1587, "starttls")
-        carol = Account(args.cli, root, "carol", "imap", 1143, "starttls", 1587, "starttls")
+        # carol trusts the certificate by its fingerprint instead of accepting any.
+        carol = Account(args.cli, root, "carol", "imap", 1143, "starttls", 1587, "starttls", pin=cert["sha256"])
         dana = Account(args.cli, root, "dana", "pop3", 1110, "starttls", 1465, "ssl")
         for a in (alice, bob, carol, dana):
             a.sync()  # the first look: anything already there is never deleted
         check(True, "IMAPS, POP3S, IMAP+STARTTLS, POP3+STARTTLS, SMTPS and submission all log in")
+        check(True, "carol logs in over STARTTLS with the certificate pinned")
+        wrong = Account(args.cli, root, "carol", "imap", 1143, "starttls", 1587, "starttls", pin="ab" * 32,
+                        dirname="carol-wrong-pin")
+        out = subprocess.run([args.cli, "--data-dir", wrong.dir, "sync"], capture_output=True, text=True,
+                             env=dict(os.environ, E3MAIL_NO_KEYCHAIN="1"))
+        check(out.returncode != 0 and "certificate" in out.stderr, "a different pinned certificate is refused")
 
         print("2. a Cc'd message with an attachment, in cleartext")
         note = os.path.join(root, "q3.csv")
@@ -138,6 +205,9 @@ def main():
         dana.sync()
         check(dana.find("unverified", "pre") is not None, "dana sees mail that was there before")
         check(on_server("dana") == 1, "and it stays on the server")
+
+        print("5. mail signed by GnuPG: PGP/MIME, cleartext-signed, inline encrypted")
+        gnupg_mail(alice, root)
         print("all passed")
     finally:
         if args.keep:

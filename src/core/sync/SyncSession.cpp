@@ -18,8 +18,17 @@ namespace {
 
 constexpr int kWireVersion = 1;
 
+QByteArray message(const QString &type, QJsonObject body)
+{
+    body.insert(QStringLiteral("v"), kWireVersion);
+    body.insert(QStringLiteral("t"), type);
+    return QJsonDocument(body).toJson(QJsonDocument::Compact);
+}
+
+} // namespace
+
 // The clock goes as a string: it uses 64 bits, and JSON numbers are doubles.
-QJsonObject toWire(const Op &o)
+QJsonObject SyncSession::opToWire(const Op &o)
 {
     return {{QStringLiteral("d"), o.device},
             {QStringLiteral("s"), o.seq},
@@ -28,7 +37,7 @@ QJsonObject toWire(const Op &o)
             {QStringLiteral("p"), o.payload}};
 }
 
-Op fromWire(const QJsonObject &w)
+Op SyncSession::opFromWire(const QJsonObject &w)
 {
     Op o;
     o.device = w.value(QLatin1String("d")).toString();
@@ -39,14 +48,24 @@ Op fromWire(const QJsonObject &w)
     return o;
 }
 
-QByteArray message(const QString &type, QJsonObject body)
+void SyncSession::storeHave(MailContext &ctx, const QString &device, const OpApply::Versions &have)
 {
-    body.insert(QStringLiteral("v"), kWireVersion);
-    body.insert(QStringLiteral("t"), type);
-    return QJsonDocument(body).toJson(QJsonDocument::Compact);
+    QJsonObject o;
+    for (auto it = have.cbegin(); it != have.cend(); ++it)
+        o.insert(it.key(), double(it.value()));
+    ctx.db.run("UPDATE devices SET have_json=? WHERE id=?",
+               QString::fromUtf8(QJsonDocument(o).toJson(QJsonDocument::Compact)), device);
 }
 
-} // namespace
+OpApply::Versions SyncSession::storedHave(MailContext &ctx, const QString &device)
+{
+    OpApply::Versions have;
+    const auto json = ctx.db.queryText("SELECT have_json FROM devices WHERE id=?", device);
+    const QJsonObject o = QJsonDocument::fromJson(json.value_or(QString()).toUtf8()).object();
+    for (auto it = o.begin(); it != o.end(); ++it)
+        have.insert(it.key(), qint64(it.value().toDouble()));
+    return have;
+}
 
 SyncSession::SyncSession(MailContext &ctx, DeviceTransport &transport, QObject *parent)
     : QObject(parent), m_ctx(ctx), m_transport(transport)
@@ -118,10 +137,11 @@ void SyncSession::sendMissing(const QString &device)
             return;
         QJsonArray ops;
         for (const Op &o : batch) {
-            ops.append(toWire(o));
+            ops.append(opToWire(o));
             have.insert(o.device, qMax(have.value(o.device), o.seq));
         }
         m_transport.send(device, message(QStringLiteral("ops"), {{QStringLiteral("ops"), ops}}));
+        storeHave(m_ctx, device, have);
     }
 }
 
@@ -142,11 +162,12 @@ void SyncSession::onReceived(const QString &device, const QByteArray &bytes)
             for (auto it = h.begin(); it != h.end(); ++it)
                 have.insert(it.key(), qint64(it.value().toDouble()));
             m_peerHave.insert(device, have);
+            storeHave(m_ctx, device, have);
             sendMissing(device);
         } else if (type == QLatin1String("ops")) {
             QList<Op> ops;
             for (const QJsonValue &v : msg.value(QLatin1String("ops")).toArray())
-                ops.append(fromWire(v.toObject()));
+                ops.append(opFromWire(v.toObject()));
             handleOps(device, ops);
         }
     } catch (const std::exception &e) {

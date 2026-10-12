@@ -34,7 +34,10 @@ against `server/compose`.
 
 Dependencies on Arch: `qt6-base qt6-declarative qt6-svg qt6-tools icu botan
 json-c sqlite`, plus RNP from `scripts/build-rnp.sh /usr/local` (it is not
-packaged). Screenshots in Chinese and Japanese need a CJK font.
+packaged), and Rust from rustup for device sync (`src/p2p`, built by cargo
+through Corrosion; keep `~/.cargo/bin` on `PATH`, or configure with
+`-DE3MAIL_P2P=OFF`). The first build compiles iroh, about ten minutes.
+Screenshots in Chinese and Japanese need a CJK font.
 
 Android (ADR 0016): `scripts/android-toolchain.sh <dir>` installs the SDK,
 NDK r27c and Qt 6.8.3 for Android and prints the environment;

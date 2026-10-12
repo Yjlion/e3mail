@@ -62,10 +62,6 @@ To: %4
         <translation>Не удаётся прочитать %1.</translation>
     </message>
     <message>
-        <source>No signature is set. Add one in Settings.</source>
-        <translation>Подпись не задана. Добавьте её в настройках.</translation>
-    </message>
-    <message>
         <source>Add a recipient.</source>
         <translation>Добавьте получателя.</translation>
     </message>
@@ -109,46 +105,6 @@ To: %4
         <translation>Тема</translation>
     </message>
     <message>
-        <source>Bold</source>
-        <translation>Жирный</translation>
-    </message>
-    <message>
-        <source>Italic</source>
-        <translation>Курсив</translation>
-    </message>
-    <message>
-        <source>Underline</source>
-        <translation>Подчёркнутый</translation>
-    </message>
-    <message>
-        <source>Strikethrough</source>
-        <translation>Зачёркнутый</translation>
-    </message>
-    <message>
-        <source>Heading</source>
-        <translation>Заголовок</translation>
-    </message>
-    <message>
-        <source>Quote</source>
-        <translation>Цитата</translation>
-    </message>
-    <message>
-        <source>Bulleted list</source>
-        <translation>Маркированный список</translation>
-    </message>
-    <message>
-        <source>Numbered list</source>
-        <translation>Нумерованный список</translation>
-    </message>
-    <message>
-        <source>Code</source>
-        <translation>Код</translation>
-    </message>
-    <message>
-        <source>Link</source>
-        <translation>Ссылка</translation>
-    </message>
-    <message>
         <source>Write your message</source>
         <translation>Напишите сообщение</translation>
     </message>
@@ -169,8 +125,16 @@ To: %4
         <translation>Прикрепить файлы</translation>
     </message>
     <message>
-        <source>Insert signature</source>
-        <translation>Вставить подпись</translation>
+        <source>Signature</source>
+        <translation>Подпись</translation>
+    </message>
+    <message>
+        <source>No signature is set. Add one in Settings.</source>
+        <translation>Подпись не задана. Добавьте её в настройках.</translation>
+    </message>
+    <message>
+        <source>No signature</source>
+        <translation>Без подписи</translation>
     </message>
     <message>
         <source>Mark as important</source>
@@ -199,14 +163,6 @@ To: %4
     <message>
         <source>Discard</source>
         <translation>Отменить</translation>
-    </message>
-    <message>
-        <source>Link to</source>
-        <translation>Ссылка на</translation>
-    </message>
-    <message>
-        <source>example.com or name@example.com</source>
-        <translation>example.com или имя@example.com</translation>
     </message>
 </context>
 <context>
@@ -434,6 +390,45 @@ To: %4
     </message>
 </context>
 <context>
+    <name>JoinDialog</name>
+    <message>
+        <source>Copy an account from another device</source>
+        <translation>Скопировать учётную запись с другого устройства</translation>
+    </message>
+    <message>
+        <source>On the device that has the account, open Settings, Devices, “Pair a new device”, and enter the code it shows here.</source>
+        <translation>На устройстве, где есть учётная запись, откройте Настройки, Устройства, «Привязать новое устройство» и введите здесь показанный код.</translation>
+    </message>
+    <message>
+        <source>Code</source>
+        <translation>Код</translation>
+    </message>
+    <message>
+        <source>For %1</source>
+        <translation>Для %1</translation>
+    </message>
+    <message>
+        <source>This is not a pairing code.</source>
+        <translation>Это не код привязки.</translation>
+    </message>
+    <message>
+        <source>This device’s name</source>
+        <translation>Имя этого устройства</translation>
+    </message>
+    <message>
+        <source>Waiting for the other device to allow it…</source>
+        <translation>Ожидание разрешения на другом устройстве…</translation>
+    </message>
+    <message>
+        <source>Copy the account</source>
+        <translation>Скопировать учётную запись</translation>
+    </message>
+    <message>
+        <source>That code cannot be used here. Is this account already on this device?</source>
+        <translation>Этот код здесь нельзя использовать. Может, учётная запись уже есть на этом устройстве?</translation>
+    </message>
+</context>
+<context>
     <name>LabelDialog</name>
     <message>
         <source>Edit tag</source>
@@ -465,6 +460,10 @@ To: %4
 </context>
 <context>
     <name>MailApp</name>
+    <message>
+        <source>Unnamed device</source>
+        <translation>Устройство без имени</translation>
+    </message>
     <message>
         <source>(no subject)</source>
         <translation>(без темы)</translation>
@@ -820,6 +819,53 @@ To: %4
     </message>
 </context>
 <context>
+    <name>PairDialog</name>
+    <message>
+        <source>This device could not start its connection to other devices.</source>
+        <translation>Это устройство не смогло начать соединение с другими устройствами.</translation>
+    </message>
+    <message>
+        <source>Pair a new device</source>
+        <translation>Привязать новое устройство</translation>
+    </message>
+    <message>
+        <source>On the new device, choose “Copy an account from another device” when adding a mailbox, and enter this code. It works once, for ten minutes.</source>
+        <translation>На новом устройстве при добавлении ящика выберите «Скопировать учётную запись с другого устройства» и введите этот код. Он действует один раз, десять минут.</translation>
+    </message>
+    <message>
+        <source>Pairing code as a QR code</source>
+        <translation>Код привязки в виде QR-кода</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Копировать</translation>
+    </message>
+    <message>
+        <source>“%1” wants to become a device of this account. It will get a copy of all your mail, your contacts, your key and your password.</source>
+        <translation>«%1» хочет стать устройством этой учётной записи. Оно получит копию всей вашей почты, контактов, ключа и пароля.</translation>
+    </message>
+    <message>
+        <source>Allow it only if you are setting up that device yourself, now.</source>
+        <translation>Разрешайте, только если вы сами настраиваете это устройство прямо сейчас.</translation>
+    </message>
+    <message>
+        <source>Allow</source>
+        <translation>Разрешить</translation>
+    </message>
+    <message>
+        <source>Refuse</source>
+        <translation>Отклонить</translation>
+    </message>
+    <message>
+        <source>Sending a copy to “%1”…</source>
+        <translation>Отправка копии на «%1»…</translation>
+    </message>
+    <message>
+        <source>“%1” is now a device of this account.</source>
+        <translation>«%1» теперь устройство этой учётной записи.</translation>
+    </message>
+</context>
+<context>
     <name>Policy</name>
     <message>
         <source>Add a recipient.</source>
@@ -901,6 +947,57 @@ To: %4
     </message>
 </context>
 <context>
+    <name>RichEditor</name>
+    <message>
+        <source>Bold</source>
+        <translation>Жирный</translation>
+    </message>
+    <message>
+        <source>Italic</source>
+        <translation>Курсив</translation>
+    </message>
+    <message>
+        <source>Underline</source>
+        <translation>Подчёркнутый</translation>
+    </message>
+    <message>
+        <source>Strikethrough</source>
+        <translation>Зачёркнутый</translation>
+    </message>
+    <message>
+        <source>Heading</source>
+        <translation>Заголовок</translation>
+    </message>
+    <message>
+        <source>Quote</source>
+        <translation>Цитата</translation>
+    </message>
+    <message>
+        <source>Bulleted list</source>
+        <translation>Маркированный список</translation>
+    </message>
+    <message>
+        <source>Numbered list</source>
+        <translation>Нумерованный список</translation>
+    </message>
+    <message>
+        <source>Code</source>
+        <translation>Код</translation>
+    </message>
+    <message>
+        <source>Link</source>
+        <translation>Ссылка</translation>
+    </message>
+    <message>
+        <source>Link to</source>
+        <translation>Ссылка на</translation>
+    </message>
+    <message>
+        <source>example.com or name@example.com</source>
+        <translation>example.com или имя@example.com</translation>
+    </message>
+</context>
+<context>
     <name>SaveMessage</name>
     <message>
         <source>Save decrypted</source>
@@ -970,8 +1067,36 @@ To: %4
         <translation>Имя</translation>
     </message>
     <message>
-        <source>Signature</source>
-        <translation>Подпись</translation>
+        <source>Signatures</source>
+        <translation>Подписи</translation>
+    </message>
+    <message>
+        <source>Put this one in new mail</source>
+        <translation>Добавлять эту в новые письма</translation>
+    </message>
+    <message>
+        <source>Default: %1</source>
+        <translation>По умолчанию: %1</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>Изменить</translation>
+    </message>
+    <message>
+        <source>Delete %1</source>
+        <translation>Удалить %1</translation>
+    </message>
+    <message>
+        <source>No signature in new mail</source>
+        <translation>Без подписи в новых письмах</translation>
+    </message>
+    <message>
+        <source>Add a signature…</source>
+        <translation>Добавить подпись…</translation>
+    </message>
+    <message>
+        <source>The chosen one goes into new mail. The composer&apos;s signature button swaps it for another.</source>
+        <translation>Выбранная подпись добавляется в новые письма. Кнопка подписи в редакторе заменяет её другой.</translation>
     </message>
     <message>
         <source>Encryption</source>
@@ -1062,6 +1187,34 @@ To: %4
         <translation>с</translation>
     </message>
     <message>
+        <source>The sending server&apos;s certificate is not trusted, or is not the one trusted before.</source>
+        <translation>Сертификат сервера отправки не доверенный или не тот, которому вы доверяли раньше.</translation>
+    </message>
+    <message>
+        <source>The incoming server&apos;s certificate is not trusted, or is not the one trusted before.</source>
+        <translation>Сертификат сервера входящей почты не доверенный или не тот, которому вы доверяли раньше.</translation>
+    </message>
+    <message>
+        <source>Trust it only if this SHA-256 fingerprint matches the one your server&apos;s administrator gave you.</source>
+        <translation>Доверяйте ему, только если этот отпечаток SHA-256 совпадает с тем, что дал администратор вашего сервера.</translation>
+    </message>
+    <message>
+        <source>Trust this certificate</source>
+        <translation>Доверять этому сертификату</translation>
+    </message>
+    <message>
+        <source>Sending server: trusted certificate %1</source>
+        <translation>Сервер отправки: доверенный сертификат %1</translation>
+    </message>
+    <message>
+        <source>Incoming server: trusted certificate %1</source>
+        <translation>Сервер входящей почты: доверенный сертификат %1</translation>
+    </message>
+    <message>
+        <source>Forget</source>
+        <translation>Забыть</translation>
+    </message>
+    <message>
         <source>%1 %2:%3 · SMTP %4:%5 · password stored in the %6</source>
         <translation>%1 %2:%3 · SMTP %4:%5 · пароль хранится в: %6</translation>
     </message>
@@ -1102,6 +1255,58 @@ To: %4
         <translation>Заблокировать</translation>
     </message>
     <message>
+        <source>Devices</source>
+        <translation>Устройства</translation>
+    </message>
+    <message>
+        <source>This build of e3mail cannot sync with other devices.</source>
+        <translation>Эта сборка e3mail не умеет синхронизироваться с другими устройствами.</translation>
+    </message>
+    <message>
+        <source>This device</source>
+        <translation>Это устройство</translation>
+    </message>
+    <message>
+        <source>Connected</source>
+        <translation>Подключено</translation>
+    </message>
+    <message>
+        <source>Last seen %1</source>
+        <translation>Последний раз: %1</translation>
+    </message>
+    <message>
+        <source>Not seen yet</source>
+        <translation>Ещё не появлялось</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Убрать</translation>
+    </message>
+    <message>
+        <source>Pair a new device…</source>
+        <translation>Привязать новое устройство…</translation>
+    </message>
+    <message>
+        <source>Relay</source>
+        <translation>Ретранслятор</translation>
+    </message>
+    <message>
+        <source>n0&apos;s public relays</source>
+        <translation>Публичные ретрансляторы n0</translation>
+    </message>
+    <message>
+        <source>A relay I run</source>
+        <translation>Мой собственный ретранслятор</translation>
+    </message>
+    <message>
+        <source>None: only on the same network</source>
+        <translation>Нет: только в одной сети</translation>
+    </message>
+    <message>
+        <source>Devices of this account sync directly with each other, end-to-end encrypted. When they cannot reach each other, a relay passes the encrypted traffic along; it cannot read it.</source>
+        <translation>Устройства этой учётной записи синхронизируются напрямую, со сквозным шифрованием. Когда они не могут связаться, ретранслятор передаёт зашифрованный трафик; прочитать его он не может.</translation>
+    </message>
+    <message>
         <source>Data</source>
         <translation>Данные</translation>
     </message>
@@ -1132,6 +1337,10 @@ To: %4
     <message>
         <source>Remove %1?</source>
         <translation>Удалить %1?</translation>
+    </message>
+    <message>
+        <source>It stops syncing with this account&apos;s other devices. What is already on it stays there.</source>
+        <translation>Оно перестанет синхронизироваться с другими устройствами этой учётной записи. То, что уже на нём, останется.</translation>
     </message>
     <message>
         <source>Every message, contact and key of this mailbox is deleted from this device.</source>
@@ -1224,6 +1433,34 @@ To: %4
         <translation>Нет (небезопасно)</translation>
     </message>
     <message>
+        <source>The certificate of %1 is not the one you trusted before.</source>
+        <translation>Сертификат %1 — не тот, которому вы доверяли раньше.</translation>
+    </message>
+    <message>
+        <source>The certificate of %1 (sending) is not trusted.</source>
+        <translation>Сертификат %1 (отправка) не доверенный.</translation>
+    </message>
+    <message>
+        <source>The certificate of %1 is not trusted.</source>
+        <translation>Сертификат %1 не доверенный.</translation>
+    </message>
+    <message>
+        <source>SHA-256 fingerprint</source>
+        <translation>Отпечаток SHA-256</translation>
+    </message>
+    <message>
+        <source>Issued to %1 by %2, valid until %3.</source>
+        <translation>Выдан %1, издатель %2, действует до %3.</translation>
+    </message>
+    <message>
+        <source>Trust it only if this fingerprint matches the one your server&apos;s administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
+        <translation>Доверяйте ему, только если этот отпечаток совпадает с тем, что дал администратор вашего сервера. Тогда e3mail будет принимать от этого сервера этот сертификат и никакой другой.</translation>
+    </message>
+    <message>
+        <source>Trust this certificate</source>
+        <translation>Доверять этому сертификату</translation>
+    </message>
+    <message>
         <source>Checking…</source>
         <translation>Проверка…</translation>
     </message>
@@ -1234,6 +1471,10 @@ To: %4
     <message>
         <source>Cancel</source>
         <translation>Отмена</translation>
+    </message>
+    <message>
+        <source>Copy an account from another device…</source>
+        <translation>Скопировать учётную запись с другого устройства…</translation>
     </message>
 </context>
 <context>
@@ -1323,8 +1564,38 @@ To: %4
         <translation>Не удалось войти — проверьте пароль</translation>
     </message>
     <message>
+        <source>Certificate not trusted — see Settings</source>
+        <translation>Сертификат не доверенный — см. Настройки</translation>
+    </message>
+    <message>
         <source>Offline</source>
         <translation>Не в сети</translation>
+    </message>
+</context>
+<context>
+    <name>SignatureDialog</name>
+    <message>
+        <source>Edit signature</source>
+        <translation>Изменить подпись</translation>
+    </message>
+    <message>
+        <source>New signature</source>
+        <translation>Новая подпись</translation>
+    </message>
+    <message>
+        <source>Name, such as Work</source>
+        <translation>Название, например «Работа»</translation>
+    </message>
+    <message>
+        <source>Your signature</source>
+        <translation>Ваша подпись</translation>
+    </message>
+</context>
+<context>
+    <name>Signatures</name>
+    <message>
+        <source>Signature</source>
+        <translation>Подпись</translation>
     </message>
 </context>
 <context>
@@ -1382,6 +1653,68 @@ To: %4
     <message>
         <source>Create a tag…</source>
         <translation>Создать метку…</translation>
+    </message>
+</context>
+<context>
+    <name>e3::PairingJoin</name>
+    <message>
+        <source>The code could not be read.</source>
+        <translation>Не удалось прочитать код.</translation>
+    </message>
+    <message>
+        <source>The connection to the other device was lost: %1</source>
+        <translation>Соединение с другим устройством прервалось: %1</translation>
+    </message>
+    <message>
+        <source>The other device did not allow it.</source>
+        <translation>Другое устройство не разрешило.</translation>
+    </message>
+    <message>
+        <source>The other device offered a different account.</source>
+        <translation>Другое устройство предложило другую учётную запись.</translation>
+    </message>
+    <message>
+        <source>Cannot write here.</source>
+        <translation>Сюда нельзя записать.</translation>
+    </message>
+    <message>
+        <source>The other device sent something unexpected.</source>
+        <translation>Другое устройство прислало что-то неожиданное.</translation>
+    </message>
+    <message>
+        <source>A file arrived damaged.</source>
+        <translation>Файл пришёл повреждённым.</translation>
+    </message>
+    <message>
+        <source>The copy of the mailbox arrived damaged.</source>
+        <translation>Копия ящика пришла повреждённой.</translation>
+    </message>
+</context>
+<context>
+    <name>e3::PairingOffer</name>
+    <message>
+        <source>The code expired.</source>
+        <translation>Срок действия кода истёк.</translation>
+    </message>
+    <message>
+        <source>The other device went away.</source>
+        <translation>Другое устройство пропало.</translation>
+    </message>
+    <message>
+        <source>Another device</source>
+        <translation>Другое устройство</translation>
+    </message>
+    <message>
+        <source>Pairing was refused on this device.</source>
+        <translation>Привязка отклонена на этом устройстве.</translation>
+    </message>
+    <message>
+        <source>A file asked for is not here.</source>
+        <translation>Запрошенного файла здесь нет.</translation>
+    </message>
+    <message>
+        <source>The copy of the mailbox could not be read.</source>
+        <translation>Не удалось прочитать копию ящика.</translation>
     </message>
 </context>
 </TS>

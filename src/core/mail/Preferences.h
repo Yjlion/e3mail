@@ -15,6 +15,8 @@ public:
 
     // Stores the value, applies its side effects, and records it if synced.
     static void set(MailContext &ctx, const char *key, const QString &value);
+    // The same, inside a transaction the caller holds.
+    static void write(MailContext &ctx, const QString &key, const QString &value);
 
     // Stores the value and applies its side effects, without recording. For
     // ops from other devices.

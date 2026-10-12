@@ -14,6 +14,7 @@
 #include <QQmlApplicationEngine>
 
 #include "InlineImages.h"
+#include "QrImageProvider.h"
 #include <QWindow>
 #include <QQuickStyle>
 #include <QQuickWindow>
@@ -74,6 +75,7 @@ int main(int argc, char *argv[])
         &engine, &QQmlApplicationEngine::objectCreationFailed, &app, [] { QCoreApplication::exit(1); },
         Qt::QueuedConnection);
     engine.addImageProvider(QStringLiteral("cid"), new InlineImages); // the engine owns it
+    engine.addImageProvider(QStringLiteral("qr"), new QrImageProvider);
     engine.loadFromModule("E3mail", "Main");
     if (engine.rootObjects().isEmpty())
         return 1;
@@ -112,6 +114,16 @@ int main(int argc, char *argv[])
         else if (p.value(page) == QLatin1String("reply")) // to the message --open selected
             QMetaObject::invokeMethod(root, "compose", Q_ARG(QVariant, QStringLiteral("reply")),
                                       Q_ARG(QVariant, mailApp.selectedMessageId()));
+        else if (p.value(page) == QLatin1String("formatting")) // compose, with the toolbar
+            QMetaObject::invokeMethod(root, "composeFormatted");
+        else if (p.value(page) == QLatin1String("signature")) // the default one, in its editor
+            QMetaObject::invokeMethod(root, "editSignature");
+        else if (p.value(page) == QLatin1String("devices")) // settings, at Devices
+            QMetaObject::invokeMethod(root, "showDevices");
+        else if (p.value(page) == QLatin1String("pair")) // settings, pairing a device
+            QMetaObject::invokeMethod(root, "showPairing");
+        else if (p.value(page) == QLatin1String("join")) // first run, copying an account
+            QMetaObject::invokeMethod(root, "showJoin");
         else if (p.value(page) == QLatin1String("menu")) // the narrow layout's drawer
             QMetaObject::invokeMethod(root, "openMenu");
         else if (p.value(page) == QLatin1String("source")) // of the message --open selected

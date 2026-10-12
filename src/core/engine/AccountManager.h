@@ -25,6 +25,10 @@ public:
     void select(int id);
 
     Account *create();
+    // Takes in an account directory filled elsewhere (pairing's snapshot),
+    // on the same file system as root(). Null if it cannot be moved.
+    Account *adopt(const QString &dir);
+    QString root() const { return m_root; }
     void remove(int id);
     void startAll();
     void stopAll();

@@ -5,9 +5,10 @@
 #include <QHash>
 #include <QList>
 #include <QObject>
+#include <QPointer>
 #include <QTcpServer>
 
-class QTcpSocket;
+#include <QTcpSocket>
 
 // An in-process mail system for tests: SMTP delivers into per-user mailboxes,
 // which IMAP and POP3 then serve. Plain TCP on localhost; runs on the thread
@@ -48,6 +49,8 @@ public:
     bool imapAuthPlain = true;
     bool pop3SaslPlain = false;
     quint32 uidValidity = 777;
+    // Reads every command and answers none: a server that has hung.
+    bool stalled = false;
     int expungeCount = 0;
     int fetchCount = 0;
     int searchCount = 0;
@@ -69,5 +72,11 @@ private:
     QHash<QString, QList<Stored>> m_boxes;
     QHash<QString, quint32> m_nextUid;
     QList<Envelope> m_envelopes;
-    QList<QPair<QTcpSocket *, QString>> m_idlers;
+    struct Idler
+    {
+        QPointer<QTcpSocket> socket;
+        QString user;
+        ImapConn *conn; // lives as long as the socket
+    };
+    QList<Idler> m_idlers;
 };

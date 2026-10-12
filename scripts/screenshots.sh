@@ -9,7 +9,7 @@ OUT=screenshots
 DATA=$(mktemp -d)
 EMPTY=$(mktemp -d)
 trap 'rm -rf "$DATA" "$EMPTY"' EXIT
-export QT_QPA_PLATFORM=offscreen E3MAIL_NO_KEYCHAIN=1 QT_LOGGING_RULES="e3.*.info=false"
+export QT_QPA_PLATFORM=offscreen E3MAIL_NO_KEYCHAIN=1 E3MAIL_DEVICE_NAME=Laptop QT_LOGGING_RULES="e3.*.info=false"
 APP="$BUILD/src/app/e3mail"
 mkdir -p "$OUT"
 "$BUILD/tests/e3mail-fixtures" "$DATA" >/dev/null
@@ -19,6 +19,10 @@ shot reading --open inbox:0
 shot thread --open inbox:1
 shot unverified --open unverified
 shot composer --page compose
+shot composer-formatting --page formatting
+shot signature --page signature
+shot devices --page devices
+shot pair --page pair
 shot reply-html --open inbox:0 --page reply
 shot contacts --page contacts
 shot source --open inbox:0 --page source
@@ -30,7 +34,12 @@ shot reading-ja --open inbox:0 --lang ja
 shot settings-de --page settings --lang de
 shot unverified-he --open unverified --lang he
 shot source-ar --open inbox:0 --page source --lang ar
+shot settings-ar --page settings --lang ar
+shot signature-ar --page signature --lang ar
+shot devices-ar --page devices --lang ar
+shot pair-ar --page pair --lang ar
 "$APP" --data-dir "$EMPTY" --grab "$OUT/first-run.png"; echo "$OUT/first-run.png"
+"$APP" --data-dir "$EMPTY" --grab "$OUT/join.png" --page join; echo "$OUT/join.png"
 # A phone: one pane at a time.
 PHONE=(--size 400x820)
 shot phone-inbox "${PHONE[@]}"
@@ -39,6 +48,9 @@ shot phone-reading --open inbox:0 "${PHONE[@]}"
 shot phone-composer --page compose "${PHONE[@]}"
 shot phone-contacts --page contacts "${PHONE[@]}"
 shot phone-settings --page settings "${PHONE[@]}"
+shot phone-signature --page signature "${PHONE[@]}"
+shot phone-devices --page devices "${PHONE[@]}"
+shot phone-pair --page pair "${PHONE[@]}"
 shot phone-source --open inbox:0 --page source "${PHONE[@]}"
 shot phone-inbox-ar --lang ar "${PHONE[@]}"
 shot phone-reading-ar --open inbox:0 --lang ar "${PHONE[@]}"

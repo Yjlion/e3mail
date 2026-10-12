@@ -41,7 +41,10 @@ public:
 Q_SIGNALS:
     void mailChanged();
     void newMail(qint64 msgId);
-    void status(const QString &state, const QString &detail); // online | offline | error | auth
+    void status(const QString &state, const QString &detail); // online | offline | error | auth | cert
+    // A server's certificate was refused: not trusted, or not the pinned one.
+    // `server` is "in" or "smtp"; `sha256` is what a pin would hold.
+    void certificateRefused(const QString &server, const QByteArray &sha256);
     void sent(qint64 msgId);
     // Older mail still to download (IMAP's first sync); 0 when done.
     void backfillProgress(int remaining);

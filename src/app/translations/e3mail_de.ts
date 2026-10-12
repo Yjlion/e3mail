@@ -62,10 +62,6 @@ An: %4
         <translation>%1 kann nicht gelesen werden.</translation>
     </message>
     <message>
-        <source>No signature is set. Add one in Settings.</source>
-        <translation>Es ist keine Signatur festgelegt. Fügen Sie eine in den Einstellungen hinzu.</translation>
-    </message>
-    <message>
         <source>Add a recipient.</source>
         <translation>Fügen Sie einen Empfänger hinzu.</translation>
     </message>
@@ -109,46 +105,6 @@ An: %4
         <translation>Betreff</translation>
     </message>
     <message>
-        <source>Bold</source>
-        <translation>Fett</translation>
-    </message>
-    <message>
-        <source>Italic</source>
-        <translation>Kursiv</translation>
-    </message>
-    <message>
-        <source>Underline</source>
-        <translation>Unterstrichen</translation>
-    </message>
-    <message>
-        <source>Strikethrough</source>
-        <translation>Durchgestrichen</translation>
-    </message>
-    <message>
-        <source>Heading</source>
-        <translation>Überschrift</translation>
-    </message>
-    <message>
-        <source>Quote</source>
-        <translation>Zitat</translation>
-    </message>
-    <message>
-        <source>Bulleted list</source>
-        <translation>Aufzählung</translation>
-    </message>
-    <message>
-        <source>Numbered list</source>
-        <translation>Nummerierte Liste</translation>
-    </message>
-    <message>
-        <source>Code</source>
-        <translation>Code</translation>
-    </message>
-    <message>
-        <source>Link</source>
-        <translation>Link</translation>
-    </message>
-    <message>
         <source>Write your message</source>
         <translation>Nachricht schreiben</translation>
     </message>
@@ -169,8 +125,16 @@ An: %4
         <translation>Dateien anhängen</translation>
     </message>
     <message>
-        <source>Insert signature</source>
-        <translation>Signatur einfügen</translation>
+        <source>Signature</source>
+        <translation>Signatur</translation>
+    </message>
+    <message>
+        <source>No signature is set. Add one in Settings.</source>
+        <translation>Es ist keine Signatur festgelegt. Fügen Sie eine in den Einstellungen hinzu.</translation>
+    </message>
+    <message>
+        <source>No signature</source>
+        <translation>Keine Signatur</translation>
     </message>
     <message>
         <source>Mark as important</source>
@@ -199,14 +163,6 @@ An: %4
     <message>
         <source>Discard</source>
         <translation>Verwerfen</translation>
-    </message>
-    <message>
-        <source>Link to</source>
-        <translation>Link zu</translation>
-    </message>
-    <message>
-        <source>example.com or name@example.com</source>
-        <translation>beispiel.de oder name@beispiel.de</translation>
     </message>
 </context>
 <context>
@@ -434,6 +390,45 @@ An: %4
     </message>
 </context>
 <context>
+    <name>JoinDialog</name>
+    <message>
+        <source>Copy an account from another device</source>
+        <translation>Konto von einem anderen Gerät übernehmen</translation>
+    </message>
+    <message>
+        <source>On the device that has the account, open Settings, Devices, “Pair a new device”, and enter the code it shows here.</source>
+        <translation>Öffnen Sie auf dem Gerät, das das Konto hat, Einstellungen, Geräte, „Neues Gerät koppeln“ und geben Sie den angezeigten Code hier ein.</translation>
+    </message>
+    <message>
+        <source>Code</source>
+        <translation>Code</translation>
+    </message>
+    <message>
+        <source>For %1</source>
+        <translation>Für %1</translation>
+    </message>
+    <message>
+        <source>This is not a pairing code.</source>
+        <translation>Das ist kein Kopplungscode.</translation>
+    </message>
+    <message>
+        <source>This device’s name</source>
+        <translation>Name dieses Geräts</translation>
+    </message>
+    <message>
+        <source>Waiting for the other device to allow it…</source>
+        <translation>Warten, bis das andere Gerät zustimmt…</translation>
+    </message>
+    <message>
+        <source>Copy the account</source>
+        <translation>Konto übernehmen</translation>
+    </message>
+    <message>
+        <source>That code cannot be used here. Is this account already on this device?</source>
+        <translation>Dieser Code ist hier nicht verwendbar. Ist das Konto schon auf diesem Gerät?</translation>
+    </message>
+</context>
+<context>
     <name>LabelDialog</name>
     <message>
         <source>Edit tag</source>
@@ -465,6 +460,10 @@ An: %4
 </context>
 <context>
     <name>MailApp</name>
+    <message>
+        <source>Unnamed device</source>
+        <translation>Unbenanntes Gerät</translation>
+    </message>
     <message>
         <source>(no subject)</source>
         <translation>(kein Betreff)</translation>
@@ -810,6 +809,53 @@ An: %4
     </message>
 </context>
 <context>
+    <name>PairDialog</name>
+    <message>
+        <source>This device could not start its connection to other devices.</source>
+        <translation>Dieses Gerät konnte keine Verbindung zu anderen Geräten aufbauen.</translation>
+    </message>
+    <message>
+        <source>Pair a new device</source>
+        <translation>Neues Gerät koppeln</translation>
+    </message>
+    <message>
+        <source>On the new device, choose “Copy an account from another device” when adding a mailbox, and enter this code. It works once, for ten minutes.</source>
+        <translation>Wählen Sie auf dem neuen Gerät beim Hinzufügen eines Postfachs „Konto von einem anderen Gerät übernehmen“ und geben Sie diesen Code ein. Er gilt einmal, zehn Minuten lang.</translation>
+    </message>
+    <message>
+        <source>Pairing code as a QR code</source>
+        <translation>Kopplungscode als QR-Code</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Kopieren</translation>
+    </message>
+    <message>
+        <source>“%1” wants to become a device of this account. It will get a copy of all your mail, your contacts, your key and your password.</source>
+        <translation>„%1“ möchte ein Gerät dieses Kontos werden. Es erhält eine Kopie Ihrer gesamten Post, Ihrer Kontakte, Ihres Schlüssels und Ihres Passworts.</translation>
+    </message>
+    <message>
+        <source>Allow it only if you are setting up that device yourself, now.</source>
+        <translation>Erlauben Sie es nur, wenn Sie dieses Gerät gerade selbst einrichten.</translation>
+    </message>
+    <message>
+        <source>Allow</source>
+        <translation>Erlauben</translation>
+    </message>
+    <message>
+        <source>Refuse</source>
+        <translation>Ablehnen</translation>
+    </message>
+    <message>
+        <source>Sending a copy to “%1”…</source>
+        <translation>Kopie wird an „%1“ gesendet…</translation>
+    </message>
+    <message>
+        <source>“%1” is now a device of this account.</source>
+        <translation>„%1“ ist jetzt ein Gerät dieses Kontos.</translation>
+    </message>
+</context>
+<context>
     <name>Policy</name>
     <message>
         <source>Add a recipient.</source>
@@ -891,6 +937,57 @@ An: %4
     </message>
 </context>
 <context>
+    <name>RichEditor</name>
+    <message>
+        <source>Bold</source>
+        <translation>Fett</translation>
+    </message>
+    <message>
+        <source>Italic</source>
+        <translation>Kursiv</translation>
+    </message>
+    <message>
+        <source>Underline</source>
+        <translation>Unterstrichen</translation>
+    </message>
+    <message>
+        <source>Strikethrough</source>
+        <translation>Durchgestrichen</translation>
+    </message>
+    <message>
+        <source>Heading</source>
+        <translation>Überschrift</translation>
+    </message>
+    <message>
+        <source>Quote</source>
+        <translation>Zitat</translation>
+    </message>
+    <message>
+        <source>Bulleted list</source>
+        <translation>Aufzählung</translation>
+    </message>
+    <message>
+        <source>Numbered list</source>
+        <translation>Nummerierte Liste</translation>
+    </message>
+    <message>
+        <source>Code</source>
+        <translation>Code</translation>
+    </message>
+    <message>
+        <source>Link</source>
+        <translation>Link</translation>
+    </message>
+    <message>
+        <source>Link to</source>
+        <translation>Link zu</translation>
+    </message>
+    <message>
+        <source>example.com or name@example.com</source>
+        <translation>beispiel.de oder name@beispiel.de</translation>
+    </message>
+</context>
+<context>
     <name>SaveMessage</name>
     <message>
         <source>Save decrypted</source>
@@ -960,8 +1057,36 @@ An: %4
         <translation>Name</translation>
     </message>
     <message>
-        <source>Signature</source>
-        <translation>Signatur</translation>
+        <source>Signatures</source>
+        <translation>Signaturen</translation>
+    </message>
+    <message>
+        <source>Put this one in new mail</source>
+        <translation>Diese in neue Nachrichten einfügen</translation>
+    </message>
+    <message>
+        <source>Default: %1</source>
+        <translation>Standard: %1</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>Bearbeiten</translation>
+    </message>
+    <message>
+        <source>Delete %1</source>
+        <translation>%1 löschen</translation>
+    </message>
+    <message>
+        <source>No signature in new mail</source>
+        <translation>Keine Signatur in neuen Nachrichten</translation>
+    </message>
+    <message>
+        <source>Add a signature…</source>
+        <translation>Signatur hinzufügen…</translation>
+    </message>
+    <message>
+        <source>The chosen one goes into new mail. The composer&apos;s signature button swaps it for another.</source>
+        <translation>Die gewählte Signatur kommt in neue Nachrichten. Mit der Signatur-Schaltfläche beim Verfassen lässt sie sich gegen eine andere tauschen.</translation>
     </message>
     <message>
         <source>Encryption</source>
@@ -1052,6 +1177,34 @@ An: %4
         <translation>Sekunden</translation>
     </message>
     <message>
+        <source>The sending server&apos;s certificate is not trusted, or is not the one trusted before.</source>
+        <translation>Das Zertifikat des Postausgangsservers ist nicht vertrauenswürdig oder nicht das zuvor bestätigte.</translation>
+    </message>
+    <message>
+        <source>The incoming server&apos;s certificate is not trusted, or is not the one trusted before.</source>
+        <translation>Das Zertifikat des Posteingangsservers ist nicht vertrauenswürdig oder nicht das zuvor bestätigte.</translation>
+    </message>
+    <message>
+        <source>Trust it only if this SHA-256 fingerprint matches the one your server&apos;s administrator gave you.</source>
+        <translation>Vertrauen Sie ihm nur, wenn dieser SHA-256-Fingerabdruck mit dem übereinstimmt, den Ihnen die Verwaltung Ihres Servers gegeben hat.</translation>
+    </message>
+    <message>
+        <source>Trust this certificate</source>
+        <translation>Diesem Zertifikat vertrauen</translation>
+    </message>
+    <message>
+        <source>Sending server: trusted certificate %1</source>
+        <translation>Postausgangsserver: vertrautes Zertifikat %1</translation>
+    </message>
+    <message>
+        <source>Incoming server: trusted certificate %1</source>
+        <translation>Posteingangsserver: vertrautes Zertifikat %1</translation>
+    </message>
+    <message>
+        <source>Forget</source>
+        <translation>Vergessen</translation>
+    </message>
+    <message>
         <source>%1 %2:%3 · SMTP %4:%5 · password stored in the %6</source>
         <translation>%1 %2:%3 · SMTP %4:%5 · Passwort gespeichert: %6</translation>
     </message>
@@ -1092,6 +1245,58 @@ An: %4
         <translation>Blockieren</translation>
     </message>
     <message>
+        <source>Devices</source>
+        <translation>Geräte</translation>
+    </message>
+    <message>
+        <source>This build of e3mail cannot sync with other devices.</source>
+        <translation>Diese Version von e3mail kann nicht mit anderen Geräten synchronisieren.</translation>
+    </message>
+    <message>
+        <source>This device</source>
+        <translation>Dieses Gerät</translation>
+    </message>
+    <message>
+        <source>Connected</source>
+        <translation>Verbunden</translation>
+    </message>
+    <message>
+        <source>Last seen %1</source>
+        <translation>Zuletzt gesehen %1</translation>
+    </message>
+    <message>
+        <source>Not seen yet</source>
+        <translation>Noch nicht gesehen</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Entfernen</translation>
+    </message>
+    <message>
+        <source>Pair a new device…</source>
+        <translation>Neues Gerät koppeln…</translation>
+    </message>
+    <message>
+        <source>Relay</source>
+        <translation>Relay</translation>
+    </message>
+    <message>
+        <source>n0&apos;s public relays</source>
+        <translation>Öffentliche Relays von n0</translation>
+    </message>
+    <message>
+        <source>A relay I run</source>
+        <translation>Ein eigenes Relay</translation>
+    </message>
+    <message>
+        <source>None: only on the same network</source>
+        <translation>Keins: nur im selben Netz</translation>
+    </message>
+    <message>
+        <source>Devices of this account sync directly with each other, end-to-end encrypted. When they cannot reach each other, a relay passes the encrypted traffic along; it cannot read it.</source>
+        <translation>Die Geräte dieses Kontos synchronisieren direkt miteinander, Ende-zu-Ende-verschlüsselt. Erreichen sie einander nicht, leitet ein Relay den verschlüsselten Verkehr weiter; lesen kann es ihn nicht.</translation>
+    </message>
+    <message>
         <source>Data</source>
         <translation>Daten</translation>
     </message>
@@ -1122,6 +1327,10 @@ An: %4
     <message>
         <source>Remove %1?</source>
         <translation>%1 entfernen?</translation>
+    </message>
+    <message>
+        <source>It stops syncing with this account&apos;s other devices. What is already on it stays there.</source>
+        <translation>Es synchronisiert nicht mehr mit den anderen Geräten dieses Kontos. Was schon darauf ist, bleibt dort.</translation>
     </message>
     <message>
         <source>Every message, contact and key of this mailbox is deleted from this device.</source>
@@ -1214,6 +1423,34 @@ An: %4
         <translation>Keine (unsicher)</translation>
     </message>
     <message>
+        <source>The certificate of %1 is not the one you trusted before.</source>
+        <translation>Das Zertifikat von %1 ist nicht das, dem Sie zuvor vertraut haben.</translation>
+    </message>
+    <message>
+        <source>The certificate of %1 (sending) is not trusted.</source>
+        <translation>Das Zertifikat von %1 (Postausgang) ist nicht vertrauenswürdig.</translation>
+    </message>
+    <message>
+        <source>The certificate of %1 is not trusted.</source>
+        <translation>Das Zertifikat von %1 ist nicht vertrauenswürdig.</translation>
+    </message>
+    <message>
+        <source>SHA-256 fingerprint</source>
+        <translation>SHA-256-Fingerabdruck</translation>
+    </message>
+    <message>
+        <source>Issued to %1 by %2, valid until %3.</source>
+        <translation>Ausgestellt für %1 von %2, gültig bis %3.</translation>
+    </message>
+    <message>
+        <source>Trust it only if this fingerprint matches the one your server&apos;s administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
+        <translation>Vertrauen Sie ihm nur, wenn dieser Fingerabdruck mit dem übereinstimmt, den Ihnen die Verwaltung Ihres Servers gegeben hat. Dann akzeptiert e3mail von diesem Server genau dieses Zertifikat und kein anderes.</translation>
+    </message>
+    <message>
+        <source>Trust this certificate</source>
+        <translation>Diesem Zertifikat vertrauen</translation>
+    </message>
+    <message>
         <source>Checking…</source>
         <translation>Wird geprüft…</translation>
     </message>
@@ -1224,6 +1461,10 @@ An: %4
     <message>
         <source>Cancel</source>
         <translation>Abbrechen</translation>
+    </message>
+    <message>
+        <source>Copy an account from another device…</source>
+        <translation>Konto von einem anderen Gerät übernehmen…</translation>
     </message>
 </context>
 <context>
@@ -1312,8 +1553,38 @@ An: %4
         <translation>Anmeldung fehlgeschlagen — Passwort prüfen</translation>
     </message>
     <message>
+        <source>Certificate not trusted — see Settings</source>
+        <translation>Zertifikat nicht vertrauenswürdig – siehe Einstellungen</translation>
+    </message>
+    <message>
         <source>Offline</source>
         <translation>Offline</translation>
+    </message>
+</context>
+<context>
+    <name>SignatureDialog</name>
+    <message>
+        <source>Edit signature</source>
+        <translation>Signatur bearbeiten</translation>
+    </message>
+    <message>
+        <source>New signature</source>
+        <translation>Neue Signatur</translation>
+    </message>
+    <message>
+        <source>Name, such as Work</source>
+        <translation>Name, etwa „Arbeit“</translation>
+    </message>
+    <message>
+        <source>Your signature</source>
+        <translation>Ihre Signatur</translation>
+    </message>
+</context>
+<context>
+    <name>Signatures</name>
+    <message>
+        <source>Signature</source>
+        <translation>Signatur</translation>
     </message>
 </context>
 <context>
@@ -1371,6 +1642,68 @@ An: %4
     <message>
         <source>Create a tag…</source>
         <translation>Schlagwort anlegen…</translation>
+    </message>
+</context>
+<context>
+    <name>e3::PairingJoin</name>
+    <message>
+        <source>The code could not be read.</source>
+        <translation>Der Code konnte nicht gelesen werden.</translation>
+    </message>
+    <message>
+        <source>The connection to the other device was lost: %1</source>
+        <translation>Die Verbindung zum anderen Gerät ist abgebrochen: %1</translation>
+    </message>
+    <message>
+        <source>The other device did not allow it.</source>
+        <translation>Das andere Gerät hat es nicht erlaubt.</translation>
+    </message>
+    <message>
+        <source>The other device offered a different account.</source>
+        <translation>Das andere Gerät hat ein anderes Konto angeboten.</translation>
+    </message>
+    <message>
+        <source>Cannot write here.</source>
+        <translation>Hier kann nicht geschrieben werden.</translation>
+    </message>
+    <message>
+        <source>The other device sent something unexpected.</source>
+        <translation>Das andere Gerät hat etwas Unerwartetes gesendet.</translation>
+    </message>
+    <message>
+        <source>A file arrived damaged.</source>
+        <translation>Eine Datei kam beschädigt an.</translation>
+    </message>
+    <message>
+        <source>The copy of the mailbox arrived damaged.</source>
+        <translation>Die Kopie des Postfachs kam beschädigt an.</translation>
+    </message>
+</context>
+<context>
+    <name>e3::PairingOffer</name>
+    <message>
+        <source>The code expired.</source>
+        <translation>Der Code ist abgelaufen.</translation>
+    </message>
+    <message>
+        <source>The other device went away.</source>
+        <translation>Das andere Gerät ist nicht mehr erreichbar.</translation>
+    </message>
+    <message>
+        <source>Another device</source>
+        <translation>Ein anderes Gerät</translation>
+    </message>
+    <message>
+        <source>Pairing was refused on this device.</source>
+        <translation>Die Kopplung wurde auf diesem Gerät abgelehnt.</translation>
+    </message>
+    <message>
+        <source>A file asked for is not here.</source>
+        <translation>Eine angeforderte Datei ist nicht vorhanden.</translation>
+    </message>
+    <message>
+        <source>The copy of the mailbox could not be read.</source>
+        <translation>Die Kopie des Postfachs konnte nicht gelesen werden.</translation>
     </message>
 </context>
 </TS>

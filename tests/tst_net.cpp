@@ -3,8 +3,45 @@
 #include "net/Imap.h"
 #include "net/Pop3.h"
 #include "net/Smtp.h"
+#include "net/SyncSocket.h"
 
+#include <QSslCertificate>
+#include <QSslConfiguration>
+#include <QSslKey>
+#include <QSslSocket>
+#include <QTcpServer>
 #include <QtTest>
+
+// A TLS endpoint with the self-signed certificate in tests/data: it starts
+// TLS at once and then says "hello". With STARTTLS the client connects in
+// cleartext first and asks for TLS, which here simply follows.
+class TlsServer : public QTcpServer
+{
+public:
+    TlsServer()
+    {
+        QFile c(QStringLiteral(E3_TEST_DATA "/tls-cert.pem"));
+        QFile k(QStringLiteral(E3_TEST_DATA "/tls-key.pem"));
+        if (c.open(QIODevice::ReadOnly) && k.open(QIODevice::ReadOnly)) {
+            cert = QSslCertificate(c.readAll());
+            key = QSslKey(k.readAll(), QSsl::Rsa);
+        }
+        listen(QHostAddress::LocalHost);
+    }
+    QSslCertificate cert;
+    QSslKey key;
+
+protected:
+    void incomingConnection(qintptr fd) override
+    {
+        auto *s = new QSslSocket(this);
+        s->setSocketDescriptor(fd);
+        s->setLocalCertificate(cert);
+        s->setPrivateKey(key);
+        QObject::connect(s, &QSslSocket::encrypted, s, [s] { s->write("hello\r\n"); });
+        s->startServerEncryption();
+    }
+};
 
 using namespace e3::net;
 
@@ -145,6 +182,102 @@ private Q_SLOTS:
     void dotStuffing()
     {
         QCOMPARE(SmtpClient::prepareData("a\n.b\r\n..c"), QByteArray("a\r\n..b\r\n...c\r\n.\r\n"));
+    }
+
+    void certificatePinning_data()
+    {
+        QTest::addColumn<int>("security");
+        QTest::newRow("implicit TLS") << int(Security::Ssl);
+        QTest::newRow("STARTTLS") << int(Security::StartTls);
+    }
+
+    // ADR 0017: an untrusted certificate is refused with what is needed to
+    // decide about it; once pinned it is trusted, and only it.
+    void certificatePinning()
+    {
+        QFETCH(int, security);
+        TlsServer srv;
+        QVERIFY(!srv.cert.isNull());
+        const QByteArray sha = srv.cert.digest(QCryptographicHash::Sha256).toHex();
+        ServerSettings s;
+        s.host = QStringLiteral("127.0.0.1");
+        s.port = srv.serverPort();
+        s.security = Security(security);
+        const auto connect = [&](SyncSocket &sock) {
+            sock.connectToHost(s);
+            if (s.security == Security::StartTls)
+                sock.startTls();
+        };
+
+        {
+            SyncSocket sock(5000);
+            try {
+                connect(sock);
+                QFAIL("an untrusted certificate was accepted");
+            } catch (const CertError &e) {
+                QCOMPARE(e.info.sha256, sha);
+                QCOMPARE(e.info.subject, QStringLiteral("mail.e3.test"));
+                QVERIFY(!e.info.problems.isEmpty());
+                QVERIFY(!e.info.pinChanged);
+                QVERIFY(e.info.expires.isValid());
+            }
+        }
+        {
+            s.pinnedSha256 = sha;
+            SyncSocket sock(5000);
+            connect(sock);
+            QVERIFY(sock.isEncrypted());
+            QCOMPARE(sock.readLine(), QByteArray("hello"));
+        }
+        {
+            s.pinnedSha256 = QByteArray(64, 'a');
+            SyncSocket sock(5000);
+            try {
+                connect(sock);
+                QFAIL("a certificate other than the pinned one was accepted");
+            } catch (const CertError &e) {
+                QCOMPARE(e.info.sha256, sha);
+                QVERIFY(e.info.pinChanged);
+            }
+        }
+    }
+
+    // A pin also refuses a certificate TLS would trust: it is the one
+    // certificate accepted from that server.
+    void pinRefusesATrustedCertificate()
+    {
+        TlsServer srv;
+        const QSslConfiguration before = QSslConfiguration::defaultConfiguration();
+        QSslConfiguration trusting = before;
+        trusting.addCaCertificate(srv.cert);
+        QSslConfiguration::setDefaultConfiguration(trusting);
+        ServerSettings s;
+        s.host = QStringLiteral("127.0.0.1");
+        s.port = srv.serverPort();
+        {
+            SyncSocket sock(5000);
+            sock.connectToHost(s);
+            QCOMPARE(sock.readLine(), QByteArray("hello")); // trusted, no pin
+        }
+        s.pinnedSha256 = QByteArray(64, 'b');
+        SyncSocket sock(5000);
+        bool refused = false;
+        try {
+            sock.connectToHost(s);
+        } catch (const CertError &e) {
+            refused = e.info.pinChanged;
+        }
+        QSslConfiguration::setDefaultConfiguration(before);
+        QVERIFY(refused);
+    }
+
+    void fingerprints()
+    {
+        const QByteArray sha = "a3347807083c4ebb972586cee104822f5d67eff72086cf456204b537b286d2b6";
+        QCOMPARE(formatFingerprint(sha).left(11), QStringLiteral("A3:34:78:07"));
+        QCOMPARE(normalizeFingerprint(formatFingerprint(sha)), sha);
+        QCOMPARE(normalizeFingerprint(QStringLiteral("A334 7807 083C 4EBB 9725 86CE E104 822F 5D67 EFF7 2086 CF45 6204 B537 B286 D2B6")), sha);
+        QVERIFY(normalizeFingerprint(QStringLiteral("A3:34")).isEmpty());
     }
 };
 

@@ -14,6 +14,7 @@
 #include "store/Config.h"
 #include "store/Database.h"
 #include "store/OpLog.h"
+#include "sync/MailboxFallback.h"
 #include "sync/OpApply.h"
 #include "util/Log.h"
 
@@ -35,6 +36,73 @@ bool isEncryptedPart(const mime::Part &p)
 {
     return p.mimeType == "multipart/encrypted" && p.children.size() >= 2
         && p.typeParams.value("protocol").toLower() == QLatin1String("application/pgp-encrypted");
+}
+
+// Signed without encryption, or signed inside it (RFC 3156).
+bool isSignedPart(const mime::Part &p)
+{
+    return p.mimeType == "multipart/signed" && p.children.size() == 2
+        && p.typeParams.value("protocol").toLower() == QLatin1String("application/pgp-signature");
+}
+
+// Good signers of a multipart/signed. The signature covers the first part
+// exactly as sent, headers included, with CRLF line endings.
+QStringList signersOf(MailContext &ctx, const mime::Part &signedPart)
+{
+    QByteArray data = signedPart.children[0].raw;
+    data.replace("\r\n", "\n");
+    data.replace("\n", "\r\n");
+    try {
+        return ctx.pgp.verifyDetached(data, signedPart.children[1].body);
+    } catch (const crypto::PgpError &e) {
+        qCWarning(lcMail) << "cannot read a signature:" << e.what();
+        return {};
+    }
+}
+
+// The part `walk` shows as the text, or null.
+const mime::Part *textPart(const mime::Part &p)
+{
+    if (p.isMultipart()) {
+        if (p.mimeType == "multipart/alternative") {
+            const mime::Part *text = nullptr;
+            for (const mime::Part &c : p.children) {
+                if (c.mimeType == "text/plain")
+                    text = &c;
+            }
+            if (text)
+                return text;
+        }
+        for (const mime::Part &c : p.children) {
+            if (const mime::Part *t = textPart(c))
+                return t;
+        }
+        return nullptr;
+    }
+    return p.disposition != "attachment" && p.mimeType == "text/plain" ? &p : nullptr;
+}
+
+// Inline PGP in a text body: the first armoured message or cleartext-signed
+// block, as [start, end) in the part's bytes.
+std::optional<std::pair<qsizetype, qsizetype>> armouredBlock(const QByteArray &body)
+{
+    static const QByteArray kMessage = "-----BEGIN PGP MESSAGE-----";
+    static const QByteArray kSigned = "-----BEGIN PGP SIGNED MESSAGE-----";
+    for (qsizetype pos = 0; pos < body.size();) {
+        const qsizetype nl = body.indexOf('\n', pos);
+        const qsizetype lineEnd = nl < 0 ? body.size() : nl;
+        const QByteArray line = body.mid(pos, lineEnd - pos).trimmed();
+        if (line == kMessage || line == kSigned) {
+            const QByteArray end = line == kMessage ? "-----END PGP MESSAGE-----" : "-----END PGP SIGNATURE-----";
+            const qsizetype e = body.indexOf(end, lineEnd);
+            if (e < 0)
+                return std::nullopt;
+            const qsizetype eol = body.indexOf('\n', e);
+            return std::make_pair(pos, eol < 0 ? body.size() : eol + 1);
+        }
+        pos = lineEnd + 1;
+    }
+    return std::nullopt;
 }
 
 void walk(const mime::Part &p, Ingest::Content &out, bool inAlternative)
@@ -181,6 +249,13 @@ Ingest::Result Ingest::process(MailContext &ctx, const QByteArray &raw)
         }
     }
 
+    std::optional<mime::Part> signedPart;
+    if (decryptError.isEmpty() && isSignedPart(content)) {
+        signedPart = content;
+        content = signedPart->children[0];
+        validSigners += signersOf(ctx, *signedPart);
+    }
+
     QString messageId = mime::parseMessageIds(headers.raw("Message-ID")).value(0);
     if (messageId.isEmpty()) {
         // Stable across fetches, so a refetch is still a duplicate.
@@ -198,6 +273,11 @@ Ingest::Result Ingest::process(MailContext &ctx, const QByteArray &raw)
         result.purged = true;
         return result;
     }
+
+    // Device sync by mail: its ops, applied before the message is stored
+    // (hidden), outside the transaction that stores it.
+    if (hidden && isEncryptedPart(outer) && decryptError.isEmpty())
+        sync::MailboxFallback::receive(ctx, extract(content).text, validSigners);
 
     const QList<mime::Address> fromList = mime::parseAddressList(headers.raw("From"));
     const mime::Address from = fromList.value(0);
@@ -219,6 +299,33 @@ Ingest::Result Ingest::process(MailContext &ctx, const QByteArray &raw)
                         .arg(decryptError);
         encrypted = true;
     }
+
+    // Inline PGP, in mail without PGP/MIME: the armour in the text is
+    // replaced by what it holds. Tried again once the keys this message
+    // carries are learned, as for PGP/MIME (trap 4).
+    const mime::Part *inlinePart = !encrypted && !signedPart && decryptError.isEmpty() ? textPart(content) : nullptr;
+    const auto inlineRange = inlinePart ? armouredBlock(inlinePart->body) : std::nullopt;
+    bool inlineDone = false;
+    const auto tryInline = [&] {
+        if (!inlineRange || inlineDone)
+            return;
+        const auto [start, end] = *inlineRange;
+        try {
+            const crypto::Pgp::Decrypted d = ctx.pgp.decrypt(inlinePart->body.mid(start, end - start));
+            const QByteArray cs = inlinePart->charset();
+            QString text = mime::decodeCharset(inlinePart->body.left(start), cs) + mime::decodeCharset(d.data, cs)
+                + mime::decodeCharset(inlinePart->body.mid(end), cs);
+            text.replace(QStringLiteral("\r\n"), QStringLiteral("\n"));
+            body.text = text;
+            body.html.clear(); // an HTML alternative would still show the armour
+            encrypted = d.encrypted;
+            validSigners = d.validSigners;
+            inlineDone = true;
+        } catch (const crypto::PgpError &e) {
+            qCWarning(lcMail) << "cannot read inline PGP:" << e.what();
+        }
+    };
+    tryInline();
 
     const QString selfAddr = mime::normalizeAddr(ctx.config.get(cfg::Addr));
     const bool fromSelf = mime::normalizeAddr(from.addr) == selfAddr;
@@ -275,11 +382,17 @@ Ingest::Result Ingest::process(MailContext &ctx, const QByteArray &raw)
     }
     // A first encrypted message carries the key that signed it; verify again
     // now that the keyring has it.
-    if (encrypted && decryptError.isEmpty() && validSigners.isEmpty()) {
+    if (isEncryptedPart(outer) && decryptError.isEmpty() && validSigners.isEmpty()) {
         try {
             validSigners = ctx.pgp.decrypt(outer.children[1].body).validSigners;
         } catch (const crypto::PgpError &) {
         }
+    }
+    if (signedPart && validSigners.isEmpty())
+        validSigners = signersOf(ctx, *signedPart);
+    if (inlineRange && validSigners.isEmpty()) {
+        inlineDone = false;
+        tryInline();
     }
     QString signedFpr;
     bool verified = false;
@@ -340,7 +453,10 @@ Ingest::Result Ingest::process(MailContext &ctx, const QByteArray &raw)
             result.held = true;
         }
     }
-    ctx.ops.record(op::MessageAdded, {{QStringLiteral("mid"), messageId}, {QStringLiteral("raw"), rawBlob}});
+    // Device-sync mail reaches every device from the server; passing it on
+    // would only be more ops to sync.
+    if (!hidden)
+        ctx.ops.record(op::MessageAdded, {{QStringLiteral("mid"), messageId}, {QStringLiteral("raw"), rawBlob}});
     // What other devices already did to it, if their ops came first.
     sync::OpApply::replayFor(ctx, messageId);
     tx.commit();

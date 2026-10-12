@@ -5,6 +5,7 @@
 
 #include <QObject>
 #include <QPointer>
+#include <QQuickTextDocument>
 #include <QTimer>
 #include <QUrl>
 #include <QVariant>
@@ -41,12 +42,25 @@ class MailApp : public QObject
     Q_PROPERTY(QString accountStatusDetail READ accountStatusDetail NOTIFY statusChanged)
     // Older mail the first sync is still downloading, newest first.
     Q_PROPERTY(int olderRemaining READ olderRemaining NOTIFY statusChanged)
+    // Other devices of this account (ADR 0010).
+    Q_PROPERTY(bool devicesAvailable READ devicesAvailable CONSTANT)
+    // [{id, name, online, lastSeen}]
+    Q_PROPERTY(QVariantList devices READ devices NOTIFY devicesChanged)
+    Q_PROPERTY(QString deviceName READ deviceName WRITE setDeviceName NOTIFY devicesChanged)
+    // "default", "off", or a relay URL.
+    Q_PROPERTY(QString relay READ relay WRITE setRelay NOTIFY devicesChanged)
+    // While the status is "cert": {server, fingerprint}; otherwise empty.
+    Q_PROPERTY(QVariantMap refusedCertificate READ refusedCertificate NOTIFY statusChanged)
     Q_PROPERTY(QString currentTag READ currentTag NOTIFY viewChanged)
     Q_PROPERTY(qint64 currentLabelId READ currentLabelId NOTIFY viewChanged)
     Q_PROPERTY(QString searchText READ searchText NOTIFY viewChanged)
     Q_PROPERTY(MessageListModel *messages READ messages CONSTANT)
     Q_PROPERTY(QVariantList labels READ labels NOTIFY labelsChanged)
     Q_PROPERTY(QVariantMap counts READ counts NOTIFY countsChanged)
+    // [{id, name, preview, isDefault}], sorted by name.
+    Q_PROPERTY(QVariantList signatures READ signatures NOTIFY signaturesChanged)
+    // An id, or empty for no signature on new mail.
+    Q_PROPERTY(QString defaultSignature READ defaultSignature WRITE setDefaultSignature NOTIFY signaturesChanged)
     Q_PROPERTY(qint64 selectedMessageId READ selectedMessageId NOTIFY selectionChanged)
     Q_PROPERTY(QVariantList thread READ thread NOTIFY selectionChanged)
     // The chosen interface language; empty follows the system.
@@ -145,8 +159,42 @@ public:
     Q_INVOKABLE QStringList completeAddress(const QString &prefix) const;
 
     Q_INVOKABLE QVariantMap settings() const;
+    QVariantMap refusedCertificate() const;
+
+    bool devicesAvailable() const;
+    QVariantList devices() const;
+    QString deviceName() const;
+    void setDeviceName(const QString &name);
+    QString relay() const;
+    void setRelay(const QString &relay);
+    // Pairing, on the device that has the account: a code to show, or
+    // empty if the endpoint did not start. Then pairingRequested, allow or
+    // deny, and pairingFinished.
+    Q_INVOKABLE QString startPairing();
+    Q_INVOKABLE void allowPairing();
+    Q_INVOKABLE void denyPairing();
+    Q_INVOKABLE void cancelPairing();
+    Q_INVOKABLE void removeDevice(const QString &id);
+    // On the new device: the account a code is for (empty if it is not a
+    // code), and joining it.
+    Q_INVOKABLE QString codeAccount(const QString &code) const;
+    Q_INVOKABLE bool joinDevice(const QString &code, const QString &deviceName);
+    Q_INVOKABLE void cancelJoin();
+    Q_INVOKABLE QString defaultDeviceName() const;
+    Q_INVOKABLE void trustRefusedCertificate();
+    // "in" or "smtp": back to TLS's own judgement.
+    Q_INVOKABLE void forgetCertificate(const QString &server);
     Q_INVOKABLE void setSetting(const QString &key, const QVariant &value);
-    Q_INVOKABLE QString signature() const;
+
+    QVariantList signatures() const { return m_signatures; }
+    QString defaultSignature() const;
+    void setDefaultSignature(const QString &id);
+    // The signature editor's document: filled from, and saved to, a
+    // signature. saveSignature returns the id (new when `id` is empty).
+    Q_INVOKABLE void loadSignature(const QString &id, QQuickTextDocument *doc) const;
+    Q_INVOKABLE QString saveSignature(const QString &id, const QString &name, QQuickTextDocument *doc);
+    Q_INVOKABLE void removeSignature(const QString &id);
+    Q_INVOKABLE QString signatureName(const QString &id) const;
 
     QString language() const;
     void setLanguage(const QString &code);
@@ -163,6 +211,14 @@ Q_SIGNALS:
     void viewChanged();
     void labelsChanged();
     void countsChanged();
+    void signaturesChanged();
+    void devicesChanged();
+    void pairingRequested(const QString &deviceName);
+    void pairingProgress(int percent);
+    void pairingFinished(bool ok, const QString &message);
+    void joinWaiting();
+    void joinProgress(int percent);
+    void joinFinished(bool ok, const QString &message);
     void selectionChanged();
     void notify(const QString &message);
     void newMailArrived(const QString &from, const QString &subject);
@@ -178,6 +234,7 @@ private:
     void reloadLabels();
     void reloadCounts();
     void reloadThread();
+    void reloadSignatures();
     QVariantMap messageMap(qint64 id) const;
     void scheduleRefresh();
     void wireNotifications();
@@ -191,6 +248,9 @@ private:
     QString m_search;
     QVariantList m_labels;
     QVariantMap m_counts;
+    QVariantList m_signatures;
+    QPointer<QObject> m_offer; // a PairingOffer
+    QPointer<QObject> m_join;  // a PairingJoin
     qint64 m_selected = 0;
     QVariantList m_thread;
     QTimer m_refresh;

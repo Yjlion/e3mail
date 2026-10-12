@@ -7,8 +7,15 @@
 #include <QFuture>
 #include <QObject>
 #include <QPointer>
+#include <QTimer>
 
 #include <memory>
+#include <optional>
+
+namespace e3::sync {
+class DeviceTransport;
+class SyncSession;
+} // namespace e3::sync
 
 namespace e3 {
 
@@ -42,6 +49,20 @@ public:
         QString smtpUser;
         QString smtpPassword; // empty: same as incoming
         bool acceptInvalidCertificates = false;
+        // Certificates trusted for these servers although TLS does not
+        // trust them (ADR 0017); empty for none.
+        QByteArray inCertSha256;
+        QByteArray smtpCertSha256;
+    };
+
+    // What checking a server found: nothing (it works), an error, or a
+    // certificate that needs a person's decision.
+    struct CheckResult
+    {
+        QString error;
+        QString server; // "in" or "smtp"
+        std::optional<net::CertInfo> cert;
+        bool ok() const { return error.isEmpty(); }
     };
 
     Account(int id, const QString &dir, QObject *parent = nullptr);
@@ -58,12 +79,14 @@ public:
     // Stores settings and secrets and creates the account's key. Does not
     // connect; see verify().
     void configure(const Settings &s);
+    // In the OS keyring if there is one, otherwise in the database.
+    void storePasswords(const QString &inPassword, const QString &smtpPassword);
     Settings settings() const;
     MailWorker::Credentials credentials() const;
 
     // Tries both servers with these settings on a pool thread. The future's
     // result is empty on success, or what went wrong.
-    static QFuture<QString> check(const Settings &s);
+    static QFuture<CheckResult> check(const Settings &s);
 
     void start();
     void stop();
@@ -73,6 +96,34 @@ public:
     // Older mail the first sync still has to download; 0 when done.
     int olderRemaining() const { return m_olderRemaining; }
     QString statusDetail() const { return m_statusDetail; }
+
+    // The certificate the worker last refused, while status() is "cert":
+    // which server, and its SHA-256. Trusting pins it and restarts.
+    QString refusedServer() const { return m_refusedServer; }
+    QByteArray refusedSha256() const { return m_refusedSha256; }
+    void trustRefusedCertificate();
+    // Back to TLS's own judgement for that server ("in" or "smtp").
+    void forgetCertificate(const QString &server);
+    void restart();
+
+    // Other devices of this account (ADR 0010). The endpoint runs while the
+    // account does and another device is paired, or while pairing.
+    static bool devicesAvailable();
+    // Starts the endpoint and the sync session if they are not running.
+    // False when this build has no Iroh, or the endpoint cannot start.
+    bool startDevices();
+    void stopDevices();
+    sync::DeviceTransport *deviceTransport() const { return m_transport.get(); }
+    // Sends paired devices what they lack, soon.
+    void pushSoon();
+    bool isDeviceConnected(const QString &device) const;
+    // Mails this device's ops to itself now if a paired device that is not
+    // connected needs them (the mailbox fallback); otherwise five minutes
+    // after a change. True if a mail was queued.
+    bool mailFallbackNow();
+    // Removes a paired device here and, through a device.unpair op, on the
+    // others; it is refused from then on.
+    void removeDevice(const QString &device);
 
     MailContext &ctx() { return *m_ctx; }
     // UI-side mutations call this so every view refreshes.
@@ -96,6 +147,13 @@ private:
     QString m_status = QStringLiteral("offline");
     int m_olderRemaining = 0;
     QString m_statusDetail;
+    QString m_refusedServer;
+    QByteArray m_refusedSha256;
+    std::unique_ptr<sync::DeviceTransport> m_transport;
+    std::unique_ptr<sync::SyncSession> m_sync;
+    QTimer m_push; // gathers changes into one push
+    QTimer m_dial; // dials paired devices that are not connected
+    QTimer m_fallback; // the mailbox fallback, some minutes after a change
 };
 
 } // namespace e3

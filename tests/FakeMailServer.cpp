@@ -11,6 +11,7 @@ struct FakeMailServer::ImapConn
     QString user;
     QByteArray pendingAuthTag;
     QByteArray idleTag;
+    quint32 seenNext = 0; // UIDNEXT as of the last SELECT
 };
 struct FakeMailServer::Pop3Conn
 {
@@ -125,9 +126,11 @@ void FakeMailServer::deliver(const QString &addr, const QByteArray &raw)
     if (!m_boxes.contains(key))
         return;
     m_boxes[key].append({m_nextUid[key]++, raw, false});
-    for (const auto &[sock, user] : std::as_const(m_idlers)) {
-        if (user == key)
-            sock->write("* " + QByteArray::number(m_boxes[key].size()) + " EXISTS\r\n");
+    for (const Idler &i : std::as_const(m_idlers)) {
+        if (i.socket && i.user == key) {
+            i.socket->write("* " + QByteArray::number(m_boxes[key].size()) + " EXISTS\r\n");
+            i.conn->seenNext = m_nextUid[key];
+        }
     }
 }
 
@@ -155,9 +158,11 @@ bool FakeMailServer::checkPlain(const QByteArray &b64, QString *user) const
 
 void FakeMailServer::imapLine(QTcpSocket *s, ImapConn &c, const QByteArray &line)
 {
+    if (stalled)
+        return;
     if (!c.idleTag.isEmpty()) {
         if (line.trimmed().toUpper() == "DONE") {
-            m_idlers.removeIf([s](const auto &p) { return p.first == s; });
+            m_idlers.removeIf([s](const Idler &i) { return i.socket == s; });
             s->write(c.idleTag + " OK IDLE done\r\n");
             c.idleTag.clear();
         }
@@ -214,6 +219,7 @@ void FakeMailServer::imapLine(QTcpSocket *s, ImapConn &c, const QByteArray &line
         s->write("* " + QByteArray::number(exists) + " EXISTS\r\n* OK [UIDVALIDITY "
                  + QByteArray::number(uidValidity) + "] ok\r\n* OK [UIDNEXT "
                  + QByteArray::number(m_nextUid.value(c.user)) + "] ok\r\n" + tag + " OK [READ-WRITE] selected\r\n");
+        c.seenNext = m_nextUid.value(c.user);
     } else if (cmd == "UID SEARCH") {
         // ALL, or UID a:b where b may be "*". As RFC 3501 says, "a:*" also
         // matches the last message when a is above every UID.
@@ -261,8 +267,18 @@ void FakeMailServer::imapLine(QTcpSocket *s, ImapConn &c, const QByteArray &line
         s->write(tag + " OK done\r\n");
     } else if (cmd == "IDLE") {
         c.idleTag = tag;
-        m_idlers.append({s, c.user});
+        m_idlers.removeIf([](const Idler &i) { return !i.socket; });
+        m_idlers.append({s, c.user, &c});
         s->write("+ idling\r\n");
+        // Mail that arrived since the client last heard of the mailbox is
+        // announced, as a real server would on its next untagged response.
+        if (m_nextUid.value(c.user) > c.seenNext) {
+            quint32 exists = 0;
+            for (const Stored &m : box)
+                exists += m.deleted ? 0 : 1;
+            s->write("* " + QByteArray::number(exists) + " EXISTS\r\n");
+            c.seenNext = m_nextUid.value(c.user);
+        }
     } else if (cmd == "NOOP") {
         s->write(tag + " OK done\r\n");
     } else if (cmd == "LOGOUT") {
@@ -275,6 +291,8 @@ void FakeMailServer::imapLine(QTcpSocket *s, ImapConn &c, const QByteArray &line
 
 void FakeMailServer::pop3Line(QTcpSocket *s, Pop3Conn &c, const QByteArray &line)
 {
+    if (stalled)
+        return;
     const QList<QByteArray> a = line.split(' ');
     const QByteArray cmd = a.value(0).toUpper();
     QList<Stored> &box = m_boxes[c.user];
@@ -346,6 +364,8 @@ void FakeMailServer::pop3Line(QTcpSocket *s, Pop3Conn &c, const QByteArray &line
 
 void FakeMailServer::smtpLine(QTcpSocket *s, SmtpConn &c, const QByteArray &line)
 {
+    if (stalled)
+        return;
     if (c.inData) {
         if (line == ".") {
             c.inData = false;

@@ -52,6 +52,14 @@ for abi in "${ABIS[@]}"; do
     qt "android_$abi" all_os android "$QT_VERSION" "android_$abi"
 done
 
+# The Rust targets for src/p2p (Iroh), one per ABI. Rust itself comes from
+# rustup (https://rustup.rs); without it, configure with -DE3MAIL_P2P=OFF.
+if command -v rustup >/dev/null || [[ -x "$HOME/.cargo/bin/rustup" ]]; then
+    "$(command -v rustup || echo "$HOME/.cargo/bin/rustup")" target add x86_64-linux-android aarch64-linux-android >&2
+else
+    echo "rustup not found: device sync (src/p2p) needs it, or -DE3MAIL_P2P=OFF" >&2
+fi
+
 # A throwaway signing key, as Android Studio makes for debug builds: the
 # packages are not published, but Android installs only signed ones.
 if [[ ! -f "$DIR/debug.keystore" ]]; then

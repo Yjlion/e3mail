@@ -1,13 +1,17 @@
 // SPDX-License-Identifier: MPL-2.0
 #include "FakeMailServer.h"
+#include "crypto/Autocrypt.h"
+#include "crypto/Pgp.h"
 #include "engine/AccountManager.h"
 #include "engine/MailWorker.h"
 #include "mail/Compose.h"
 #include "mail/Contacts.h"
 #include "mail/Export.h"
+#include "mail/Keyring.h"
 #include "mail/Organize.h"
 #include "mail/Policy.h"
 #include "mail/Search.h"
+#include "mail/Signatures.h"
 #include "mail/VCard.h"
 #include "mime/Part.h"
 #include "store/OpLog.h"
@@ -285,6 +289,25 @@ private Q_SLOTS:
         a->stop();
     }
 
+    // Trap 38: stopping must not wait for a server that has stopped
+    // answering. The fake server runs on this thread, which stop() blocks.
+    void stopDoesNotWaitForTheServer()
+    {
+        Account *a = makeAccount(QStringLiteral("hang@x.test"), QStringLiteral("imap"));
+        a->start();
+        QTRY_VERIFY_WITH_TIMEOUT(a->status() == QLatin1String("online"), 10000);
+        QTest::qWait(300); // into IDLE
+        m_srv->stalled = true;
+        // The worker leaves IDLE for this mail and then waits for an answer
+        // that never comes.
+        m_srv->deliver(QStringLiteral("hang@x.test"), "From: a@b.test\r\nSubject: x\r\n\r\nx\r\n");
+        QTest::qWait(500);
+        QElapsedTimer t;
+        t.start();
+        a->stop();
+        QVERIFY2(t.elapsed() < 5000, qPrintable(QStringLiteral("stop took %1 ms").arg(t.elapsed())));
+    }
+
     void addressBook()
     {
         Account *bob = makeAccount(QStringLiteral("bob@x.test"), QStringLiteral("imap"));
@@ -339,6 +362,61 @@ private Q_SLOTS:
         QCOMPARE(c.organization, QStringLiteral("Navy"));
         QVERIFY(mail::Contacts::isTrusted(ctx, QStringLiteral("ada@b.test")));
         QCOMPARE(mail::Contacts::get(ctx, QStringLiteral("ada2@b.test"))->phones.value(0).number, QStringLiteral("+44"));
+    }
+
+    void signatures()
+    {
+        Account *bob = makeAccount(QStringLiteral("bob@x.test"), QStringLiteral("imap"));
+        auto &ctx = bob->ctx();
+        const auto settingOps = [&ctx] {
+            return *ctx.db.queryInt("SELECT count(*) FROM ops WHERE kind=?", op::Setting);
+        };
+        QVERIFY(mail::Signatures::list(ctx).isEmpty());
+        QVERIFY(mail::Signatures::defaultId(ctx).isEmpty());
+
+        // The plain signature of earlier versions reads as one, and is the
+        // default until someone chooses.
+        ctx.config.set(cfg::Signature, QStringLiteral("Bob\nx.test"));
+        QCOMPARE(mail::Signatures::list(ctx).size(), 1);
+        QCOMPARE(mail::Signatures::defaultId(ctx), mail::Signatures::LegacyId);
+        auto old = *mail::Signatures::get(ctx, mail::Signatures::LegacyId);
+        QCOMPARE(old.text, QStringLiteral("Bob\nx.test"));
+
+        // Adding a second keeps the old one the default, now written down.
+        const QString work = mail::Signatures::save(
+            ctx, {QString(), QStringLiteral("Work"), QStringLiteral("<p><b>Bob</b></p>"), QStringLiteral("Bob")});
+        QCOMPARE(mail::Signatures::list(ctx).size(), 2);
+        QCOMPARE(mail::Signatures::defaultId(ctx), mail::Signatures::LegacyId);
+
+        // Editing the old one converts it, under its fixed id.
+        old.text = QStringLiteral("Bob B.");
+        QCOMPARE(mail::Signatures::save(ctx, old), mail::Signatures::LegacyId);
+        QVERIFY(ctx.config.get(cfg::Signature).isEmpty());
+        QCOMPARE(mail::Signatures::get(ctx, mail::Signatures::LegacyId)->text, QStringLiteral("Bob B."));
+        QCOMPARE(mail::Signatures::defaultId(ctx), mail::Signatures::LegacyId);
+
+        // Sorted by name; the default can be changed, or be none.
+        const QStringList names = [&] {
+            QStringList n;
+            for (const auto &x : mail::Signatures::list(ctx))
+                n << x.name;
+            return n;
+        }();
+        QCOMPARE(names, (QStringList{QStringLiteral("Signature"), QStringLiteral("Work")}));
+        mail::Signatures::setDefault(ctx, work);
+        QCOMPARE(mail::Signatures::defaultSignature(ctx)->html, QStringLiteral("<p><b>Bob</b></p>"));
+        mail::Signatures::setDefault(ctx, QString());
+        QVERIFY(!mail::Signatures::defaultSignature(ctx));
+
+        // Removing the default leaves none.
+        mail::Signatures::setDefault(ctx, work);
+        mail::Signatures::remove(ctx, work);
+        QVERIFY(!mail::Signatures::get(ctx, work));
+        QVERIFY(mail::Signatures::defaultId(ctx).isEmpty());
+        QCOMPARE(mail::Signatures::list(ctx).size(), 1);
+
+        // Every change travelled as a setting.
+        QCOMPARE(settingOps(), 9);
     }
 
     void repliesQuoteHtmlAsHtml()
@@ -482,6 +560,118 @@ private Q_SLOTS:
         QVERIFY(!ids(tag::Inbox).contains(ccId));
         QVERIFY(!ids(tag::Sent).contains(ccId));
         QVERIFY(!ids(tag::All).contains(ccId));
+    }
+
+    // multipart/signed without encryption (RFC 3156), as other clients send
+    // it: the signature covers the first part, headers and all, in CRLF.
+    void signedOnlyIsVerified()
+    {
+        Account *ada = makeAccount(QStringLiteral("ada@x.test"), QStringLiteral("imap"));
+        Account *bob = makeAccount(QStringLiteral("bob@x.test"), QStringLiteral("imap"));
+        sync(bob);
+        const QString fpr = mail::Keyring::selfFingerprint(ada->ctx());
+        const QByteArray keydata = ada->ctx().pgp.exportAutocrypt(fpr, QStringLiteral("ada@x.test"));
+        const QByteArray autocrypt = crypto::Autocrypt::format(QStringLiteral("ada@x.test"), keydata, false);
+
+        const auto message = [&](const QByteArray &id, const QByteArray &body, bool tamper, bool lf) {
+            QByteArray signedPart = "Content-Type: text/plain; charset=utf-8\r\n\r\n" + body + "\r\n";
+            const QByteArray sig = ada->ctx().pgp.signDetached(signedPart, fpr);
+            if (tamper)
+                signedPart.replace("pay", "PAY");
+            QByteArray raw = "From: Ada <ada@x.test>\r\nTo: bob@x.test\r\nSubject: signed\r\nMessage-ID: <" + id
+                + "@x.test>\r\nAutocrypt: " + autocrypt + "\r\nMIME-Version: 1.0\r\n"
+                + "Content-Type: multipart/signed; micalg=pgp-sha256; protocol=\"application/pgp-signature\"; "
+                  "boundary=\"b1\"\r\n\r\n--b1\r\n"
+                + signedPart + "\r\n--b1\r\nContent-Type: application/pgp-signature\r\n\r\n" + sig + "\r\n--b1--\r\n";
+            // Some servers hand mail out with bare LF; the signature still holds.
+            if (lf)
+                raw.replace("\r\n", "\n");
+            return raw;
+        };
+        const auto detail = [&](const QString &id) {
+            const auto row = bob->ctx().db.queryInt("SELECT id FROM messages WHERE message_id=?", id);
+            return *mail::Search::detail(bob->ctx(), *row);
+        };
+
+        // The first one carries the key that signed it (trap 4).
+        m_srv->deliver(QStringLiteral("bob@x.test"), message("s1", "please pay the invoice", false, false));
+        m_srv->deliver(QStringLiteral("bob@x.test"), message("s2", "please pay the invoice", true, false));
+        m_srv->deliver(QStringLiteral("bob@x.test"), message("s3", "line one\r\nline two", false, true));
+        sync(bob);
+
+        const auto first = detail(QStringLiteral("s1@x.test"));
+        QVERIFY(first.signedBySender);
+        QVERIFY(!first.encrypted);
+        QVERIFY(first.bodyText.contains(QLatin1String("please pay")));
+        QVERIFY(first.attachments.isEmpty()); // the signature is not one
+        QVERIFY(!detail(QStringLiteral("s2@x.test")).signedBySender);
+        QVERIFY(detail(QStringLiteral("s3@x.test")).signedBySender);
+    }
+
+    // Inline PGP: armour in a text body, as older clients and hand-made
+    // mail send it.
+    void inlinePgp()
+    {
+        Account *ada = makeAccount(QStringLiteral("ada@x.test"), QStringLiteral("imap"));
+        Account *bob = makeAccount(QStringLiteral("bob@x.test"), QStringLiteral("imap"));
+        sync(bob);
+        auto &apgp = ada->ctx().pgp;
+        const QString adaFpr = mail::Keyring::selfFingerprint(ada->ctx());
+        const QString bobFpr = mail::Keyring::selfFingerprint(bob->ctx());
+        apgp.import(bob->ctx().pgp.exportPublic(bobFpr));
+        const QByteArray autocrypt = crypto::Autocrypt::format(
+            QStringLiteral("ada@x.test"), apgp.exportAutocrypt(adaFpr, QStringLiteral("ada@x.test")), false);
+        crypto::Pgp stranger;
+        const QString strangerFpr = stranger.generate(QStringLiteral("<ada@x.test>"));
+
+        const auto message = [&](const QByteArray &id, const QByteArray &contentType, const QByteArray &body) {
+            return "From: Ada <ada@x.test>\r\nTo: bob@x.test\r\nSubject: inline\r\nMessage-ID: <" + id
+                + "@x.test>\r\nAutocrypt: " + autocrypt + "\r\nMIME-Version: 1.0\r\nContent-Type: " + contentType
+                + "\r\n\r\n" + body;
+        };
+        const QByteArray latin1 = "text/plain; charset=iso-8859-1";
+        // Encrypted and signed, with text around it, in Latin-1.
+        const QByteArray secret = apgp.encrypt(QStringLiteral("Geheim: Größe").toLatin1(), {bobFpr}, adaFpr);
+        m_srv->deliver(QStringLiteral("bob@x.test"),
+                       message("i1", latin1, QStringLiteral("Grüße vorher\r\n").toLatin1() + secret + "\r\nnachher\r\n"));
+        // Cleartext-signed; then the same with the text changed.
+        const QByteArray clear = apgp.signCleartext("Pay 5 EUR\r\n", adaFpr);
+        m_srv->deliver(QStringLiteral("bob@x.test"), message("i2", "text/plain", clear));
+        m_srv->deliver(QStringLiteral("bob@x.test"), message("i3", "text/plain", QByteArray(clear).replace("Pay 5", "Pay 500")));
+        // Signed by a key that is not the sender's.
+        m_srv->deliver(QStringLiteral("bob@x.test"), message("i4", "text/plain", stranger.signCleartext("hello\r\n", strangerFpr)));
+        // An HTML alternative showing the same armour.
+        m_srv->deliver(QStringLiteral("bob@x.test"),
+                       message("i5", "multipart/alternative; boundary=\"b\"",
+                               "--b\r\nContent-Type: text/plain\r\n\r\n" + clear + "\r\n--b\r\nContent-Type: text/html\r\n\r\n<pre>"
+                                   + clear + "</pre>\r\n--b--\r\n"));
+        sync(bob);
+
+        const auto detail = [&](const QString &id) {
+            const auto row = bob->ctx().db.queryInt("SELECT id FROM messages WHERE message_id=?", id);
+            return *mail::Search::detail(bob->ctx(), *row);
+        };
+        const auto i1 = detail(QStringLiteral("i1@x.test"));
+        QVERIFY(i1.encrypted);
+        QVERIFY(i1.signedBySender);
+        QCOMPARE(i1.bodyText, QStringLiteral("Grüße vorher\nGeheim: Größe\nnachher\n"));
+        // Saved decrypted, it is the text without the armour.
+        const QByteArray eml = mail::Export::decryptedEml(bob->ctx(), i1.id);
+        QVERIFY(eml.contains(QStringLiteral("Geheim: Größe").toUtf8()));
+        QVERIFY(!eml.contains("BEGIN PGP"));
+        QVERIFY(eml.contains("Subject: inline"));
+        const auto i2 = detail(QStringLiteral("i2@x.test"));
+        QVERIFY(!i2.encrypted);
+        QVERIFY(i2.signedBySender);
+        QCOMPARE(i2.bodyText.trimmed(), QStringLiteral("Pay 5 EUR"));
+        QVERIFY(!detail(QStringLiteral("i3@x.test")).signedBySender);
+        const auto i4 = detail(QStringLiteral("i4@x.test"));
+        QVERIFY(!i4.signedBySender);
+        QVERIFY(!i4.bodyText.contains(QLatin1String("BEGIN PGP")));
+        const auto i5 = detail(QStringLiteral("i5@x.test"));
+        QVERIFY(i5.signedBySender);
+        QVERIFY(i5.bodyHtml.isEmpty());
+        QVERIFY(!i5.bodyText.contains(QLatin1String("BEGIN PGP")));
     }
 
     void blocklistTrashesOnArrival()
