@@ -76,3 +76,66 @@ when it equals the store password). Keep a copy of the keystore outside
 GitHub: losing it means no release can update an installed e3mail again.
 Without the secrets the workflow still builds, signs with a throwaway key and
 warns.
+
+## Amendment — 2026-10-12: Google Play
+
+e3mail is also published on Google Play, beside the APKs on GitHub.
+
+**Qt 6.10, API 36, 16 KB pages.** Play takes new apps and updates only when
+they target API 36 (since 2026-08-31) and when every native library is
+aligned for 16 KB pages. The free Qt 6.8 stops at 6.8.3, whose Android
+libraries are aligned to 4 KB; Qt 6.10 has both. The whole project moves to
+Qt 6.10.3, desktop included, so there is one Qt to test. The minimum stays
+API 28.
+
+**Predictive back is off** (`enableOnBackInvokedCallback="false"`).
+Targeting API 36 turns it on, and Android then stops sending the Back key,
+which the narrow layout steps back with.
+
+**A bundle, arm64-v8a only.** Play takes Android App Bundles, not APKs. The
+release workflow builds one from the arm64-v8a build, which covers phones;
+x86_64 (emulators, Chromebooks) stays a GitHub download. A second bundle
+for x86_64 would need a version code of its own, which the scheme in
+`src/app/CMakeLists.txt` does not leave room for yet.
+
+**Google holds the app signing key** (Play App Signing). The workflow signs
+the bundle with an upload key kept in the repository's secrets
+(`PLAY_UPLOAD_KEYSTORE_BASE64`, `PLAY_UPLOAD_KEYSTORE_PASS`,
+`PLAY_UPLOAD_KEY_ALIAS`, `PLAY_UPLOAD_KEY_PASS`); Google re-signs it. A lost
+upload key can be replaced through Play's support, unlike the GitHub release
+key. The consequence: a package from Play and one from GitHub carry
+different signatures, so neither installs over the other. Moving between
+them is an uninstall, which deletes the mailbox; pairing (P8) is the way to
+move.
+
+**Every tagged release goes to the internal testing track, as a draft**
+(`PLAY_SERVICE_ACCOUNT_JSON`, a service account with release rights on this
+app only). A person releases it to testers and promotes it in Play Console;
+nothing reaches users without that step. The tag must equal the project
+version, because Play refuses a version code it has seen (v0.2.0 was tagged
+at 0.1.5). Without the secrets the workflow builds, warns, and uploads
+nothing.
+
+Setting it up, once:
+
+1. Play Console: create the app (`org.e3mail.e3mail`), choose to let Google
+   create and keep the app signing key, and fill in the store listing,
+   privacy policy, Data safety, content rating and target audience.
+2. The upload key:
+
+   ```sh
+   keytool -genkeypair -keystore e3mail-upload.keystore -alias upload \
+       -keyalg RSA -keysize 4096 -validity 10000 -dname "CN=e3mail upload"
+   base64 -w0 e3mail-upload.keystore   # PLAY_UPLOAD_KEYSTORE_BASE64
+   ```
+
+   Secrets: `PLAY_UPLOAD_KEYSTORE_BASE64`, `PLAY_UPLOAD_KEYSTORE_PASS`,
+   `PLAY_UPLOAD_KEY_ALIAS` (`upload`), and `PLAY_UPLOAD_KEY_PASS` (may be
+   omitted when it equals the store password).
+3. The first bundle goes up by hand: Play's API cannot create a release for
+   an app that has none. Take `play-bundle` from a Release run (Actions →
+   Release → Run workflow), and upload it to Internal testing.
+4. Google Cloud: enable the Google Play Android Developer API, create a
+   service account, and make it a JSON key. Play Console → Users and
+   permissions: invite the account's address, with release rights on this
+   app only. Secret: `PLAY_SERVICE_ACCOUNT_JSON`, the whole JSON file.

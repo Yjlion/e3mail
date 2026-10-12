@@ -612,6 +612,46 @@ Two fixes came out of this work:
   anything; how many pile up over weeks of one device being away has not
   been measured.
 
+## Qt 6.10 and Google Play (2026-10-12)
+
+The project builds with Qt 6.10.3 everywhere, and Android targets API 36, so
+that the app can go on Google Play ([ADR 0016](adr/0016-android.md),
+amendment 2026-10-12). Play takes new apps and updates only when they target
+API 36 and their native libraries support 16 KB pages, and the free Qt 6.8
+(6.8.3, aligned to 4 KB) cannot do either. The release workflow now checks
+that the tag equals the project version (now 0.2.1; v0.2.0 was tagged at
+0.1.5), builds a signed arm64 bundle with an upload key, and sends each
+tagged release to Play's internal testing track as a draft. Google keeps
+the app signing key, so Play and GitHub packages cannot update each other.
+
+**Verified:**
+- CI on Qt 6.10.3 (run 38297600372): Linux, macOS and Windows build with
+  warnings as errors and pass all 17 suites; both APKs build. Qt 6.10 warned
+  that `StandardKey.New` and `Find` have several bindings on Linux and macOS,
+  which failed `app_smoke`; the shortcuts now take `sequences`.
+- The local x86_64 build: all 81 native libraries in the bundle are aligned
+  to 16 KB (`readelf`, `0x4000`), e3mail's own included; the APK reports
+  `targetSdkVersion 36`, `compileSdkVersion 36`, versionCode 201. The bundle
+  signs and verifies with `jarsigner` and a throwaway upload key.
+- The x86_64 APK boots on Android 16 in CI's emulator and draws setup with
+  the first-run dialog (trap 50), and on Android 14 here.
+- Edge to edge: on Android 16 the window is drawn under the status and
+  navigation bars, but Qt 6.10 keeps its content clear of them. `SafeArea`
+  margins on the main layout and setup came out as zero there (the screenshot
+  did not move). The drawer, which lives in the overlay, keeps them.
+
+**Not verified:**
+- **The Back key on Android 16.** The manifest opts out of predictive back
+  (`enableOnBackInvokedCallback="false"`), as Qt 6.10's own template does,
+  so Android should keep sending Back; nobody has pressed it. The emulator
+  here cannot run API 36 (its system server restarts in a loop in 1.5 GB of
+  a 6 GB machine).
+- **The drawer's margins**: it needs an account to open, and none was added.
+- **The Play upload**: no Play app, upload key or service account exists
+  yet, so the `play` job has only been read, not run. The `Bundle for Google
+  Play` step skips with a warning without its secrets.
+- Anything on a phone, as before.
+
 ## Known gaps
 
 - **Signed-only mail** is checked only for PGP/MIME (`multipart/signed`);
@@ -896,22 +936,41 @@ leaves the linker to rustc with MSVC and ignores `corrosion_set_linker`, so
 sets it, as Android's do, and the first try named `CARGO_TARGET__LINKER`). The
 target is the host, so the one variable covers build scripts too.
 
+**50. A smoke test that passed on a blank screen.** The first Qt 6.10 run
+on Android 16 (run 38289961093) passed `android-smoke.sh` with nothing drawn
+but the system bars: the script waited 25 s and asked only whether the
+process was alive. The first frame came later than that. The script now
+waits up to two minutes for the middle of the screen to hold more than 16
+colours (a raw `screencap`, read with Python), fails if it never does, and
+grants the notification permission at install so Android's question cannot
+pass for the window. File size is not enough: at 1080×2400 a black window
+with the status bar's icons is 23 KB.
+
+**51. Java ignores `TMPDIR`.** `apksigner` and `jarsigner` write their
+temporary files to `/tmp`; on a machine where `/tmp` is a small tmpfs the
+signing step fails with "Disk quota exceeded", or leaves a truncated file
+that `adb install` calls "not an APK". Set
+`JAVA_TOOL_OPTIONS=-Djava.io.tmpdir=<dir>`.
+
 ## Next
 
-1. Connect two machines on different networks through n0's relay, and
-   publish the release v0.2.0 failed to make (trap 49).
-2. Scan the pairing QR code with a phone's camera (Qt Multimedia and a QR
+1. Set up Google Play (ADR 0016, amendment 2026-10-12: the app, the upload
+   key, the first bundle by hand, the service account), then tag v0.2.1;
+   it replaces v0.2.0, which was never published (trap 49). On a phone from
+   internal testing, press Back on Android 16.
+2. Connect two machines on different networks through n0's relay.
+3. Scan the pairing QR code with a phone's camera (Qt Multimedia and a QR
    decoder in the Android build); the code is pasted for now.
-3. Install each published package on its own platform. Pre-releases
+4. Install each published package on its own platform. Pre-releases
    v0.1.1 to v0.1.5 are on GitHub (v0.1.5 with both APKs); v0.1.0 is still
    marked Latest.
-4. P9 SecureJoin, then an interop pass against Delta Chat's released
+5. P9 SecureJoin, then an interop pass against Delta Chat's released
    `deltachat-rpc-server`, as eeemail's `scripts/interop-pass.py` does.
-5. Try notifications on a real Windows and macOS desktop, and import real
+6. Try notifications on a real Windows and macOS desktop, and import real
    vCard exports (Google, Apple, Thunderbird).
-6. Install v0.1.5's arm64 APK on a phone and try each export there
+7. Install v0.1.5's arm64 APK on a phone and try each export there
    (Android's file picker returns `content://`).
-7. Android on a real phone: rendering, typing (including a bold word typed
+8. Android on a real phone: rendering, typing (including a bold word typed
    through the keyboard, see "Typing formats" above), the keyboard covering setup's
    Connect button, then a real account (receive, send, a notification, the
    Keystore). Setup can now trust `server/compose`'s self-signed certificate

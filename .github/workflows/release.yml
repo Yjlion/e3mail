@@ -17,8 +17,24 @@ env:
   ANDROID_NDK_VERSION: "27.2.12479018"
 
 jobs:
+  # Google Play refuses a version code it has seen, and the code comes from
+  # the project version (src/app/CMakeLists.txt): v0.2.0 was tagged at 0.1.5.
+  version:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: The tag matches the project version
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          v=$(sed -n 's/^    VERSION \([0-9.]*\)$/\1/p' CMakeLists.txt | head -1)
+          if [[ "$GITHUB_REF_NAME" != "v$v" ]]; then
+            echo "::error::The tag is $GITHUB_REF_NAME, but CMakeLists.txt says $v."
+            exit 1
+          fi
+
   package:
     name: ${{ matrix.name }}
+    needs: version
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -108,6 +124,7 @@ jobs:
   # x86_64 for emulators and Chromebooks.
   android:
     name: Android ${{ matrix.abi }}
+    needs: version
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
@@ -202,6 +219,38 @@ jobs:
           name: e3mail-Android-${{ matrix.abi }}
           path: dist/*
 
+      # The bundle for Google Play (ADR 0016, amendment 2026-10-12): arm64
+      # only, signed with the upload key; Google re-signs it with the app
+      # signing key it keeps. Not part of the GitHub release.
+      - name: Bundle for Google Play
+        if: matrix.abi == 'arm64-v8a'
+        env:
+          UPLOAD_KEYSTORE_BASE64: ${{ secrets.PLAY_UPLOAD_KEYSTORE_BASE64 }}
+          UPLOAD_KEYSTORE_PASS: ${{ secrets.PLAY_UPLOAD_KEYSTORE_PASS }}
+          UPLOAD_KEY_ALIAS: ${{ secrets.PLAY_UPLOAD_KEY_ALIAS }}
+          UPLOAD_KEY_PASS: ${{ secrets.PLAY_UPLOAD_KEY_PASS }}
+        run: |
+          if [[ -z "$UPLOAD_KEYSTORE_BASE64" ]]; then
+            echo "::warning::PLAY_UPLOAD_KEYSTORE_BASE64 is not set: no bundle for Google Play."
+            exit 0
+          fi
+          cmake --build build/${{ matrix.preset }} --target aab
+          ks="$RUNNER_TEMP/upload.keystore"
+          base64 -d <<< "$UPLOAD_KEYSTORE_BASE64" > "$ks"
+          mkdir -p play
+          aab=play/e3mail-${{ github.ref_name }}.aab
+          cp "$(find build/${{ matrix.preset }} -path '*/outputs/bundle/release/*.aab' | head -1)" "$aab"
+          jarsigner -keystore "$ks" -storepass "$UPLOAD_KEYSTORE_PASS" -keypass "${UPLOAD_KEY_PASS:-$UPLOAD_KEYSTORE_PASS}" \
+              -sigalg SHA256withRSA -digestalg SHA-256 "$aab" "$UPLOAD_KEY_ALIAS"
+          jarsigner -verify "$aab"
+
+      - uses: actions/upload-artifact@v4
+        if: matrix.abi == 'arm64-v8a'
+        with:
+          name: play-bundle
+          path: play/*.aab
+          if-no-files-found: ignore
+
   publish:
     needs: [package, android]
     if: startsWith(github.ref, 'refs/tags/')
@@ -210,8 +259,37 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           path: dist
+          pattern: e3mail-*
           merge-multiple: true
       - uses: softprops/action-gh-release@v2
         with:
           files: dist/*
           prerelease: true
+
+  # Google Play's internal testing track, as a draft: a person releases it to
+  # testers, and promotes it, in Play Console. Needs a service account with
+  # release rights on the app (ADR 0016, amendment 2026-10-12).
+  play:
+    needs: publish
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-24.04
+    env:
+      PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+    steps:
+      - name: Service account
+        if: env.PLAY_SERVICE_ACCOUNT_JSON == ''
+        run: echo "::warning::PLAY_SERVICE_ACCOUNT_JSON is not set, so nothing goes to Google Play."
+      - uses: actions/download-artifact@v4
+        if: env.PLAY_SERVICE_ACCOUNT_JSON != ''
+        with:
+          name: play-bundle
+          path: play
+      - uses: r0adkll/upload-google-play@v1
+        if: env.PLAY_SERVICE_ACCOUNT_JSON != ''
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: org.e3mail.e3mail
+          releaseFiles: play/*.aab
+          releaseName: ${{ github.ref_name }}
+          track: internal
+          status: draft
