@@ -92,7 +92,7 @@ what is not.
 
 ## Build
 
-You need Qt 6.8 or newer (with Qt Linguist's tools), CMake 3.21+, a C++20
+You need Qt 6.10 or newer (with Qt Linguist's tools), CMake 3.21+, a C++20
 compiler, SQLite with FTS5, ICU, and RNP with Botan. On Arch, `pacman -S
 qt6-base qt6-declarative qt6-svg qt6-tools icu botan json-c sqlite`, then
 [`scripts/build-rnp.sh`](scripts/build-rnp.sh) for RNP. On Debian or Ubuntu

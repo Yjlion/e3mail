@@ -33,7 +33,7 @@ endif()
 if(E3MAIL_BUILD_TESTS)
     list(APPEND E3MAIL_QT_COMPONENTS Test)
 endif()
-find_package(Qt6 6.8 REQUIRED COMPONENTS ${E3MAIL_QT_COMPONENTS})
+find_package(Qt6 6.10 REQUIRED COMPONENTS ${E3MAIL_QT_COMPONENTS})
 qt_standard_project_setup(REQUIRES 6.8
     I18N_SOURCE_LANGUAGE en
     I18N_TRANSLATED_LANGUAGES de fr es zh_CN ja ru pl ar he yi)
