@@ -519,7 +519,9 @@ on that device.
 - Installing any of it on its own platform. CI (run 38189964407, branch
   `compose-formats-signatures`) builds and tests everything with the crate
   on Linux, macOS and Windows, builds both APKs and boots the x86_64 one in
-  an emulator (trap 48). The release workflow has not run with Rust.
+  an emulator (trap 48). The release workflow builds every package with it
+  (run 38264335541, from the branch, after trap 49), but nothing is published
+  from that.
 - A large first transfer: blobs travel one frame each (up to 64 MiB), with
   no flow control beyond QUIC's; a mailbox of several gigabytes has not been
   tried.
@@ -883,10 +885,21 @@ and every C++ test passed, but `cargo test` ran in Git Bash, where Git's
 `link` comes before MSVC's. `cmake/E3mailP2p.cmake` links the frameworks and
 names MSVC's linker for that test.
 
+**49. The first release run with Rust failed on Windows the same way**
+(run 38259540456, tag v0.2.0, so v0.2.0 was never published). The release
+workflow builds in Git Bash, where CI builds in PowerShell, and cargo linked
+the build scripts of `proc-macro2` and `quote` with Git's `link`. Corrosion
+leaves the linker to rustc with MSVC and ignores `corrosion_set_linker`, so
+`cmake/E3mailP2p.cmake` now sets `CARGO_TARGET_<triple>_LINKER` to
+`CMAKE_LINKER` for the crate build and the test alike (from
+`Rust_CARGO_TARGET_CACHED`: plain `Rust_CARGO_TARGET` is empty unless a preset
+sets it, as Android's do, and the first try named `CARGO_TARGET__LINKER`). The
+target is the host, so the one variable covers build scripts too.
+
 ## Next
 
-1. Connect two machines on different networks through n0's relay, and run
-   the release workflow with Rust.
+1. Connect two machines on different networks through n0's relay, and
+   publish the release v0.2.0 failed to make (trap 49).
 2. Scan the pairing QR code with a phone's camera (Qt Multimedia and a QR
    decoder in the Android build); the code is pasted for now.
 3. Install each published package on its own platform. Pre-releases
