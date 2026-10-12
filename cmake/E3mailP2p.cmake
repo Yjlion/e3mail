@@ -12,6 +12,14 @@ corrosion_import_crate(MANIFEST_PATH ${PROJECT_SOURCE_DIR}/src/p2p/Cargo.toml
     LOCKED)
 target_include_directories(e3p2p INTERFACE ${PROJECT_SOURCE_DIR}/src/p2p)
 
+# macOS: what iroh's dependencies call in the system (network interfaces and
+# proxies, the keychain's certificate checks). Corrosion adds only what the
+# Rust standard library needs.
+if(APPLE)
+    target_link_libraries(e3p2p INTERFACE "-framework CoreFoundation" "-framework Security"
+        "-framework SystemConfiguration")
+endif()
+
 # Android: link through the NDK's clang wrapper for this target and API
 # level. Corrosion's plain clang lacks both, and a dependency that links a
 # shared library of its own (iroh-relay) then cannot find liblog.
@@ -33,5 +41,10 @@ if(E3MAIL_BUILD_TESTS AND NOT ANDROID AND NOT CMAKE_CROSSCOMPILING)
         add_test(NAME p2p_cargo
             COMMAND ${E3MAIL_CARGO} test --locked --manifest-path ${PROJECT_SOURCE_DIR}/src/p2p/Cargo.toml
                 --target-dir ${CMAKE_BINARY_DIR}/p2p-test)
+        # Under Git Bash, Git's own `link` comes first on PATH; name MSVC's.
+        if(MSVC AND CMAKE_LINKER)
+            set_tests_properties(p2p_cargo PROPERTIES
+                ENVIRONMENT "CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_LINKER=${CMAKE_LINKER}")
+        endif()
     endif()
 endif()
