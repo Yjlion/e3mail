@@ -28,9 +28,9 @@ ColumnLayout {
         selectionEnd: body.selectionEnd
     }
 
-    Shortcut { sequence: StandardKey.Bold; enabled: body.activeFocus; onActivated: editor.fmt("bold") }
-    Shortcut { sequence: StandardKey.Italic; enabled: body.activeFocus; onActivated: editor.fmt("italic") }
-    Shortcut { sequence: StandardKey.Underline; enabled: body.activeFocus; onActivated: editor.fmt("underline") }
+    Shortcut { sequences: [StandardKey.Bold]; enabled: body.activeFocus; onActivated: editor.fmt("bold") }
+    Shortcut { sequences: [StandardKey.Italic]; enabled: body.activeFocus; onActivated: editor.fmt("italic") }
+    Shortcut { sequences: [StandardKey.Underline]; enabled: body.activeFocus; onActivated: editor.fmt("underline") }
 
     Flow {
         Layout.fillWidth: true

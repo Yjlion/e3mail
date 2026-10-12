@@ -55,9 +55,9 @@ ApplicationWindow {
     function showJoin() { firstSetup.openJoin() }
     onClosing: (close) => { if (narrow && back()) close.accepted = false }
 
-    Shortcut { sequence: StandardKey.New; onActivated: window.compose("new", 0) }
+    Shortcut { sequences: [StandardKey.New]; onActivated: window.compose("new", 0) }
     Shortcut { sequence: "F5"; onActivated: MailApp.syncNow() }
-    Shortcut { sequence: StandardKey.Find; onActivated: { page = "mail"; messageList.focusSearch() } }
+    Shortcut { sequences: [StandardKey.Find]; onActivated: { page = "mail"; messageList.focusSearch() } }
 
     // Arabic, Hebrew and Yiddish read right to left: rows, anchors and
     // alignments mirror. Controls mirror by their locale on their own.
