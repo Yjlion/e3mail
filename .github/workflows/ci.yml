@@ -15,7 +15,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  QT_VERSION: "6.8.3"
+  QT_VERSION: "6.10.3"
   RNP_VERSION: "v0.18.1"
 
 jobs:
@@ -132,7 +132,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y ninja-build autoconf-archive
           "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" \
-              "platforms;android-34" "build-tools;34.0.0" "ndk;$ANDROID_NDK_VERSION" >/dev/null
+              "platforms;android-36" "build-tools;36.0.0" "ndk;$ANDROID_NDK_VERSION" >/dev/null
           echo "ANDROID_NDK_ROOT=$ANDROID_SDK_ROOT/ndk/$ANDROID_NDK_VERSION" >> "$GITHUB_ENV"
 
       # Qt for Android, and the desktop Qt of the same version for its tools
@@ -198,7 +198,7 @@ jobs:
         if: matrix.abi == 'x86_64'
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 34
+          api-level: 36
           arch: x86_64
           target: google_apis
           disable-animations: true

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- Qt 6.8's template, with e3mail's activity, permissions and no backup.
+<!-- Qt 6.10's template, with e3mail's activity, permissions and no backup.
      The %%INSERT_...%% markers are filled in by androiddeployqt. -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.e3mail.e3mail"
@@ -16,7 +16,9 @@
         android:normalScreens="true"
         android:smallScreens="true" />
     <!-- No backup: the database is the mailbox and holds the secret key, and
-         Android's backup would copy it to the cloud unencrypted (ADR 0016). -->
+         Android's backup would copy it to the cloud unencrypted (ADR 0016).
+         No predictive back: targeting API 36, Android would otherwise stop
+         sending the Back key, which the narrow layout steps back with. -->
     <application
         android:name="org.qtproject.qt.android.bindings.QtApplication"
         android:hardwareAccelerated="true"
@@ -25,7 +27,8 @@
         android:allowBackup="false"
         android:fullBackupContent="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
-        android:networkSecurityConfig="@xml/network_security_config">
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:enableOnBackInvokedCallback="false">
         <activity
             android:name="org.e3mail.e3mail.E3Activity"
             android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|layoutDirection|locale|fontScale|keyboard|keyboardHidden|navigation|mcc|mnc|density"
