@@ -619,8 +619,9 @@ that the app can go on Google Play ([ADR 0016](adr/0016-android.md),
 amendment 2026-10-12). Play takes new apps and updates only when they target
 API 36 and their native libraries support 16 KB pages, and the free Qt 6.8
 (6.8.3, aligned to 4 KB) cannot do either. The release workflow now checks
-that the tag equals the project version (now 0.2.1; v0.2.0 was tagged at
-0.1.5), builds a signed arm64 bundle with an upload key, and sends each
+that the tag equals the project version (now 0.2.2: v0.2.0 and v0.2.1 were
+tagged at 0.1.5, and v0.2.2 first at 0.2.1, which the check stopped, run
+38313229963), builds a signed arm64 bundle with an upload key, and sends each
 tagged release to Play's internal testing track as a draft. Google keeps
 the app signing key, so Play and GitHub packages cannot update each other.
 
@@ -955,8 +956,8 @@ that `adb install` calls "not an APK". Set
 ## Next
 
 1. Set up Google Play (ADR 0016, amendment 2026-10-12: the app, the upload
-   key, the first bundle by hand, the service account), then tag v0.2.1;
-   it replaces v0.2.0, which was never published (trap 49). On a phone from
+   key, the first bundle by hand, the service account), then tag v0.2.2
+   on a commit whose project version is 0.2.2. On a phone from
    internal testing, press Back on Android 16.
 2. Connect two machines on different networks through n0's relay.
 3. Scan the pairing QR code with a phone's camera (Qt Multimedia and a QR

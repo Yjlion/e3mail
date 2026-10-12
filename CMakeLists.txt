@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.21)
 
 project(e3mail
-    VERSION 0.2.1
+    VERSION 0.2.2
     DESCRIPTION "An end-to-end encrypted email client with classic email functionality"
     HOMEPAGE_URL "https://github.com/Yjlion/e3mail"
     LANGUAGES CXX)
