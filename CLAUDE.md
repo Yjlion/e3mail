@@ -40,7 +40,7 @@ through Corrosion; keep `~/.cargo/bin` on `PATH`, or configure with
 Screenshots in Chinese and Japanese need a CJK font.
 
 Android (ADR 0016): `scripts/android-toolchain.sh <dir>` installs the SDK,
-NDK r27c and Qt 6.8.3 for Android and prints the environment;
+NDK r27c and Qt 6.10.3 for Android and prints the environment;
 `scripts/android-deps.sh <abi> $E3_ANDROID_DEPS/<abi>` builds the native
 dependencies (an hour the first time, mostly ICU and Botan); then
 `cmake --preset android-x64 && cmake --build --preset android-x64` makes a

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.21)
 
 project(e3mail
-    VERSION 0.1.5
+    VERSION 0.2.1
     DESCRIPTION "An end-to-end encrypted email client with classic email functionality"
     HOMEPAGE_URL "https://github.com/Yjlion/e3mail"
     LANGUAGES CXX)
@@ -33,7 +33,7 @@ endif()
 if(E3MAIL_BUILD_TESTS)
     list(APPEND E3MAIL_QT_COMPONENTS Test)
 endif()
-find_package(Qt6 6.8 REQUIRED COMPONENTS ${E3MAIL_QT_COMPONENTS})
+find_package(Qt6 6.10 REQUIRED COMPONENTS ${E3MAIL_QT_COMPONENTS})
 qt_standard_project_setup(REQUIRES 6.8
     I18N_SOURCE_LANGUAGE en
     I18N_TRANSLATED_LANGUAGES de fr es zh_CN ja ru pl ar he yi)

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Installs what an Android build needs under one directory: the Android SDK
-# command-line tools, platform 34, build-tools, NDK r27c, and Qt for Android
+# command-line tools, platform 36, build-tools, NDK r27c, and Qt for Android
 # with the matching desktop Qt (androiddeployqt and the host tools must be the
 # same version). Needs JDK 17 on PATH and python3. CI uses its own actions
 # instead; this is for building locally.
@@ -13,7 +13,7 @@ DIR=${1:?usage: android-toolchain.sh <dir> [abi...]}
 shift
 ABIS=("$@")
 [[ ${#ABIS[@]} -gt 0 ]] || ABIS=(x86_64 arm64_v8a)
-QT_VERSION=${QT_VERSION:-6.8.3}
+QT_VERSION=${QT_VERSION:-6.10.3}
 # r27c: r26b's libc++ is too old for Botan 3 (no operator<=> it needs).
 NDK_VERSION=${NDK_VERSION:-27.2.12479018}
 TOOLS_ZIP=commandlinetools-linux-11076708_latest.zip
@@ -32,7 +32,7 @@ if [[ ! -x "$SDK/cmdline-tools/latest/bin/sdkmanager" ]]; then
 fi
 yes | "$SDK/cmdline-tools/latest/bin/sdkmanager" --sdk_root="$SDK" --licenses >/dev/null || true
 "$SDK/cmdline-tools/latest/bin/sdkmanager" --sdk_root="$SDK" \
-    "platform-tools" "platforms;android-34" "build-tools;34.0.0" "ndk;$NDK_VERSION"
+    "platform-tools" "platforms;android-36" "build-tools;36.0.0" "ndk;$NDK_VERSION"
 
 if [[ ! -x "$DIR/aqt-venv/bin/aqt" ]]; then
     python3 -m venv "$DIR/aqt-venv"

@@ -83,7 +83,7 @@ if(ANDROID)
         QT_ANDROID_PACKAGE_NAME org.e3mail.e3mail
         QT_ANDROID_APP_NAME e3mail
         QT_ANDROID_MIN_SDK_VERSION 28
-        QT_ANDROID_TARGET_SDK_VERSION 34
+        QT_ANDROID_TARGET_SDK_VERSION 36
         QT_ANDROID_VERSION_NAME ${PROJECT_VERSION}
         QT_ANDROID_VERSION_CODE ${e3_version_code})
     # QSslSocket loads OpenSSL at run time: KDAB's prebuilt libraries, from

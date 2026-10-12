@@ -55,17 +55,23 @@ ApplicationWindow {
     function showJoin() { firstSetup.openJoin() }
     onClosing: (close) => { if (narrow && back()) close.accepted = false }
 
-    Shortcut { sequence: StandardKey.New; onActivated: window.compose("new", 0) }
+    Shortcut { sequences: [StandardKey.New]; onActivated: window.compose("new", 0) }
     Shortcut { sequence: "F5"; onActivated: MailApp.syncNow() }
-    Shortcut { sequence: StandardKey.Find; onActivated: { page = "mail"; messageList.focusSearch() } }
+    Shortcut { sequences: [StandardKey.Find]; onActivated: { page = "mail"; messageList.focusSearch() } }
 
     // Arabic, Hebrew and Yiddish read right to left: rows, anchors and
     // alignments mirror. Controls mirror by their locale on their own.
     LayoutMirroring.enabled: Qt.application.layoutDirection === Qt.RightToLeft
     LayoutMirroring.childrenInherit: true
 
+    // Android 15 and later draw the window under the status and navigation
+    // bars; SafeArea says how much of it they cover (none on the desktop).
     ColumnLayout {
         anchors.fill: parent
+        anchors.topMargin: parent.SafeArea.margins.top
+        anchors.bottomMargin: parent.SafeArea.margins.bottom
+        anchors.leftMargin: parent.SafeArea.margins.left
+        anchors.rightMargin: parent.SafeArea.margins.right
         spacing: 0
         visible: MailApp.hasAccounts
 
@@ -168,6 +174,8 @@ ApplicationWindow {
         Sidebar {
             id: drawerSidebar
             anchors.fill: parent
+            anchors.topMargin: parent.SafeArea.margins.top
+            anchors.bottomMargin: parent.SafeArea.margins.bottom
             page: window.page
             onNavigate: (p) => { window.page = p; window.reading = false; drawer.close() }
             onComposeRequested: { drawer.close(); window.compose("new", 0) }
@@ -179,6 +187,10 @@ ApplicationWindow {
     SetupView {
         id: firstSetup
         anchors.fill: parent
+        anchors.topMargin: parent.SafeArea.margins.top
+        anchors.bottomMargin: parent.SafeArea.margins.bottom
+        anchors.leftMargin: parent.SafeArea.margins.left
+        anchors.rightMargin: parent.SafeArea.margins.right
         visible: !MailApp.hasAccounts
         cancellable: false
     }
@@ -195,7 +207,7 @@ ApplicationWindow {
         property string message
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 24
+        anchors.bottomMargin: 24 + parent.SafeArea.margins.bottom
         radius: Theme.radius
         color: Theme.text
         opacity: message.length ? 0.92 : 0
