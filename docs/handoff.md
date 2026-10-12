@@ -648,9 +648,10 @@ the app signing key, so Play and GitHub packages cannot update each other.
   here cannot run API 36 (its system server restarts in a loop in 1.5 GB of
   a 6 GB machine).
 - **The drawer's margins**: it needs an account to open, and none was added.
-- **The Play upload**: no Play app, upload key or service account exists
-  yet, so the `play` job has only been read, not run. The `Bundle for Google
-  Play` step skips with a warning without its secrets.
+- **The Play upload** was verified later: v0.2.2 (run 38314064978) signed
+  its bundle with the upload key and uploaded it to the internal testing
+  track as a draft, with no bundle uploaded by hand first. The ADR's step 3
+  said that was impossible; it was wrong, and is corrected there.
 - Anything on a phone, as before.
 
 ## Known gaps
@@ -955,10 +956,8 @@ that `adb install` calls "not an APK". Set
 
 ## Next
 
-1. Set up Google Play (ADR 0016, amendment 2026-10-12: the app, the upload
-   key, the first bundle by hand, the service account), then tag v0.2.2
-   on a commit whose project version is 0.2.2. On a phone from
-   internal testing, press Back on Android 16.
+1. Release v0.2.2 to internal testers in Play Console (it is a draft
+   there), install it on a phone, and press Back on Android 16.
 2. Connect two machines on different networks through n0's relay.
 3. Scan the pairing QR code with a phone's camera (Qt Multimedia and a QR
    decoder in the Android build); the code is pasted for now.

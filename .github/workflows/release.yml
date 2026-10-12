@@ -291,5 +291,5 @@ jobs:
           packageName: org.e3mail.e3mail
           releaseFiles: play/*.aab
           releaseName: ${{ github.ref_name }}
-          track: internal
+          tracks: internal
           status: draft
