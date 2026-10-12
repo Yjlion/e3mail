@@ -139,3 +139,8 @@ Setting it up, once:
    service account, and make it a JSON key. Play Console → Users and
    permissions: invite the account's address, with release rights on this
    app only. Secret: `PLAY_SERVICE_ACCOUNT_JSON`, the whole JSON file.
+
+Correction, 2026-10-12: step 3 is not needed. The first tagged release
+(v0.2.2, run 38314064978) uploaded its bundle to the internal testing
+track through the API, as a draft, with no bundle uploaded by hand
+before it.
