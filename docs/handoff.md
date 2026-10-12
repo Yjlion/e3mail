@@ -519,7 +519,9 @@ on that device.
 - Installing any of it on its own platform. CI (run 38189964407, branch
   `compose-formats-signatures`) builds and tests everything with the crate
   on Linux, macOS and Windows, builds both APKs and boots the x86_64 one in
-  an emulator (trap 48). The release workflow has not run with Rust.
+  an emulator (trap 48). The release workflow builds every package with it
+  (run 38264335541, from the branch, after trap 49), but nothing is published
+  from that.
 - A large first transfer: blobs travel one frame each (up to 64 MiB), with
   no flow control beyond QUIC's; a mailbox of several gigabytes has not been
   tried.
@@ -896,8 +898,8 @@ target is the host, so the one variable covers build scripts too.
 
 ## Next
 
-1. Connect two machines on different networks through n0's relay, and run
-   the release workflow with Rust.
+1. Connect two machines on different networks through n0's relay, and
+   publish the release v0.2.0 failed to make (trap 49).
 2. Scan the pairing QR code with a phone's camera (Qt Multimedia and a QR
    decoder in the Android build); the code is pasted for now.
 3. Install each published package on its own platform. Pre-releases
