@@ -516,9 +516,10 @@ on that device.
 **Not verified:**
 - Any relay, or n0's address lookup: every test runs with the relay off on
   one machine. Two machines on different networks have never connected.
-- The arm64 APK, the Android emulator with the crate, and Windows and macOS
-  builds: the CI and release workflows install Rust now, but nothing was
-  pushed, so they have not run.
+- Installing any of it on its own platform. CI (run 38189964407, branch
+  `compose-formats-signatures`) builds and tests everything with the crate
+  on Linux, macOS and Windows, builds both APKs and boots the x86_64 one in
+  an emulator (trap 48). The release workflow has not run with Rust.
 - A large first transfer: blobs travel one frame each (up to 64 MiB), with
   no flow control beyond QUIC's; a mailbox of several gigabytes has not been
   tried.
@@ -875,10 +876,17 @@ tests.
 print a stack trace with gdb and waits. Use `QTEST_DISABLE_STACK_DUMP=1` and
 `timeout -s KILL` when running a suite that might hang.
 
+**48. The first CI run with Rust failed twice.** macOS left CoreFoundation,
+Security and SystemConfiguration symbols unresolved: iroh's dependencies use
+them, and Corrosion adds only the standard library's. On Windows the build
+and every C++ test passed, but `cargo test` ran in Git Bash, where Git's
+`link` comes before MSVC's. `cmake/E3mailP2p.cmake` links the frameworks and
+names MSVC's linker for that test.
+
 ## Next
 
-1. Push and watch CI with Rust on all three desktop platforms and Android;
-   connect two machines on different networks through n0's relay.
+1. Connect two machines on different networks through n0's relay, and run
+   the release workflow with Rust.
 2. Scan the pairing QR code with a phone's camera (Qt Multimedia and a QR
    decoder in the Android build); the code is pasted for now.
 3. Install each published package on its own platform. Pre-releases
