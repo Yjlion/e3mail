@@ -20,6 +20,17 @@ if(APPLE)
         "-framework SystemConfiguration")
 endif()
 
+# MSVC: name its linker. Under Git Bash, Git's own `link` comes first on PATH,
+# and rustc would run it for the crate and its build scripts (same triple as
+# the host, so one variable covers both). corrosion_set_linker is ignored
+# with MSVC.
+if(MSVC AND CMAKE_LINKER)
+    string(TOUPPER "${Rust_CARGO_TARGET_CACHED}" e3_rust_target)
+    string(REPLACE "-" "_" e3_rust_target "${e3_rust_target}")
+    set(e3_msvc_linker "CARGO_TARGET_${e3_rust_target}_LINKER=${CMAKE_LINKER}")
+    corrosion_set_env_vars(e3p2p "${e3_msvc_linker}")
+endif()
+
 # Android: link through the NDK's clang wrapper for this target and API
 # level. Corrosion's plain clang lacks both, and a dependency that links a
 # shared library of its own (iroh-relay) then cannot find liblog.
@@ -41,10 +52,8 @@ if(E3MAIL_BUILD_TESTS AND NOT ANDROID AND NOT CMAKE_CROSSCOMPILING)
         add_test(NAME p2p_cargo
             COMMAND ${E3MAIL_CARGO} test --locked --manifest-path ${PROJECT_SOURCE_DIR}/src/p2p/Cargo.toml
                 --target-dir ${CMAKE_BINARY_DIR}/p2p-test)
-        # Under Git Bash, Git's own `link` comes first on PATH; name MSVC's.
-        if(MSVC AND CMAKE_LINKER)
-            set_tests_properties(p2p_cargo PROPERTIES
-                ENVIRONMENT "CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_LINKER=${CMAKE_LINKER}")
+        if(e3_msvc_linker)
+            set_tests_properties(p2p_cargo PROPERTIES ENVIRONMENT "${e3_msvc_linker}")
         endif()
     endif()
 endif()
