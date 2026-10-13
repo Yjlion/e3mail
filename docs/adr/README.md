@@ -12,7 +12,7 @@ that supersedes it, or a dated amendment block inside it, and add a row here.
 | [0005](0005-rnp-and-an-own-keyring.md) | OpenPGP through RNP, in a keyring of our own | Accepted |
 | [0006](0006-transport-only-imap-and-pop3.md) | IMAP and POP3 are transport only; retention is not retroactive | Accepted |
 | [0007](0007-tags-not-folders.md) | Tags, not folders | Accepted; amended 2026-10-08 (mail to oneself, All mail) |
-| [0008](0008-strangers-wait-and-trash-is-the-only-destroyer.md) | Strangers wait in Unverified; Trash is the only destroyer | Accepted |
+| [0008](0008-strangers-wait-and-trash-is-the-only-destroyer.md) | Strangers wait in Unverified; Trash is the only destroyer | Accepted; amended 2026-10-13 (recipients join the address book) |
 | [0009](0009-two-barriers-for-message-content.md) | Two barriers between message content and the network | Accepted; amended 2026-10-07 (inline images) |
 | [0010](0010-multi-client-over-iroh.md) | Devices sync with each other over Iroh | Accepted, Phase 8; amended 2026-10-11 (the transport, pairing, the mailbox fallback) |
 | [0011](0011-linear-protocol-code-over-an-event-loop.md) | Linear protocol code over a local event loop | Accepted |
