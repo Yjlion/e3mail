@@ -2,6 +2,7 @@
 // The composer's formatting against a real TextArea: keys typed into the
 // editor, not text put into the document behind its back, because what is
 // tested is what the editor's own cursor does with a pending format.
+#include "RichText.h"
 #include "TextFormatter.h"
 
 #include <QGuiApplication>
@@ -11,6 +12,7 @@
 #include <QTemporaryDir>
 #include <QTextCursor>
 #include <QTextDocument>
+#include <QTextList>
 #include <QtTest>
 
 class TestFormatting : public QObject
@@ -47,6 +49,22 @@ class TestFormatting : public QObject
         m_area->setProperty("cursorPosition", pos);
         QCoreApplication::processEvents();
     }
+    void select(int from, int to)
+    {
+        QMetaObject::invokeMethod(m_area, "select", Q_ARG(int, from), Q_ARG(int, to));
+        QCoreApplication::processEvents();
+    }
+    // Paragraphs typed one after another, Enter between them.
+    void typeLines(const QStringList &lines)
+    {
+        for (qsizetype i = 0; i < lines.size(); ++i) {
+            if (i)
+                QTest::keyClick(m_view.get(), Qt::Key_Return);
+            type(lines[i]);
+        }
+    }
+    QTextBlock blockAt(int n) const { return doc()->findBlockByNumber(n); }
+    QString html() const { return RichText::emit(doc()).html; }
 
 private Q_SLOTS:
     void initTestCase()
@@ -174,6 +192,139 @@ Item {
         QVERIFY(m_fmt->bold());
         moveTo(4);
         QVERIFY(!m_fmt->bold());
+    }
+
+    // The block buttons act on the selected paragraphs, and only on them.
+    void listOffOnlyThatItem()
+    {
+        typeLines({QStringLiteral("one"), QStringLiteral("two"), QStringLiteral("three")});
+        select(0, 13);
+        m_fmt->block(QStringLiteral("bullet"));
+        QVERIFY(blockAt(0).textList() && blockAt(0).textList() == blockAt(2).textList());
+        moveTo(5); // in "two"
+        QVERIFY(m_fmt->bullet());
+        m_fmt->block(QStringLiteral("bullet"));
+        QVERIFY(!blockAt(1).textList());
+        QVERIFY(!m_fmt->bullet());
+        QVERIFY(blockAt(0).textList());
+        QVERIFY(blockAt(2).textList());
+        QCOMPARE(blockAt(1).blockFormat().indent(), 0);
+    }
+
+    void listOffOneItem()
+    {
+        type(QStringLiteral("one"));
+        m_fmt->block(QStringLiteral("numbered"));
+        QVERIFY(m_fmt->numbered());
+        m_fmt->block(QStringLiteral("numbered"));
+        QVERIFY(!m_fmt->numbered());
+        QVERIFY(!blockAt(0).textList());
+        QCOMPARE(html(), QString());
+    }
+
+    void bulletToNumbered()
+    {
+        typeLines({QStringLiteral("one"), QStringLiteral("two"), QStringLiteral("three")});
+        select(0, 13);
+        m_fmt->block(QStringLiteral("bullet"));
+        moveTo(5);
+        m_fmt->block(QStringLiteral("numbered"));
+        QTextList *list = blockAt(0).textList();
+        QVERIFY(list);
+        QCOMPARE(list->count(), 3);
+        QCOMPARE(blockAt(1).textList(), list);
+        QCOMPARE(blockAt(2).textList(), list);
+        QCOMPARE(list->format().style(), QTextListFormat::ListDecimal);
+        QCOMPARE(html(), QStringLiteral("<ol><li>one</li><li>two</li><li>three</li></ol>"));
+    }
+
+    void headingOnListItem()
+    {
+        typeLines({QStringLiteral("one"), QStringLiteral("two")});
+        select(0, 7);
+        m_fmt->block(QStringLiteral("bullet"));
+        moveTo(1);
+        m_fmt->block(QStringLiteral("h2"));
+        QVERIFY(m_fmt->heading());
+        QVERIFY(!m_fmt->bullet());
+        QVERIFY(!blockAt(0).textList());
+        QVERIFY(blockAt(1).textList());
+        QCOMPARE(html(), QStringLiteral("<h2>one</h2><ul><li>two</li></ul>"));
+    }
+
+    void quoteOnListItem()
+    {
+        type(QStringLiteral("one"));
+        m_fmt->block(QStringLiteral("bullet"));
+        m_fmt->block(QStringLiteral("quote"));
+        QVERIFY(m_fmt->quote());
+        QVERIFY(!blockAt(0).textList());
+        QCOMPARE(html(), QStringLiteral("<blockquote><p>one</p></blockquote>"));
+    }
+
+    void listOnHeadingOrQuote()
+    {
+        typeLines({QStringLiteral("one"), QStringLiteral("two")});
+        moveTo(1);
+        m_fmt->block(QStringLiteral("h2"));
+        moveTo(5);
+        m_fmt->block(QStringLiteral("quote"));
+        select(0, 7);
+        m_fmt->block(QStringLiteral("bullet"));
+        QVERIFY(!m_fmt->heading());
+        QVERIFY(!m_fmt->quote());
+        QVERIFY(!boldAt(0));
+        QCOMPARE(html(), QStringLiteral("<ul><li>one</li><li>two</li></ul>"));
+    }
+
+    void headingToQuoteIsNotBold()
+    {
+        type(QStringLiteral("title"));
+        m_fmt->block(QStringLiteral("h2"));
+        QVERIFY(boldAt(0));
+        m_fmt->block(QStringLiteral("quote"));
+        QVERIFY(m_fmt->quote());
+        QVERIFY(!m_fmt->heading());
+        QVERIFY(!boldAt(0));
+        QCOMPARE(html(), QStringLiteral("<blockquote><p>title</p></blockquote>"));
+    }
+
+    void headingOffIsNotBold()
+    {
+        type(QStringLiteral("title"));
+        m_fmt->block(QStringLiteral("h2"));
+        m_fmt->block(QStringLiteral("h2"));
+        QVERIFY(!m_fmt->heading());
+        QVERIFY(!boldAt(0));
+    }
+
+    // Decided by the first paragraph selected: a quote across a quoted and a
+    // plain paragraph turns off only when the first is quoted.
+    void decidedByTheFirstParagraph()
+    {
+        typeLines({QStringLiteral("one"), QStringLiteral("two")});
+        moveTo(1);
+        m_fmt->block(QStringLiteral("quote"));
+        select(0, 7);
+        m_fmt->block(QStringLiteral("quote"));
+        QCOMPARE(blockAt(0).blockFormat().intProperty(RichText::RoleProperty), int(RichText::Paragraph));
+        QCOMPARE(blockAt(1).blockFormat().intProperty(RichText::RoleProperty), int(RichText::Paragraph));
+        moveTo(5);
+        m_fmt->block(QStringLiteral("quote"));
+        select(0, 7);
+        m_fmt->block(QStringLiteral("quote"));
+        QCOMPARE(blockAt(0).blockFormat().intProperty(RichText::RoleProperty), int(RichText::Quote));
+        QCOMPARE(blockAt(1).blockFormat().intProperty(RichText::RoleProperty), int(RichText::Quote));
+    }
+
+    void oneUndo()
+    {
+        typeLines({QStringLiteral("one"), QStringLiteral("two")});
+        select(0, 7);
+        m_fmt->block(QStringLiteral("bullet"));
+        doc()->undo();
+        QVERIFY(!blockAt(0).textList());
+        QVERIFY(!blockAt(1).textList());
     }
 };
 

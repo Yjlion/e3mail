@@ -364,6 +364,40 @@ private Q_SLOTS:
         QCOMPARE(mail::Contacts::get(ctx, QStringLiteral("ada2@b.test"))->phones.value(0).number, QStringLiteral("+44"));
     }
 
+    // Everyone written to goes into the address book, once, and their held
+    // mail is released; ourselves never.
+    void recipientsJoinTheBook()
+    {
+        Account *bob = makeAccount(QStringLiteral("bob@x.test"), QStringLiteral("imap"));
+        auto &ctx = bob->ctx();
+        const auto accepts = [&ctx] { return *ctx.db.queryInt("SELECT count(*) FROM ops WHERE kind=?", op::Accept); };
+        m_srv->deliver(QStringLiteral("bob@x.test"),
+                       "From: ann@y.test\r\nSubject: hi\r\nMessage-ID: <hi@y.test>\r\n\r\nhi\r\n");
+        sync(bob);
+        QCOMPARE(mail::Search::count(ctx, tag::Unverified, false), 1);
+        QCOMPARE(int(mail::Contacts::get(ctx, QStringLiteral("ann@y.test"))->origin), int(ContactOrigin::IncomingFrom));
+
+        Draft d = draft(QStringLiteral("ANN@y.test"), QStringLiteral("re"), QStringLiteral("x"));
+        d.cc = {{QStringLiteral("Me"), QStringLiteral("Bob@x.test")}};
+        d.bcc = {{QStringLiteral("Cy"), QStringLiteral("cy@y.test")}};
+        mail::Compose::queue(ctx, d);
+        for (const QString &a : {QStringLiteral("ann@y.test"), QStringLiteral("cy@y.test")}) {
+            const auto c = mail::Contacts::get(ctx, a);
+            QVERIFY2(c, qPrintable(a));
+            QCOMPARE(int(c->origin), int(ContactOrigin::Manual));
+            QVERIFY(!c->verified);
+        }
+        QCOMPARE(mail::Contacts::get(ctx, QStringLiteral("cy@y.test"))->name, QStringLiteral("Cy"));
+        QVERIFY(!mail::Contacts::get(ctx, QStringLiteral("bob@x.test")));
+        QCOMPARE(accepts(), 2);
+        QCOMPARE(mail::Search::count(ctx, tag::Unverified, false), 0);
+        QCOMPARE(mail::Search::count(ctx, tag::Inbox, false), 1);
+
+        // Writing again records nothing new.
+        mail::Compose::queue(ctx, d);
+        QCOMPARE(accepts(), 2);
+    }
+
     void signatures()
     {
         Account *bob = makeAccount(QStringLiteral("bob@x.test"), QStringLiteral("imap"));

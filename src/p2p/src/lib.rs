@@ -204,6 +204,18 @@ unsafe fn str_arg<'a>(p: *const c_char) -> Option<&'a str> {
     if p.is_null() { None } else { unsafe { CStr::from_ptr(p) }.to_str().ok() }
 }
 
+/// Android only: hands Iroh the Java VM and the application context, which
+/// its DNS resolver reads the system's nameservers through. Without them the
+/// resolver panics, and under `panic = "abort"` that ends the app. Call it
+/// before the first `e3p2p_start`; later calls do nothing. Both pointers must
+/// stay valid until the process exits (a global reference for the context).
+#[cfg(target_os = "android")]
+#[unsafe(no_mangle)]
+pub extern "C" fn e3p2p_android_init(java_vm: *mut c_void, context: *mut c_void) {
+    static ONCE: std::sync::Once = std::sync::Once::new();
+    ONCE.call_once(|| unsafe { iroh::dns::install_android_jni_context(java_vm, context) });
+}
+
 /// Fills `out` with a new secret key.
 #[unsafe(no_mangle)]
 pub extern "C" fn e3p2p_generate_secret(out: *mut u8) {

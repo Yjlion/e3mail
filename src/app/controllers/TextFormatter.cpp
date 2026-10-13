@@ -10,6 +10,8 @@
 #include <QTextDocument>
 #include <QTextList>
 
+#include <algorithm>
+
 using namespace e3;
 
 namespace {
@@ -157,48 +159,105 @@ void TextFormatter::block(const QString &kind)
     if (!d)
         return;
     const int last = d->characterCount() - 1;
-    QTextCursor c(d);
-    c.setPosition(qBound(0, m_selStart, last));
-    c.setPosition(qBound(0, m_selEnd, last), QTextCursor::KeepAnchor);
-    c.beginEditBlock();
-    QTextBlockFormat bf = c.blockFormat();
+    // The paragraphs the selection touches; the first decides on or off.
+    QList<QTextBlock> blocks;
+    const QTextBlock end = d->findBlock(qBound(0, qMax(m_selStart, m_selEnd), last));
+    for (QTextBlock b = d->findBlock(qBound(0, qMin(m_selStart, m_selEnd), last)); b.isValid(); b = b.next()) {
+        blocks.append(b);
+        if (b == end)
+            break;
+    }
+    if (blocks.isEmpty())
+        return;
+    const QTextBlockFormat first = blocks.first().blockFormat();
     const int heading = kind.startsWith(u'h') ? kind.mid(1).toInt() : 0;
-    const bool toggleOff = (heading && bf.headingLevel() == heading)
-        || (kind == QLatin1String("quote") && bf.intProperty(RichText::RoleProperty) == RichText::Quote)
-        || (kind == QLatin1String("pre") && bf.intProperty(RichText::RoleProperty) == RichText::Code);
-    bf.setHeadingLevel(toggleOff ? 0 : heading);
-    bf.setProperty(RichText::RoleProperty, toggleOff ? int(RichText::Paragraph)
-                                           : kind == QLatin1String("quote") ? int(RichText::Quote)
-                                           : kind == QLatin1String("pre")   ? int(RichText::Code)
-                                                                            : int(RichText::Paragraph));
-    bf.setLeftMargin(!toggleOff && kind == QLatin1String("quote") ? 16 : 0);
-    if (kind == QLatin1String("bullet") || kind == QLatin1String("numbered")) {
+    const bool listKind = kind == QLatin1String("bullet") || kind == QLatin1String("numbered");
+
+    QTextCursor c(d);
+    c.beginEditBlock();
+    if (listKind) {
         const auto style = kind == QLatin1String("bullet") ? QTextListFormat::ListDisc : QTextListFormat::ListDecimal;
-        if (QTextList *list = c.currentList(); list && list->format().style() == style) {
-            for (int i = list->count() - 1; i >= 0; --i)
-                list->remove(list->item(i));
-            bf.setIndent(0);
-            c.setBlockFormat(bf);
+        QTextList *const list = blocks.first().textList();
+        const bool allInList = std::all_of(blocks.cbegin(), blocks.cend(),
+                                           [list](const QTextBlock &b) { return list && b.textList() == list; });
+        if (allInList && list->format().style() == style) {
+            for (const QTextBlock &b : blocks)
+                unlist(b);
+        } else if (allInList) {
+            // The whole list changes kind, as in any editor.
+            QTextListFormat lf = list->format();
+            lf.setStyle(style);
+            list->setFormat(lf);
         } else {
-            c.setBlockFormat(bf);
+            for (const QTextBlock &b : blocks) {
+                unlist(b);
+                setRole(b, 0, RichText::Paragraph);
+            }
+            c.setPosition(blocks.first().position());
+            c.setPosition(blocks.last().position(), QTextCursor::KeepAnchor);
             QTextListFormat lf;
             lf.setStyle(style);
             c.createList(lf);
         }
     } else {
-        c.setBlockFormat(bf);
-        QTextCharFormat cf;
-        if (heading)
-            cf.setFontWeight(toggleOff ? QFont::Normal : QFont::Bold);
-        if (kind == QLatin1String("pre")) {
-            cf.setFontFixedPitch(!toggleOff);
-            cf.setFontFamilies({toggleOff ? QString() : QStringLiteral("monospace")});
+        const int role = kind == QLatin1String("quote") ? RichText::Quote
+                       : kind == QLatin1String("pre")   ? RichText::Code
+                                                        : RichText::Paragraph;
+        const bool off = (heading && first.headingLevel() == heading)
+            || (role != RichText::Paragraph && first.intProperty(RichText::RoleProperty) == role);
+        for (const QTextBlock &b : blocks) {
+            unlist(b);
+            setRole(b, off ? 0 : heading, off ? int(RichText::Paragraph) : role);
         }
-        if (heading || kind == QLatin1String("pre"))
-            c.mergeBlockCharFormat(cf);
     }
     c.endEditBlock();
     refresh();
+}
+
+void TextFormatter::unlist(const QTextBlock &b)
+{
+    QTextList *list = b.textList();
+    if (!list)
+        return;
+    list->remove(b);
+    QTextBlockFormat bf = b.blockFormat();
+    bf.setIndent(0);
+    bf.setObjectIndex(-1);
+    QTextCursor(b).setBlockFormat(bf);
+}
+
+void TextFormatter::setRole(const QTextBlock &b, int heading, int role)
+{
+    const QTextBlockFormat old = b.blockFormat();
+    const bool wasHeading = old.headingLevel() > 0;
+    const bool wasCode = old.intProperty(RichText::RoleProperty) == RichText::Code;
+    QTextBlockFormat bf = old;
+    bf.setHeadingLevel(heading);
+    bf.setProperty(RichText::RoleProperty, role);
+    bf.setLeftMargin(role == RichText::Quote ? 16 : 0);
+    QTextCursor c(b);
+    c.setBlockFormat(bf);
+    // Headings and code look the part in the editor; emit writes them as
+    // <h2> and <pre>, whatever the characters say.
+    QTextCharFormat cf;
+    bool change = false;
+    if (heading || wasHeading) {
+        cf.setFontWeight(heading ? QFont::Bold : QFont::Normal);
+        // As Qt's own HTML import sizes an <h2>.
+        cf.setProperty(QTextFormat::FontSizeAdjustment, heading ? 4 - heading : 0);
+        change = true;
+    }
+    if (role == RichText::Code || wasCode) {
+        const bool code = role == RichText::Code;
+        cf.setFontFixedPitch(code);
+        cf.setFontFamilies({code ? QStringLiteral("monospace") : QString()});
+        change = true;
+    }
+    if (!change)
+        return;
+    c.mergeBlockCharFormat(cf);
+    c.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
+    c.mergeCharFormat(cf);
 }
 
 void TextFormatter::link(const QString &url)

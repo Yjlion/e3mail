@@ -6,11 +6,21 @@
 #include <QPainter>
 #include <QUrl>
 
+#include <optional>
+
 QImage QrImageProvider::requestImage(const QString &id, QSize *size, const QSize &requestedSize)
 {
     const QByteArray text = QUrl::fromPercentEncoding(id.toUtf8()).toUtf8();
     using qrcodegen::QrCode;
-    const QrCode qr = QrCode::encodeText(text.constData(), QrCode::Ecc::LOW);
+    // Too much text for any QR code throws, and nothing above here catches
+    // it; the code is still shown as text.
+    std::optional<QrCode> encoded;
+    try {
+        encoded = QrCode::encodeText(text.constData(), QrCode::Ecc::LOW);
+    } catch (const qrcodegen::data_too_long &) {
+        return {};
+    }
+    const QrCode &qr = *encoded;
     constexpr int kQuiet = 4;
     const int modules = qr.getSize() + 2 * kQuiet;
     const int want = requestedSize.isValid() ? qMin(requestedSize.width(), requestedSize.height()) : modules * 6;

@@ -578,6 +578,22 @@ private Q_SLOTS:
             QVERIFY(!mail::Contacts::get(*x, QStringLiteral("ada@z.test")));
     }
 
+    // Someone written to on A is in the book on B too, so their replies
+    // reach B's Inbox rather than waiting in Unverified.
+    void recipientsJoinTheBookEverywhere()
+    {
+        Draft d;
+        d.to = {{QStringLiteral("Ann"), QStringLiteral("ann@z.test")}};
+        d.subject = QStringLiteral("hello");
+        d.text = QStringLiteral("x");
+        mail::Compose::queue(m_a->ctx(), d);
+        connectDevices();
+        const auto onB = mail::Contacts::get(m_b->ctx(), QStringLiteral("ann@z.test"));
+        QVERIFY(onB);
+        QCOMPARE(int(onB->origin), int(ContactOrigin::Manual));
+        QVERIFY(mail::Contacts::isTrusted(m_b->ctx(), QStringLiteral("ann@z.test")));
+    }
+
     void everyChangeIsRecorded()
     {
         auto &a = m_a->ctx();

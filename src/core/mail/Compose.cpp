@@ -233,12 +233,19 @@ qint64 Compose::queue(MailContext &ctx, const Draft &draft)
                nullIfEmpty(rawBlob), rawExpires, Ingest::makePreview(draft.text), id);
     ctx.db.run("INSERT INTO outbox(msg_id, raw, mail_from, rcpts) VALUES(?, ?, ?, ?)", id, raw, selfAddr,
                rcpts.join(u'\n'));
-    // Writing to someone makes them known, and releases any mail of theirs
-    // waiting in Unverified.
+    // Writing to someone puts them in the address book, on every device, and
+    // releases any mail of theirs waiting in Unverified (ADR 0008 amendment).
+    const QString self = mime::normalizeAddr(selfAddr);
     for (const auto &list : {draft.to, draft.cc, draft.bcc}) {
         for (const mime::Address &a : list) {
-            Contacts::touch(ctx, a.addr, a.name, ContactOrigin::Outgoing);
-            Organize::releaseHeld(ctx, a.addr);
+            const QString addr = mime::normalizeAddr(a.addr);
+            if (addr == self || !addr.contains(u'@'))
+                continue;
+            const auto before = Contacts::get(ctx, addr);
+            Contacts::touch(ctx, addr, a.name, ContactOrigin::Manual);
+            if (!before || int(before->origin) < int(ContactOrigin::Manual))
+                ctx.ops.record(op::Accept, {{QStringLiteral("addr"), addr}});
+            Organize::releaseHeld(ctx, addr);
         }
     }
     Search::index(ctx, id);

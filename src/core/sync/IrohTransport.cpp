@@ -8,10 +8,33 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
+#ifdef Q_OS_ANDROID
+#include <QJniEnvironment>
+#include <QJniObject>
+#include <QtCore/qcoreapplication_platform.h>
+#endif
+
 namespace e3::sync {
 
 namespace {
 constexpr qsizetype kNameLen = 64; // blob names are SHA-256 in hex
+
+#ifdef Q_OS_ANDROID
+// Iroh's DNS resolver reads Android's nameservers through JNI, and aborts
+// the app without a context to do it with (trap 52).
+void initAndroid()
+{
+    static const bool done = [] {
+        QJniEnvironment env;
+        const QJniObject context = QNativeInterface::QAndroidApplication::context();
+        // Kept for the life of the process, as Iroh requires.
+        jobject global = env->NewGlobalRef(context.object());
+        e3p2p_android_init(env.javaVM(), global);
+        return true;
+    }();
+    Q_UNUSED(done);
+}
+#endif
 }
 
 IrohTransport::IrohTransport(Database &db, const QString &self, const Options &options, QObject *parent)
@@ -23,6 +46,9 @@ IrohTransport::IrohTransport(Database &db, const QString &self, const Options &o
                     : options.relay == Relay::Custom ? E3P2P_RELAY_CUSTOM
                                                      : E3P2P_RELAY_DEFAULT;
     const QByteArray url = options.relayUrl.toUtf8();
+#ifdef Q_OS_ANDROID
+    initAndroid();
+#endif
     m_node = e3p2p_start(reinterpret_cast<const uint8_t *>(options.secret.constData()), relay,
                          url.isEmpty() ? nullptr : url.constData(), options.port, options.loopback ? 1 : 0,
                          &IrohTransport::wake, this);

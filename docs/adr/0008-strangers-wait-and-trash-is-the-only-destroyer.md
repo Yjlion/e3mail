@@ -16,3 +16,16 @@
 
 The two zeros mean opposite things deliberately: someone who wants strangers'
 mail gone at once turns gating off.
+
+## Amendment — 2026-10-13: writing to someone puts them in the address book
+
+- **Sending puts every To, Cc and Bcc recipient in the address book** (origin
+  Manual), as accepting them does, and records `contact.accept` for each one
+  not already there. Before, writing made them known only on the device that
+  sent (origin Outgoing, no op): on the other devices they stayed strangers,
+  and their replies waited in Unverified there.
+- Our own address is never added. A recipient already in the book records no
+  new op, so writing to someone again costs nothing.
+- It does not make anyone **verified**. Verified means a key checked in
+  person, which pins it against replacement; an address typed into To says
+  nothing about a key.
