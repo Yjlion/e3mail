@@ -654,6 +654,74 @@ the app signing key, so Play and GitHub packages cannot update each other.
   said that was impossible; it was wrong, and is corrected there.
 - Anything on a phone, as before.
 
+## Pairing on Android, the block buttons, recipients in the book (2026-10-13)
+
+Three reports from the Android build.
+
+- **"Pair a new device…" killed the app on Android.** Reproduced on the
+  API 34 emulator with a Release APK: `SIGABRT` in a `tokio-rt-worker`, abort
+  message `android context was not initialized`, from `ndk_context`, reached
+  through `netdev::route` (netwatch's default route) when the Iroh endpoint
+  started. iroh-dns reads the nameservers the same way. Both need
+  `ndk_context` to hold the Java VM and the application context; without
+  them they panic, and the crate builds with `panic = "abort"` (trap 52).
+  The endpoint starts lazily, at the first pairing, unless a device is
+  already paired, so the click was the first time it ran. A phone with a
+  paired device would have died at launch, and the join side the same way.
+  `e3p2p_android_init` installs the context once (through
+  `iroh::dns::install_android_jni_context`); `IrohTransport` calls it under
+  `Q_OS_ANDROID` with `QJniEnvironment::javaVM()` and a global reference to
+  the application context. `QrImageProvider` now catches
+  `qrcodegen::data_too_long` instead of letting it end the app; the code is
+  still shown as text.
+- **The block buttons** (heading, quote, lists) were broken in five ways,
+  each now a test in `tst_formatting` that failed before (7 of 11 new tests):
+  a list could not be turned off (the paragraph went back into it, and every
+  other item left it); bullet to numbered split the list instead of
+  switching it; a heading or quote on a list item stayed in the list, so
+  `emit` dropped the heading and wrapped the list in a quote; leaving a
+  heading left the text bold; and a heading on text already typed was never
+  bold at all (`mergeBlockCharFormat` only reaches new text), so the button
+  looked dead. The choice is now made by the first paragraph selected, the
+  kinds exclude each other, a whole list switches style, and a heading is
+  bold and sized as Qt's own `<h2>` import does.
+- **Everyone written to is in the address book** ([ADR 0008
+  amendment](adr/0008-strangers-wait-and-trash-is-the-only-destroyer.md)):
+  origin Manual and a `contact.accept` op per new recipient, so other
+  devices let their replies into the Inbox too; before, writing made them
+  known on the sending device only. Never ourselves, never "verified".
+
+**Verified here:**
+- `ctest --preset dev`: all 17 suites pass. New: `tst_formatting` (11 block
+  tests), `tst_engine::recipientsJoinTheBook`,
+  `tst_sync::recipientsJoinTheBookEverywhere`; the last two failed without
+  the change.
+- The block buttons drawn offscreen (a heading, a quote, a numbered list that
+  was bulleted) and the HTML they emit, looked at.
+- Android: the crash above, on the pre-fix Release APK, opening the pairing
+  page through `--page pair` (Qt's `applicationArguments` extra) on the
+  fixture account pushed into the app's files with `adb root`. With the fix,
+  the same steps start the endpoint (`devices: endpoint …` in logcat) and
+  show the dialog: the accessibility tree has the QR code, the
+  `E3PAIR1:` code carrying n0's relay and the emulator's addresses, Copy and
+  Cancel. About two minutes later the app ended with `System.exit(0)` after
+  Android sent an application-info change (the `uiautomator` dump loading
+  into it) and destroyed its surface, and Android restarted it; no abort.
+  Whether a real phone does that has not been looked at.
+
+**Not verified:**
+- A real phone; pairing two devices on Android; the Join side on Android.
+- `scripts/e2e.py` and `scripts/p2p-e2e.py`: not run, as the shell had no
+  access to Docker. The desktop transport is unchanged (the new call is
+  Android only) and `tst_p2p` passes; sending now records ops, which the live
+  scripts would exercise.
+- The block buttons by touch on Android, and with an input method.
+- On this host the API 34 emulator now needs `-gpu guest -memory 2048
+  -no-boot-anim` and no Gradle daemon running beside it: with
+  `swiftshader_indirect`, Android's watchdog killed the system server over
+  and over. The window then draws black, so the UI was driven through
+  `--page` and read through logcat, not seen.
+
 ## Known gaps
 
 - **Signed-only mail** is checked only for PGP/MIME (`multipart/signed`);
@@ -953,6 +1021,14 @@ temporary files to `/tmp`; on a machine where `/tmp` is a small tmpfs the
 signing step fails with "Disk quota exceeded", or leaves a truncated file
 that `adb install` calls "not an APK". Set
 `JAVA_TOOL_OPTIONS=-Djava.io.tmpdir=<dir>`.
+
+**52. Rust crates on Android need the JNI context, or they abort.**
+iroh-dns and netwatch (through `netdev`) call into Java through
+`ndk_context`, which panics when nobody installed the Java VM and the
+application context; under `panic = "abort"` that ends the app with
+"android context was not initialized". Glue crates such as `android-activity`
+install it; Qt does not. `e3p2p_android_init` must run before the first
+`e3p2p_start`.
 
 ## Next
 
