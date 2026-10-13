@@ -8,6 +8,7 @@
 
 #include <QQuickTextDocument>
 
+class QTextBlock;
 class QTextDocument;
 
 // Formatting for a rich-text TextArea: the composer's body and the signature
@@ -77,6 +78,10 @@ private:
     void dropPendingIfMoved();
     void clearPending();
     void refresh();
+    // Takes a paragraph out of its list, if it is in one.
+    static void unlist(const QTextBlock &b);
+    // Heading level (0 for none) and role, with the look that goes with them.
+    static void setRole(const QTextBlock &b, int heading, int role);
 
     QPointer<QQuickTextDocument> m_document;
     QMetaObject::Connection m_contents;
