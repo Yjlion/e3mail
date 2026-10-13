@@ -708,19 +708,32 @@ Three reports from the Android build.
   Android sent an application-info change (the `uiautomator` dump loading
   into it) and destroyed its surface, and Android restarted it; no abort.
   Whether a real phone does that has not been looked at.
+- Again after a reboot of this machine, with memory free: the emulator
+  booted with `swiftshader_indirect` and drew (with the diagonal tears noted
+  under "Android"). Through the real path, tapped: drawer, Settings, Devices,
+  "Pair a new device…" with n0's relays chosen. The dialog drew its QR code,
+  code, Copy and Cancel; logcat had `devices: endpoint …` and no abort; the
+  same process was alive three minutes later. With no `uiautomator` dumps
+  this time there was no exit, so the earlier `System.exit(0)` was the dump.
+- The block buttons by touch. Typed with `adb shell input text`: bullet
+  on, Enter continuing the list, bullet off on that line only (the line
+  above kept its bullet), numbered on a bulleted line. Typed on Gboard key
+  by key: bullet on and off, then heading making the existing text large
+  and bold and the next words typed staying in it, all while the keyboard
+  held a word in progress; tapping into another line and typing on was
+  clean too.
+- `scripts/e2e.py` against `server/compose`: all passed, once its mailboxes
+  were emptied (a message left in dana's from an earlier run made "it stays
+  on the server" count two). `scripts/p2p-e2e.py`: five runs, all passed.
 
 **Not verified:**
 - A real phone; pairing two devices on Android; the Join side on Android.
-- `scripts/e2e.py` and `scripts/p2p-e2e.py`: not run, as the shell had no
-  access to Docker. The desktop transport is unchanged (the new call is
-  Android only) and `tst_p2p` passes; sending now records ops, which the live
-  scripts would exercise.
-- The block buttons by touch on Android, and with an input method.
-- On this host the API 34 emulator now needs `-gpu guest -memory 2048
-  -no-boot-anim` and no Gradle daemon running beside it: with
-  `swiftshader_indirect`, Android's watchdog killed the system server over
-  and over. The window then draws black, so the UI was driven through
-  `--page` and read through logcat, not seen.
+- Text typed with `adb shell input text` goes behind the keyboard's back:
+  Gboard kept "one" as its word in progress while other words arrived, and
+  after a block button changed the document it committed "one" again at the
+  cursor, then again elsewhere. Typed key by key, the same steps were
+  clean, so this is taken as the tool's, not the editor's; a real keyboard
+  in other languages, or swipe typing, has not been tried.
 
 ## Known gaps
 
