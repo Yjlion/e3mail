@@ -30,6 +30,11 @@ typedef struct e3p2p_event {
 
 typedef void (*e3p2p_waker)(void *ctx);
 
+#ifdef __ANDROID__
+/* Before the first e3p2p_start: the JavaVM and a global reference to the
+ * application context, both valid until the process exits. */
+void e3p2p_android_init(void *java_vm, void *context);
+#endif
 void e3p2p_generate_secret(uint8_t out[32]);
 e3p2p_node *e3p2p_start(const uint8_t secret[32], int32_t relay, const char *relay_url, uint16_t port,
                         int32_t loopback, e3p2p_waker waker, void *waker_ctx);
