@@ -76,8 +76,16 @@ set_target_properties(e3mail PROPERTIES
 
 if(ANDROID)
     # Version code: major, minor, patch, two digits each (0.1.1 -> 101).
+    # Google Play refuses a code it has seen, so each release needs a higher
+    # version than the last one uploaded.
+    if(PROJECT_VERSION_MINOR GREATER 99 OR PROJECT_VERSION_PATCH GREATER 99)
+        message(FATAL_ERROR "Version ${PROJECT_VERSION}: minor and patch must be below 100 for the Android version code.")
+    endif()
     math(EXPR e3_version_code
         "${PROJECT_VERSION_MAJOR} * 10000 + ${PROJECT_VERSION_MINOR} * 100 + ${PROJECT_VERSION_PATCH}")
+    if(e3_version_code LESS 1)
+        set(e3_version_code 1) # a build without a version (0.0.0); never one for Play
+    endif()
     set_target_properties(e3mail PROPERTIES
         QT_ANDROID_PACKAGE_SOURCE_DIR ${PROJECT_SOURCE_DIR}/packaging/android
         QT_ANDROID_PACKAGE_NAME org.e3mail.e3mail

@@ -144,3 +144,25 @@ Correction, 2026-10-12: step 3 is not needed. The first tagged release
 (v0.2.2, run 38314064978) uploaded its bundle to the internal testing
 track through the API, as a draft, with no bundle uploaded by hand
 before it.
+
+## Amendment — 2026-10-14: the tag is the version
+
+The rule that the tag must equal the project version is replaced. v0.2.3
+was published while `CMakeLists.txt` still said 0.2.2; the check stopped the
+run (38435223872), so the release has no packages and nothing reached Play.
+A number kept in two places will drift again.
+
+- **The release's tag is the version.** The release workflow runs when a
+  release is published (drafted on GitHub with a new tag `vX.Y.Z`, as a
+  pre-release or not), takes X.Y.Z from the tag, and passes it to every
+  build as `-DE3MAIL_VERSION`. No file in the source names the version.
+- A tag that is not `vX.Y.Z`, or whose minor or patch is 100 or more (the
+  version code packs them two digits each), fails the run before anything
+  builds.
+- Without `E3MAIL_VERSION`, CMake takes the newest `vX.Y.Z` tag in git
+  (`git describe`), and without git it builds as 0.0.0, version code 1.
+- Play still refuses a version code it has seen: each release must be higher
+  than the last one uploaded (v0.2.2, code 202, as of this amendment).
+- Pushing a tag alone no longer builds anything; publishing the release
+  does. The workflow no longer marks releases as pre-releases; the person
+  publishing chooses.
