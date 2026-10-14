@@ -765,11 +765,12 @@ the version ([ADR 0016 amendment](adr/0016-android.md)):
   versionName 0.2.4; the Play bundle carries 204 and verifies with the
   upload key.
 
-**Not verified:** the `release: published` path itself, which only a real
-release exercises; publishing and the Play upload are skipped when run by
-hand. Google Play last received v0.2.2 (code 202). Code 203 was never
-uploaded, so 0.2.3 could still be used, but its tag and empty release exist
-on GitHub and would have to be deleted first.
+**Verified by v0.2.4 (run 38618309691):** publishing the release ran the
+workflow, every package was built as 0.2.4 and attached (16 files), and the
+release kept what it was published as. The Play upload failed at first (trap
+53); after automatic translations were turned off in Play Console, a
+re-run of that job alone uploaded the bundle (code 204) to the internal
+track as a draft. v0.2.3's tag and its empty release are still on GitHub.
 
 ## Known gaps
 
@@ -1078,6 +1079,16 @@ application context; under `panic = "abort"` that ends the app with
 "android context was not initialized". Glue crates such as `android-activity`
 install it; Qt does not. `e3p2p_android_init` must run before the first
 `e3p2p_start`.
+
+**53. Play's automatic translation fails every upload.** With "App
+strings → automatic translations" on in Play Console, the API upload of
+v0.2.4 failed at commit with "One or more of the languages are not
+supported for translation: zh-CN", and on a re-run with "ru": Play
+reports one of its target languages that it cannot machine-translate. The
+bundle carries no translations (e3mail's are Qt's, inside the app), so it
+gains nothing from the feature anyway. Turned off on 2026-10-14; then the
+same job passed. A failed Play job can be re-run alone (`gh run rerun
+<id> --failed`): the release and the bundle artifact stay.
 
 ## Next
 
