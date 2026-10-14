@@ -735,6 +735,42 @@ Three reports from the Android build.
   clean, so this is taken as the tool's, not the editor's; a real keyboard
   in other languages, or swipe typing, has not been tried.
 
+## The tag is the version (2026-10-14)
+
+v0.2.3 was published while `CMakeLists.txt` still said 0.2.2. The release
+workflow's check stopped it (run 38435223872): the v0.2.3 release has no
+packages, and nothing went to Google Play. Now nothing in the source names
+the version ([ADR 0016 amendment](adr/0016-android.md)):
+
+- The release workflow runs when a release is **published** (Draft a new
+  release, a new tag `vX.Y.Z`, Publish), takes X.Y.Z from the tag and passes
+  it to every build as `-DE3MAIL_VERSION`. Pushing a tag alone builds
+  nothing. A tag that is not `vX.Y.Z`, or has a minor or patch of 100 or
+  more, fails before anything builds.
+- Run by hand, it takes a `version` input and builds without publishing.
+- Without `E3MAIL_VERSION`, CMake takes the newest `vX.Y.Z` tag
+  (`git describe`); without git, 0.0.0 (Android version code 1).
+- The workflow no longer forces "pre-release"; it keeps what the release was
+  published as (`action-gh-release` keeps an existing release's flag and
+  notes when not given them).
+
+**Verified:**
+- Locally: the version from git (0.2.3), given (0.2.4), refused ("0.2"),
+  and 0.0.0 without git, with a warning. Android: 0.2.4 gives version code
+  204, 0.0.0 gives 1, 0.100.0 is refused. The workflow's version step, run
+  with bash against sample refs, takes `v0.2.4` and `v1.10.0` and refuses
+  `v0.2`, `v0.2.100` and `release-1`.
+- Run 38607415924, by hand on the branch as 0.2.4: every job passed. The
+  Linux packages are named 0.2.4; the arm64 APK says versionCode 204,
+  versionName 0.2.4; the Play bundle carries 204 and verifies with the
+  upload key.
+
+**Not verified:** the `release: published` path itself, which only a real
+release exercises; publishing and the Play upload are skipped when run by
+hand. Google Play last received v0.2.2 (code 202). Code 203 was never
+uploaded, so 0.2.3 could still be used, but its tag and empty release exist
+on GitHub and would have to be deleted first.
+
 ## Known gaps
 
 - **Signed-only mail** is checked only for PGP/MIME (`multipart/signed`);
