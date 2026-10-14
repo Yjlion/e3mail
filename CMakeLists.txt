@@ -1,7 +1,28 @@
 cmake_minimum_required(VERSION 3.21)
 
+# The version is the release's tag: the release workflow passes
+# -DE3MAIL_VERSION=X.Y.Z from it. Without that, the newest vX.Y.Z tag in git
+# names the build, and without git, 0.0.0 does.
+set(E3MAIL_VERSION "" CACHE STRING "Version as X.Y.Z; empty takes the newest vX.Y.Z tag")
+if(E3MAIL_VERSION)
+    if(NOT E3MAIL_VERSION MATCHES "^[0-9]+\\.[0-9]+\\.[0-9]+$")
+        message(FATAL_ERROR "E3MAIL_VERSION is \"${E3MAIL_VERSION}\"; it must be X.Y.Z.")
+    endif()
+    set(e3_version ${E3MAIL_VERSION})
+else()
+    execute_process(COMMAND git describe --tags --abbrev=0 --match "v[0-9]*.[0-9]*.[0-9]*"
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        OUTPUT_VARIABLE e3_tag OUTPUT_STRIP_TRAILING_WHITESPACE
+        RESULT_VARIABLE e3_git ERROR_QUIET)
+    string(REGEX REPLACE "^v" "" e3_version "${e3_tag}")
+    if(NOT e3_git EQUAL 0 OR NOT e3_version MATCHES "^[0-9]+\\.[0-9]+\\.[0-9]+$")
+        message(WARNING "No E3MAIL_VERSION and no vX.Y.Z tag in git: building as 0.0.0.")
+        set(e3_version 0.0.0)
+    endif()
+endif()
+
 project(e3mail
-    VERSION 0.2.3
+    VERSION ${e3_version}
     DESCRIPTION "An end-to-end encrypted email client with classic email functionality"
     HOMEPAGE_URL "https://github.com/Yjlion/e3mail"
     LANGUAGES CXX)
