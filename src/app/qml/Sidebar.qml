@@ -189,6 +189,8 @@ Rectangle {
                     text: MailApp.accountStatus === "online" && MailApp.olderRemaining > 0
                           ? qsTr("Fetching older mail… %n left", "", MailApp.olderRemaining)
                         : MailApp.accountStatus === "online" ? qsTr("Connected")
+                        : MailApp.accountStatus === "auth" && MailApp.accountSignsInWith.length > 0
+                          ? qsTr("Signed out by %1 — sign in again").arg(MailApp.accountSignsInWith)
                         : MailApp.accountStatus === "auth" ? qsTr("Login failed — check the password")
                         : MailApp.accountStatus === "cert" ? qsTr("Certificate not trusted — see Settings")
                         : qsTr("Offline")
@@ -198,6 +200,10 @@ Rectangle {
                     ToolTip.visible: statusHover.hovered && MailApp.accountStatusDetail.length > 0
                     ToolTip.text: MailApp.accountStatusDetail
                     HoverHandler { id: statusHover }
+                    TapHandler {
+                        enabled: MailApp.accountStatus === "auth" && MailApp.accountSignsInWith.length > 0
+                        onTapped: MailApp.signInAgain()
+                    }
                 }
             }
         }

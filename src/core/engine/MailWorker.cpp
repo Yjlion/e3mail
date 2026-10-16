@@ -306,6 +306,15 @@ void MailWorker::nap(int ms)
     }
 }
 
+void MailWorker::fillTokens(Credentials &creds, bool fresh)
+{
+    if (!creds.oauth)
+        return;
+    const QString token = creds.oauth->accessToken(fresh);
+    creds.incoming.accessToken = token;
+    creds.smtp.accessToken = token;
+}
+
 void MailWorker::run()
 {
     std::unique_ptr<Session> s;
@@ -318,9 +327,11 @@ void MailWorker::run()
     const bool pop3 = m_creds.protocol == QLatin1String("pop3");
     m_creds.incoming.abort = m_creds.smtp.abort = [this] { return m_stop.load(); };
     int backoffMs = 15000;
+    bool retriedToken = false;
     while (!m_stop) {
         m_wake = false;
         try {
+            fillTokens(m_creds, false);
             s->housekeepingIfDue(this);
             if (s->sendOutbox(m_creds, this))
                 Q_EMIT mailChanged();
@@ -332,6 +343,7 @@ void MailWorker::run()
             Q_EMIT status(QStringLiteral("online"), QString());
             Q_EMIT backfillProgress(older);
             backoffMs = 15000;
+            retriedToken = false;
             // Wait for news. Anything queued meanwhile wakes us. While older
             // mail is still coming, go straight on to the next page.
             if (older) {
@@ -349,6 +361,22 @@ void MailWorker::run()
             nap(30 * 60 * 1000); // until someone decides about it and we are restarted
         } catch (const net::AuthError &e) {
             s->imap.reset();
+            // A refused access token may only have expired early: renew it
+            // once and go straight back. A refused renewal ends up here too,
+            // and then the person must sign in again.
+            if (m_creds.oauth && !retriedToken) {
+                retriedToken = true;
+                try {
+                    fillTokens(m_creds, true);
+                    continue;
+                } catch (const net::AuthError &again) {
+                    Q_EMIT status(QStringLiteral("auth"), again.message());
+                    nap(30 * 60 * 1000);
+                    continue;
+                } catch (const std::exception &) {
+                    // The provider is unreachable: the usual backoff below.
+                }
+            }
             Q_EMIT status(QStringLiteral("auth"), e.message());
             nap(30 * 60 * 1000); // until the user fixes the password and we are restarted
         } catch (const std::exception &e) {
@@ -365,8 +393,10 @@ void MailWorker::run()
         s->imap->close();
 }
 
-int MailWorker::runOnce(const QString &accountDir, const Credentials &creds)
+int MailWorker::runOnce(const QString &accountDir, const Credentials &original)
 {
+    Credentials creds = original;
+    fillTokens(creds, false);
     Session s(accountDir);
     s.lastHousekeeping = 0;
     s.housekeepingIfDue(nullptr);

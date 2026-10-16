@@ -492,6 +492,10 @@ To: %4
         <translation>名前のないデバイス</translation>
     </message>
     <message>
+        <source>You signed in as %1, not as %2.</source>
+        <translation>%2 ではなく %1 としてサインインしました。</translation>
+    </message>
+    <message>
         <source>(no subject)</source>
         <translation>(件名なし)</translation>
     </message>
@@ -1420,6 +1424,10 @@ To: %4
         <translation>アドレスから推測したサーバー設定です。接続する前に確認してください。</translation>
     </message>
     <message>
+        <source>You signed in as %1, not as %2. Sign in with the account of the address you are adding.</source>
+        <translation>%2 ではなく %1 としてサインインしました。追加するアドレスのアカウントでサインインしてください。</translation>
+    </message>
+    <message>
         <source>Enter your email address and password.</source>
         <translation>メールアドレスとパスワードを入力してください。</translation>
     </message>
@@ -1439,8 +1447,24 @@ To: %4
         <translation>メールアドレス</translation>
     </message>
     <message>
+        <source>Signed in with %1</source>
+        <translation>%1 でサインイン済み</translation>
+    </message>
+    <message>
+        <source>Sign in with %1</source>
+        <translation>%1 でサインイン</translation>
+    </message>
+    <message>
+        <source>Opens %1 in your browser. e3mail never sees your password there. Or use an app password below.</source>
+        <translation>ブラウザーで %1 を開きます。e3mail がそこでのパスワードを見ることはありません。または下でアプリ パスワードを使ってください。</translation>
+    </message>
+    <message>
         <source>Password</source>
         <translation>パスワード</translation>
+    </message>
+    <message>
+        <source>App password</source>
+        <translation>アプリ パスワード</translation>
     </message>
     <message>
         <source>Your name (optional)</source>
@@ -1604,6 +1628,10 @@ To: %4
         <translation>接続済み</translation>
     </message>
     <message>
+        <source>Signed out by %1 — sign in again</source>
+        <translation>%1 によりサインアウトされました — もう一度サインインしてください</translation>
+    </message>
+    <message>
         <source>Login failed — check the password</source>
         <translation>ログインに失敗しました — パスワードを確認してください</translation>
     </message>
@@ -1614,6 +1642,29 @@ To: %4
     <message>
         <source>Offline</source>
         <translation>オフライン</translation>
+    </message>
+</context>
+<context>
+    <name>SignIn</name>
+    <message>
+        <source>The sign-in took too long. Try again.</source>
+        <translation>サインインに時間がかかりすぎました。もう一度お試しください。</translation>
+    </message>
+    <message>
+        <source>Cannot listen for the browser&apos;s answer on this device.</source>
+        <translation>このデバイスではブラウザーからの応答を受け取れません。</translation>
+    </message>
+    <message>
+        <source>Signed in. You can close this page and go back to e3mail.</source>
+        <translation>サインインしました。このページを閉じて e3mail に戻ってください。</translation>
+    </message>
+    <message>
+        <source>%1 did not allow e3mail to stay signed in.</source>
+        <translation>%1 は e3mail がサインインしたままでいることを許可しませんでした。</translation>
+    </message>
+    <message>
+        <source>%1 refused the sign-in.</source>
+        <translation>%1 がサインインを拒否しました。</translation>
     </message>
 </context>
 <context>

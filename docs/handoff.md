@@ -36,7 +36,7 @@ suites, including the GnuPG interop test against Git for Windows' gpg.
 - The app has not been used interactively on a real display. Offscreen
   rendering and the smoke test are all there is.
 - No interop with Delta Chat, Thunderbird, Gmail or any mainstream provider.
-  OAuth2 is not supported, so Gmail and Outlook need app passwords.
+  OAuth 2 is built (2026-10-16) but has not met Google or Microsoft yet.
 
 ## P8 in progress: the sync core (2026-10-06)
 
@@ -911,6 +911,63 @@ What `todo.md` still listed for P8, short of hardware this machine lacks.
   does; older Android versions and some makers do not freeze cached apps,
   and there e3mail now keeps syncing in the background until the process is
   ended, where before Qt paused.
+
+## OAuth 2 for Gmail and Outlook (2026-10-16)
+
+Accounts can sign in with Google or Microsoft instead of a password
+([ADR 0019](adr/0019-oauth-for-google-and-microsoft.md)).
+
+- **Servers:** XOAUTH2, or OAUTHBEARER, in IMAP, POP3 and SMTP (`net/Sasl`).
+  `ServerSettings::accessToken` replaces the password when set.
+- **Renewal:** `net::oauth::TokenSource` in the core renews on the worker's
+  thread, with plain QtNetwork. The worker renews once and retries when a
+  server refuses a token early. `invalid_grant` gives status `auth`, and the
+  sidebar reads "Signed out by Google — sign in again" (click to do so).
+- **Sign-in:** `src/oauthflow` (`e3oauthflow`, QtNetworkAuth): PKCE, a
+  listener on 127.0.0.1, the system browser. Setup offers it where ISPDB
+  names the issuer or the domain is Google's or Microsoft's, and only with a
+  client ID. `e3mail-cli add --oauth google|microsoft` prints the URL.
+- The refresh token is kept as the passwords are (keyring, or
+  `oauth_refresh`) and travels with pairing. Microsoft's rotated ones replace
+  it. The account keeps its client ID and token URL.
+- Client IDs: CMake options read from the environment. The release workflow
+  passes the repository secrets `E3MAIL_OAUTH_GOOGLE_ID`,
+  `E3MAIL_OAUTH_GOOGLE_SECRET` and `E3MAIL_OAUTH_MICROSOFT_ID`, none set yet.
+  Qt's `qtnetworkauth` module is now installed by CI, the release workflow
+  and `scripts/android-toolchain.sh`.
+
+**Verified here:**
+- `tst_net::oauth`: XOAUTH2 and OAUTHBEARER (the fake refuses the wrong
+  one), inline and after a continuation, on IMAP, POP3 and SMTP. An expired
+  token is an AuthError carrying the server's JSON, with the exchange
+  ended properly.
+- `tst_oauth` (new): the whole browser sign-in against `FakeOAuthServer`. The
+  authorization URL carries PKCE S256, the scopes, `access_type` and
+  `login_hint`; the browser's return is exchanged with the verifier, which
+  the fake checks against the challenge. A forged `state` ends the sign-in
+  with nothing exchanged. Also: renewal, caching, early renewal, rotation,
+  revocation as AuthError, providers by domain and issuer, ID tokens, and
+  the SASL strings against Google's and RFC 7628's examples.
+- `tst_engine::oauthTokens` (IMAP and POP3): fetch and send by token, a
+  token refused early renewed once and the account online, a rotated refresh
+  token stored, a revoked one giving `auth` and "Sign in again". It fails
+  with the renew-once retry taken out.
+- `tst_autoconfig::parsesOAuth` on Thunderbird's real ISPDB file for
+  gmail.com (`tests/data/ispdb-gmail.xml`).
+- `tst_p2p::pairing`: the refresh token reaches the new device.
+- `ctest --preset dev`: all 19 pass. `scripts/e2e.py` passes, so passwords
+  are unchanged on the real servers.
+- `e3mail-cli add --oauth google` without an ID says which variable to set.
+- Screenshots: setup with "Sign in with Google" (desktop, Arabic, phone).
+- The x86_64 APK builds with `libQt6NetworkAuth`.
+
+**Not verified:**
+- **Any real provider.** There are no client IDs yet, so no Gmail or Outlook
+  account has signed in, renewed, or fetched by token. That is the first
+  thing to do once the apps are registered (ADR 0019 says how).
+- The browser opening and coming back in the running app, on any platform,
+  Android included (the loopback there is the open question in ADR 0019).
+- "Sign in again" from the sidebar: built, not clicked.
 
 ## Known gaps
 

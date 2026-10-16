@@ -492,6 +492,10 @@ To: %4
         <translation>מכשיר אָן נאָמען</translation>
     </message>
     <message>
+        <source>You signed in as %1, not as %2.</source>
+        <translation>איר זײַט אַרײַן ווי %1, נישט ווי %2.</translation>
+    </message>
+    <message>
         <source>(no subject)</source>
         <translation>(אָן טעמע)</translation>
     </message>
@@ -1430,6 +1434,10 @@ To: %4
         <translation>סערווער־איינשטעלונגען געטראָפֿן פֿון דעם אַדרעס. קאָנטראָלירט זיי איידער איר פֿאַרבינדט זיך.</translation>
     </message>
     <message>
+        <source>You signed in as %1, not as %2. Sign in with the account of the address you are adding.</source>
+        <translation>איר זײַט אַרײַן ווי %1, נישט ווי %2. גייט אַרײַן מיטן חשבון פֿון דער אַדרעס וואָס איר לייגט צו.</translation>
+    </message>
+    <message>
         <source>Enter your email address and password.</source>
         <translation>שרײַבט אײַער בליצבריוו־אַדרעס און פּאַראָל.</translation>
     </message>
@@ -1449,8 +1457,24 @@ To: %4
         <translation>בליצבריוו־אַדרעס</translation>
     </message>
     <message>
+        <source>Signed in with %1</source>
+        <translation>אַרײַן דורך %1</translation>
+    </message>
+    <message>
+        <source>Sign in with %1</source>
+        <translation>אַרײַנגיין דורך %1</translation>
+    </message>
+    <message>
+        <source>Opens %1 in your browser. e3mail never sees your password there. Or use an app password below.</source>
+        <translation>עפֿנט %1 אין אײַער בלעטערער. e3mail זעט קיינמאָל נישט דאָרט אײַער פּאַראָל. אָדער ניצט אונטן אַן אַפּ־פּאַראָל.</translation>
+    </message>
+    <message>
         <source>Password</source>
         <translation>פּאַראָל</translation>
+    </message>
+    <message>
+        <source>App password</source>
+        <translation>אַפּ־פּאַראָל</translation>
     </message>
     <message>
         <source>Your name (optional)</source>
@@ -1615,6 +1639,10 @@ To: %4
         <translation>פֿאַרבונדן</translation>
     </message>
     <message>
+        <source>Signed out by %1 — sign in again</source>
+        <translation>%1 האָט אײַך אַרויסגעשיקט — גייט ווידער אַרײַן</translation>
+    </message>
+    <message>
         <source>Login failed — check the password</source>
         <translation>אַרײַנלאָגירן איז דורכגעפֿאַלן — קוקט איבער די פּאַראָל</translation>
     </message>
@@ -1625,6 +1653,29 @@ To: %4
     <message>
         <source>Offline</source>
         <translation>ניט פֿאַרבונדן</translation>
+    </message>
+</context>
+<context>
+    <name>SignIn</name>
+    <message>
+        <source>The sign-in took too long. Try again.</source>
+        <translation>דאָס אַרײַנגיין האָט געדויערט צו לאַנג. פּרובירט ווידער.</translation>
+    </message>
+    <message>
+        <source>Cannot listen for the browser&apos;s answer on this device.</source>
+        <translation>מע קען נישט באַקומען דעם בלעטערערס ענטפֿער אויף דעם מכשיר.</translation>
+    </message>
+    <message>
+        <source>Signed in. You can close this page and go back to e3mail.</source>
+        <translation>אַרײַן. איר קענט פֿאַרמאַכן דעם בלאַט און זיך אומקערן צו e3mail.</translation>
+    </message>
+    <message>
+        <source>%1 did not allow e3mail to stay signed in.</source>
+        <translation>%1 האָט נישט דערלויבט e3mail צו בלײַבן אַרײַן.</translation>
+    </message>
+    <message>
+        <source>%1 refused the sign-in.</source>
+        <translation>%1 האָט אָפּגעזאָגט דאָס אַרײַנגיין.</translation>
     </message>
 </context>
 <context>

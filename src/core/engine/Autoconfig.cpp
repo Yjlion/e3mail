@@ -120,6 +120,11 @@ Autoconfig::Result Autoconfig::parseAutoconfig(const QByteArray &xml, const QStr
                                                          : net::Security::Plain;
             } else if (inServer && name == QLatin1String("username")) {
                 cur.username = expand(x.readElementText(), addr);
+            } else if (inServer && name == QLatin1String("authentication")) {
+                if (x.readElementText().trimmed() == QLatin1String("OAuth2"))
+                    cur.oauth = true;
+            } else if (!inServer && name == QLatin1String("issuer")) {
+                r.oauthIssuer = x.readElementText().trimmed();
             }
         } else if (x.isEndElement() && inServer
                    && (x.name() == QLatin1String("incomingServer") || x.name() == QLatin1String("outgoingServer"))) {

@@ -492,6 +492,10 @@ To: %4
         <translation>מכשיר ללא שם</translation>
     </message>
     <message>
+        <source>You signed in as %1, not as %2.</source>
+        <translation>התחברתם בתור %1, לא בתור %2.</translation>
+    </message>
+    <message>
         <source>(no subject)</source>
         <translation>(ללא נושא)</translation>
     </message>
@@ -1430,6 +1434,10 @@ To: %4
         <translation>הגדרות השרת נוחשו מהכתובת. יש לבדוק אותן לפני ההתחברות.</translation>
     </message>
     <message>
+        <source>You signed in as %1, not as %2. Sign in with the account of the address you are adding.</source>
+        <translation>התחברתם בתור %1, לא בתור %2. התחברו עם החשבון של הכתובת שאתם מוסיפים.</translation>
+    </message>
+    <message>
         <source>Enter your email address and password.</source>
         <translation>יש להזין כתובת דואר וסיסמה.</translation>
     </message>
@@ -1449,8 +1457,24 @@ To: %4
         <translation>כתובת דואר</translation>
     </message>
     <message>
+        <source>Signed in with %1</source>
+        <translation>מחובר דרך %1</translation>
+    </message>
+    <message>
+        <source>Sign in with %1</source>
+        <translation>התחברות דרך %1</translation>
+    </message>
+    <message>
+        <source>Opens %1 in your browser. e3mail never sees your password there. Or use an app password below.</source>
+        <translation>פותח את %1 בדפדפן. e3mail אף פעם לא רואה שם את הסיסמה שלכם. או השתמשו למטה בסיסמת אפליקציה.</translation>
+    </message>
+    <message>
         <source>Password</source>
         <translation>סיסמה</translation>
+    </message>
+    <message>
+        <source>App password</source>
+        <translation>סיסמת אפליקציה</translation>
     </message>
     <message>
         <source>Your name (optional)</source>
@@ -1615,6 +1639,10 @@ To: %4
         <translation>מחובר</translation>
     </message>
     <message>
+        <source>Signed out by %1 — sign in again</source>
+        <translation>%1 ניתק אתכם — התחברו מחדש</translation>
+    </message>
+    <message>
         <source>Login failed — check the password</source>
         <translation>הכניסה נכשלה — יש לבדוק את הסיסמה</translation>
     </message>
@@ -1625,6 +1653,29 @@ To: %4
     <message>
         <source>Offline</source>
         <translation>לא מחובר</translation>
+    </message>
+</context>
+<context>
+    <name>SignIn</name>
+    <message>
+        <source>The sign-in took too long. Try again.</source>
+        <translation>ההתחברות ארכה יותר מדי. נסו שוב.</translation>
+    </message>
+    <message>
+        <source>Cannot listen for the browser&apos;s answer on this device.</source>
+        <translation>אי אפשר לקבל במכשיר הזה את תשובת הדפדפן.</translation>
+    </message>
+    <message>
+        <source>Signed in. You can close this page and go back to e3mail.</source>
+        <translation>מחובר. אפשר לסגור את הדף הזה ולחזור ל־e3mail.</translation>
+    </message>
+    <message>
+        <source>%1 did not allow e3mail to stay signed in.</source>
+        <translation>%1 לא איפשר ל־e3mail להישאר מחובר.</translation>
+    </message>
+    <message>
+        <source>%1 refused the sign-in.</source>
+        <translation>%1 דחה את ההתחברות.</translation>
     </message>
 </context>
 <context>

@@ -1,6 +1,6 @@
 # Shared test helpers: the in-process fake mail system, and an in-process
 # network between devices.
-add_library(e3testsupport STATIC FakeMailServer.cpp FakeMailServer.h
+add_library(e3testsupport STATIC FakeMailServer.cpp FakeMailServer.h FakeOAuthServer.cpp FakeOAuthServer.h
     LoopbackTransport.cpp LoopbackTransport.h DeviceClone.cpp DeviceClone.h)
 target_link_libraries(e3testsupport PUBLIC e3core Qt6::Network Qt6::Test)
 target_include_directories(e3testsupport PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
@@ -38,6 +38,10 @@ foreach(src ${E3_TEST_SOURCES})
         e3_add_test(${name})
     endif()
 endforeach()
+
+# Signing in in a browser (src/oauthflow), against FakeOAuthServer.
+target_link_libraries(tst_oauth PRIVATE e3oauthflow)
+target_compile_definitions(tst_oauth PRIVATE E3MAIL_TEST_BUILT_GOOGLE_ID="${E3MAIL_OAUTH_GOOGLE_ID}")
 
 # Not a test: builds the demonstration mailbox used for screenshots.
 add_executable(e3mail-fixtures make_fixtures.cpp)

@@ -14,8 +14,8 @@ shift
 ABIS=("$@")
 [[ ${#ABIS[@]} -gt 0 ]] || ABIS=(x86_64 arm64_v8a)
 QT_VERSION=${QT_VERSION:-6.10.3}
-# Add-on modules beyond Qt's base: the camera for pairing codes.
-QT_MODULES=(qtmultimedia)
+# Add-on modules beyond Qt's base: the camera for pairing codes, OAuth.
+QT_MODULES=(qtmultimedia qtnetworkauth)
 # r27c: r26b's libc++ is too old for Botan 3 (no operator<=> it needs).
 NDK_VERSION=${NDK_VERSION:-27.2.12479018}
 TOOLS_ZIP=commandlinetools-linux-11076708_latest.zip

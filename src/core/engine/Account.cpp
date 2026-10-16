@@ -252,9 +252,14 @@ void Account::configure(const Settings &s)
     m_config->setInt(cfg::AcceptInvalidCerts, s.acceptInvalidCertificates);
     m_config->set(cfg::InCertSha256, QString::fromLatin1(s.inCertSha256));
     m_config->set(cfg::SmtpCertSha256, QString::fromLatin1(s.smtpCertSha256));
+    m_config->set(cfg::Auth, s.auth.isEmpty() ? QStringLiteral("password") : s.auth);
+    m_config->set(cfg::OAuthClientId, s.oauthClientId);
+    m_config->set(cfg::OAuthClientSecret, s.oauthClientSecret);
+    m_config->set(cfg::OAuthTokenUrl, s.oauthTokenUrl);
     m_config->setInt(cfg::Configured, 1);
     tx.commit();
     storePasswords(s.inPassword, s.smtpPassword);
+    storeRefreshToken(s.oauthRefresh);
     mail::Keyring::ensureSelfKey(*m_ctx, s.addr.trimmed());
 }
 
@@ -269,6 +274,18 @@ void Account::storePasswords(const QString &inPassword, const QString &smtp)
         qCWarning(lcEngine) << "no OS keyring; storing the password in the account database";
         m_config->set(cfg::InPassword, inPassword);
         m_config->set(cfg::SmtpPassword, smtpPassword);
+    }
+}
+
+void Account::storeRefreshToken(const QString &token)
+{
+    if (token.isEmpty()) {
+        SecretStore::remove(secretKey(m_id, "oauth"));
+        m_db->run("DELETE FROM config WHERE key=?", cfg::OAuthRefresh);
+    } else if (SecretStore::write(secretKey(m_id, "oauth"), token)) {
+        m_db->run("DELETE FROM config WHERE key=?", cfg::OAuthRefresh);
+    } else {
+        m_config->set(cfg::OAuthRefresh, token);
     }
 }
 
@@ -296,6 +313,15 @@ Account::Settings Account::settings() const
         s.inPassword = SecretStore::read(secretKey(m_id, "in")).value_or(QString());
         s.smtpPassword = SecretStore::read(secretKey(m_id, "smtp")).value_or(s.inPassword);
     }
+    s.auth = m_config->get(cfg::Auth);
+    if (s.auth.startsWith(QLatin1String("oauth:"))) {
+        s.oauthClientId = m_config->get(cfg::OAuthClientId);
+        s.oauthClientSecret = m_config->get(cfg::OAuthClientSecret);
+        s.oauthTokenUrl = m_config->get(cfg::OAuthTokenUrl);
+        s.oauthRefresh = m_config->isSet(cfg::OAuthRefresh)
+            ? m_config->get(cfg::OAuthRefresh)
+            : SecretStore::read(secretKey(m_id, "oauth")).value_or(QString());
+    }
     return s;
 }
 
@@ -317,21 +343,49 @@ static MailWorker::Credentials credentialsFrom(const Account::Settings &s)
     c.smtp.password = s.smtpPassword.isEmpty() ? s.inPassword : s.smtpPassword;
     c.smtp.acceptInvalidCertificates = s.acceptInvalidCertificates;
     c.smtp.pinnedSha256 = s.smtpCertSha256;
+    if (s.auth.startsWith(QLatin1String("oauth:"))) {
+        // The client the refresh token was issued to, whatever this build's.
+        net::oauth::Provider p = net::oauth::known(s.auth.mid(6)).value_or(net::oauth::Provider());
+        if (!s.oauthClientId.isEmpty()) {
+            p.clientId = s.oauthClientId;
+            p.clientSecret = s.oauthClientSecret;
+        }
+        if (!s.oauthTokenUrl.isEmpty())
+            p.tokenUrl = QUrl(s.oauthTokenUrl);
+        c.oauth = std::make_shared<net::oauth::TokenSource>(p, s.oauthRefresh);
+        if (!s.oauthAccess.isEmpty())
+            c.oauth->setAccessToken(s.oauthAccess, s.oauthExpires);
+        c.incoming.password.clear();
+        c.smtp.password.clear();
+    }
     return c;
 }
 
 MailWorker::Credentials Account::credentials() const
 {
-    return credentialsFrom(settings());
+    MailWorker::Credentials c = credentialsFrom(settings());
+    if (c.oauth) {
+        // Microsoft rotates refresh tokens; the worker's thread hands the
+        // new one here to be stored.
+        QPointer<Account> self(const_cast<Account *>(this));
+        c.oauth->onRefreshTokenChanged = [self](const QString &token) {
+            QMetaObject::invokeMethod(self.data(), [self, token] {
+                if (self)
+                    self->storeRefreshToken(token);
+            }, Qt::QueuedConnection);
+        };
+    }
+    return c;
 }
 
 QFuture<Account::CheckResult> Account::check(const Settings &s)
 {
-    const MailWorker::Credentials c = credentialsFrom(s);
-    return QtConcurrent::run([c]() -> CheckResult {
+    MailWorker::Credentials c = credentialsFrom(s);
+    return QtConcurrent::run([c]() mutable -> CheckResult {
         CheckResult r;
         r.server = QStringLiteral("in");
         try {
+            MailWorker::fillTokens(c, false);
             if (c.protocol == QLatin1String("pop3")) {
                 net::Pop3Client pop;
                 pop.connect(c.incoming);

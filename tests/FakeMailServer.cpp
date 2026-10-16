@@ -10,17 +10,21 @@ struct FakeMailServer::ImapConn
 {
     QString user;
     QByteArray pendingAuthTag;
+    QByteArray pendingOAuthTag;    // waiting for the initial response
+    QByteArray failingOAuthTag;    // challenge sent; the client's answer ends it
     QByteArray idleTag;
     quint32 seenNext = 0; // UIDNEXT as of the last SELECT
 };
 struct FakeMailServer::Pop3Conn
 {
+    bool failingOAuth = false;
     QString user;
     QString pendingUser;
     QList<int> dele;
 };
 struct FakeMailServer::SmtpConn
 {
+    bool failingOAuth = false;
     bool authed = false;
     bool inData = false;
     QByteArray data;
@@ -156,6 +160,37 @@ bool FakeMailServer::checkPlain(const QByteArray &b64, QString *user) const
     return true;
 }
 
+// XOAUTH2 ("user=…^Aauth=Bearer …^A^A") or OAUTHBEARER ("n,a=…,^A…^Aauth=Bearer …^A^A").
+bool FakeMailServer::checkOAuth(const QByteArray &b64, QString *user)
+{
+    const QByteArray raw = QByteArray::fromBase64(b64);
+    if (oauthBearerOnly && !raw.startsWith("n,")) {
+        ++oauthRefused; // XOAUTH2 where only OAUTHBEARER is offered
+        return false;
+    }
+    QString u, token;
+    for (const QByteArray &part : raw.split('\x01')) {
+        if (part.startsWith("user="))
+            u = QString::fromUtf8(part.mid(5));
+        else if (part.startsWith("n,a="))
+            u = QString::fromUtf8(part.mid(4).chopped(part.endsWith(',') ? 1 : 0));
+        else if (part.startsWith("auth=Bearer "))
+            token = QString::fromUtf8(part.mid(12));
+    }
+    u = u.toLower();
+    if (u.isEmpty() || !m_tokens.contains(u) || m_tokens.value(u) != token) {
+        ++oauthRefused;
+        return false;
+    }
+    *user = u;
+    return true;
+}
+
+QByteArray FakeMailServer::oauthChallenge() const
+{
+    return QByteArray(R"({"status":"401","schemes":"bearer","scope":"https://mail.google.com/"})").toBase64();
+}
+
 void FakeMailServer::imapLine(QTcpSocket *s, ImapConn &c, const QByteArray &line)
 {
     if (stalled)
@@ -165,6 +200,22 @@ void FakeMailServer::imapLine(QTcpSocket *s, ImapConn &c, const QByteArray &line
             m_idlers.removeIf([s](const Idler &i) { return i.socket == s; });
             s->write(c.idleTag + " OK IDLE done\r\n");
             c.idleTag.clear();
+        }
+        return;
+    }
+    if (!c.failingOAuthTag.isEmpty()) {
+        s->write(c.failingOAuthTag + " NO [AUTHENTICATIONFAILED] invalid credentials\r\n");
+        c.failingOAuthTag.clear();
+        return;
+    }
+    if (!c.pendingOAuthTag.isEmpty()) {
+        const QByteArray tag = c.pendingOAuthTag;
+        c.pendingOAuthTag.clear();
+        if (checkOAuth(line.trimmed(), &c.user)) {
+            s->write(tag + " OK logged in\r\n");
+        } else {
+            c.failingOAuthTag = tag;
+            s->write("+ " + oauthChallenge() + "\r\n");
         }
         return;
     }
@@ -189,6 +240,8 @@ void FakeMailServer::imapLine(QTcpSocket *s, ImapConn &c, const QByteArray &line
         QByteArray caps = "* CAPABILITY IMAP4rev1";
         if (imapAuthPlain)
             caps += " AUTH=PLAIN SASL-IR";
+        if (oauth)
+            caps += oauthBearerOnly ? " AUTH=OAUTHBEARER" : " AUTH=XOAUTH2 AUTH=OAUTHBEARER";
         if (imapIdle)
             caps += " IDLE";
         if (imapUidPlus)
@@ -202,6 +255,18 @@ void FakeMailServer::imapLine(QTcpSocket *s, ImapConn &c, const QByteArray &line
             s->write(tag + " OK logged in\r\n");
         } else {
             s->write(tag + " NO [AUTHENTICATIONFAILED] bad credentials\r\n");
+        }
+    } else if (cmd == "AUTHENTICATE" && oauth && (args.value(0).toUpper() == "XOAUTH2" || args.value(0).toUpper() == "OAUTHBEARER")) {
+        if (args.size() >= 2) {
+            if (checkOAuth(args[1], &c.user)) {
+                s->write(tag + " OK logged in\r\n");
+            } else {
+                c.failingOAuthTag = tag;
+                s->write("+ " + oauthChallenge() + "\r\n");
+            }
+        } else {
+            c.pendingOAuthTag = tag;
+            s->write("+ \r\n");
         }
     } else if (cmd == "AUTHENTICATE") {
         if (args.size() >= 2) {
@@ -293,6 +358,11 @@ void FakeMailServer::pop3Line(QTcpSocket *s, Pop3Conn &c, const QByteArray &line
 {
     if (stalled)
         return;
+    if (c.failingOAuth) {
+        c.failingOAuth = false;
+        s->write("-ERR [AUTH] invalid credentials\r\n");
+        return;
+    }
     const QList<QByteArray> a = line.split(' ');
     const QByteArray cmd = a.value(0).toUpper();
     QList<Stored> &box = m_boxes[c.user];
@@ -306,7 +376,13 @@ void FakeMailServer::pop3Line(QTcpSocket *s, Pop3Conn &c, const QByteArray &line
         return out;
     };
     if (cmd == "CAPA") {
-        s->write(QByteArray("+OK\r\nUIDL\r\nUSER\r\n") + (pop3SaslPlain ? "SASL PLAIN\r\n" : "") + ".\r\n");
+        QByteArray sasl;
+        if (pop3SaslPlain)
+            sasl += " PLAIN";
+        if (oauth)
+            sasl += oauthBearerOnly ? " OAUTHBEARER" : " XOAUTH2 OAUTHBEARER";
+        s->write(QByteArray("+OK\r\nUIDL\r\nUSER\r\n") + (sasl.isEmpty() ? QByteArray() : "SASL" + sasl + "\r\n")
+                 + ".\r\n");
     } else if (cmd == "USER") {
         c.pendingUser = QString::fromUtf8(a.value(1)).toLower();
         s->write("+OK\r\n");
@@ -316,6 +392,13 @@ void FakeMailServer::pop3Line(QTcpSocket *s, Pop3Conn &c, const QByteArray &line
             s->write("+OK logged in\r\n");
         } else {
             s->write("-ERR bad credentials\r\n");
+        }
+    } else if (cmd == "AUTH" && oauth && (a.value(1).toUpper() == "XOAUTH2" || a.value(1).toUpper() == "OAUTHBEARER")) {
+        if (checkOAuth(a.value(2), &c.user)) {
+            s->write("+OK logged in\r\n");
+        } else {
+            c.failingOAuth = true;
+            s->write("+ " + oauthChallenge() + "\r\n");
         }
     } else if (cmd == "AUTH") {
         s->write(checkPlain(a.value(2), &c.user) ? "+OK logged in\r\n" : "-ERR bad credentials\r\n");
@@ -380,9 +463,24 @@ void FakeMailServer::smtpLine(QTcpSocket *s, SmtpConn &c, const QByteArray &line
         c.data += (line.startsWith('.') ? line.mid(1) : line) + "\r\n";
         return;
     }
+    if (c.failingOAuth) {
+        c.failingOAuth = false;
+        s->write("535 5.7.8 invalid credentials\r\n");
+        return;
+    }
     const QByteArray upper = line.toUpper();
     if (upper.startsWith("EHLO") || upper.startsWith("HELO")) {
-        s->write("250-fake\r\n250-AUTH PLAIN LOGIN\r\n250 8BITMIME\r\n");
+        s->write(QByteArray("250-fake\r\n250-AUTH PLAIN LOGIN")
+                 + (oauth ? (oauthBearerOnly ? " OAUTHBEARER" : " XOAUTH2 OAUTHBEARER") : "") + "\r\n250 8BITMIME\r\n");
+    } else if (oauth && (upper.startsWith("AUTH XOAUTH2 ") || upper.startsWith("AUTH OAUTHBEARER "))) {
+        QString user;
+        c.authed = checkOAuth(line.mid(line.lastIndexOf(' ') + 1), &user);
+        if (c.authed) {
+            s->write("235 ok\r\n");
+        } else {
+            c.failingOAuth = true;
+            s->write("334 " + oauthChallenge() + "\r\n");
+        }
     } else if (upper.startsWith("AUTH PLAIN ")) {
         QString user;
         c.authed = checkPlain(line.mid(11), &user);

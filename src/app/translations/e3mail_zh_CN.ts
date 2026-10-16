@@ -492,6 +492,10 @@ To: %4
         <translation>未命名设备</translation>
     </message>
     <message>
+        <source>You signed in as %1, not as %2.</source>
+        <translation>你以 %1 身份登录，而不是 %2。</translation>
+    </message>
+    <message>
         <source>(no subject)</source>
         <translation>（无主题）</translation>
     </message>
@@ -1420,6 +1424,10 @@ To: %4
         <translation>根据地址推测的服务器设置。连接前请检查。</translation>
     </message>
     <message>
+        <source>You signed in as %1, not as %2. Sign in with the account of the address you are adding.</source>
+        <translation>你以 %1 身份登录，而不是 %2。请使用你正在添加的地址所属的账户登录。</translation>
+    </message>
+    <message>
         <source>Enter your email address and password.</source>
         <translation>请输入您的邮箱地址和密码。</translation>
     </message>
@@ -1439,8 +1447,24 @@ To: %4
         <translation>邮箱地址</translation>
     </message>
     <message>
+        <source>Signed in with %1</source>
+        <translation>已通过 %1 登录</translation>
+    </message>
+    <message>
+        <source>Sign in with %1</source>
+        <translation>通过 %1 登录</translation>
+    </message>
+    <message>
+        <source>Opens %1 in your browser. e3mail never sees your password there. Or use an app password below.</source>
+        <translation>在浏览器中打开 %1。e3mail 不会看到你在那里输入的密码。也可以在下方使用应用专用密码。</translation>
+    </message>
+    <message>
         <source>Password</source>
         <translation>密码</translation>
+    </message>
+    <message>
+        <source>App password</source>
+        <translation>应用专用密码</translation>
     </message>
     <message>
         <source>Your name (optional)</source>
@@ -1604,6 +1628,10 @@ To: %4
         <translation>已连接</translation>
     </message>
     <message>
+        <source>Signed out by %1 — sign in again</source>
+        <translation>已被 %1 退出登录 — 请重新登录</translation>
+    </message>
+    <message>
         <source>Login failed — check the password</source>
         <translation>登录失败 — 请检查密码</translation>
     </message>
@@ -1614,6 +1642,29 @@ To: %4
     <message>
         <source>Offline</source>
         <translation>离线</translation>
+    </message>
+</context>
+<context>
+    <name>SignIn</name>
+    <message>
+        <source>The sign-in took too long. Try again.</source>
+        <translation>登录耗时过长。请重试。</translation>
+    </message>
+    <message>
+        <source>Cannot listen for the browser&apos;s answer on this device.</source>
+        <translation>无法在此设备上接收浏览器的回应。</translation>
+    </message>
+    <message>
+        <source>Signed in. You can close this page and go back to e3mail.</source>
+        <translation>已登录。你可以关闭此页面并返回 e3mail。</translation>
+    </message>
+    <message>
+        <source>%1 did not allow e3mail to stay signed in.</source>
+        <translation>%1 未允许 e3mail 保持登录。</translation>
+    </message>
+    <message>
+        <source>%1 refused the sign-in.</source>
+        <translation>%1 拒绝了登录。</translation>
     </message>
 </context>
 <context>
