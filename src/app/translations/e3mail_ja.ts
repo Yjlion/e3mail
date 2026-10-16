@@ -9,6 +9,25 @@
     </message>
 </context>
 <context>
+    <name>AndroidSync</name>
+    <message>
+        <source>Background sync</source>
+        <translation>バックグラウンド同期</translation>
+    </message>
+    <message>
+        <source>e3mail is keeping in sync</source>
+        <translation>e3mail は同期を続けています</translation>
+    </message>
+    <message>
+        <source>New mail and other devices&apos; changes arrive while e3mail is in the background.</source>
+        <translation>e3mail がバックグラウンドにある間も、新着メールと他のデバイスの変更が届きます。</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation>停止</translation>
+    </message>
+</context>
+<context>
     <name>Compose</name>
     <message>
         <source>On %1 at %2, %3 wrote:</source>
@@ -1070,6 +1089,14 @@ To: %4
         <translation>このシステムにはデスクトップ通知がありません。</translation>
     </message>
     <message>
+        <source>Keep syncing in the background</source>
+        <translation>バックグラウンドで同期を続ける</translation>
+    </message>
+    <message>
+        <source>Mail and your other devices&apos; changes keep arriving while e3mail is not in front. Android shows a notification for as long as this is on, and it uses more battery. Swiping e3mail away from the recent apps ends it.</source>
+        <translation>e3mail が前面にないときも、メールと他のデバイスの変更が届き続けます。オンの間は Android が通知を表示し続け、バッテリーの消費が増えます。最近使ったアプリから e3mail をスワイプして閉じると終了します。</translation>
+    </message>
+    <message>
         <source>You</source>
         <translation>あなた</translation>
     </message>
@@ -1272,6 +1299,14 @@ To: %4
     <message>
         <source>This build of e3mail cannot sync with other devices.</source>
         <translation>このビルドの e3mail は他のデバイスと同期できません。</translation>
+    </message>
+    <message>
+        <source>“%1” removed this device from the account, so they no longer sync. Mail still arrives here from the server.</source>
+        <translation>「%1」がこのデバイスをアカウントから削除したため、同期されなくなりました。メールは引き続きサーバーからここに届きます。</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
     </message>
     <message>
         <source>This device</source>

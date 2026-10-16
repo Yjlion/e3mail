@@ -9,6 +9,25 @@
     </message>
 </context>
 <context>
+    <name>AndroidSync</name>
+    <message>
+        <source>Background sync</source>
+        <translation>Synchronizacja w tle</translation>
+    </message>
+    <message>
+        <source>e3mail is keeping in sync</source>
+        <translation>e3mail pozostaje zsynchronizowany</translation>
+    </message>
+    <message>
+        <source>New mail and other devices&apos; changes arrive while e3mail is in the background.</source>
+        <translation>Nowa poczta i zmiany z innych urządzeń przychodzą, gdy e3mail działa w tle.</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation>Zatrzymaj</translation>
+    </message>
+</context>
+<context>
     <name>Compose</name>
     <message>
         <source>On %1 at %2, %3 wrote:</source>
@@ -1090,6 +1109,14 @@ Do: %4
         <translation>Ten system nie oferuje powiadomień na pulpicie.</translation>
     </message>
     <message>
+        <source>Keep syncing in the background</source>
+        <translation>Synchronizuj dalej w tle</translation>
+    </message>
+    <message>
+        <source>Mail and your other devices&apos; changes keep arriving while e3mail is not in front. Android shows a notification for as long as this is on, and it uses more battery. Swiping e3mail away from the recent apps ends it.</source>
+        <translation>Poczta i zmiany z twoich innych urządzeń przychodzą dalej, gdy e3mail nie jest na pierwszym planie. Dopóki to jest włączone, Android pokazuje powiadomienie, a bateria zużywa się szybciej. Przesunięcie e3mail z ostatnich aplikacji kończy to.</translation>
+    </message>
+    <message>
         <source>You</source>
         <translation>Ty</translation>
     </message>
@@ -1292,6 +1319,14 @@ Do: %4
     <message>
         <source>This build of e3mail cannot sync with other devices.</source>
         <translation>Ta wersja e3mail nie synchronizuje się z innymi urządzeniami.</translation>
+    </message>
+    <message>
+        <source>“%1” removed this device from the account, so they no longer sync. Mail still arrives here from the server.</source>
+        <translation>„%1” usunęło to urządzenie z konta, więc nie synchronizują się już. Poczta nadal przychodzi tu z serwera.</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
     </message>
     <message>
         <source>This device</source>

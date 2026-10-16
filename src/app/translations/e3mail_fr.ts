@@ -9,6 +9,25 @@
     </message>
 </context>
 <context>
+    <name>AndroidSync</name>
+    <message>
+        <source>Background sync</source>
+        <translation>Synchronisation en arrière-plan</translation>
+    </message>
+    <message>
+        <source>e3mail is keeping in sync</source>
+        <translation>e3mail reste synchronisé</translation>
+    </message>
+    <message>
+        <source>New mail and other devices&apos; changes arrive while e3mail is in the background.</source>
+        <translation>Le nouveau courrier et les modifications de vos autres appareils arrivent pendant que e3mail est en arrière-plan.</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation>Arrêter</translation>
+    </message>
+</context>
+<context>
     <name>Compose</name>
     <message>
         <source>On %1 at %2, %3 wrote:</source>
@@ -397,7 +416,7 @@ Objet : %3
     </message>
     <message>
         <source>On the device that has the account, open Settings, Devices, “Pair a new device”, and scan the QR code it shows, or enter its code here.</source>
-        <translation>Sur l'appareil qui a le compte, ouvrez Réglages, Appareils, « Associer un nouvel appareil », et scannez le code QR affiché, ou saisissez ici son code.</translation>
+        <translation>Sur l&apos;appareil qui a le compte, ouvrez Réglages, Appareils, « Associer un nouvel appareil », et scannez le code QR affiché, ou saisissez ici son code.</translation>
     </message>
     <message>
         <source>On the device that has the account, open Settings, Devices, “Pair a new device”, and enter the code it shows here.</source>
@@ -1018,19 +1037,19 @@ Objet : %3
     <name>ScanView</name>
     <message>
         <source>This device has no camera. Type the code instead.</source>
-        <translation>Cet appareil n'a pas de caméra. Saisissez plutôt le code.</translation>
+        <translation>Cet appareil n&apos;a pas de caméra. Saisissez plutôt le code.</translation>
     </message>
     <message>
         <source>e3mail may not use the camera. Allow it in the system settings, or type the code instead.</source>
-        <translation>e3mail n'a pas le droit d'utiliser la caméra. Autorisez-le dans les réglages du système, ou saisissez plutôt le code.</translation>
+        <translation>e3mail n&apos;a pas le droit d&apos;utiliser la caméra. Autorisez-le dans les réglages du système, ou saisissez plutôt le code.</translation>
     </message>
     <message>
         <source>Asking for the camera…</source>
-        <translation>Demande d'accès à la caméra…</translation>
+        <translation>Demande d&apos;accès à la caméra…</translation>
     </message>
     <message>
         <source>Point the camera at the QR code on the other device.</source>
-        <translation>Dirigez la caméra vers le code QR de l'autre appareil.</translation>
+        <translation>Dirigez la caméra vers le code QR de l&apos;autre appareil.</translation>
     </message>
     <message>
         <source>Type the code instead</source>
@@ -1078,6 +1097,14 @@ Objet : %3
     <message>
         <source>This system offers no desktop notifications.</source>
         <translation>Ce système n’offre pas de notifications de bureau.</translation>
+    </message>
+    <message>
+        <source>Keep syncing in the background</source>
+        <translation>Continuer à synchroniser en arrière-plan</translation>
+    </message>
+    <message>
+        <source>Mail and your other devices&apos; changes keep arriving while e3mail is not in front. Android shows a notification for as long as this is on, and it uses more battery. Swiping e3mail away from the recent apps ends it.</source>
+        <translation>Le courrier et les modifications de vos autres appareils continuent d'arriver quand e3mail n'est pas au premier plan. Android affiche une notification tant que c'est activé, et cela consomme plus de batterie. Balayer e3mail hors des applications récentes y met fin.</translation>
     </message>
     <message>
         <source>You</source>
@@ -1282,6 +1309,14 @@ Objet : %3
     <message>
         <source>This build of e3mail cannot sync with other devices.</source>
         <translation>Cette version d&apos;e3mail ne peut pas se synchroniser avec d&apos;autres appareils.</translation>
+    </message>
+    <message>
+        <source>“%1” removed this device from the account, so they no longer sync. Mail still arrives here from the server.</source>
+        <translation>« %1 » a retiré cet appareil du compte : ils ne se synchronisent plus. Le courrier continue d&apos;arriver ici depuis le serveur.</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
     </message>
     <message>
         <source>This device</source>

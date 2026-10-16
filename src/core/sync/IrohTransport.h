@@ -42,6 +42,7 @@ public:
         QString relayUrl;
         quint16 port = 0; // 0: any
         bool loopback = false; // this machine only: tests and screenshots
+        bool relayOnly = false; // no direct paths, only the relay: tests
     };
 
     // `db` is read for the paired devices; `self` is this device's id.
@@ -66,6 +67,8 @@ public:
     void acceptAny(bool on);
     bool isConnected(const QString &device) const { return m_byDevice.contains(device); }
     QStringList connectedDevices() const { return m_byDevice.keys(); }
+    // How data reaches a connected device now: "direct", "relay", or empty.
+    QString path(const QString &device) const;
 
     void send(const QString &device, const QByteArray &message) override;
     void requestBlob(const QString &device, const QString &name) override;
@@ -81,6 +84,9 @@ Q_SIGNALS:
     void strangerFrame(quint64 conn, const QString &peer, quint8 kind, const QByteArray &data);
     void strangerConnected(quint64 conn, const QString &peer, bool incoming);
     void strangerClosed(quint64 conn, const QString &reason);
+    // A paired device's endpoint refused this one as not paired: it no longer
+    // counts this device as one of the account's.
+    void refusedBy(const QString &device);
 
 private:
     struct Conn

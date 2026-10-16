@@ -66,7 +66,7 @@ QByteArray chunkHeader(bool blob, const QString &name, qint64 offset)
 }
 
 // Settings that belong to one device and never travel in a snapshot.
-const char *const kDeviceOnly[] = {cfg::DeviceId, cfg::P2pSecret, cfg::P2pPort, cfg::P2pLoopback, cfg::DeviceName, cfg::InPassword,
+const char *const kDeviceOnly[] = {cfg::DeviceId, cfg::P2pSecret, cfg::P2pPort, cfg::P2pLoopback, cfg::P2pRelayOnly, cfg::P2pRemovedBy, cfg::DeviceName, cfg::InPassword,
                                    cfg::SmtpPassword};
 
 // Whether an endpoint address offers only this machine's own addresses.

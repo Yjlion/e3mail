@@ -19,6 +19,7 @@
 #endif
 #include "util/Log.h"
 
+#include <QDateTime>
 #include <QDir>
 #include <QSet>
 #include <QtConcurrent>
@@ -62,7 +63,9 @@ Account::Account(int id, const QString &dir, QObject *parent) : QObject(parent),
     // Whatever changed here, the other devices hear of it.
     connect(this, &Account::mailChanged, this, &Account::pushSoon);
     m_fallback.setSingleShot(true);
-    m_fallback.setInterval(5 * 60 * 1000);
+    // Five minutes; E3MAIL_FALLBACK_SECONDS shortens it for live tests.
+    const int fallbackSeconds = qEnvironmentVariableIntValue("E3MAIL_FALLBACK_SECONDS");
+    m_fallback.setInterval((fallbackSeconds > 0 ? fallbackSeconds : 5 * 60) * 1000);
     connect(&m_fallback, &QTimer::timeout, this, &Account::mailFallbackNow);
 }
 
@@ -95,6 +98,7 @@ bool Account::startDevices()
     o.secret = secret;
     o.port = quint16(m_config->getInt(cfg::P2pPort));
     o.loopback = m_config->getBool(cfg::P2pLoopback);
+    o.relayOnly = m_config->getBool(cfg::P2pRelayOnly);
     const QString relay = m_config->get(cfg::P2pRelay);
     if (relay == QLatin1String("off")) {
         o.relay = sync::IrohTransport::Relay::Off;
@@ -111,6 +115,7 @@ bool Account::startDevices()
         raw->refreshPeers(); // another device may have joined (device.pair)
         Q_EMIT mailChanged();
     });
+    connect(raw, &sync::IrohTransport::refusedBy, this, &Account::refusedBy);
     connect(raw, &sync::DeviceTransport::connected, this, &Account::statusChanged);
     connect(raw, &sync::DeviceTransport::disconnected, this, &Account::statusChanged);
     m_transport = std::move(t);
@@ -150,6 +155,29 @@ void Account::removeDevice(const QString &device)
         m_ops->record(op::DeviceUnpair, {{QStringLiteral("device"), device}});
         tx.commit();
     }
+#ifdef E3MAIL_HAVE_P2P
+    if (auto *t = qobject_cast<sync::IrohTransport *>(m_transport.get()))
+        t->refreshPeers();
+#endif
+    notifyChanged();
+    Q_EMIT statusChanged();
+}
+
+void Account::refusedBy(const QString &device)
+{
+    // Just after pairing, the other side may not have taken this device into
+    // its list yet; only a pairing older than this counts as a removal.
+    constexpr qint64 kSettled = 10 * 60 * 1000;
+    const auto pairedAt = m_db->queryInt("SELECT paired_at FROM devices WHERE id=?", device);
+    if (!pairedAt || QDateTime::currentMSecsSinceEpoch() - *pairedAt < kSettled)
+        return;
+    const QString name = m_db->queryText("SELECT name FROM devices WHERE id=?", device).value_or(QString());
+    // Removed there while this device was away (ADR 0010 amendment,
+    // 2026-10-16): stop dialing it, waiting for its acknowledgements and
+    // mailing it changes. Not an op: the other devices still have it.
+    m_db->run("DELETE FROM devices WHERE id=?", device);
+    m_config->set(cfg::P2pRemovedBy, name);
+    qCInfo(lcEngine) << "devices: removed from the account by" << device;
 #ifdef E3MAIL_HAVE_P2P
     if (auto *t = qobject_cast<sync::IrohTransport *>(m_transport.get()))
         t->refreshPeers();

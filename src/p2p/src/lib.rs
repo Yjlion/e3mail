@@ -14,9 +14,13 @@ use std::ffi::{CStr, CString, c_char, c_void};
 use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use std::sync::{Arc, Mutex};
 
-use iroh::endpoint::{Connection, RecvStream, SendStream, presets};
+use iroh::endpoint::{Connection, ConnectionError, RecvStream, SendStream, presets};
 use iroh::{Endpoint, EndpointAddr, EndpointId, RelayMap, RelayMode, RelayUrl, SecretKey};
 use tokio::sync::mpsc;
+
+/// How a stranger's connection is closed, before anything is read.
+const CLOSE_NOT_PAIRED: u32 = 1;
+const NOT_PAIRED: &str = "not paired";
 
 /// The protocol every e3mail device speaks; a peer offering another is refused.
 pub const ALPN: &[u8] = b"e3mail/sync/1";
@@ -30,6 +34,16 @@ pub const EVENT_FRAME: i32 = 3;
 pub const RELAY_DEFAULT: i32 = 0;
 pub const RELAY_CUSTOM: i32 = 1;
 pub const RELAY_OFF: i32 = 2;
+
+/// `e3p2p_start`'s `network`: every path, this machine only, or the relay only.
+pub const NETWORK_ANY: i32 = 0;
+pub const NETWORK_LOOPBACK: i32 = 1;
+pub const NETWORK_RELAY_ONLY: i32 = 2;
+
+/// `e3p2p_conn_path`: the path a connection's data takes now.
+pub const PATH_UNKNOWN: i32 = 0;
+pub const PATH_DIRECT: i32 = 1;
+pub const PATH_RELAY: i32 = 2;
 
 /// One thing that happened, for `e3p2p_poll`.
 #[repr(C)]
@@ -155,6 +169,12 @@ async fn run_connection(
         }
     };
     writer.abort();
+    // A refusal says so, whatever the read reported: the other side uses it
+    // to learn that it was removed.
+    let why = match conn.close_reason() {
+        Some(ConnectionError::ApplicationClosed(f)) if f.error_code == CLOSE_NOT_PAIRED.into() => NOT_PAIRED.to_owned(),
+        _ => why,
+    };
     conn.close(0u32.into(), b"bye");
     shared.closed(id, &peer, why);
 }
@@ -182,7 +202,7 @@ async fn accept_loop(endpoint: Endpoint, shared: Arc<Shared>) {
             let Ok(conn) = incoming.await else { return };
             // Strangers are refused before any stream is read.
             if !shared.is_allowed(&conn.remote_id()) {
-                conn.close(1u32.into(), b"not paired");
+                conn.close(CLOSE_NOT_PAIRED.into(), NOT_PAIRED.as_bytes());
                 return;
             }
             let Ok((send, recv)) = conn.accept_bi().await else { return };
@@ -225,16 +245,18 @@ pub extern "C" fn e3p2p_generate_secret(out: *mut u8) {
 
 /// Starts an endpoint with this secret key. `relay`: RELAY_DEFAULT (n0's),
 /// RELAY_CUSTOM (`relay_url`) or RELAY_OFF. `port`: a fixed UDP port, or 0
-/// for any. `loopback`: listen on this machine only (tests and screenshots,
-/// which must neither reach out nor show real addresses). `waker` is called, from another thread, whenever events are
-/// waiting. Null on failure.
+/// for any. `network`: NETWORK_ANY; NETWORK_LOOPBACK, listening on this
+/// machine only (tests and screenshots, which must neither reach out nor show
+/// real addresses); or NETWORK_RELAY_ONLY, no direct paths at all (trying a
+/// relay between two processes on one machine). `waker` is called, from
+/// another thread, whenever events are waiting. Null on failure.
 #[unsafe(no_mangle)]
 pub extern "C" fn e3p2p_start(
     secret: *const u8,
     relay: i32,
     relay_url: *const c_char,
     port: u16,
-    loopback: i32,
+    network: i32,
     waker: Option<Waker>,
     waker_ctx: *mut c_void,
 ) -> *mut e3p2p_node {
@@ -265,7 +287,9 @@ pub extern "C" fn e3p2p_start(
             .secret_key(SecretKey::from_bytes(&bytes))
             .relay_mode(mode)
             .alpns(vec![ALPN.to_vec()]);
-        if loopback != 0 {
+        if network == NETWORK_RELAY_ONLY {
+            builder = builder.clear_ip_transports();
+        } else if network == NETWORK_LOOPBACK {
             builder = builder
                 .clear_ip_transports()
                 .bind_addr(format!("127.0.0.1:{port}").as_str())
@@ -378,6 +402,21 @@ pub extern "C" fn e3p2p_connect(node: *const e3p2p_node, addr: *const c_char) ->
         run_connection(shared, pending, conn, send, recv, rx).await;
     });
     pending
+}
+
+/// The path the connection's data takes now: PATH_DIRECT, PATH_RELAY, or
+/// PATH_UNKNOWN if none is selected yet or the connection is gone.
+#[unsafe(no_mangle)]
+pub extern "C" fn e3p2p_conn_path(node: *const e3p2p_node, conn: u64) -> i32 {
+    let node = unsafe { &*node };
+    let live = node.shared.live.lock().unwrap();
+    let Some(c) = live.get(&conn) else { return PATH_UNKNOWN };
+    let paths = c.paths();
+    match paths.iter().find(|p| p.is_selected()) {
+        Some(p) if p.is_relay() => PATH_RELAY,
+        Some(_) => PATH_DIRECT,
+        None => PATH_UNKNOWN,
+    }
 }
 
 /// Queues a frame. 0 if the connection is gone or the frame too large.

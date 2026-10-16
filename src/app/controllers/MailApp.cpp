@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 #include "MailApp.h"
+#include "AndroidSync.h"
 #include "FileIo.h"
 #include "Languages.h"
 #include "InlineImages.h"
@@ -97,6 +98,11 @@ MailApp::MailApp(AccountManager *manager, QObject *parent) : QObject(parent), m_
     m_notifier = new Notifier(makeSystemNotifierBackend(), this);
     m_notifier->setMode(Notifier::modeFromString(appSettings().value(QStringLiteral("notifications")).toString()));
     m_notifier->setWindowActive([] { return QGuiApplication::applicationState() == Qt::ApplicationActive; });
+    // The process keeps running in the background only while the service
+    // does; it is started here, at launch, while e3mail is in front.
+    androidsync::onStopPressed([this] { setBackgroundSync(false); });
+    if (backgroundSync())
+        androidsync::start();
     connect(m_notifier, &Notifier::activated, this, [this](int accountId, qint64 msgId) {
         if (accountId >= 0 && m_mgr->account(accountId)) {
             m_mgr->select(accountId);
@@ -148,6 +154,26 @@ void MailApp::setNotificationMode(const QString &mode)
 bool MailApp::notificationsAvailable() const
 {
     return m_notifier->available();
+}
+
+bool MailApp::backgroundSync() const
+{
+    return androidsync::available() && appSettings().value(QStringLiteral("backgroundSync")).toBool();
+}
+
+void MailApp::setBackgroundSync(bool on)
+{
+    if (!androidsync::available() || on == backgroundSync())
+        return;
+    QSettings s = appSettings();
+    s.setValue(QStringLiteral("backgroundSync"), on);
+    on ? androidsync::start() : androidsync::stop();
+    Q_EMIT backgroundSyncChanged();
+}
+
+bool MailApp::backgroundSyncAvailable() const
+{
+    return androidsync::available();
 }
 
 MailApp *MailApp::create(QQmlEngine *, QJSEngine *)
@@ -283,6 +309,19 @@ QVariantList MailApp::devices() const
 QString MailApp::deviceName() const
 {
     return account() ? account()->ctx().config.get(cfg::DeviceName) : QString();
+}
+
+QString MailApp::removedBy() const
+{
+    return account() ? account()->ctx().config.get(cfg::P2pRemovedBy) : QString();
+}
+
+void MailApp::dismissRemoved()
+{
+    if (!account())
+        return;
+    account()->ctx().config.set(cfg::P2pRemovedBy, QString());
+    Q_EMIT devicesChanged();
 }
 
 void MailApp::setDeviceName(const QString &name)

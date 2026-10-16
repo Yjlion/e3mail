@@ -119,3 +119,21 @@ account, and the other device still asks).
   as before.
 - The camera is asked for through Qt's permission API when the person
   presses the button, never earlier.
+
+## Amendment — 2026-10-16: removed while away, relay-only, the path
+
+- **A device removed while it was away learns it by being refused.** The
+  refusing endpoint closes with code 1, "not paired"; the dialing device,
+  when its pairing with that device is more than ten minutes old, drops it
+  from its own list and keeps the other device's name (`p2p_removed_by`, a
+  device-only setting) to tell the person in Settings, Devices. It records
+  no op: its remaining devices still have the one that refused it. Before
+  this, a removed device dialed forever and kept every server message for an
+  acknowledgement that would never come. The ten minutes cover a fresh
+  pairing, whose other side may not have taken the new device into its list
+  yet.
+- **Relay only** (`p2p_relay_only`, device-only, for tests): the endpoint
+  has no direct paths at all, so two processes on one machine can only meet
+  through the relay. The pairing code then names only the relay.
+- **The path** each connection takes (direct or relay) is logged when it
+  connects, and `e3mail-cli run` prints it at the end.

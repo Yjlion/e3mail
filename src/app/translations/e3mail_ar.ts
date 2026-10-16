@@ -9,6 +9,25 @@
     </message>
 </context>
 <context>
+    <name>AndroidSync</name>
+    <message>
+        <source>Background sync</source>
+        <translation>المزامنة في الخلفية</translation>
+    </message>
+    <message>
+        <source>e3mail is keeping in sync</source>
+        <translation>يُبقي e3mail المزامنة جارية</translation>
+    </message>
+    <message>
+        <source>New mail and other devices&apos; changes arrive while e3mail is in the background.</source>
+        <translation>يصل البريد الجديد وتغييرات الأجهزة الأخرى بينما e3mail في الخلفية.</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation>إيقاف</translation>
+    </message>
+</context>
+<context>
     <name>Compose</name>
     <message>
         <source>On %1 at %2, %3 wrote:</source>
@@ -1120,6 +1139,14 @@ To: %4
         <translation>لا يوفّر هذا النظام إشعارات سطح المكتب.</translation>
     </message>
     <message>
+        <source>Keep syncing in the background</source>
+        <translation>متابعة المزامنة في الخلفية</translation>
+    </message>
+    <message>
+        <source>Mail and your other devices&apos; changes keep arriving while e3mail is not in front. Android shows a notification for as long as this is on, and it uses more battery. Swiping e3mail away from the recent apps ends it.</source>
+        <translation>يستمر وصول البريد وتغييرات أجهزتك الأخرى حين لا يكون e3mail في الواجهة. يعرض Android إشعارًا طوال مدة تفعيل هذا، ويستهلك مزيدًا من البطارية. يُنهيه سحب e3mail من التطبيقات الحديثة.</translation>
+    </message>
+    <message>
         <source>You</source>
         <translation>أنت</translation>
     </message>
@@ -1322,6 +1349,14 @@ To: %4
     <message>
         <source>This build of e3mail cannot sync with other devices.</source>
         <translation>لا يستطيع هذا الإصدار من e3mail المزامنة مع أجهزة أخرى.</translation>
+    </message>
+    <message>
+        <source>“%1” removed this device from the account, so they no longer sync. Mail still arrives here from the server.</source>
+        <translation>أزال «%1» هذا الجهاز من الحساب، فلم يعودا يتزامنان. لا يزال البريد يصل إلى هنا من الخادم.</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>حسنًا</translation>
     </message>
     <message>
         <source>This device</source>
