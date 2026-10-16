@@ -228,6 +228,7 @@ Rectangle {
         }
     }
     function openJoin() { joinDialog.open() }
+    function scanJoin() { joinDialog.open(); joinDialog.scan() }
     JoinDialog {
         id: joinDialog
         onJoined: view.finished()

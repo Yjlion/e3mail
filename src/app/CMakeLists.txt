@@ -17,6 +17,14 @@ e3mail_set_warnings(e3notifier)
 add_library(qrcodegen STATIC third_party/qrcodegen/qrcodegen.cpp third_party/qrcodegen/qrcodegen.hpp)
 target_include_directories(qrcodegen PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/qrcodegen)
 
+# Reading a QR code from an image (zxing-cpp), separate so tests can reach it.
+if(E3MAIL_CAMERA)
+    add_library(e3qrdecode STATIC controllers/QrDecode.cpp controllers/QrDecode.h)
+    target_include_directories(e3qrdecode PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/controllers)
+    target_link_libraries(e3qrdecode PUBLIC Qt6::Gui PRIVATE ZXing::ZXing)
+    e3mail_set_warnings(e3qrdecode)
+endif()
+
 qt_add_executable(e3mail WIN32 MACOSX_BUNDLE
     main.cpp
     NetworkBarrier.cpp NetworkBarrier.h
@@ -27,6 +35,12 @@ file(GLOB E3_QML_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} CONFIGURE_DEPENDS
     qml/*.qml qml/components/*.qml)
 file(GLOB E3_ICONS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} CONFIGURE_DEPENDS qml/icons/*.svg)
 set_source_files_properties(qml/Theme.qml PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
+set(E3_CAMERA_SOURCES)
+if(E3MAIL_CAMERA)
+    set(E3_CAMERA_SOURCES controllers/QrScanner.cpp controllers/QrScanner.h)
+else()
+    list(REMOVE_ITEM E3_QML_FILES qml/ScanView.qml) # it imports QtMultimedia
+endif()
 
 qt_add_qml_module(e3mail
     URI E3mail
@@ -43,6 +57,7 @@ qt_add_qml_module(e3mail
         controllers/SourceHighlighter.cpp controllers/SourceHighlighter.h
         controllers/FileIo.cpp controllers/FileIo.h
         controllers/QrImageProvider.cpp controllers/QrImageProvider.h
+        ${E3_CAMERA_SOURCES}
         models/MessageListModel.cpp models/MessageListModel.h
 )
 
@@ -61,6 +76,10 @@ target_include_directories(e3mail PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/controllers ${CMAKE_CURRENT_SOURCE_DIR}/models)
 target_link_libraries(e3mail PRIVATE
     e3core e3richtext e3notifier qrcodegen Qt6::Gui Qt6::Qml Qt6::Quick Qt6::QuickControls2 Qt6::Svg)
+if(E3MAIL_CAMERA)
+    target_link_libraries(e3mail PRIVATE e3qrdecode Qt6::Multimedia Qt6::Concurrent)
+    target_compile_definitions(e3mail PRIVATE E3MAIL_HAVE_CAMERA=1)
+endif()
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     target_link_libraries(e3mail PRIVATE Qt6::DBus)
 elseif(NOT ANDROID)

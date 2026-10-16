@@ -100,3 +100,22 @@ fails under delete-after-download and cannot work over POP3.
 - **The server copy** is an ordinary server message: deleted once every
   device has acknowledged it, which for the last sync mail waits until the
   devices next exchange anything.
+
+## Amendment — 2026-10-16: scanning the code
+
+The new device can read the pairing code with its camera instead of pasting
+it. "Scan QR code", next to the code field, shows the camera; the first QR
+code that holds an `E3PAIR1:` code fills the field, and the rest of pairing
+is unchanged (the person still checks "For <address>" and presses Copy the
+account, and the other device still asks).
+
+- Qt Multimedia gives the frames, and zxing-cpp (Apache-2.0, fetched at one
+  pinned release, readers only, asked for QR codes only) reads them, off the main thread,
+  one frame at a time.
+- Anything else in a QR code is ignored, so a code for a web page never fills
+  the field.
+- It is a build option, `E3MAIL_CAMERA`, on wherever Qt Multimedia is found.
+  Without it, or without a camera, the button is not shown and pasting works
+  as before.
+- The camera is asked for through Qt's permission API when the person
+  presses the button, never earlier.

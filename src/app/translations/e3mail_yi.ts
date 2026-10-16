@@ -396,12 +396,20 @@ To: %4
         <translation>קאָפּירן אַ חשבון פֿון אַן אַנדער מכשיר</translation>
     </message>
     <message>
+        <source>On the device that has the account, open Settings, Devices, “Pair a new device”, and scan the QR code it shows, or enter its code here.</source>
+        <translation>אויפֿן מכשיר וואָס האָט דעם חשבון, עפֿנט איינשטעלונגען, מכשירים, „פֿאַרבינדן אַ נײַעם מכשיר“, און סקאַנירט דעם QR־קאָד וואָס ער ווײַזט, אָדער לייגט דאָ אַרײַן זײַן קאָד.</translation>
+    </message>
+    <message>
         <source>On the device that has the account, open Settings, Devices, “Pair a new device”, and enter the code it shows here.</source>
         <translation>אויפֿן מכשיר וואָס האָט דעם חשבון, עפֿנט איינשטעלונגען, מכשירים, „פֿאַרבינדן אַ נײַעם מכשיר“, און לייגט דאָ אַרײַן דעם קאָד וואָס ער ווײַזט.</translation>
     </message>
     <message>
         <source>Code</source>
         <translation>קאָד</translation>
+    </message>
+    <message>
+        <source>Scan QR code</source>
+        <translation>סקאַנירן QR־קאָד</translation>
     </message>
     <message>
         <source>For %1</source>
@@ -1004,6 +1012,29 @@ To: %4
     <message>
         <source>All files (*)</source>
         <translation>אַלע טעקעס (*)</translation>
+    </message>
+</context>
+<context>
+    <name>ScanView</name>
+    <message>
+        <source>This device has no camera. Type the code instead.</source>
+        <translation>דער מכשיר האָט נישט קיין קאַמערע. שרײַבט אַרײַן דעם קאָד אַנשטאָט.</translation>
+    </message>
+    <message>
+        <source>e3mail may not use the camera. Allow it in the system settings, or type the code instead.</source>
+        <translation>e3mail טאָר נישט ניצן די קאַמערע. דערלויבט עס אין די סיסטעם־איינשטעלונגען, אָדער שרײַבט אַרײַן דעם קאָד אַנשטאָט.</translation>
+    </message>
+    <message>
+        <source>Asking for the camera…</source>
+        <translation>מע בעט רשות פֿאַר דער קאַמערע…</translation>
+    </message>
+    <message>
+        <source>Point the camera at the QR code on the other device.</source>
+        <translation>ווענדט די קאַמערע צום QR־קאָד אויפֿן אַנדערן מכשיר.</translation>
+    </message>
+    <message>
+        <source>Type the code instead</source>
+        <translation>אַרײַנשרײַבן דעם קאָד אַנשטאָט</translation>
     </message>
 </context>
 <context>

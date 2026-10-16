@@ -124,6 +124,8 @@ int main(int argc, char *argv[])
             QMetaObject::invokeMethod(root, "showPairing");
         else if (p.value(page) == QLatin1String("join")) // first run, copying an account
             QMetaObject::invokeMethod(root, "showJoin");
+        else if (p.value(page) == QLatin1String("scan")) // the same, reading the code with the camera
+            QMetaObject::invokeMethod(root, "showScan");
         else if (p.value(page) == QLatin1String("menu")) // the narrow layout's drawer
             QMetaObject::invokeMethod(root, "openMenu");
         else if (p.value(page) == QLatin1String("source")) // of the message --open selected

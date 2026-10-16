@@ -10,7 +10,6 @@ is done.
 Phase 8 is built (see `docs/handoff.md`, ADR 0010 and its amendments).
 
 **Open:**
-- Scanning the pairing QR code with a phone's camera; the code is pasted.
 - How Android keeps a peer reachable with no background service
   (ADR 0016). Until then the mailbox fallback carries its changes.
 - Running a relay (`iroh-relay`) beside `server/compose`, and trying two

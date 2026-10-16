@@ -49,10 +49,11 @@ ApplicationWindow {
     function composeFormatted() { compose("new", 0); composerView.formatting = true }
     // For screenshots (--page signature): the default signature, editing.
     function editSignature() { page = "settings"; settingsView.editSignature(MailApp.defaultSignature) }
-    // For screenshots (--page pair, --page join).
+    // For screenshots (--page pair, --page join, --page scan).
     function showPairing() { page = "settings"; settingsView.pairDevice() }
     function showDevices() { page = "settings"; settingsView.showDevices() }
     function showJoin() { firstSetup.openJoin() }
+    function showScan() { firstSetup.scanJoin() }
     onClosing: (close) => { if (narrow && back()) close.accepted = false }
 
     Shortcut { sequences: [StandardKey.New]; onActivated: window.compose("new", 0) }

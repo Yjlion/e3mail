@@ -20,6 +20,8 @@ permissions:
 
 env:
   QT_VERSION: "6.10.3"
+  # Add-on modules: the camera for pairing codes.
+  QT_MODULES: "qtmultimedia"
   RNP_VERSION: "v0.18.1"
   # r27c: r26b's libc++ cannot build Botan 3.
   ANDROID_NDK_VERSION: "27.2.12479018"
@@ -73,6 +75,7 @@ jobs:
       - uses: jurplel/install-qt-action@v4
         with:
           version: ${{ env.QT_VERSION }}
+          modules: ${{ env.QT_MODULES }}
           cache: true
 
       - name: Dependencies (Linux)
@@ -181,6 +184,7 @@ jobs:
         uses: jurplel/install-qt-action@v4
         with:
           version: ${{ env.QT_VERSION }}
+          modules: ${{ env.QT_MODULES }}
           host: all_os
           autodesktop: true
           target: android

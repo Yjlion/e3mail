@@ -12,6 +12,8 @@ Dialog {
     property string phase: "entering" // entering | waiting | copying | failed
     property string message
     property int percent: 0
+    // Reading the code with the camera instead of typing it.
+    property bool scanning: false
     readonly property string account: MailApp.codeAccount(codeField.text)
 
     parent: Overlay.overlay
@@ -20,7 +22,10 @@ Dialog {
     width: Math.min(460, parent.width - (Theme.narrow ? 16 : 96))
     title: qsTr("Copy an account from another device")
     standardButtons: Dialog.Cancel
-    onOpened: { phase = "entering"; message = ""; percent = 0; codeField.text = ""; nameField.text = MailApp.defaultDeviceName(); codeField.forceActiveFocus() }
+    onAboutToShow: { phase = "entering"; message = ""; percent = 0; scanning = false; codeField.text = ""; nameField.text = MailApp.defaultDeviceName() }
+    onOpened: if (!scanning) codeField.forceActiveFocus()
+    // For screenshots (--page scan).
+    function scan() { scanning = true }
     onRejected: MailApp.cancelJoin()
 
     Connections {
@@ -39,25 +44,48 @@ Dialog {
         Label {
             Layout.fillWidth: true
             wrapMode: Text.Wrap
-            text: qsTr("On the device that has the account, open Settings, Devices, “Pair a new device”, and enter the code it shows here.")
+            visible: !dlg.scanning
+            text: MailApp.scanAvailable
+                ? qsTr("On the device that has the account, open Settings, Devices, “Pair a new device”, and scan the QR code it shows, or enter its code here.")
+                : qsTr("On the device that has the account, open Settings, Devices, “Pair a new device”, and enter the code it shows here.")
         }
-        Label { text: qsTr("Code"); color: Theme.muted }
-        Field {
-            id: codeField
+        Loader {
             Layout.fillWidth: true
-            enabled: dlg.phase === "entering" || dlg.phase === "failed"
-            placeholderText: "E3PAIR1:…"
-            font.family: "monospace"
+            active: dlg.scanning
+            visible: active
+            source: "ScanView.qml"
+            onLoaded: {
+                item.found.connect(function(code) { codeField.text = code; dlg.scanning = false })
+                item.cancelled.connect(function() { dlg.scanning = false; codeField.forceActiveFocus() })
+            }
+        }
+        Label { visible: !dlg.scanning; text: qsTr("Code"); color: Theme.muted }
+        RowLayout {
+            Layout.fillWidth: true
+            visible: !dlg.scanning
+            Field {
+                id: codeField
+                Layout.fillWidth: true
+                enabled: dlg.phase === "entering" || dlg.phase === "failed"
+                placeholderText: "E3PAIR1:…"
+                font.family: "monospace"
+            }
+            Button {
+                visible: MailApp.scanAvailable
+                enabled: codeField.enabled
+                text: qsTr("Scan QR code")
+                onClicked: dlg.scanning = true
+            }
         }
         Label {
             Layout.fillWidth: true
             wrapMode: Text.Wrap
-            visible: codeField.text.length > 0
+            visible: codeField.text.length > 0 && !dlg.scanning
             color: dlg.account.length ? Theme.muted : Theme.bad
             text: dlg.account.length ? qsTr("For %1").arg(dlg.account) : qsTr("This is not a pairing code.")
         }
-        Label { text: qsTr("This device’s name"); color: Theme.muted }
-        Field { id: nameField; Layout.fillWidth: true; enabled: dlg.phase === "entering" || dlg.phase === "failed" }
+        Label { visible: !dlg.scanning; text: qsTr("This device’s name"); color: Theme.muted }
+        Field { id: nameField; visible: !dlg.scanning; Layout.fillWidth: true; enabled: dlg.phase === "entering" || dlg.phase === "failed" }
         Label {
             Layout.fillWidth: true
             wrapMode: Text.Wrap
@@ -73,6 +101,7 @@ Dialog {
             text: dlg.message
         }
         PrimaryButton {
+            visible: !dlg.scanning
             text: qsTr("Copy the account")
             enabled: dlg.account.length > 0 && (dlg.phase === "entering" || dlg.phase === "failed")
             onClicked: {

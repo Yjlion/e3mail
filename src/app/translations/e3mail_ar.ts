@@ -396,12 +396,20 @@ To: %4
         <translation>نسخ حساب من جهاز آخر</translation>
     </message>
     <message>
+        <source>On the device that has the account, open Settings, Devices, “Pair a new device”, and scan the QR code it shows, or enter its code here.</source>
+        <translation>على الجهاز الذي يحوي الحساب، افتح الإعدادات، ثم الأجهزة، ثم «إقران جهاز جديد»، وامسح رمز QR الذي يعرضه، أو أدخل رمزه هنا.</translation>
+    </message>
+    <message>
         <source>On the device that has the account, open Settings, Devices, “Pair a new device”, and enter the code it shows here.</source>
         <translation>على الجهاز الذي يحوي الحساب، افتح الإعدادات، ثم الأجهزة، ثم «إقران جهاز جديد»، وأدخل هنا الرمز الذي يعرضه.</translation>
     </message>
     <message>
         <source>Code</source>
         <translation>شيفرة</translation>
+    </message>
+    <message>
+        <source>Scan QR code</source>
+        <translation>امسح رمز QR</translation>
     </message>
     <message>
         <source>For %1</source>
@@ -1044,6 +1052,29 @@ To: %4
     <message>
         <source>All files (*)</source>
         <translation>كل الملفات (*)</translation>
+    </message>
+</context>
+<context>
+    <name>ScanView</name>
+    <message>
+        <source>This device has no camera. Type the code instead.</source>
+        <translation>لا توجد كاميرا في هذا الجهاز. اكتب الرمز بدلًا من ذلك.</translation>
+    </message>
+    <message>
+        <source>e3mail may not use the camera. Allow it in the system settings, or type the code instead.</source>
+        <translation>لا يُسمح لـ e3mail باستخدام الكاميرا. اسمح بذلك في إعدادات النظام، أو اكتب الرمز بدلًا من ذلك.</translation>
+    </message>
+    <message>
+        <source>Asking for the camera…</source>
+        <translation>جارٍ طلب الإذن باستخدام الكاميرا…</translation>
+    </message>
+    <message>
+        <source>Point the camera at the QR code on the other device.</source>
+        <translation>وجّه الكاميرا نحو رمز QR على الجهاز الآخر.</translation>
+    </message>
+    <message>
+        <source>Type the code instead</source>
+        <translation>اكتب الرمز بدلًا من ذلك</translation>
     </message>
 </context>
 <context>

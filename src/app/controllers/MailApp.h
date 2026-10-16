@@ -44,6 +44,8 @@ class MailApp : public QObject
     Q_PROPERTY(int olderRemaining READ olderRemaining NOTIFY statusChanged)
     // Other devices of this account (ADR 0010).
     Q_PROPERTY(bool devicesAvailable READ devicesAvailable CONSTANT)
+    // Pairing codes can be read with a camera: built with one, and one there.
+    Q_PROPERTY(bool scanAvailable READ scanAvailable CONSTANT)
     // [{id, name, online, lastSeen}]
     Q_PROPERTY(QVariantList devices READ devices NOTIFY devicesChanged)
     Q_PROPERTY(QString deviceName READ deviceName WRITE setDeviceName NOTIFY devicesChanged)
@@ -162,6 +164,7 @@ public:
     QVariantMap refusedCertificate() const;
 
     bool devicesAvailable() const;
+    bool scanAvailable() const;
     QVariantList devices() const;
     QString deviceName() const;
     void setDeviceName(const QString &name);

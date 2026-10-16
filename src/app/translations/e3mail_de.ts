@@ -396,12 +396,20 @@ An: %4
         <translation>Konto von einem anderen Gerät übernehmen</translation>
     </message>
     <message>
+        <source>On the device that has the account, open Settings, Devices, “Pair a new device”, and scan the QR code it shows, or enter its code here.</source>
+        <translation>Öffnen Sie auf dem Gerät, das das Konto hat, Einstellungen, Geräte, „Neues Gerät koppeln“ und scannen Sie den angezeigten QR-Code oder geben Sie den Code hier ein.</translation>
+    </message>
+    <message>
         <source>On the device that has the account, open Settings, Devices, “Pair a new device”, and enter the code it shows here.</source>
         <translation>Öffnen Sie auf dem Gerät, das das Konto hat, Einstellungen, Geräte, „Neues Gerät koppeln“ und geben Sie den angezeigten Code hier ein.</translation>
     </message>
     <message>
         <source>Code</source>
         <translation>Code</translation>
+    </message>
+    <message>
+        <source>Scan QR code</source>
+        <translation>QR-Code scannen</translation>
     </message>
     <message>
         <source>For %1</source>
@@ -1004,6 +1012,29 @@ An: %4
     <message>
         <source>All files (*)</source>
         <translation>Alle Dateien (*)</translation>
+    </message>
+</context>
+<context>
+    <name>ScanView</name>
+    <message>
+        <source>This device has no camera. Type the code instead.</source>
+        <translation>Dieses Gerät hat keine Kamera. Geben Sie den Code stattdessen ein.</translation>
+    </message>
+    <message>
+        <source>e3mail may not use the camera. Allow it in the system settings, or type the code instead.</source>
+        <translation>e3mail darf die Kamera nicht verwenden. Erlauben Sie es in den Systemeinstellungen oder geben Sie den Code stattdessen ein.</translation>
+    </message>
+    <message>
+        <source>Asking for the camera…</source>
+        <translation>Kamerazugriff wird angefragt…</translation>
+    </message>
+    <message>
+        <source>Point the camera at the QR code on the other device.</source>
+        <translation>Richten Sie die Kamera auf den QR-Code auf dem anderen Gerät.</translation>
+    </message>
+    <message>
+        <source>Type the code instead</source>
+        <translation>Code stattdessen eingeben</translation>
     </message>
 </context>
 <context>
