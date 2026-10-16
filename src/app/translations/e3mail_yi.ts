@@ -9,6 +9,25 @@
     </message>
 </context>
 <context>
+    <name>AndroidSync</name>
+    <message>
+        <source>Background sync</source>
+        <translation>סינכראָניזירן אין הינטערגרונט</translation>
+    </message>
+    <message>
+        <source>e3mail is keeping in sync</source>
+        <translation>e3mail האַלט זיך סינכראָניזירט</translation>
+    </message>
+    <message>
+        <source>New mail and other devices&apos; changes arrive while e3mail is in the background.</source>
+        <translation>נײַע פּאָסט און ענדערונגען פֿון אַנדערע מכשירים קומען אָן בשעת e3mail איז אין הינטערגרונט.</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation>אָפּשטעלן</translation>
+    </message>
+</context>
+<context>
     <name>Compose</name>
     <message>
         <source>On %1 at %2, %3 wrote:</source>
@@ -1080,6 +1099,14 @@ To: %4
         <translation>די סיסטעם גיט נישט קיין דעסקטאָפּ־מעלדונגען.</translation>
     </message>
     <message>
+        <source>Keep syncing in the background</source>
+        <translation>ווײַטער סינכראָניזירן אין הינטערגרונט</translation>
+    </message>
+    <message>
+        <source>Mail and your other devices&apos; changes keep arriving while e3mail is not in front. Android shows a notification for as long as this is on, and it uses more battery. Swiping e3mail away from the recent apps ends it.</source>
+        <translation>פּאָסט און ענדערונגען פֿון אײַערע אַנדערע מכשירים קומען ווײַטער אָן ווען e3mail איז נישט פֿאָרנט. Android ווײַזט אַ מעלדונג אַזוי לאַנג ווי דאָס איז אָן, און עס ניצט מער באַטעריע. אַוועקשלעפּן e3mail פֿון די לעצטע אַפּס ענדיקט עס.</translation>
+    </message>
+    <message>
         <source>You</source>
         <translation>איר</translation>
     </message>
@@ -1282,6 +1309,14 @@ To: %4
     <message>
         <source>This build of e3mail cannot sync with other devices.</source>
         <translation>די ווערסיע פֿון e3mail קען זיך ניט סינכראָניזירן מיט אַנדערע מכשירים.</translation>
+    </message>
+    <message>
+        <source>“%1” removed this device from the account, so they no longer sync. Mail still arrives here from the server.</source>
+        <translation>„%1“ האָט אַראָפּגענומען דעם מכשיר פֿונעם חשבון, איז זיי סינכראָניזירן זיך מער נישט. פּאָסט קומט נאָך אַלץ אָן אַהער פֿונעם סערווער.</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>גוט</translation>
     </message>
     <message>
         <source>This device</source>

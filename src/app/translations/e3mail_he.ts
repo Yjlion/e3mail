@@ -9,6 +9,25 @@
     </message>
 </context>
 <context>
+    <name>AndroidSync</name>
+    <message>
+        <source>Background sync</source>
+        <translation>סנכרון ברקע</translation>
+    </message>
+    <message>
+        <source>e3mail is keeping in sync</source>
+        <translation>e3mail ממשיך להסתנכרן</translation>
+    </message>
+    <message>
+        <source>New mail and other devices&apos; changes arrive while e3mail is in the background.</source>
+        <translation>דואר חדש ושינויים ממכשירים אחרים מגיעים בזמן ש־e3mail ברקע.</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation>עצירה</translation>
+    </message>
+</context>
+<context>
     <name>Compose</name>
     <message>
         <source>On %1 at %2, %3 wrote:</source>
@@ -1080,6 +1099,14 @@ To: %4
         <translation>המערכת הזו לא מציעה התראות שולחן עבודה.</translation>
     </message>
     <message>
+        <source>Keep syncing in the background</source>
+        <translation>להמשיך לסנכרן ברקע</translation>
+    </message>
+    <message>
+        <source>Mail and your other devices&apos; changes keep arriving while e3mail is not in front. Android shows a notification for as long as this is on, and it uses more battery. Swiping e3mail away from the recent apps ends it.</source>
+        <translation>דואר ושינויים מהמכשירים האחרים שלכם ממשיכים להגיע כש־e3mail לא בחזית. Android מציג התראה כל עוד זה פועל, וזה צורך יותר סוללה. החלקת e3mail מהאפליקציות האחרונות מסיימת את זה.</translation>
+    </message>
+    <message>
         <source>You</source>
         <translation>את/ה</translation>
     </message>
@@ -1282,6 +1309,14 @@ To: %4
     <message>
         <source>This build of e3mail cannot sync with other devices.</source>
         <translation>גרסה זו של e3mail אינה יכולה להסתנכרן עם מכשירים אחרים.</translation>
+    </message>
+    <message>
+        <source>“%1” removed this device from the account, so they no longer sync. Mail still arrives here from the server.</source>
+        <translation>„%1” הסיר את המכשיר הזה מהחשבון, ולכן הם כבר לא מסתנכרנים. הדואר עדיין מגיע לכאן מהשרת.</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>אישור</translation>
     </message>
     <message>
         <source>This device</source>

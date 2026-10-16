@@ -110,19 +110,20 @@ state, trash, contacts, keys and verifications don't travel either.
 **Iroh for device-to-device transport**, plus rules that keep things correct
 when devices are never online together:
 
-1. **One small Rust crate, `src/p2p/` (`e3p2p`)**, wraps `iroh` and
-   `iroh-blobs` behind a narrow non-blocking C ABI (cbindgen), built from
-   CMake with Corrosion. Rust only moves bytes and blobs; protocol logic stays
-   in C++ behind a `DeviceTransport` interface. Iroh's official C binding was
+1. **One small Rust crate, `src/p2p/` (`e3p2p`)**, wraps `iroh` behind a
+   narrow non-blocking C ABI (`e3p2p.h`, kept by hand), built from CMake with
+   Corrosion. Rust only moves framed bytes; protocol logic, blobs included,
+   stays in C++ behind a `DeviceTransport` interface. `iroh-blobs` was
+   planned and dropped (ADR 0010 amendment). Iroh's official C binding was
    considered: it is itself a Rust crate built with cargo, so it does not
-   remove the Rust toolchain, and it lacks `iroh-blobs`.
+   remove the Rust toolchain.
 2. **A replicated op-log** (`ops` table, in the schema since migration 1):
    every user-visible change is recorded with a hybrid logical clock. Ops name
    messages by Message-ID, never by local row id. Merge is last-writer-wins
    per field, tag sets are add/remove sets, and a purge is a tombstone.
-3. **Pairing by QR**: the new device gets a full encrypted snapshot (database
-   plus blobs over `iroh-blobs`). Account secrets travel only inside this
-   authenticated channel.
+3. **Pairing by QR code**, scanned or pasted: the new device pulls the
+   database and every blob over the authenticated Iroh connection, checked by
+   SHA-256. Account secrets travel only inside it.
 4. **Every device fetches, and server deletion waits for every paired device's
    acknowledgement.** "Delete after download" becomes "delete after every
    device has it". This works the same for IMAP UIDs and POP3 UIDLs, so devices
@@ -130,8 +131,9 @@ when devices are never online together:
 5. **A mailbox fallback**: when no peer is reachable, ops are also mailed to
    self, encrypted and hidden, and kept on the server by rule 4.
 
-The op-log, its merge rules ([ADR 0013](adr/0013-op-merge-rules.md)) and the
-deletion rule are in place and tested over a loopback transport; Iroh is next.
+All five are built ([ADR 0010](adr/0010-multi-client-over-iroh.md) and its
+amendments, [ADR 0013](adr/0013-op-merge-rules.md)), and tried live against
+`server/compose`: directly, through its relay, and by mail alone.
 
 ## Phases
 
@@ -145,13 +147,13 @@ deletion rule are in place and tested over a loopback transport; Iroh is next.
 | P5 | Organisation: threads, tags, search, Unverified, Trash, blocklist, importance | ✅ |
 | P6 | Desktop app (QML) | ✅ |
 | P7 | Packaging and CI: `.deb`, AppImage, NSIS, portable zip, `.dmg` | ✅ CI green on all three; release workflow not yet run |
-| P8 | Multi-client over Iroh | done: transport, pairing, mailbox fallback (2026-10-11) |
+| P8 | Multi-client over Iroh | ✅ transport, pairing (scanned), mailbox fallback, relay, Android in the background (2026-10-16) |
 | P9 | SecureJoin and QR (Delta Chat compatible) | |
 | P10 | Address book: details, phones, vCard import and export, CSV export | ✅ (categories not built) |
 | P11 | At rest: SQLCipher passphrase, blob encryption, encrypted backup | |
 | P12 | Read receipts (MDN) and disappearing messages into Trash | |
 | P13 | Structured email (SML), trusted vs inert | |
-| P14 | Android: the same app, adaptive layout, foreground sync ([ADR 0016](adr/0016-android.md)) | APK builds and boots in an emulator; no background service |
+| P14 | Android: the same app, adaptive layout, foreground sync ([ADR 0016](adr/0016-android.md)) | APK builds and boots in an emulator; background sync if asked ([ADR 0018](adr/0018-background-sync-on-android.md)) |
 
 ## Verification
 

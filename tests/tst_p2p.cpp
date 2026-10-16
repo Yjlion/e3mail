@@ -189,6 +189,26 @@ private Q_SLOTS:
         QTest::qWait(1500);
         QVERIFY(!iroh(m_a)->isConnected(device(m_b)));
         QVERIFY(!iroh(m_b)->isConnected(device(m_a)));
+        // Just paired, a refusal is not taken as a removal: A may not have
+        // taken B into its list yet.
+        QVERIFY(m_b->ctx().db.queryInt("SELECT 1 FROM devices WHERE id=?", device(m_a)));
+        QVERIFY(m_b->ctx().config.get(cfg::P2pRemovedBy).isEmpty());
+    }
+
+    // A device removed while it was away learns it on its next dial: the
+    // other device refuses it, and it stops counting that one as paired.
+    void removedWhileAwayLearnsIt()
+    {
+        m_b->stopDevices();
+        m_a->removeDevice(device(m_b));
+        // Paired an hour ago, as a real removal would be.
+        m_b->ctx().db.run("UPDATE devices SET paired_at=?", QDateTime::currentMSecsSinceEpoch() - 3600 * 1000);
+        QVERIFY(m_b->startDevices());
+        QTRY_VERIFY_WITH_TIMEOUT(!m_b->ctx().db.queryInt("SELECT 1 FROM devices WHERE id=?", device(m_a)), 15000);
+        QCOMPARE(m_b->ctx().config.get(cfg::P2pRemovedBy), QStringLiteral("A"));
+        // No op: the devices B still has would otherwise drop A too.
+        QCOMPARE(m_b->ctx().db.queryInt("SELECT count(*) FROM ops WHERE kind='device.unpair'").value_or(0), 0);
+        QVERIFY(!iroh(m_a)->isConnected(device(m_b)));
     }
 
     // A new device joins with a code: the existing device allows it, the

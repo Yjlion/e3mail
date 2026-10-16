@@ -38,6 +38,12 @@ shot settings-ar --page settings --lang ar
 shot signature-ar --page signature --lang ar
 shot devices-ar --page devices --lang ar
 shot pair-ar --page pair --lang ar
+# Removed on another device while away.
+"$BUILD/src/cli/e3mail-cli" --data-dir "$DATA" config p2p_removed_by Desktop >/dev/null
+shot devices-removed --page devices
+shot devices-removed-ar --page devices --lang ar
+shot phone-devices-removed --page devices --size 400x820
+"$BUILD/src/cli/e3mail-cli" --data-dir "$DATA" config p2p_removed_by "" >/dev/null
 "$APP" --data-dir "$EMPTY" --grab "$OUT/first-run.png"; echo "$OUT/first-run.png"
 "$APP" --data-dir "$EMPTY" --grab "$OUT/join.png" --page join; echo "$OUT/join.png"
 # Reading the code with the camera; there is none offscreen, so the scan

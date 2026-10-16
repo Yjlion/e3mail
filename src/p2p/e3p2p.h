@@ -16,6 +16,8 @@ typedef struct e3p2p_node e3p2p_node;
 
 enum { E3P2P_EVENT_CONNECTED = 1, E3P2P_EVENT_CLOSED = 2, E3P2P_EVENT_FRAME = 3 };
 enum { E3P2P_RELAY_DEFAULT = 0, E3P2P_RELAY_CUSTOM = 1, E3P2P_RELAY_OFF = 2 };
+enum { E3P2P_NETWORK_ANY = 0, E3P2P_NETWORK_LOOPBACK = 1, E3P2P_NETWORK_RELAY_ONLY = 2 };
+enum { E3P2P_PATH_UNKNOWN = 0, E3P2P_PATH_DIRECT = 1, E3P2P_PATH_RELAY = 2 };
 #define E3P2P_MAX_FRAME (64u << 20)
 
 typedef struct e3p2p_event {
@@ -37,7 +39,7 @@ void e3p2p_android_init(void *java_vm, void *context);
 #endif
 void e3p2p_generate_secret(uint8_t out[32]);
 e3p2p_node *e3p2p_start(const uint8_t secret[32], int32_t relay, const char *relay_url, uint16_t port,
-                        int32_t loopback, e3p2p_waker waker, void *waker_ctx);
+                        int32_t network, e3p2p_waker waker, void *waker_ctx);
 void e3p2p_stop(e3p2p_node *node);
 void e3p2p_node_id(const e3p2p_node *node, char out[65]);
 char *e3p2p_addr(const e3p2p_node *node); /* free with e3p2p_string_free */
@@ -46,6 +48,7 @@ void e3p2p_string_free(char *s);
 int32_t e3p2p_allow(const e3p2p_node *node, const char *peer, int32_t allowed);
 void e3p2p_accept_any(const e3p2p_node *node, int32_t on);
 uint64_t e3p2p_connect(const e3p2p_node *node, const char *addr);
+int32_t e3p2p_conn_path(const e3p2p_node *node, uint64_t conn);
 int32_t e3p2p_send(const e3p2p_node *node, uint64_t conn, uint8_t kind, const uint8_t *data, size_t len);
 void e3p2p_close(const e3p2p_node *node, uint64_t conn);
 int32_t e3p2p_poll(const e3p2p_node *node, e3p2p_event *out);

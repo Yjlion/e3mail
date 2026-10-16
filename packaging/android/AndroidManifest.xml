@@ -18,6 +18,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="29" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <!-- Background sync, when the person turns it on (ADR 0018). -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <!-- Asking for the camera would otherwise hide e3mail from devices
          without one; pasting the code still works there. -->
     <uses-feature android:name="android.hardware.camera" android:required="false" />
@@ -60,7 +63,26 @@
             <meta-data
                 android:name="android.app.arguments"
                 android:value="-- %%INSERT_APP_ARGUMENTS%% --" />
+            <!-- Qt's event loop keeps running when e3mail leaves the front;
+                 otherwise background sync (E3SyncService) would keep a
+                 process whose mail and device sync are frozen. Without the
+                 service, Android freezes the cached process anyway. -->
+            <meta-data
+                android:name="android.app.background_running"
+                android:value="true" />
         </activity>
+
+        <!-- Background sync (ADR 0018): only a notification; the work is
+             e3mail's own, in the same process. Ends with the task. -->
+        <service
+            android:name="org.e3mail.e3mail.E3SyncService"
+            android:exported="false"
+            android:stopWithTask="true"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="At the person's request, keeps an email client's IMAP IDLE connection and its end-to-end encrypted sync with the person's own other devices open while the app is not in front." />
+        </service>
 
         <provider
             android:name="androidx.core.content.FileProvider"

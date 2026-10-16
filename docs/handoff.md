@@ -835,6 +835,83 @@ Multimedia. The camera is optional (`uses-feature … required="false"`).
   release APK ("not allowed to use extra arguments in non-debug mode") and
   the app ended with exit code 1, so `--page` works only in debug APKs.
 
+## P8 finished: relay, mailbox fallback live, removed devices, Android in the background (2026-10-16)
+
+What `todo.md` still listed for P8, short of hardware this machine lacks.
+
+- **A relay beside `server/compose`.** `docker compose --profile relay up -d
+  --build` adds iroh-relay 1.3.0 (the version `Cargo.lock` has) in its
+  development mode, plain HTTP on 127.0.0.1:3340. The crate gained a
+  relay-only mode (`p2p_relay_only`, no IP transports at all, for tests) and
+  `e3p2p_conn_path`, so each connection logs whether it is direct or
+  relayed and `e3mail-cli run` prints it. `scripts/p2p-e2e.py --relay
+  http://127.0.0.1:3340` pairs and syncs through it.
+- **The mailbox fallback against Dovecot.** `e3mail-cli fallback-now` mails
+  this device's changes to itself and sends them; `E3MAIL_FALLBACK_SECONDS`
+  shortens the five-minute timer. `scripts/p2p-e2e.py --fallback` never runs
+  both devices at once.
+- **A device removed while away** used to dial forever, keep every server
+  message waiting for an acknowledgement from the device that removed it,
+  and show nothing. Now the refusal says "not paired" (the crate used to
+  report every close as "connection lost"); a device refused by one it was
+  paired with more than ten minutes ago drops it, without an op, and
+  Settings, Devices says who removed it ([ADR 0010
+  amendment](adr/0010-multi-client-over-iroh.md)).
+- **Android in the background** ([ADR 0018](adr/0018-background-sync-on-android.md)):
+  "Keep syncing in the background", off by default, runs `E3SyncService`, a
+  `specialUse` foreground service with a notification and Stop. The manifest
+  now sets `android.app.background_running`, without which Qt freezes its
+  own event loop as soon as the app leaves the front.
+- DESIGN.md no longer says pairing uses iroh-blobs.
+
+**Verified here:**
+- `scripts/p2p-e2e.py --relay`: five runs, all passed. The code holds only
+  the relay; both sides report the path as "relay"; the relay's log (now at
+  info) shows both endpoints as its clients.
+- `scripts/p2p-e2e.py --fallback`: three runs, all passed. A's accept and
+  archive reach B by mail alone; the sync mail is hidden; B's answer lets A
+  delete the server copy; ten rounds of trash and restore, one device at a
+  time, each followed by B. **One** sync mail was left on the server after
+  the ten rounds each time.
+- `scripts/p2p-e2e.py` (direct) and `scripts/e2e.py`: passed.
+- `tst_p2p::removedWhileAwayLearnsIt`: B is removed while stopped, starts,
+  is refused on its first dial and drops A, with `p2p_removed_by` "A" and no
+  op. Before the crate fix it took 34 s (the 60 s dial backoff), learning
+  only by chance. `removedDeviceIsRefused` now also checks that a refusal
+  right after pairing removes nothing; it failed with the ten-minute check
+  taken out.
+- `ctest --preset dev`: all 18 pass.
+- Screenshots: the removal notice (desktop, Arabic, phone).
+- **The emulator (API 34), against this machine**: a phone device paired by
+  `e3mail-cli` and pushed into the app's files, a desktop device running
+  `e3mail-cli run`, direct paths, relay off.
+  - With background sync on, the service ran in the foreground (type
+    specialUse) with its notification. After Home, the activity stopped and
+    the process stayed at state 4 (foreground service). A block made on the
+    desktop and a new message both reached the phone's database.
+  - **Off, as the control**: the cached process (state 15) still got one
+    change in the seconds before Android froze it, and then, frozen,
+    nothing for 100 s while the desktop device ran.
+  - **On again, a minute in the background, then forced deep Doze**
+    (`dumpsys deviceidle force-idle`, battery unplugged): not frozen, and
+    both the change it had missed and a new one arrived.
+
+**Not verified:**
+- Two machines on different networks, or n0's relays: still all on one
+  machine.
+- A real phone, for hours: battery, and makers' power managers, which are
+  known to end foreground services Android itself keeps.
+- The notification's Stop button: not pressed, only the setting.
+- IMAP IDLE in the background on its own: the new message may have come
+  from the desktop device rather than from the server.
+- Google Play's acceptance of `specialUse`: its declaration has to be made
+  in Play Console before a release with this reaches testers.
+- `background_running` is now on whether or not the service is. Without the
+  service the emulator froze the process within a minute, as Android 14
+  does; older Android versions and some makers do not freeze cached apps,
+  and there e3mail now keeps syncing in the background until the process is
+  ended, where before Qt paused.
+
 ## Known gaps
 
 - **Signed-only mail** is checked only for PGP/MIME (`multipart/signed`);
@@ -847,14 +924,16 @@ Multimedia. The camera is optional (`uses-feature … required="false"`).
   first; POP3 has no way to ask for part of a mailbox by order.
 - **Address book**: one contact per address, so a person with two addresses
   is two contacts. No categories, postal addresses or photos.
-- **Notifications** are shown only while e3mail runs; there is no background
-  service.
-- **Android** has no background sync: mail arrives only while e3mail is open.
+- **Notifications** are shown only while e3mail runs. On Android that
+  includes the background when "Keep syncing in the background" is on.
+- **Android** syncs in the background only if the person turns it on
+  (ADR 0018); otherwise mail arrives only while e3mail is open.
   Its rendering, typing and mail flow are unverified (see "Android" above).
   CI packages are debug-signed; release packages use the key in the
   repository's secrets once it is set (ADR 0016 amendment).
-- **Sync**: devices have only been tried on one machine, with the relay off;
-  no phone camera has read a real pairing code yet. A message another device sent while it was still pending in that
+- **Sync**: devices have only been tried on one machine (directly, through
+  `server/compose`'s relay, and by mail alone, plus the emulator against this
+  machine); no phone camera has read a real pairing code yet. A message another device sent while it was still pending in that
   device's outbox arrives as Sent. Mail whose raw copy expired under
   raw-message retention never reaches a new device unless the server still
   has it, and sent mail then never does. A label renamed on one device comes
@@ -1157,7 +1236,8 @@ same job passed. A failed Play job can be re-run alone (`gh run rerun
 
 1. Release v0.2.2 to internal testers in Play Console (it is a draft
    there), install it on a phone, and press Back on Android 16.
-2. Connect two machines on different networks through n0's relay.
+2. Connect two machines on different networks through n0's relay, and
+   through `server/compose`'s relay with its port opened to both.
 3. Scan a pairing QR code on a real phone: from another device's screen,
    in daylight and in a dim room, and see how long it takes (see "Scanning
    the pairing code" above).
