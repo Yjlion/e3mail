@@ -40,6 +40,12 @@ shot devices-ar --page devices --lang ar
 shot pair-ar --page pair --lang ar
 "$APP" --data-dir "$EMPTY" --grab "$OUT/first-run.png"; echo "$OUT/first-run.png"
 "$APP" --data-dir "$EMPTY" --grab "$OUT/join.png" --page join; echo "$OUT/join.png"
+# Reading the code with the camera; there is none offscreen, so the scan
+# view says so.
+export E3MAIL_SCREENSHOT_CAMERA=1
+"$APP" --data-dir "$EMPTY" --grab "$OUT/join-scan-button.png" --page join; echo "$OUT/join-scan-button.png"
+"$APP" --data-dir "$EMPTY" --grab "$OUT/scan.png" --page scan; echo "$OUT/scan.png"
+"$APP" --data-dir "$EMPTY" --grab "$OUT/scan-ar.png" --page scan --lang ar; echo "$OUT/scan-ar.png"
 # A phone: one pane at a time.
 PHONE=(--size 400x820)
 shot phone-inbox "${PHONE[@]}"
@@ -56,3 +62,5 @@ shot phone-inbox-ar --lang ar "${PHONE[@]}"
 shot phone-reading-ar --open inbox:0 --lang ar "${PHONE[@]}"
 shot phone-menu-ar --page menu --lang ar "${PHONE[@]}"
 "$APP" --data-dir "$EMPTY" --grab "$OUT/phone-first-run.png" "${PHONE[@]}"; echo "$OUT/phone-first-run.png"
+"$APP" --data-dir "$EMPTY" --grab "$OUT/phone-join-ar.png" --page join --lang ar "${PHONE[@]}"; echo "$OUT/phone-join-ar.png"
+"$APP" --data-dir "$EMPTY" --grab "$OUT/phone-scan.png" --page scan "${PHONE[@]}"; echo "$OUT/phone-scan.png"

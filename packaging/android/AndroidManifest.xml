@@ -6,10 +6,22 @@
     android:installLocation="auto"
     android:versionCode="-- %%INSERT_VERSION_CODE%% --"
     android:versionName="-- %%INSERT_VERSION_NAME%% --">
-    <!-- %%INSERT_PERMISSIONS -->
+    <!-- The permissions are listed here, not inserted by androiddeployqt
+         (%%INSERT_PERMISSIONS), because Qt Multimedia would insert the
+         microphone, Bluetooth and audio settings too; e3mail only reads a
+         pairing code with the camera. INTERNET and ACCESS_NETWORK_STATE are
+         what Qt Network asks for; WRITE_EXTERNAL_STORAGE what Qt Core does,
+         which Android ignores from API 30. -->
     <!-- %%INSERT_FEATURES -->
-    <!-- Qt Network inserts INTERNET and ACCESS_NETWORK_STATE above. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="29" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- Asking for the camera would otherwise hide e3mail from devices
+         without one; pasting the code still works there. -->
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"

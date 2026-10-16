@@ -14,6 +14,8 @@ shift
 ABIS=("$@")
 [[ ${#ABIS[@]} -gt 0 ]] || ABIS=(x86_64 arm64_v8a)
 QT_VERSION=${QT_VERSION:-6.10.3}
+# Add-on modules beyond Qt's base: the camera for pairing codes.
+QT_MODULES=(qtmultimedia)
 # r27c: r26b's libc++ is too old for Botan 3 (no operator<=> it needs).
 NDK_VERSION=${NDK_VERSION:-27.2.12479018}
 TOOLS_ZIP=commandlinetools-linux-11076708_latest.zip
@@ -40,11 +42,13 @@ if [[ ! -x "$DIR/aqt-venv/bin/aqt" ]]; then
 fi
 AQT="$DIR/aqt-venv/bin/aqt"
 # A marker, not the directory: an interrupted install leaves a partial one
-# (the desktop Qt without its ICU, whose tools then cannot start).
+# (the desktop Qt without its ICU, whose tools then cannot start). The marker
+# names the modules, so adding one installs again.
 qt() { # <arch dir> <aqt args...>
-    local done="$DIR/Qt/$QT_VERSION/$1/.e3-installed"; shift
+    local mods="${QT_MODULES[*]}"
+    local done="$DIR/Qt/$QT_VERSION/$1/.e3-installed-${mods// /-}"; shift
     [[ -f "$done" ]] && return
-    "$AQT" install-qt "$@" -O "$DIR/Qt"
+    "$AQT" install-qt "$@" -m "${QT_MODULES[@]}" -O "$DIR/Qt"
     touch "$done"
 }
 qt gcc_64 linux desktop "$QT_VERSION" linux_gcc_64

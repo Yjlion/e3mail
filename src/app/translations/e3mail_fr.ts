@@ -396,12 +396,20 @@ Objet : %3
         <translation>Copier un compte depuis un autre appareil</translation>
     </message>
     <message>
+        <source>On the device that has the account, open Settings, Devices, “Pair a new device”, and scan the QR code it shows, or enter its code here.</source>
+        <translation>Sur l'appareil qui a le compte, ouvrez Réglages, Appareils, « Associer un nouvel appareil », et scannez le code QR affiché, ou saisissez ici son code.</translation>
+    </message>
+    <message>
         <source>On the device that has the account, open Settings, Devices, “Pair a new device”, and enter the code it shows here.</source>
-        <translation>Sur l'appareil qui a le compte, ouvrez Réglages, Appareils, « Associer un nouvel appareil », et saisissez ici le code affiché.</translation>
+        <translation>Sur l&apos;appareil qui a le compte, ouvrez Réglages, Appareils, « Associer un nouvel appareil », et saisissez ici le code affiché.</translation>
     </message>
     <message>
         <source>Code</source>
         <translation>Code</translation>
+    </message>
+    <message>
+        <source>Scan QR code</source>
+        <translation>Scanner le code QR</translation>
     </message>
     <message>
         <source>For %1</source>
@@ -409,7 +417,7 @@ Objet : %3
     </message>
     <message>
         <source>This is not a pairing code.</source>
-        <translation>Ce n'est pas un code d'association.</translation>
+        <translation>Ce n&apos;est pas un code d&apos;association.</translation>
     </message>
     <message>
         <source>This device’s name</source>
@@ -417,7 +425,7 @@ Objet : %3
     </message>
     <message>
         <source>Waiting for the other device to allow it…</source>
-        <translation>En attente de l'accord de l'autre appareil…</translation>
+        <translation>En attente de l&apos;accord de l&apos;autre appareil…</translation>
     </message>
     <message>
         <source>Copy the account</source>
@@ -812,7 +820,7 @@ Objet : %3
     <name>PairDialog</name>
     <message>
         <source>This device could not start its connection to other devices.</source>
-        <translation>Cet appareil n'a pas pu ouvrir sa connexion aux autres appareils.</translation>
+        <translation>Cet appareil n&apos;a pas pu ouvrir sa connexion aux autres appareils.</translation>
     </message>
     <message>
         <source>Pair a new device</source>
@@ -824,7 +832,7 @@ Objet : %3
     </message>
     <message>
         <source>Pairing code as a QR code</source>
-        <translation>Code d'association en QR code</translation>
+        <translation>Code d&apos;association en QR code</translation>
     </message>
     <message>
         <source>Copy</source>
@@ -836,7 +844,7 @@ Objet : %3
     </message>
     <message>
         <source>Allow it only if you are setting up that device yourself, now.</source>
-        <translation>N'acceptez que si vous configurez vous-même cet appareil, maintenant.</translation>
+        <translation>N&apos;acceptez que si vous configurez vous-même cet appareil, maintenant.</translation>
     </message>
     <message>
         <source>Allow</source>
@@ -848,7 +856,7 @@ Objet : %3
     </message>
     <message>
         <source>Sending a copy to “%1”…</source>
-        <translation>Envoi d'une copie à « %1 »…</translation>
+        <translation>Envoi d&apos;une copie à « %1 »…</translation>
     </message>
     <message>
         <source>“%1” is now a device of this account.</source>
@@ -1004,6 +1012,29 @@ Objet : %3
     <message>
         <source>All files (*)</source>
         <translation>Tous les fichiers (*)</translation>
+    </message>
+</context>
+<context>
+    <name>ScanView</name>
+    <message>
+        <source>This device has no camera. Type the code instead.</source>
+        <translation>Cet appareil n'a pas de caméra. Saisissez plutôt le code.</translation>
+    </message>
+    <message>
+        <source>e3mail may not use the camera. Allow it in the system settings, or type the code instead.</source>
+        <translation>e3mail n'a pas le droit d'utiliser la caméra. Autorisez-le dans les réglages du système, ou saisissez plutôt le code.</translation>
+    </message>
+    <message>
+        <source>Asking for the camera…</source>
+        <translation>Demande d'accès à la caméra…</translation>
+    </message>
+    <message>
+        <source>Point the camera at the QR code on the other device.</source>
+        <translation>Dirigez la caméra vers le code QR de l'autre appareil.</translation>
+    </message>
+    <message>
+        <source>Type the code instead</source>
+        <translation>Saisir plutôt le code</translation>
     </message>
 </context>
 <context>
@@ -1250,7 +1281,7 @@ Objet : %3
     </message>
     <message>
         <source>This build of e3mail cannot sync with other devices.</source>
-        <translation>Cette version d'e3mail ne peut pas se synchroniser avec d'autres appareils.</translation>
+        <translation>Cette version d&apos;e3mail ne peut pas se synchroniser avec d&apos;autres appareils.</translation>
     </message>
     <message>
         <source>This device</source>
@@ -1330,7 +1361,7 @@ Objet : %3
     </message>
     <message>
         <source>It stops syncing with this account&apos;s other devices. What is already on it stays there.</source>
-        <translation>Il cesse de se synchroniser avec les autres appareils de ce compte. Ce qui s'y trouve déjà y reste.</translation>
+        <translation>Il cesse de se synchroniser avec les autres appareils de ce compte. Ce qui s&apos;y trouve déjà y reste.</translation>
     </message>
     <message>
         <source>Every message, contact and key of this mailbox is deleted from this device.</source>
@@ -1648,27 +1679,27 @@ Objet : %3
     <name>e3::PairingJoin</name>
     <message>
         <source>The code could not be read.</source>
-        <translation>Le code n'a pas pu être lu.</translation>
+        <translation>Le code n&apos;a pas pu être lu.</translation>
     </message>
     <message>
         <source>The connection to the other device was lost: %1</source>
-        <translation>La connexion à l'autre appareil a été perdue : %1</translation>
+        <translation>La connexion à l&apos;autre appareil a été perdue : %1</translation>
     </message>
     <message>
         <source>The other device did not allow it.</source>
-        <translation>L'autre appareil ne l'a pas accepté.</translation>
+        <translation>L&apos;autre appareil ne l&apos;a pas accepté.</translation>
     </message>
     <message>
         <source>The other device offered a different account.</source>
-        <translation>L'autre appareil a proposé un autre compte.</translation>
+        <translation>L&apos;autre appareil a proposé un autre compte.</translation>
     </message>
     <message>
         <source>Cannot write here.</source>
-        <translation>Impossible d'écrire ici.</translation>
+        <translation>Impossible d&apos;écrire ici.</translation>
     </message>
     <message>
         <source>The other device sent something unexpected.</source>
-        <translation>L'autre appareil a envoyé quelque chose d'inattendu.</translation>
+        <translation>L&apos;autre appareil a envoyé quelque chose d&apos;inattendu.</translation>
     </message>
     <message>
         <source>A file arrived damaged.</source>
@@ -1687,7 +1718,7 @@ Objet : %3
     </message>
     <message>
         <source>The other device went away.</source>
-        <translation>L'autre appareil est parti.</translation>
+        <translation>L&apos;autre appareil est parti.</translation>
     </message>
     <message>
         <source>Another device</source>
@@ -1695,15 +1726,15 @@ Objet : %3
     </message>
     <message>
         <source>Pairing was refused on this device.</source>
-        <translation>L'association a été refusée sur cet appareil.</translation>
+        <translation>L&apos;association a été refusée sur cet appareil.</translation>
     </message>
     <message>
         <source>A file asked for is not here.</source>
-        <translation>Un fichier demandé n'est pas ici.</translation>
+        <translation>Un fichier demandé n&apos;est pas ici.</translation>
     </message>
     <message>
         <source>The copy of the mailbox could not be read.</source>
-        <translation>La copie de la boîte n'a pas pu être lue.</translation>
+        <translation>La copie de la boîte n&apos;a pas pu être lue.</translation>
     </message>
 </context>
 </TS>

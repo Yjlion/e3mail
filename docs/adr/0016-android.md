@@ -166,3 +166,16 @@ A number kept in two places will drift again.
 - Pushing a tag alone no longer builds anything; publishing the release
   does. The workflow no longer marks releases as pre-releases; the person
   publishing chooses.
+
+## Amendment — 2026-10-16: the camera
+
+e3mail asks for the camera, to read the pairing code (ADR 0010 amendment of
+the same date), and only when the person presses "Scan QR code". The camera
+is not required, so devices without one can still install the app.
+
+The manifest now lists its permissions itself instead of letting
+androiddeployqt insert them: Qt Multimedia would add the microphone,
+Bluetooth and the audio settings, none of which e3mail uses. The list is
+INTERNET, ACCESS_NETWORK_STATE, WRITE_EXTERNAL_STORAGE (up to API 29, as Qt
+Core asks), POST_NOTIFICATIONS and CAMERA. A new Qt module that needs a
+permission must have it added there by hand.

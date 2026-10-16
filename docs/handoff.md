@@ -772,6 +772,69 @@ release kept what it was published as. The Play upload failed at first (trap
 re-run of that job alone uploaded the bundle (code 204) to the internal
 track as a draft. v0.2.3's tag and its empty release are still on GitHub.
 
+## Scanning the pairing code (2026-10-16)
+
+The join dialog has "Scan QR code" next to the code field ([ADR 0010
+amendment](adr/0010-multi-client-over-iroh.md)). The camera view replaces
+the form; the first QR code holding an `E3PAIR1:` code fills the field, and
+"Type the code instead" goes back. Other QR codes are ignored.
+`QrScanner` (QML element, Qt Multimedia's `QVideoSink`) passes frames,
+scaled to at most 1280 px, to `qrdecode::pairingCode` (zxing-cpp 3.1.1,
+fetched pinned, readers and QR codes only) on a worker, one frame at a time.
+The camera is asked for through `QCameraPermission` when the button is
+pressed. `E3MAIL_CAMERA` turns it off; without Qt Multimedia, CMake warns and
+builds without it. The workflows and `scripts/android-toolchain.sh` now
+install Qt's `qtmultimedia` module.
+
+Android: the manifest now lists its permissions itself ([ADR 0016
+amendment](adr/0016-android.md)). Letting androiddeployqt insert them would
+have added RECORD_AUDIO, BLUETOOTH and MODIFY_AUDIO_SETTINGS from Qt
+Multimedia. The camera is optional (`uses-feature … required="false"`).
+
+**Verified here:**
+- `tst_qrscan`: a long pairing code (n0's relay and six addresses, 662
+  characters: QR version 18, 89 modules, 2 px each at the dialog's 260 px)
+  drawn by `QrImageProvider` exactly as the dialog draws it reads back
+  exactly. The same code turned 0°, 15°, 90° and 180°, shrunk, blurred,
+  dimmed and noisy on a grey background (one of them looked at as an image)
+  reads back too, and so does an inverted one. A web-address QR code is read
+  but not taken as a pairing code (failed when the filter was removed); an
+  empty image gives nothing.
+- `ctest --preset dev`: all 18 pass, on Qt 6.12 here.
+- Screenshots: the join dialog with the button (desktop; phone in Arabic) and
+  the scan view without a camera (desktop, Arabic, phone). Offscreen there is
+  no camera, so `E3MAIL_SCREENSHOT_CAMERA` shows the button for these.
+- `cmake --preset android-x64` builds with the camera. The APK asks for
+  exactly INTERNET, ACCESS_NETWORK_STATE, WRITE_EXTERNAL_STORAGE (max 29),
+  POST_NOTIFICATIONS and CAMERA, with the camera not required. Qt Multimedia
+  and its FFmpeg add 20.8 MiB of libraries to the x86_64 APK (uncompressed,
+  as the APK stores them), plus zxing inside `libe3mail`.
+- On the API 34 emulator, by taps: setup, "Copy an account from another
+  device…", "Scan QR code" (shown, since the emulator has a camera). Android
+  asked "Allow e3mail to take pictures and record video?"; after "While
+  using the app", the camera service opened camera 10 for e3mail at
+  1280×960 and the scan view showed the emulator's virtual room live.
+
+**Not verified:**
+- **A code read through a camera.** The emulator's virtual scene would not
+  take a picture of a code (`virtualscene-image` failed with "Failed to find
+  ColorBuffer", no GPU here), so no frame with a QR code reached the reader
+  except in the test. Whether a phone reads a 260 px code with 2 px modules
+  from a laptop screen is the open question; if it struggles, draw the
+  dialog's code larger or shorten the code.
+- The scan view on the emulator drew with the same diagonal tears as the
+  rest of the app there (see "Android").
+- "Don't allow", and the denied state after it.
+- Desktop webcams: the button shows wherever Qt sees a camera, but none was
+  tried. macOS will ask for the camera through its own prompt.
+- The AppImage: `build-appimage.sh` now names `multimedia` for linuxdeploy's
+  Qt plugin, but no AppImage was built here; CI's release run will show
+  whether the FFmpeg plugin travels with it. The Windows and macOS packages
+  rely on Qt's deploy script picking up Qt Multimedia, also untried.
+- A release launched with arguments: Qt refuses `applicationArguments` in a
+  release APK ("not allowed to use extra arguments in non-debug mode") and
+  the app ended with exit code 1, so `--page` works only in debug APKs.
+
 ## Known gaps
 
 - **Signed-only mail** is checked only for PGP/MIME (`multipart/signed`);
@@ -791,7 +854,7 @@ track as a draft. v0.2.3's tag and its empty release are still on GitHub.
   CI packages are debug-signed; release packages use the key in the
   repository's secrets once it is set (ADR 0016 amendment).
 - **Sync**: devices have only been tried on one machine, with the relay off;
-  the pairing code is pasted, not scanned. A message another device sent while it was still pending in that
+  no phone camera has read a real pairing code yet. A message another device sent while it was still pending in that
   device's outbox arrives as Sent. Mail whose raw copy expired under
   raw-message retention never reaches a new device unless the server still
   has it, and sent mail then never does. A label renamed on one device comes
@@ -1095,8 +1158,9 @@ same job passed. A failed Play job can be re-run alone (`gh run rerun
 1. Release v0.2.2 to internal testers in Play Console (it is a draft
    there), install it on a phone, and press Back on Android 16.
 2. Connect two machines on different networks through n0's relay.
-3. Scan the pairing QR code with a phone's camera (Qt Multimedia and a QR
-   decoder in the Android build); the code is pasted for now.
+3. Scan a pairing QR code on a real phone: from another device's screen,
+   in daylight and in a dim room, and see how long it takes (see "Scanning
+   the pairing code" above).
 4. Install each published package on its own platform. Pre-releases
    v0.1.1 to v0.1.5 are on GitHub (v0.1.5 with both APKs); v0.1.0 is still
    marked Latest.

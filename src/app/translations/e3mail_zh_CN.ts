@@ -396,12 +396,20 @@ To: %4
         <translation>从另一台设备复制账户</translation>
     </message>
     <message>
+        <source>On the device that has the account, open Settings, Devices, “Pair a new device”, and scan the QR code it shows, or enter its code here.</source>
+        <translation>在已有该账户的设备上，打开“设置”→“设备”→“配对新设备”，然后扫描它显示的二维码，或在此输入它的代码。</translation>
+    </message>
+    <message>
         <source>On the device that has the account, open Settings, Devices, “Pair a new device”, and enter the code it shows here.</source>
         <translation>在已有该账户的设备上，打开“设置”→“设备”→“配对新设备”，并在此输入它显示的代码。</translation>
     </message>
     <message>
         <source>Code</source>
         <translation>代码</translation>
+    </message>
+    <message>
+        <source>Scan QR code</source>
+        <translation>扫描二维码</translation>
     </message>
     <message>
         <source>For %1</source>
@@ -994,6 +1002,29 @@ To: %4
     <message>
         <source>All files (*)</source>
         <translation>所有文件 (*)</translation>
+    </message>
+</context>
+<context>
+    <name>ScanView</name>
+    <message>
+        <source>This device has no camera. Type the code instead.</source>
+        <translation>此设备没有摄像头。请改为输入代码。</translation>
+    </message>
+    <message>
+        <source>e3mail may not use the camera. Allow it in the system settings, or type the code instead.</source>
+        <translation>e3mail 无权使用摄像头。请在系统设置中允许，或改为输入代码。</translation>
+    </message>
+    <message>
+        <source>Asking for the camera…</source>
+        <translation>正在请求使用摄像头…</translation>
+    </message>
+    <message>
+        <source>Point the camera at the QR code on the other device.</source>
+        <translation>将摄像头对准另一台设备上的二维码。</translation>
+    </message>
+    <message>
+        <source>Type the code instead</source>
+        <translation>改为输入代码</translation>
     </message>
 </context>
 <context>

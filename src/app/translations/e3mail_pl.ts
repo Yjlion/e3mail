@@ -396,12 +396,20 @@ Do: %4
         <translation>Skopiuj konto z innego urządzenia</translation>
     </message>
     <message>
+        <source>On the device that has the account, open Settings, Devices, “Pair a new device”, and scan the QR code it shows, or enter its code here.</source>
+        <translation>Na urządzeniu, które ma konto, otwórz Ustawienia, Urządzenia, „Sparuj nowe urządzenie” i zeskanuj wyświetlony kod QR albo wpisz tu jego kod.</translation>
+    </message>
+    <message>
         <source>On the device that has the account, open Settings, Devices, “Pair a new device”, and enter the code it shows here.</source>
         <translation>Na urządzeniu, które ma konto, otwórz Ustawienia, Urządzenia, „Sparuj nowe urządzenie” i wpisz tu wyświetlony kod.</translation>
     </message>
     <message>
         <source>Code</source>
         <translation>Kod</translation>
+    </message>
+    <message>
+        <source>Scan QR code</source>
+        <translation>Zeskanuj kod QR</translation>
     </message>
     <message>
         <source>For %1</source>
@@ -1014,6 +1022,29 @@ Do: %4
     <message>
         <source>All files (*)</source>
         <translation>Wszystkie pliki (*)</translation>
+    </message>
+</context>
+<context>
+    <name>ScanView</name>
+    <message>
+        <source>This device has no camera. Type the code instead.</source>
+        <translation>To urządzenie nie ma aparatu. Wpisz kod ręcznie.</translation>
+    </message>
+    <message>
+        <source>e3mail may not use the camera. Allow it in the system settings, or type the code instead.</source>
+        <translation>e3mail nie może używać aparatu. Zezwól na to w ustawieniach systemu albo wpisz kod ręcznie.</translation>
+    </message>
+    <message>
+        <source>Asking for the camera…</source>
+        <translation>Prośba o dostęp do aparatu…</translation>
+    </message>
+    <message>
+        <source>Point the camera at the QR code on the other device.</source>
+        <translation>Skieruj aparat na kod QR na drugim urządzeniu.</translation>
+    </message>
+    <message>
+        <source>Type the code instead</source>
+        <translation>Wpisz kod ręcznie</translation>
     </message>
 </context>
 <context>
