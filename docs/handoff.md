@@ -779,8 +779,8 @@ amendment](adr/0010-multi-client-over-iroh.md)). The camera view replaces
 the form; the first QR code holding an `E3PAIR1:` code fills the field, and
 "Type the code instead" goes back. Other QR codes are ignored.
 `QrScanner` (QML element, Qt Multimedia's `QVideoSink`) passes frames,
-scaled to at most 1280 px, to `qrdecode::pairingCode` (zxing-cpp 3.1.1,
-fetched pinned, readers and QR codes only) on a worker, one frame at a time.
+scaled to at most 1280 px, to `qrdecode::pairingCode` (zxing-cpp 2.3.0,
+fetched pinned, readers only; 3.1.1 failed to build with Xcode 15 in CI) on a worker, one frame at a time.
 The camera is asked for through `QCameraPermission` when the button is
 pressed. `E3MAIL_CAMERA` turns it off; without Qt Multimedia, CMake warns and
 builds without it. The workflows and `scripts/android-toolchain.sh` now

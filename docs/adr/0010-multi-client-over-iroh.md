@@ -110,7 +110,7 @@ is unchanged (the person still checks "For <address>" and presses Copy the
 account, and the other device still asks).
 
 - Qt Multimedia gives the frames, and zxing-cpp (Apache-2.0, fetched at one
-  pinned release, readers and QR codes only) reads them, off the main thread,
+  pinned release, readers only, asked for QR codes only) reads them, off the main thread,
   one frame at a time.
 - Anything else in a QR code is ignored, so a code for a web page never fills
   the field.
