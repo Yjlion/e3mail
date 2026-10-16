@@ -492,6 +492,10 @@ To: %4
         <translation>جهاز بلا اسم</translation>
     </message>
     <message>
+        <source>You signed in as %1, not as %2.</source>
+        <translation>سجّلت الدخول باسم %1، لا باسم %2.</translation>
+    </message>
+    <message>
         <source>(no subject)</source>
         <translation>(بلا موضوع)</translation>
     </message>
@@ -1470,6 +1474,10 @@ To: %4
         <translation>إعدادات الخادم مُخمَّنة من العنوان. راجعها قبل الاتصال.</translation>
     </message>
     <message>
+        <source>You signed in as %1, not as %2. Sign in with the account of the address you are adding.</source>
+        <translation>سجّلت الدخول باسم %1، لا باسم %2. سجّل الدخول بحساب العنوان الذي تضيفه.</translation>
+    </message>
+    <message>
         <source>Enter your email address and password.</source>
         <translation>أدخل عنوان بريدك الإلكتروني وكلمة المرور.</translation>
     </message>
@@ -1489,8 +1497,24 @@ To: %4
         <translation>عنوان البريد الإلكتروني</translation>
     </message>
     <message>
+        <source>Signed in with %1</source>
+        <translation>تم تسجيل الدخول عبر %1</translation>
+    </message>
+    <message>
+        <source>Sign in with %1</source>
+        <translation>تسجيل الدخول عبر %1</translation>
+    </message>
+    <message>
+        <source>Opens %1 in your browser. e3mail never sees your password there. Or use an app password below.</source>
+        <translation>يفتح %1 في متصفحك. لا يرى e3mail كلمة مرورك هناك أبدًا. أو استخدم كلمة مرور تطبيق أدناه.</translation>
+    </message>
+    <message>
         <source>Password</source>
         <translation>كلمة المرور</translation>
+    </message>
+    <message>
+        <source>App password</source>
+        <translation>كلمة مرور التطبيق</translation>
     </message>
     <message>
         <source>Your name (optional)</source>
@@ -1659,6 +1683,10 @@ To: %4
         <translation>متصل</translation>
     </message>
     <message>
+        <source>Signed out by %1 — sign in again</source>
+        <translation>سجّل %1 خروجك — سجّل الدخول مجددًا</translation>
+    </message>
+    <message>
         <source>Login failed — check the password</source>
         <translation>فشل تسجيل الدخول — تحقق من كلمة المرور</translation>
     </message>
@@ -1669,6 +1697,29 @@ To: %4
     <message>
         <source>Offline</source>
         <translation>غير متصل</translation>
+    </message>
+</context>
+<context>
+    <name>SignIn</name>
+    <message>
+        <source>The sign-in took too long. Try again.</source>
+        <translation>استغرق تسجيل الدخول وقتًا طويلًا. حاول مجددًا.</translation>
+    </message>
+    <message>
+        <source>Cannot listen for the browser&apos;s answer on this device.</source>
+        <translation>لا يمكن تلقّي ردّ المتصفح على هذا الجهاز.</translation>
+    </message>
+    <message>
+        <source>Signed in. You can close this page and go back to e3mail.</source>
+        <translation>تم تسجيل الدخول. يمكنك إغلاق هذه الصفحة والعودة إلى e3mail.</translation>
+    </message>
+    <message>
+        <source>%1 did not allow e3mail to stay signed in.</source>
+        <translation>لم يسمح %1 لـ e3mail بالبقاء مسجّل الدخول.</translation>
+    </message>
+    <message>
+        <source>%1 refused the sign-in.</source>
+        <translation>رفض %1 تسجيل الدخول.</translation>
     </message>
 </context>
 <context>

@@ -38,10 +38,17 @@ option(E3MAIL_BUILD_TESTS "Build the test suite" ON)
 option(E3MAIL_WARNINGS_AS_ERRORS "Treat compiler warnings as errors" OFF)
 option(E3MAIL_P2P "Sync devices over Iroh (needs Rust)" ON)
 option(E3MAIL_CAMERA "Scan pairing QR codes with a camera (Qt Multimedia, zxing-cpp)" ON)
+# OAuth 2 client IDs (ADR 0019), taken from the environment of the first
+# configure (the release workflow's secrets) unless given. Without one, that
+# provider is not offered; the same variables at run time work too.
+set(E3MAIL_OAUTH_GOOGLE_ID "$ENV{E3MAIL_OAUTH_GOOGLE_ID}" CACHE STRING "Google OAuth client ID (desktop app)")
+set(E3MAIL_OAUTH_GOOGLE_SECRET "$ENV{E3MAIL_OAUTH_GOOGLE_SECRET}" CACHE STRING
+    "Google OAuth client secret (desktop apps' is not secret)")
+set(E3MAIL_OAUTH_MICROSOFT_ID "$ENV{E3MAIL_OAUTH_MICROSOFT_ID}" CACHE STRING "Microsoft Entra application (client) ID")
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
-set(E3MAIL_QT_COMPONENTS Core Network Concurrent)
+set(E3MAIL_QT_COMPONENTS Core Network Concurrent NetworkAuth)
 if(E3MAIL_BUILD_APP)
     list(APPEND E3MAIL_QT_COMPONENTS Gui Qml Quick QuickControls2 Svg LinguistTools)
     # Notifications: the freedesktop service over D-Bus on Linux, Android's
@@ -93,6 +100,7 @@ if(E3MAIL_CAMERA)
 endif()
 
 add_subdirectory(src/core)
+add_subdirectory(src/oauthflow)
 if(E3MAIL_BUILD_CLI)
     add_subdirectory(src/cli)
 endif()

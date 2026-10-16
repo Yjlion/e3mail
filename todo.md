@@ -32,8 +32,8 @@ would copy the secret key unencrypted.
 - A restore is tested on every backup (decrypt the manifest, check hashes).
 
 **Open:**
-- OAuth for Google and Microsoft. There is no OAuth in e3mail yet, and their
-  app registration and review are a project of their own.
+- Google Drive and OneDrive need their own OAuth scopes on the clients that
+  mail sign-in uses (ADR 0019), and Google's review covers them too.
 - Whether to use rclone as a helper or our own clients. rclone covers every
   destination but is a second program to ship and trust.
 - How backups interact with P8: are they per device or per account?

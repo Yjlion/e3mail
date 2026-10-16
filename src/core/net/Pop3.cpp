@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 #include "Pop3.h"
+#include "Sasl.h"
 
 namespace e3::net {
 
@@ -51,7 +52,26 @@ void Pop3Client::connect(const ServerSettings &server)
             saslPlain = true;
     }
     QByteArray reply;
-    if (saslPlain) {
+    if (!server.accessToken.isEmpty()) {
+        // Gmail and Outlook list XOAUTH2 under SASL, if they list anything.
+        bool bearer = false;
+        for (const QByteArray &c : std::as_const(m_caps)) {
+            if (c.startsWith("SASL") && c.contains("OAUTHBEARER") && !c.contains("XOAUTH2"))
+                bearer = true;
+        }
+        const QByteArray token = server.accessToken.toUtf8();
+        m_socket.write(QByteArray(bearer ? "AUTH OAUTHBEARER " : "AUTH XOAUTH2 ")
+                       + (bearer ? sasl::oauthBearer(user, token, server.host.toUtf8(), server.port)
+                                 : sasl::xoauth2(user, token))
+                       + "\r\n");
+        reply = m_socket.readLine();
+        if (reply.startsWith("+ ")) {
+            const QByteArray why = sasl::challengeText(reply);
+            m_socket.write(sasl::abortResponse(bearer) + "\r\n");
+            m_socket.readLine();
+            throw AuthError(QStringLiteral("POP3 sign-in refused: %1").arg(QString::fromUtf8(why)));
+        }
+    } else if (saslPlain) {
         m_socket.write("AUTH PLAIN " + (QByteArray(1, '\0') + user + '\0' + pass).toBase64() + "\r\n");
         reply = m_socket.readLine();
     } else {

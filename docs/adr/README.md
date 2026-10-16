@@ -23,3 +23,4 @@ that supersedes it, or a dated amendment block inside it, and add a row here.
 | [0016](0016-android.md) | Android: the same app, one pane at a time, only while it runs | Accepted; amended 2026-10-08 (release signing), 2026-10-12 (Google Play, with a correction), 2026-10-14 (the tag is the version), 2026-10-16 (the camera); sync while not in front superseded by 0018 |
 | [0017](0017-certificate-pinning.md) | Self-signed servers: pin one certificate, after showing it | Accepted |
 | [0018](0018-background-sync-on-android.md) | Android: background sync through a foreground service, if asked | Accepted |
+| [0019](0019-oauth-for-google-and-microsoft.md) | OAuth 2 for Google and Microsoft | Accepted |

@@ -36,6 +36,7 @@ public:
         quint16 port = 0;
         net::Security security = net::Security::Ssl;
         QString username; // with %EMAILADDRESS% and %EMAILLOCALPART% expanded
+        bool oauth = false; // <authentication>OAuth2</authentication>
     };
     struct Result
     {
@@ -45,6 +46,9 @@ public:
         // From unauthenticated DNS, naming hosts outside the address's
         // domain: the form shows them before connecting (RFC 6186 §6).
         bool needsReview = false;
+        // ISPDB's <oAuth2><issuer>: who signs in for these servers, when
+        // they take OAuth 2 (ADR 0019).
+        QString oauthIssuer;
 
         bool complete() const { return !incoming.isEmpty() && !smtp.host.isEmpty(); }
     };

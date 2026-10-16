@@ -66,6 +66,9 @@ struct ServerSettings
     Security security = Security::Ssl;
     QString user;
     QString password;
+    // An OAuth 2 access token: when set, it signs in (XOAUTH2 or OAUTHBEARER)
+    // instead of the password (ADR 0019).
+    QString accessToken;
     // Only for tests and self-signed development servers; never set from the UI
     // without the user saying so.
     bool acceptInvalidCertificates = false;

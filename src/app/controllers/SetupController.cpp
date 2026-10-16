@@ -2,9 +2,11 @@
 #include "SetupController.h"
 
 #include "MailApp.h"
+#include "SignIn.h"
 #include "engine/AccountManager.h"
 #include "engine/Autoconfig.h"
 
+#include <QDesktopServices>
 #include <QFutureWatcher>
 #include <QLocale>
 
@@ -30,6 +32,7 @@ void SetupController::suggested(const Autoconfig::Result &r)
     m_smtpPort = r.smtp.port;
     m_smtpSecurity = net::securityToString(r.smtp.security);
     m_smtpUser = r.smtp.username;
+    m_oauthIssuer = r.oauthIssuer;
     if (r.source == QLatin1String("provider"))
         m_note = tr("Server settings from your provider.");
     else if (r.source == QLatin1String("ispdb"))
@@ -113,9 +116,58 @@ void SetupController::useProtocol(const QString &protocol)
     Q_EMIT changed();
 }
 
+std::optional<net::oauth::Provider> SetupController::currentProvider() const
+{
+    if (!m_oauthIssuer.isEmpty())
+        if (auto p = net::oauth::forIssuer(m_oauthIssuer))
+            return p;
+    return net::oauth::forDomain(m_addr.section(u'@', 1).trimmed());
+}
+
+QString SetupController::oauthProvider() const
+{
+    const auto p = currentProvider();
+    return p ? p->name : QString();
+}
+
+void SetupController::signIn()
+{
+    const auto provider = currentProvider();
+    if (!provider || !m_addr.contains(u'@'))
+        return;
+    delete m_signIn;
+    auto *s = new SignIn(*provider, m_addr.trimmed(), this);
+    m_signIn = s;
+    // The browser shows the provider's page; the QML engine's own network
+    // stays closed (ADR 0009).
+    connect(s, &SignIn::openBrowser, this, [](const QUrl &url) { QDesktopServices::openUrl(url); });
+    connect(s, &SignIn::finished, this, [this, s](const QString &error) {
+        s->deleteLater();
+        if (!error.isEmpty()) {
+            setBusy(false, error);
+            return;
+        }
+        const QString addr = m_addr.trimmed().toLower();
+        if (!s->email().isEmpty() && s->email().toLower() != addr) {
+            setBusy(false, tr("You signed in as %1, not as %2. Sign in with the account of the address you are adding.")
+                               .arg(s->email(), m_addr.trimmed()));
+            return;
+        }
+        m_oauthProvider = s->provider();
+        m_oauthFor = addr;
+        m_oauthRefresh = s->refreshToken();
+        m_oauthAccess = s->accessToken();
+        m_oauthExpires = s->expires();
+        Q_EMIT changed();
+        submit();
+    });
+    setBusy(true);
+    s->start();
+}
+
 void SetupController::submit()
 {
-    if (!m_addr.contains(u'@') || m_password.isEmpty()) {
+    if (!m_addr.contains(u'@') || (m_password.isEmpty() && !signedIn())) {
         setBusy(false, tr("Enter your email address and password."));
         return;
     }
@@ -137,6 +189,16 @@ void SetupController::submit()
     s.smtpHost = m_smtpHost.trimmed();
     s.smtpPort = quint16(m_smtpPort);
     s.smtpSecurity = m_smtpSecurity;
+    if (signedIn()) {
+        s.inPassword.clear();
+        s.auth = QStringLiteral("oauth:") + m_oauthProvider->id;
+        s.oauthRefresh = m_oauthRefresh;
+        s.oauthClientId = m_oauthProvider->clientId;
+        s.oauthClientSecret = m_oauthProvider->clientSecret;
+        s.oauthTokenUrl = m_oauthProvider->tokenUrl.toString();
+        s.oauthAccess = m_oauthAccess;
+        s.oauthExpires = m_oauthExpires;
+    }
     // A pin holds only for the server it was given for.
     const QString inAt = s.inHost + u':' + QString::number(s.inPort);
     const QString smtpAt = s.smtpHost + u':' + QString::number(s.smtpPort);

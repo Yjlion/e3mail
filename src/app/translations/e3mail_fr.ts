@@ -492,6 +492,10 @@ Objet : %3
         <translation>Appareil sans nom</translation>
     </message>
     <message>
+        <source>You signed in as %1, not as %2.</source>
+        <translation>Vous vous êtes connecté en tant que %1, et non %2.</translation>
+    </message>
+    <message>
         <source>(no subject)</source>
         <translation>(sans objet)</translation>
     </message>
@@ -1104,7 +1108,7 @@ Objet : %3
     </message>
     <message>
         <source>Mail and your other devices&apos; changes keep arriving while e3mail is not in front. Android shows a notification for as long as this is on, and it uses more battery. Swiping e3mail away from the recent apps ends it.</source>
-        <translation>Le courrier et les modifications de vos autres appareils continuent d'arriver quand e3mail n'est pas au premier plan. Android affiche une notification tant que c'est activé, et cela consomme plus de batterie. Balayer e3mail hors des applications récentes y met fin.</translation>
+        <translation>Le courrier et les modifications de vos autres appareils continuent d&apos;arriver quand e3mail n&apos;est pas au premier plan. Android affiche une notification tant que c&apos;est activé, et cela consomme plus de batterie. Balayer e3mail hors des applications récentes y met fin.</translation>
     </message>
     <message>
         <source>You</source>
@@ -1430,6 +1434,10 @@ Objet : %3
         <translation>Réglages du serveur devinés d’après l’adresse. Vérifiez-les avant de vous connecter.</translation>
     </message>
     <message>
+        <source>You signed in as %1, not as %2. Sign in with the account of the address you are adding.</source>
+        <translation>Vous vous êtes connecté en tant que %1, et non %2. Connectez-vous avec le compte de l'adresse que vous ajoutez.</translation>
+    </message>
+    <message>
         <source>Enter your email address and password.</source>
         <translation>Saisissez votre adresse électronique et votre mot de passe.</translation>
     </message>
@@ -1449,8 +1457,24 @@ Objet : %3
         <translation>Adresse électronique</translation>
     </message>
     <message>
+        <source>Signed in with %1</source>
+        <translation>Connecté avec %1</translation>
+    </message>
+    <message>
+        <source>Sign in with %1</source>
+        <translation>Se connecter avec %1</translation>
+    </message>
+    <message>
+        <source>Opens %1 in your browser. e3mail never sees your password there. Or use an app password below.</source>
+        <translation>Ouvre %1 dans votre navigateur. e3mail n'y voit jamais votre mot de passe. Ou utilisez un mot de passe d'application ci-dessous.</translation>
+    </message>
+    <message>
         <source>Password</source>
         <translation>Mot de passe</translation>
+    </message>
+    <message>
+        <source>App password</source>
+        <translation>Mot de passe d'application</translation>
     </message>
     <message>
         <source>Your name (optional)</source>
@@ -1615,6 +1639,10 @@ Objet : %3
         <translation>Connecté</translation>
     </message>
     <message>
+        <source>Signed out by %1 — sign in again</source>
+        <translation>Déconnecté par %1 — reconnectez-vous</translation>
+    </message>
+    <message>
         <source>Login failed — check the password</source>
         <translation>Échec de connexion — vérifiez le mot de passe</translation>
     </message>
@@ -1625,6 +1653,29 @@ Objet : %3
     <message>
         <source>Offline</source>
         <translation>Hors ligne</translation>
+    </message>
+</context>
+<context>
+    <name>SignIn</name>
+    <message>
+        <source>The sign-in took too long. Try again.</source>
+        <translation>La connexion a pris trop de temps. Réessayez.</translation>
+    </message>
+    <message>
+        <source>Cannot listen for the browser&apos;s answer on this device.</source>
+        <translation>Impossible de recevoir la réponse du navigateur sur cet appareil.</translation>
+    </message>
+    <message>
+        <source>Signed in. You can close this page and go back to e3mail.</source>
+        <translation>Connecté. Vous pouvez fermer cette page et revenir à e3mail.</translation>
+    </message>
+    <message>
+        <source>%1 did not allow e3mail to stay signed in.</source>
+        <translation>%1 n'a pas permis à e3mail de rester connecté.</translation>
+    </message>
+    <message>
+        <source>%1 refused the sign-in.</source>
+        <translation>%1 a refusé la connexion.</translation>
     </message>
 </context>
 <context>

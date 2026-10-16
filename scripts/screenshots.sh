@@ -52,6 +52,15 @@ export E3MAIL_SCREENSHOT_CAMERA=1
 "$APP" --data-dir "$EMPTY" --grab "$OUT/join-scan-button.png" --page join; echo "$OUT/join-scan-button.png"
 "$APP" --data-dir "$EMPTY" --grab "$OUT/scan.png" --page scan; echo "$OUT/scan.png"
 "$APP" --data-dir "$EMPTY" --grab "$OUT/scan-ar.png" --page scan --lang ar; echo "$OUT/scan-ar.png"
+# Signing in with Google (ADR 0019); offered only with a client ID.
+export E3MAIL_OAUTH_GOOGLE_ID=screenshot.apps.googleusercontent.com
+SEEN=$(mktemp -d) # first run already acknowledged, so the form shows
+touch "$SEEN/first-run-acknowledged"
+"$APP" --data-dir "$SEEN" --grab "$OUT/setup-oauth.png" --page setup-oauth; echo "$OUT/setup-oauth.png"
+"$APP" --data-dir "$SEEN" --grab "$OUT/setup-oauth-ar.png" --page setup-oauth --lang ar; echo "$OUT/setup-oauth-ar.png"
+"$APP" --data-dir "$SEEN" --grab "$OUT/phone-setup-oauth.png" --page setup-oauth --size 400x820; echo "$OUT/phone-setup-oauth.png"
+rm -rf "$SEEN"
+unset E3MAIL_OAUTH_GOOGLE_ID
 # A phone: one pane at a time.
 PHONE=(--size 400x820)
 shot phone-inbox "${PHONE[@]}"

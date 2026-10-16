@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MPL-2.0
 #include "MailApp.h"
 #include "AndroidSync.h"
+#include "SignIn.h"
+#include "net/OAuth.h"
 #include "FileIo.h"
 #include "Languages.h"
 #include "InlineImages.h"
@@ -459,6 +461,53 @@ void MailApp::cancelJoin()
     if (m_join)
         m_join->deleteLater();
     m_join = nullptr;
+}
+
+QString MailApp::accountSignsInWith() const
+{
+    if (!account())
+        return {};
+    const QString auth = account()->ctx().config.get(cfg::Auth);
+    if (!auth.startsWith(QLatin1String("oauth:")))
+        return {};
+    const auto p = net::oauth::known(auth.mid(6));
+    return p ? p->name : QString();
+}
+
+void MailApp::signInAgain()
+{
+    Account *a = account();
+    if (!a)
+        return;
+    const Account::Settings s = a->settings();
+    auto provider = net::oauth::known(s.auth.mid(6));
+    if (!s.auth.startsWith(QLatin1String("oauth:")) || !provider)
+        return;
+    // The client the account was set up with, so that renewal keeps working.
+    if (!s.oauthClientId.isEmpty()) {
+        provider->clientId = s.oauthClientId;
+        provider->clientSecret = s.oauthClientSecret;
+    }
+    if (!s.oauthTokenUrl.isEmpty())
+        provider->tokenUrl = QUrl(s.oauthTokenUrl);
+    auto *signIn = new SignIn(*provider, s.addr, this);
+    connect(signIn, &SignIn::openBrowser, this, [](const QUrl &url) { QDesktopServices::openUrl(url); });
+    const QPointer<Account> account(a);
+    connect(signIn, &SignIn::finished, this, [this, signIn, account](const QString &error) {
+        signIn->deleteLater();
+        if (!account)
+            return;
+        if (!error.isEmpty() || (!signIn->email().isEmpty()
+                                 && signIn->email().compare(account->addr(), Qt::CaseInsensitive) != 0)) {
+            Q_EMIT notify(error.isEmpty() ? tr("You signed in as %1, not as %2.").arg(signIn->email(), account->addr())
+                                         : error);
+            return;
+        }
+        account->storeRefreshToken(signIn->refreshToken());
+        account->stop();
+        account->start();
+    });
+    signIn->start();
 }
 
 QString MailApp::accountStatusDetail() const

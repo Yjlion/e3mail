@@ -136,6 +136,25 @@ private Q_SLOTS:
         QVERIFY(r.complete());
     }
 
+    // Thunderbird's ISPDB file for gmail.com, as served: the servers take
+    // OAuth 2, and Google signs in (ADR 0019).
+    void parsesOAuth()
+    {
+        QFile f(QStringLiteral(E3_TEST_DATA "/ispdb-gmail.xml"));
+        QVERIFY(f.open(QIODevice::ReadOnly));
+        const Result r = Autoconfig::parseAutoconfig(f.readAll(), QStringLiteral("dora@gmail.com"));
+        QVERIFY(r.complete());
+        QCOMPARE(r.oauthIssuer, QStringLiteral("accounts.google.com"));
+        QCOMPARE(r.incoming.first().host, QStringLiteral("imap.gmail.com"));
+        QVERIFY(r.incoming.first().oauth);
+        QVERIFY(r.smtp.oauth);
+        // A file that does not mention it says nothing of OAuth.
+        const Result plain = Autoconfig::parseAutoconfig(autoconfigXml(QStringLiteral("imap.x.test")),
+                                                         QStringLiteral("a@x.test"));
+        QVERIFY(plain.oauthIssuer.isEmpty());
+        QVERIFY(!plain.incoming.first().oauth);
+    }
+
     void parsesAutodiscover()
     {
         const Result r = Autoconfig::parseAutodiscover(kAutodiscover, QStringLiteral("other@corp.test"));

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 #include "FakeMailServer.h"
+#include "FakeOAuthServer.h"
 #include "crypto/Autocrypt.h"
 #include "crypto/Pgp.h"
 #include "engine/AccountManager.h"
@@ -480,6 +481,77 @@ private Q_SLOTS:
         sync(bob);
         const qint64 plain = *bob->ctx().db.queryInt("SELECT id FROM messages WHERE message_id='p1@b.test'");
         QVERIFY(mail::Compose::reply(bob->ctx(), plain, false).html.isEmpty());
+    }
+
+    // Signing in with OAuth 2 (ADR 0019): the worker renews the access token
+    // when it runs out, once more when the server refuses one early, keeps
+    // a rotated refresh token, and asks to sign in again when renewal is
+    // refused.
+    void oauthTokens_data()
+    {
+        QTest::addColumn<QString>("protocol");
+        QTest::newRow("imap") << QStringLiteral("imap");
+        QTest::newRow("pop3") << QStringLiteral("pop3");
+    }
+    void oauthTokens()
+    {
+        QFETCH(QString, protocol);
+        FakeOAuthServer provider;
+        m_srv->oauth = true;
+        int notTaken = 0; // tokens the server will refuse although they are new
+        provider.issued = [this, &notTaken](const QString &email, const QString &access) {
+            if (notTaken > 0)
+                --notTaken;
+            else
+                m_srv->setToken(email, access);
+        };
+        const QString addr = QStringLiteral("dora@x.test");
+        m_srv->addUser(addr, QStringLiteral("not the password"));
+        provider.addRefreshToken(QStringLiteral("r1"), addr);
+
+        Account *a = m_mgr->create();
+        Account::Settings s;
+        s.addr = addr;
+        s.protocol = protocol;
+        s.inHost = s.smtpHost = QStringLiteral("127.0.0.1");
+        s.inPort = protocol == QLatin1String("pop3") ? m_srv->pop3Port() : m_srv->imapPort();
+        s.inSecurity = s.smtpSecurity = QStringLiteral("plain");
+        s.smtpPort = m_srv->smtpPort();
+        s.auth = QStringLiteral("oauth:google");
+        s.oauthRefresh = QStringLiteral("r1");
+        s.oauthClientId = QStringLiteral("test-client");
+        s.oauthTokenUrl = provider.provider().tokenUrl.toString();
+        a->configure(s);
+        QCOMPARE(a->settings().oauthRefresh, QStringLiteral("r1"));
+
+        // Fetching and sending with a token renewed from the refresh token.
+        sync(a);
+        QCOMPARE(provider.refreshes, 1);
+        m_srv->deliver(addr, "From: x@x.test\r\nSubject: by token\r\n\r\nhi\r\n");
+        mail::Compose::queue(a->ctx(), draft(QStringLiteral("x@x.test"), QStringLiteral("out"), QStringLiteral("o")));
+        sync(a);
+        QCOMPARE(provider.refreshes, 2); // runOnce keeps no token between runs
+        QCOMPARE(mail::Search::count(a->ctx(), tag::Inbox, false), 1);
+        QCOMPARE(m_srv->envelopes().size(), 1);
+
+        // The server stops taking it before it expires: the worker renews
+        // it at once and goes on.
+        provider.rotate = true;
+        notTaken = 1;
+        a->start();
+        QTRY_COMPARE_WITH_TIMEOUT(a->status(), QStringLiteral("online"), 10000);
+        QCOMPARE(provider.refreshes, 4); // one to start, one more when refused
+        // Rotated: the new refresh token is the one kept.
+        QTRY_VERIFY_WITH_TIMEOUT(a->settings().oauthRefresh != QLatin1String("r1"), 5000);
+        a->stop();
+
+        // Revoked: no renewal, and the account asks to sign in again.
+        provider.revoke(a->settings().oauthRefresh);
+        m_srv->setToken(addr, QStringLiteral("nobody's"));
+        a->start();
+        QTRY_COMPARE_WITH_TIMEOUT(a->status(), QStringLiteral("auth"), 10000);
+        QVERIFY2(a->statusDetail().contains(QLatin1String("Sign in again")), qPrintable(a->statusDetail()));
+        a->stop();
     }
 
     void selfIsEncrypted()

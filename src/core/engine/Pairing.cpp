@@ -67,7 +67,7 @@ QByteArray chunkHeader(bool blob, const QString &name, qint64 offset)
 
 // Settings that belong to one device and never travel in a snapshot.
 const char *const kDeviceOnly[] = {cfg::DeviceId, cfg::P2pSecret, cfg::P2pPort, cfg::P2pLoopback, cfg::P2pRelayOnly, cfg::P2pRemovedBy, cfg::DeviceName, cfg::InPassword,
-                                   cfg::SmtpPassword};
+                                   cfg::SmtpPassword, cfg::OAuthRefresh};
 
 // Whether an endpoint address offers only this machine's own addresses.
 bool onlyLoopback(const QString &addr)
@@ -258,7 +258,8 @@ void PairingOffer::allow()
         {QStringLiteral("blobs"), blobs},
         // The passwords travel only here, inside the authenticated channel.
         {QStringLiteral("in"), s.inPassword},
-        {QStringLiteral("smtp"), s.smtpPassword}};
+        {QStringLiteral("smtp"), s.smtpPassword},
+        {QStringLiteral("oauth"), s.oauthRefresh}};
     m_transport->sendFrame(m_conn, pairing::Manifest, json(manifest));
 }
 
@@ -486,6 +487,7 @@ void PairingJoin::complete()
             return fail(tr("Cannot write here."));
         a->storePasswords(m_manifest.value(QLatin1String("in")).toString(),
                           m_manifest.value(QLatin1String("smtp")).toString());
+        a->storeRefreshToken(m_manifest.value(QLatin1String("oauth")).toString());
         // Every server message the copy holds is here now: say so, or the
         // other devices would keep it on the server forever.
         auto &ctx = a->ctx();

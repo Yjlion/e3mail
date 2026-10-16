@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: MPL-2.0
 #pragma once
 
+#include "net/OAuth.h"
 #include "net/SyncSocket.h"
 
 #include <QThread>
 
 #include <atomic>
+#include <memory>
 
 namespace e3 {
 
@@ -24,7 +26,12 @@ public:
         net::ServerSettings incoming;
         net::ServerSettings smtp;
         QString protocol; // imap | pop3
+        // OAuth 2 (ADR 0019): fills both servers' access tokens.
+        std::shared_ptr<net::oauth::TokenSource> oauth;
     };
+    // Puts a valid access token into both servers' settings, refreshing it
+    // if needed or `fresh`. Nothing for password accounts.
+    static void fillTokens(Credentials &creds, bool fresh);
 
     MailWorker(const QString &accountDir, const Credentials &creds, QObject *parent = nullptr);
     ~MailWorker() override;
