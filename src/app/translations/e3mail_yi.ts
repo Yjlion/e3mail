@@ -28,6 +28,160 @@
     </message>
 </context>
 <context>
+    <name>BackupController</name>
+    <message>
+        <source>The passphrase does not open the backups there.</source>
+        <translation>דער פּאַראָל־זאַץ עפֿנט נישט די זיכערונגען וואָס זענען דאָרט.</translation>
+    </message>
+    <message>
+        <source>Google Drive, folder “%1”</source>
+        <translation>Google Drive, טעקע „%1“</translation>
+    </message>
+    <message>
+        <source>OneDrive, Apps/e3mail</source>
+        <translation>OneDrive, ‏Apps/e3mail</translation>
+    </message>
+    <message>
+        <source>Use a passphrase of at least 12 characters, or a recovery code.</source>
+        <translation>ניצט אַ פּאַראָל־זאַץ פֿון כאָטש 12 צייכנס, אָדער אַ צוריקקריג־קאָד.</translation>
+    </message>
+</context>
+<context>
+    <name>BackupForm</name>
+    <message>
+        <source>Where</source>
+        <translation>וווּהין</translation>
+    </message>
+    <message>
+        <source>A folder (a drive, or one another program syncs)</source>
+        <translation>אַ טעקע (אַ דיסק, אָדער איינע וואָס אַן אַנדער פּראָגראַם סינכראָניזירט)</translation>
+    </message>
+    <message>
+        <source>WebDAV (Nextcloud and others)</source>
+        <translation>WebDAV ‏(Nextcloud און אַנדערע)</translation>
+    </message>
+    <message>
+        <source>S3 and compatible (Backblaze, Wasabi, R2…)</source>
+        <translation>S3 און פּאַסיקע (Backblaze, Wasabi, R2…)</translation>
+    </message>
+    <message>
+        <source>SFTP (an SSH server)</source>
+        <translation>SFTP (אַן SSH־סערווער)</translation>
+    </message>
+    <message>
+        <source>Google Drive</source>
+        <translation>Google Drive</translation>
+    </message>
+    <message>
+        <source>OneDrive</source>
+        <translation>OneDrive</translation>
+    </message>
+    <message>
+        <source>Server</source>
+        <translation>סערווער</translation>
+    </message>
+    <message>
+        <source>Endpoint</source>
+        <translation>ענדפּונקט</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>אַדרעס</translation>
+    </message>
+    <message>
+        <source>Bucket</source>
+        <translation>עמער</translation>
+    </message>
+    <message>
+        <source>Region</source>
+        <translation>ראַיאָן</translation>
+    </message>
+    <message>
+        <source>Folder in the bucket</source>
+        <translation>טעקע אינעם עמער</translation>
+    </message>
+    <message>
+        <source>Folder</source>
+        <translation>טעקע</translation>
+    </message>
+    <message>
+        <source>Folder on the server</source>
+        <translation>טעקע אויפֿן סערווער</translation>
+    </message>
+    <message>
+        <source>Access key</source>
+        <translation>צוטריט־שליסל</translation>
+    </message>
+    <message>
+        <source>User name</source>
+        <translation>באַניצער־נאָמען</translation>
+    </message>
+    <message>
+        <source>Secret key</source>
+        <translation>סוד־שליסל</translation>
+    </message>
+    <message>
+        <source>Password</source>
+        <translation>פּאַראָל</translation>
+    </message>
+    <message>
+        <source>Signed in</source>
+        <translation>אַרײַן</translation>
+    </message>
+    <message>
+        <source>Sign in to Google Drive</source>
+        <translation>אַרײַנגיין אין Google Drive</translation>
+    </message>
+    <message>
+        <source>Sign in to OneDrive</source>
+        <translation>אַרײַנגיין אין OneDrive</translation>
+    </message>
+    <message>
+        <source>Passphrase for the backups</source>
+        <translation>פּאַראָל־זאַץ פֿאַר די זיכערונגען</translation>
+    </message>
+    <message>
+        <source>Passphrase or recovery code</source>
+        <translation>פּאַראָל־זאַץ אָדער צוריקקריג־קאָד</translation>
+    </message>
+    <message>
+        <source>Again</source>
+        <translation>נאָך אַ מאָל</translation>
+    </message>
+    <message>
+        <source>Use a passphrase instead</source>
+        <translation>ניצן אַ פּאַראָל־זאַץ אַנשטאָט</translation>
+    </message>
+    <message>
+        <source>Make a recovery code instead</source>
+        <translation>מאַכן אַ צוריקקריג־קאָד אַנשטאָט</translation>
+    </message>
+    <message>
+        <source>Everything is encrypted on this device with it before it leaves. Without it the backups cannot be opened, by anyone: write it down and keep it apart from this device.</source>
+        <translation>אַלץ ווערט דערמיט פֿאַרשליסלט אויף דעם מכשיר איידער עס גייט אַוועק. אָן אים קען קיינער נישט עפֿענען די זיכערונגען: שרײַבט אים אָן און האַלט אים באַזונדער פֿונעם מכשיר.</translation>
+    </message>
+    <message>
+        <source>A new device of the account is made from the newest backup there. It does not sync with your other devices until you pair it.</source>
+        <translation>פֿון דער נײַסטער זיכערונג דאָרט ווערט אַ נײַער מכשיר פֿונעם חשבון. ער סינכראָניזירט זיך נישט מיט אײַערע אַנדערע מכשירים ביז איר פֿאַרבינדט אים.</translation>
+    </message>
+    <message>
+        <source>The server&apos;s SSH host key has changed. Trust the new one only if the server&apos;s administrator says it changed:</source>
+        <translation>דעם סערווערס SSH־שליסל האָט זיך געביטן. גלייבט דעם נײַעם נאָר אויב דער סערווער־פֿאַרוואַלטער זאָגט אַז ער האָט זיך געביטן:</translation>
+    </message>
+    <message>
+        <source>The server&apos;s SSH host key is not known yet. Trust it only if it matches what the server&apos;s administrator gives you:</source>
+        <translation>דעם סערווערס SSH־שליסל איז נאָך נישט באַקאַנט. גלייבט אים נאָר אויב ער שטימט מיט דעם וואָס דער סערווער־פֿאַרוואַלטער גיט אײַך:</translation>
+    </message>
+    <message>
+        <source>The server&apos;s certificate is not trusted. Trust it only if its fingerprint matches what the server&apos;s administrator gives you:</source>
+        <translation>דעם סערווערס סערטיפֿיקאַט ווערט נישט געגלייבט. גלייבט אים נאָר אויב זײַן פֿינגער־אָפּדרוק שטימט מיט דעם וואָס דער סערווער־פֿאַרוואַלטער גיט אײַך:</translation>
+    </message>
+    <message>
+        <source>Trust it</source>
+        <translation>גלייבן</translation>
+    </message>
+</context>
+<context>
     <name>Compose</name>
     <message>
         <source>On %1 at %2, %3 wrote:</source>
@@ -968,6 +1122,21 @@ To: %4
     </message>
 </context>
 <context>
+    <name>RestoreDialog</name>
+    <message>
+        <source>Restore from a backup</source>
+        <translation>צוריקשטעלן פֿון אַ זיכערונג</translation>
+    </message>
+    <message>
+        <source>Restoring…</source>
+        <translation>מע שטעלט צוריק…</translation>
+    </message>
+    <message>
+        <source>Restore</source>
+        <translation>צוריקשטעלן</translation>
+    </message>
+</context>
+<context>
     <name>RichEditor</name>
     <message>
         <source>Bold</source>
@@ -1367,6 +1536,50 @@ To: %4
         <translation>די מכשירים פֿון דעם חשבון סינכראָניזירן זיך גלײַך איינער מיטן אַנדערן, פֿאַרשליסלט פֿון עק צו עק. ווען זיי קענען זיך ניט דערגרייכן, גיט אַ רעלע איבער דעם פֿאַרשליסלטן פֿאַרקער; לייענען קען ער אים ניט.</translation>
     </message>
     <message>
+        <source>Backups</source>
+        <translation>זיכערונגען</translation>
+    </message>
+    <message>
+        <source>Encrypted, to %1, once a day while e3mail runs.</source>
+        <translation>פֿאַרשליסלט, קיין %1, איין מאָל אַ טאָג בשעת e3mail לויפֿט.</translation>
+    </message>
+    <message>
+        <source>Backing up…</source>
+        <translation>מע זיכערט…</translation>
+    </message>
+    <message>
+        <source>The last backup failed: %1</source>
+        <translation>די לעצטע זיכערונג איז דורכגעפֿאַלן: %1</translation>
+    </message>
+    <message>
+        <source>Last backup: %1, checked by reading it back.</source>
+        <translation>לעצטע זיכערונג: %1, געקאָנטראָלירט דורך איבערלייענען.</translation>
+    </message>
+    <message>
+        <source>No backup yet.</source>
+        <translation>נאָך קיין זיכערונג נישט.</translation>
+    </message>
+    <message>
+        <source>Back up now</source>
+        <translation>זיכערן איצט</translation>
+    </message>
+    <message>
+        <source>Stop backing up</source>
+        <translation>אויפֿהערן זיכערן</translation>
+    </message>
+    <message>
+        <source>Back this mailbox up, encrypted, to a place of your choice. The place sees only encrypted data and its size.</source>
+        <translation>זיכערט דעם פּאָסטקאַסטן, פֿאַרשליסלט, אין אַן אָרט וואָס איר קלײַבט. דאָס אָרט זעט נאָר פֿאַרשליסלטע דאַטן און זייער גרייס.</translation>
+    </message>
+    <message>
+        <source>Setting up…</source>
+        <translation>מע שטעלט אײַן…</translation>
+    </message>
+    <message>
+        <source>Set up backups</source>
+        <translation>אײַנשטעלן זיכערונגען</translation>
+    </message>
+    <message>
         <source>Data</source>
         <translation>דאַטן</translation>
     </message>
@@ -1555,6 +1768,10 @@ To: %4
     <message>
         <source>Copy an account from another device…</source>
         <translation>קאָפּירן אַ חשבון פֿון אַן אַנדער מכשיר…</translation>
+    </message>
+    <message>
+        <source>Restore from a backup…</source>
+        <translation>צוריקשטעלן פֿון אַ זיכערונג…</translation>
     </message>
 </context>
 <context>

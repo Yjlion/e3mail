@@ -92,6 +92,11 @@ public:
     // In the OS keyring if there is one, otherwise in the database.
     void storePasswords(const QString &inPassword, const QString &smtpPassword);
     void storeRefreshToken(const QString &token);
+    // Any other secret of this account, in the OS keyring as
+    // account-<id>-<which>, or without one in the config under `fallback`
+    // (a device-only key). Empty removes it.
+    void storeSecret(const char *which, const char *fallback, const QString &value);
+    QString secret(const char *which, const char *fallback) const;
     Settings settings() const;
     MailWorker::Credentials credentials() const;
 

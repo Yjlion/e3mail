@@ -245,9 +245,19 @@ Rectangle {
                 text: qsTr("Copy an account from another device…")
                 onClicked: joinDialog.open()
             }
+            Button {
+                flat: true
+                text: qsTr("Restore from a backup…")
+                onClicked: restoreDialog.open()
+            }
         }
     }
     function openJoin() { joinDialog.open() }
+    function openRestore() { restoreDialog.open() }
+    RestoreDialog {
+        id: restoreDialog
+        onRestored: view.finished()
+    }
     // For screenshots (--page setup-oauth): an address a provider signs in for.
     function prefill(addr) { setup.addr = addr }
     function scanJoin() { joinDialog.open(); joinDialog.scan() }

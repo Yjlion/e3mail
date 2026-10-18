@@ -28,6 +28,160 @@
     </message>
 </context>
 <context>
+    <name>BackupController</name>
+    <message>
+        <source>The passphrase does not open the backups there.</source>
+        <translation>عبارة المرور هذه لا تفتح النسخ الاحتياطية الموجودة هناك.</translation>
+    </message>
+    <message>
+        <source>Google Drive, folder “%1”</source>
+        <translation>Google Drive، المجلد «%1»</translation>
+    </message>
+    <message>
+        <source>OneDrive, Apps/e3mail</source>
+        <translation>OneDrive، ‏Apps/e3mail</translation>
+    </message>
+    <message>
+        <source>Use a passphrase of at least 12 characters, or a recovery code.</source>
+        <translation>استخدم عبارة مرور من 12 حرفًا على الأقل، أو رمز استرداد.</translation>
+    </message>
+</context>
+<context>
+    <name>BackupForm</name>
+    <message>
+        <source>Where</source>
+        <translation>المكان</translation>
+    </message>
+    <message>
+        <source>A folder (a drive, or one another program syncs)</source>
+        <translation>مجلد (قرص، أو مجلد يزامنه برنامج آخر)</translation>
+    </message>
+    <message>
+        <source>WebDAV (Nextcloud and others)</source>
+        <translation>WebDAV ‏(Nextcloud وغيره)</translation>
+    </message>
+    <message>
+        <source>S3 and compatible (Backblaze, Wasabi, R2…)</source>
+        <translation>S3 والخدمات المتوافقة (Backblaze وWasabi وR2…)</translation>
+    </message>
+    <message>
+        <source>SFTP (an SSH server)</source>
+        <translation>SFTP (خادم SSH)</translation>
+    </message>
+    <message>
+        <source>Google Drive</source>
+        <translation>Google Drive</translation>
+    </message>
+    <message>
+        <source>OneDrive</source>
+        <translation>OneDrive</translation>
+    </message>
+    <message>
+        <source>Server</source>
+        <translation>الخادم</translation>
+    </message>
+    <message>
+        <source>Endpoint</source>
+        <translation>نقطة النهاية</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>العنوان</translation>
+    </message>
+    <message>
+        <source>Bucket</source>
+        <translation>الحاوية</translation>
+    </message>
+    <message>
+        <source>Region</source>
+        <translation>المنطقة</translation>
+    </message>
+    <message>
+        <source>Folder in the bucket</source>
+        <translation>المجلد داخل الحاوية</translation>
+    </message>
+    <message>
+        <source>Folder</source>
+        <translation>المجلد</translation>
+    </message>
+    <message>
+        <source>Folder on the server</source>
+        <translation>المجلد على الخادم</translation>
+    </message>
+    <message>
+        <source>Access key</source>
+        <translation>مفتاح الوصول</translation>
+    </message>
+    <message>
+        <source>User name</source>
+        <translation>اسم المستخدم</translation>
+    </message>
+    <message>
+        <source>Secret key</source>
+        <translation>المفتاح السري</translation>
+    </message>
+    <message>
+        <source>Password</source>
+        <translation>كلمة المرور</translation>
+    </message>
+    <message>
+        <source>Signed in</source>
+        <translation>تم تسجيل الدخول</translation>
+    </message>
+    <message>
+        <source>Sign in to Google Drive</source>
+        <translation>تسجيل الدخول إلى Google Drive</translation>
+    </message>
+    <message>
+        <source>Sign in to OneDrive</source>
+        <translation>تسجيل الدخول إلى OneDrive</translation>
+    </message>
+    <message>
+        <source>Passphrase for the backups</source>
+        <translation>عبارة المرور للنسخ الاحتياطية</translation>
+    </message>
+    <message>
+        <source>Passphrase or recovery code</source>
+        <translation>عبارة المرور أو رمز الاسترداد</translation>
+    </message>
+    <message>
+        <source>Again</source>
+        <translation>مرة أخرى</translation>
+    </message>
+    <message>
+        <source>Use a passphrase instead</source>
+        <translation>استخدم عبارة مرور بدلًا من ذلك</translation>
+    </message>
+    <message>
+        <source>Make a recovery code instead</source>
+        <translation>أنشئ رمز استرداد بدلًا من ذلك</translation>
+    </message>
+    <message>
+        <source>Everything is encrypted on this device with it before it leaves. Without it the backups cannot be opened, by anyone: write it down and keep it apart from this device.</source>
+        <translation>يُشفَّر كل شيء بها على هذا الجهاز قبل أن يغادره. ولا يستطيع أحد فتح النسخ دونها: اكتبها واحفظها بعيدًا عن هذا الجهاز.</translation>
+    </message>
+    <message>
+        <source>A new device of the account is made from the newest backup there. It does not sync with your other devices until you pair it.</source>
+        <translation>يُنشأ جهاز جديد للحساب من أحدث نسخة احتياطية هناك. ولا يتزامن مع أجهزتك الأخرى حتى تقرنه.</translation>
+    </message>
+    <message>
+        <source>The server&apos;s SSH host key has changed. Trust the new one only if the server&apos;s administrator says it changed:</source>
+        <translation>تغيّر مفتاح المضيف SSH للخادم. لا تثق بالجديد إلا إذا قال مسؤول الخادم إنه تغيّر:</translation>
+    </message>
+    <message>
+        <source>The server&apos;s SSH host key is not known yet. Trust it only if it matches what the server&apos;s administrator gives you:</source>
+        <translation>مفتاح المضيف SSH للخادم غير معروف بعد. لا تثق به إلا إذا طابق ما يعطيك إياه مسؤول الخادم:</translation>
+    </message>
+    <message>
+        <source>The server&apos;s certificate is not trusted. Trust it only if its fingerprint matches what the server&apos;s administrator gives you:</source>
+        <translation>شهادة الخادم غير موثوقة. لا تثق بها إلا إذا طابقت بصمتها ما يعطيك إياه مسؤول الخادم:</translation>
+    </message>
+    <message>
+        <source>Trust it</source>
+        <translation>ثق به</translation>
+    </message>
+</context>
+<context>
     <name>Compose</name>
     <message>
         <source>On %1 at %2, %3 wrote:</source>
@@ -1008,6 +1162,21 @@ To: %4
     </message>
 </context>
 <context>
+    <name>RestoreDialog</name>
+    <message>
+        <source>Restore from a backup</source>
+        <translation>الاستعادة من نسخة احتياطية</translation>
+    </message>
+    <message>
+        <source>Restoring…</source>
+        <translation>جارٍ الاستعادة…</translation>
+    </message>
+    <message>
+        <source>Restore</source>
+        <translation>استعادة</translation>
+    </message>
+</context>
+<context>
     <name>RichEditor</name>
     <message>
         <source>Bold</source>
@@ -1407,6 +1576,50 @@ To: %4
         <translation>تتزامن أجهزة هذا الحساب مباشرة فيما بينها بتشفير تام بين الطرفين. وحين يتعذّر وصول بعضها إلى بعض، ينقل مُرحِّل الحركة المشفّرة دون أن يستطيع قراءتها.</translation>
     </message>
     <message>
+        <source>Backups</source>
+        <translation>النسخ الاحتياطية</translation>
+    </message>
+    <message>
+        <source>Encrypted, to %1, once a day while e3mail runs.</source>
+        <translation>مشفّرة، إلى %1، مرة يوميًا ما دام e3mail يعمل.</translation>
+    </message>
+    <message>
+        <source>Backing up…</source>
+        <translation>جارٍ النسخ الاحتياطي…</translation>
+    </message>
+    <message>
+        <source>The last backup failed: %1</source>
+        <translation>فشلت آخر نسخة احتياطية: %1</translation>
+    </message>
+    <message>
+        <source>Last backup: %1, checked by reading it back.</source>
+        <translation>آخر نسخة احتياطية: %1، وقد تُحقِّق منها بإعادة قراءتها.</translation>
+    </message>
+    <message>
+        <source>No backup yet.</source>
+        <translation>لا نسخة احتياطية بعد.</translation>
+    </message>
+    <message>
+        <source>Back up now</source>
+        <translation>انسخ احتياطيًا الآن</translation>
+    </message>
+    <message>
+        <source>Stop backing up</source>
+        <translation>أوقف النسخ الاحتياطي</translation>
+    </message>
+    <message>
+        <source>Back this mailbox up, encrypted, to a place of your choice. The place sees only encrypted data and its size.</source>
+        <translation>انسخ صندوق البريد هذا احتياطيًا، مشفّرًا، إلى مكان تختاره. لا يرى ذلك المكان إلا بيانات مشفّرة وحجمها.</translation>
+    </message>
+    <message>
+        <source>Setting up…</source>
+        <translation>جارٍ الإعداد…</translation>
+    </message>
+    <message>
+        <source>Set up backups</source>
+        <translation>إعداد النسخ الاحتياطي</translation>
+    </message>
+    <message>
         <source>Data</source>
         <translation>البيانات</translation>
     </message>
@@ -1595,6 +1808,10 @@ To: %4
     <message>
         <source>Copy an account from another device…</source>
         <translation>نسخ حساب من جهاز آخر…</translation>
+    </message>
+    <message>
+        <source>Restore from a backup…</source>
+        <translation>الاستعادة من نسخة احتياطية…</translation>
     </message>
 </context>
 <context>

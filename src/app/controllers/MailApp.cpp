@@ -2,6 +2,7 @@
 #include "MailApp.h"
 #include "AndroidSync.h"
 #include "SignIn.h"
+#include "engine/Backups.h"
 #include "net/OAuth.h"
 #include "FileIo.h"
 #include "Languages.h"
@@ -34,6 +35,7 @@
 #include "util/Paths.h"
 
 #include <QDesktopServices>
+#include <QFutureWatcher>
 #include <QGuiApplication>
 #include <QSettings>
 #include <QJSEngine>
@@ -103,6 +105,19 @@ MailApp::MailApp(AccountManager *manager, QObject *parent) : QObject(parent), m_
     // The process keeps running in the background only while the service
     // does; it is started here, at launch, while e3mail is in front.
     androidsync::onStopPressed([this] { setBackgroundSync(false); });
+    // Daily backups: looked at a few minutes after starting, then hourly.
+    auto *backupTimer = new QTimer(this);
+    connect(backupTimer, &QTimer::timeout, this, [this, backupTimer] {
+        backupTimer->setInterval(60 * 60 * 1000);
+        for (Account *a : m_mgr->accounts()) {
+            if (!backups::isSetUp(*a))
+                continue;
+            const QDateTime last = QDateTime::fromString(a->ctx().config.get(cfg::BackupLast), Qt::ISODate);
+            if (!last.isValid() || last.secsTo(QDateTime::currentDateTimeUtc()) > 23 * 3600)
+                backUp(a);
+        }
+    });
+    backupTimer->start(3 * 60 * 1000);
     if (backgroundSync())
         androidsync::start();
     connect(m_notifier, &Notifier::activated, this, [this](int accountId, qint64 msgId) {
@@ -508,6 +523,30 @@ void MailApp::signInAgain()
         account->start();
     });
     signIn->start();
+}
+
+void MailApp::backUp(Account *a)
+{
+    if (!a || m_backingUp.contains(a->id()))
+        return;
+    m_backingUp.insert(a->id());
+    Q_EMIT backupsChanged();
+    auto *w = new QFutureWatcher<backups::Outcome>(this);
+    const QPointer<Account> account(a);
+    const int id = a->id();
+    connect(w, &QFutureWatcher<backups::Outcome>::finished, this, [this, w, account, id] {
+        w->deleteLater();
+        m_backingUp.remove(id);
+        if (account)
+            backups::record(*account, w->result());
+        Q_EMIT backupsChanged();
+    });
+    w->setFuture(backups::run(*a));
+}
+
+bool MailApp::backingUp(const Account *a) const
+{
+    return a && m_backingUp.contains(a->id());
 }
 
 QString MailApp::accountStatusDetail() const

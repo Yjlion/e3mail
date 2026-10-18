@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 #include "Pairing.h"
+#include "store/Snapshot.h"
 
 #include "Account.h"
 #include "AccountManager.h"
@@ -65,9 +66,6 @@ QByteArray chunkHeader(bool blob, const QString &name, qint64 offset)
     return h;
 }
 
-// Settings that belong to one device and never travel in a snapshot.
-const char *const kDeviceOnly[] = {cfg::DeviceId, cfg::P2pSecret, cfg::P2pPort, cfg::P2pLoopback, cfg::P2pRelayOnly, cfg::P2pRemovedBy, cfg::DeviceName, cfg::InPassword,
-                                   cfg::SmtpPassword, cfg::OAuthRefresh};
 
 // Whether an endpoint address offers only this machine's own addresses.
 bool onlyLoopback(const QString &addr)
@@ -225,12 +223,7 @@ void PairingOffer::allow()
     m_tmp = std::make_unique<QTemporaryDir>(m_account->dir() + QStringLiteral("/.pairing-XXXXXX"));
     m_dbPath = m_tmp->filePath(QStringLiteral("snapshot.db"));
     try {
-        QString quoted = m_dbPath;
-        ctx.db.exec(QStringLiteral("VACUUM INTO '%1'").arg(quoted.replace(u'\'', QStringLiteral("''"))));
-        Database snap(m_dbPath);
-        for (const char *k : kDeviceOnly)
-            snap.run("DELETE FROM config WHERE key=?", k);
-        snap.exec("PRAGMA wal_checkpoint(TRUNCATE)");
+        snapshotDatabase(ctx.db, m_dbPath);
     } catch (const std::exception &e) {
         fail(QString::fromUtf8(e.what()));
         return;

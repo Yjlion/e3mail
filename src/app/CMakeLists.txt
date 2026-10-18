@@ -50,6 +50,7 @@ qt_add_qml_module(e3mail
     SOURCES
         controllers/MailApp.cpp controllers/MailApp.h
         controllers/AndroidSync.cpp controllers/AndroidSync.h
+        controllers/BackupController.cpp controllers/BackupController.h
         controllers/InlineImages.cpp controllers/InlineImages.h
         controllers/Languages.cpp controllers/Languages.h
         controllers/Composer.cpp controllers/Composer.h

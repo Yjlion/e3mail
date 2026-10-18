@@ -289,6 +289,25 @@ void Account::storeRefreshToken(const QString &token)
     }
 }
 
+void Account::storeSecret(const char *which, const char *fallback, const QString &value)
+{
+    if (value.isEmpty()) {
+        SecretStore::remove(secretKey(m_id, which));
+        m_db->run("DELETE FROM config WHERE key=?", fallback);
+    } else if (SecretStore::write(secretKey(m_id, which), value)) {
+        m_db->run("DELETE FROM config WHERE key=?", fallback);
+    } else {
+        m_config->set(fallback, value);
+    }
+}
+
+QString Account::secret(const char *which, const char *fallback) const
+{
+    if (m_config->isSet(fallback))
+        return m_config->get(fallback);
+    return SecretStore::read(secretKey(m_id, which)).value_or(QString());
+}
+
 Account::Settings Account::settings() const
 {
     Settings s;

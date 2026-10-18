@@ -28,6 +28,160 @@
     </message>
 </context>
 <context>
+    <name>BackupController</name>
+    <message>
+        <source>The passphrase does not open the backups there.</source>
+        <translation>该密码短语无法打开那里的备份。</translation>
+    </message>
+    <message>
+        <source>Google Drive, folder “%1”</source>
+        <translation>Google Drive，文件夹“%1”</translation>
+    </message>
+    <message>
+        <source>OneDrive, Apps/e3mail</source>
+        <translation>OneDrive，Apps/e3mail</translation>
+    </message>
+    <message>
+        <source>Use a passphrase of at least 12 characters, or a recovery code.</source>
+        <translation>请使用至少 12 个字符的密码短语，或恢复码。</translation>
+    </message>
+</context>
+<context>
+    <name>BackupForm</name>
+    <message>
+        <source>Where</source>
+        <translation>位置</translation>
+    </message>
+    <message>
+        <source>A folder (a drive, or one another program syncs)</source>
+        <translation>文件夹（磁盘，或其他程序同步的文件夹）</translation>
+    </message>
+    <message>
+        <source>WebDAV (Nextcloud and others)</source>
+        <translation>WebDAV（Nextcloud 等）</translation>
+    </message>
+    <message>
+        <source>S3 and compatible (Backblaze, Wasabi, R2…)</source>
+        <translation>S3 及兼容服务（Backblaze、Wasabi、R2…）</translation>
+    </message>
+    <message>
+        <source>SFTP (an SSH server)</source>
+        <translation>SFTP（SSH 服务器）</translation>
+    </message>
+    <message>
+        <source>Google Drive</source>
+        <translation>Google Drive</translation>
+    </message>
+    <message>
+        <source>OneDrive</source>
+        <translation>OneDrive</translation>
+    </message>
+    <message>
+        <source>Server</source>
+        <translation>服务器</translation>
+    </message>
+    <message>
+        <source>Endpoint</source>
+        <translation>端点</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>地址</translation>
+    </message>
+    <message>
+        <source>Bucket</source>
+        <translation>存储桶</translation>
+    </message>
+    <message>
+        <source>Region</source>
+        <translation>区域</translation>
+    </message>
+    <message>
+        <source>Folder in the bucket</source>
+        <translation>存储桶中的文件夹</translation>
+    </message>
+    <message>
+        <source>Folder</source>
+        <translation>文件夹</translation>
+    </message>
+    <message>
+        <source>Folder on the server</source>
+        <translation>服务器上的文件夹</translation>
+    </message>
+    <message>
+        <source>Access key</source>
+        <translation>访问密钥</translation>
+    </message>
+    <message>
+        <source>User name</source>
+        <translation>用户名</translation>
+    </message>
+    <message>
+        <source>Secret key</source>
+        <translation>私密密钥</translation>
+    </message>
+    <message>
+        <source>Password</source>
+        <translation>密码</translation>
+    </message>
+    <message>
+        <source>Signed in</source>
+        <translation>已登录</translation>
+    </message>
+    <message>
+        <source>Sign in to Google Drive</source>
+        <translation>登录 Google Drive</translation>
+    </message>
+    <message>
+        <source>Sign in to OneDrive</source>
+        <translation>登录 OneDrive</translation>
+    </message>
+    <message>
+        <source>Passphrase for the backups</source>
+        <translation>备份的密码短语</translation>
+    </message>
+    <message>
+        <source>Passphrase or recovery code</source>
+        <translation>密码短语或恢复码</translation>
+    </message>
+    <message>
+        <source>Again</source>
+        <translation>再次输入</translation>
+    </message>
+    <message>
+        <source>Use a passphrase instead</source>
+        <translation>改用密码短语</translation>
+    </message>
+    <message>
+        <source>Make a recovery code instead</source>
+        <translation>改为生成恢复码</translation>
+    </message>
+    <message>
+        <source>Everything is encrypted on this device with it before it leaves. Without it the backups cannot be opened, by anyone: write it down and keep it apart from this device.</source>
+        <translation>所有数据在离开本设备前都用它加密。没有它，任何人都无法打开备份：请把它写下来，并与本设备分开保管。</translation>
+    </message>
+    <message>
+        <source>A new device of the account is made from the newest backup there. It does not sync with your other devices until you pair it.</source>
+        <translation>将用那里最新的备份创建该账户的一台新设备。在你配对之前，它不会与其他设备同步。</translation>
+    </message>
+    <message>
+        <source>The server&apos;s SSH host key has changed. Trust the new one only if the server&apos;s administrator says it changed:</source>
+        <translation>服务器的 SSH 主机密钥已更改。只有在服务器管理员确认已更改时才信任新的密钥：</translation>
+    </message>
+    <message>
+        <source>The server&apos;s SSH host key is not known yet. Trust it only if it matches what the server&apos;s administrator gives you:</source>
+        <translation>服务器的 SSH 主机密钥尚不为人所知。只有在它与服务器管理员提供的一致时才信任它：</translation>
+    </message>
+    <message>
+        <source>The server&apos;s certificate is not trusted. Trust it only if its fingerprint matches what the server&apos;s administrator gives you:</source>
+        <translation>服务器的证书不受信任。只有在其指纹与服务器管理员提供的一致时才信任它：</translation>
+    </message>
+    <message>
+        <source>Trust it</source>
+        <translation>信任</translation>
+    </message>
+</context>
+<context>
     <name>Compose</name>
     <message>
         <source>On %1 at %2, %3 wrote:</source>
@@ -958,6 +1112,21 @@ To: %4
     </message>
 </context>
 <context>
+    <name>RestoreDialog</name>
+    <message>
+        <source>Restore from a backup</source>
+        <translation>从备份恢复</translation>
+    </message>
+    <message>
+        <source>Restoring…</source>
+        <translation>正在恢复…</translation>
+    </message>
+    <message>
+        <source>Restore</source>
+        <translation>恢复</translation>
+    </message>
+</context>
+<context>
     <name>RichEditor</name>
     <message>
         <source>Bold</source>
@@ -1357,6 +1526,50 @@ To: %4
         <translation>此账户的设备之间直接同步，端到端加密。当它们无法直接连接时，由中继转发加密流量；中继无法读取内容。</translation>
     </message>
     <message>
+        <source>Backups</source>
+        <translation>备份</translation>
+    </message>
+    <message>
+        <source>Encrypted, to %1, once a day while e3mail runs.</source>
+        <translation>已加密，备份到 %1，e3mail 运行时每天一次。</translation>
+    </message>
+    <message>
+        <source>Backing up…</source>
+        <translation>正在备份…</translation>
+    </message>
+    <message>
+        <source>The last backup failed: %1</source>
+        <translation>上次备份失败：%1</translation>
+    </message>
+    <message>
+        <source>Last backup: %1, checked by reading it back.</source>
+        <translation>上次备份：%1，已通过回读验证。</translation>
+    </message>
+    <message>
+        <source>No backup yet.</source>
+        <translation>尚无备份。</translation>
+    </message>
+    <message>
+        <source>Back up now</source>
+        <translation>立即备份</translation>
+    </message>
+    <message>
+        <source>Stop backing up</source>
+        <translation>停止备份</translation>
+    </message>
+    <message>
+        <source>Back this mailbox up, encrypted, to a place of your choice. The place sees only encrypted data and its size.</source>
+        <translation>将此邮箱加密备份到你选择的位置。该位置只能看到加密数据及其大小。</translation>
+    </message>
+    <message>
+        <source>Setting up…</source>
+        <translation>正在设置…</translation>
+    </message>
+    <message>
+        <source>Set up backups</source>
+        <translation>设置备份</translation>
+    </message>
+    <message>
         <source>Data</source>
         <translation>数据</translation>
     </message>
@@ -1545,6 +1758,10 @@ To: %4
     <message>
         <source>Copy an account from another device…</source>
         <translation>从另一台设备复制账户…</translation>
+    </message>
+    <message>
+        <source>Restore from a backup…</source>
+        <translation>从备份恢复…</translation>
     </message>
 </context>
 <context>

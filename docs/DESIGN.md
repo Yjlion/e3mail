@@ -150,7 +150,7 @@ amendments, [ADR 0013](adr/0013-op-merge-rules.md)), and tried live against
 | P8 | Multi-client over Iroh | ✅ transport, pairing (scanned), mailbox fallback, relay, Android in the background (2026-10-16) |
 | P9 | SecureJoin and QR (Delta Chat compatible) | |
 | P10 | Address book: details, phones, vCard import and export, CSV export | ✅ (categories not built) |
-| P11 | At rest: SQLCipher passphrase, blob encryption, encrypted backup | |
+| P11 | At rest: SQLCipher passphrase, blob encryption, encrypted backup | encrypted backup ✅ ([ADR 0020](adr/0020-encrypted-backups.md)); the rest not started |
 | P12 | Read receipts (MDN) and disappearing messages into Trash | |
 | P13 | Structured email (SML), trusted vs inert | |
 | P14 | Android: the same app, adaptive layout, foreground sync ([ADR 0016](adr/0016-android.md)) | APK builds and boots in an emulator; background sync if asked ([ADR 0018](adr/0018-background-sync-on-android.md)) |

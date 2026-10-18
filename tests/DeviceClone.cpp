@@ -31,6 +31,8 @@ bool cloneDevice(Account *src, const QString &root)
         Database db(dst + QStringLiteral("/mail.db"));
         db.run("UPDATE config SET value=? WHERE key='device_id'", QUuid::createUuid().toString(QUuid::WithoutBraces));
         db.run("DELETE FROM config WHERE key='p2p_secret'");
+        // Backups are set up per device (ADR 0020), as pairing's copy leaves them.
+        db.run("DELETE FROM config WHERE key LIKE 'backup_%'");
     }
     QFile f(root + QStringLiteral("/accounts/accounts.json"));
     if (!f.open(QIODevice::WriteOnly))

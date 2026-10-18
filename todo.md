@@ -14,30 +14,13 @@ machines on different networks (through n0's relays, and through
 `server/compose`'s relay exposed to both), and a real phone with background
 sync on for a day (battery, and what its maker's power manager does to it).
 
-## Encrypted backups to cloud storage
+## Encrypted backups: what is left
 
-Destinations: Google Drive, OneDrive, S3 and compatible, SFTP, WebDAV
-(Nextcloud and others). Part of P11 ("at rest").
-
-**There already:** the account directory is a SQLite database plus a blob
-store. Android's own backup is turned off on purpose (ADR 0016), because it
-would copy the secret key unencrypted.
-
-**Shape:**
-- Encrypted on the device before anything leaves it. The key comes from a
-  passphrase (Argon2id), or the account's OpenPGP key with a printed
-  recovery code.
-- The provider only ever sees ciphertext and sizes.
-- Incremental: blobs are content-addressed already, so only new ones go up.
-- A restore is tested on every backup (decrypt the manifest, check hashes).
-
-**Open:**
-- Google Drive and OneDrive need their own OAuth scopes on the clients that
-  mail sign-in uses (ADR 0019), and Google's review covers them too.
-- Whether to use rclone as a helper or our own clients. rclone covers every
-  destination but is a second program to ship and trust.
-- How backups interact with P8: are they per device or per account?
-- Retention and pruning of old backups.
+Built (ADR 0020, `docs/handoff.md`). **Open:**
+- SFTP on Android (libssh against Qt's OpenSSL, or a different SSH library).
+- Google Drive and OneDrive against the real services, once the OAuth clients
+  exist (ADR 0019).
+- At-rest encryption of the local database (SQLCipher), the rest of P11.
 
 ## Optional local AI through llama.cpp
 

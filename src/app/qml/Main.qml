@@ -55,6 +55,8 @@ ApplicationWindow {
     function showJoin() { firstSetup.openJoin() }
     function showScan() { firstSetup.scanJoin() }
     function showSetupOAuth() { firstSetup.prefill("dora@gmail.com") }
+    function showRestore() { firstSetup.openRestore() }
+    function showBackups() { page = "settings"; settingsView.showBackups() }
     onClosing: (close) => { if (narrow && back()) close.accepted = false }
 
     Shortcut { sequences: [StandardKey.New]; onActivated: window.compose("new", 0) }
