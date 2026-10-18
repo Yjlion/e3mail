@@ -1037,9 +1037,10 @@ Google Drive or OneDrive, and restored as a new device
   exist.
 - Real S3 (AWS, Backblaze, R2), Nextcloud, or an SFTP server with a key
   file: only the containers here, with passwords.
-- Botan 2 (Ubuntu's): written to the APIs both have, but compiled only
-  against Botan 3 here; CI's Linux job is the first Botan 2 build.
-- libssh on Windows through vcpkg, and the packages carrying it.
+- The release packages carrying libssh (AppImage, `.deb`, Windows, macOS):
+  not built yet. CI (run 39088491082) builds and tests everything on Linux
+  (Botan 2 and the distribution's libssh), macOS and Windows (vcpkg's
+  libssh), and builds both APKs.
 - A large mailbox: objects go one request each, with no parallelism.
 - The daily schedule in the running app, and the app's forms against real
   servers. They were driven only through the CLI and the tests.
