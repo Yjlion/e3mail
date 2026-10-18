@@ -9,6 +9,25 @@
     </message>
 </context>
 <context>
+    <name>AndroidSync</name>
+    <message>
+        <source>Background sync</source>
+        <translation>Фоновая синхронизация</translation>
+    </message>
+    <message>
+        <source>e3mail is keeping in sync</source>
+        <translation>e3mail поддерживает синхронизацию</translation>
+    </message>
+    <message>
+        <source>New mail and other devices&apos; changes arrive while e3mail is in the background.</source>
+        <translation>Новая почта и изменения с других устройств приходят, пока e3mail в фоне.</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation>Остановить</translation>
+    </message>
+</context>
+<context>
     <name>Compose</name>
     <message>
         <source>On %1 at %2, %3 wrote:</source>
@@ -1090,6 +1109,14 @@ To: %4
         <translation>Эта система не поддерживает уведомления на рабочем столе.</translation>
     </message>
     <message>
+        <source>Keep syncing in the background</source>
+        <translation>Синхронизировать в фоне</translation>
+    </message>
+    <message>
+        <source>Mail and your other devices&apos; changes keep arriving while e3mail is not in front. Android shows a notification for as long as this is on, and it uses more battery. Swiping e3mail away from the recent apps ends it.</source>
+        <translation>Почта и изменения с ваших других устройств продолжают приходить, когда e3mail не на переднем плане. Пока это включено, Android показывает уведомление, и расход батареи выше. Если смахнуть e3mail из недавних приложений, это прекратится.</translation>
+    </message>
+    <message>
         <source>You</source>
         <translation>Вы</translation>
     </message>
@@ -1292,6 +1319,14 @@ To: %4
     <message>
         <source>This build of e3mail cannot sync with other devices.</source>
         <translation>Эта сборка e3mail не умеет синхронизироваться с другими устройствами.</translation>
+    </message>
+    <message>
+        <source>“%1” removed this device from the account, so they no longer sync. Mail still arrives here from the server.</source>
+        <translation>«%1» удалило это устройство из учётной записи, поэтому они больше не синхронизируются. Почта по-прежнему приходит сюда с сервера.</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>ОК</translation>
     </message>
     <message>
         <source>This device</source>

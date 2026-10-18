@@ -60,6 +60,10 @@ inline constexpr char P2pSecret[] = "p2p_secret";            // this device's Ir
 inline constexpr char P2pRelay[] = "p2p_relay";              // "default" | "off" | a relay URL
 inline constexpr char P2pPort[] = "p2p_port";                // a fixed UDP port, or 0 for any
 inline constexpr char P2pLoopback[] = "p2p_loopback";        // 1: this machine only (tests, screenshots)
+inline constexpr char P2pRelayOnly[] = "p2p_relay_only";     // 1: no direct paths, the relay only (tests)
+// The name of the device that refused this one as no longer paired, until
+// the person has seen it.
+inline constexpr char P2pRemovedBy[] = "p2p_removed_by";
 inline constexpr char DeviceName[] = "device_name";          // what other devices call this one
 } // namespace cfg
 

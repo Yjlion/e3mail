@@ -49,6 +49,9 @@ class MailApp : public QObject
     // [{id, name, online, lastSeen}]
     Q_PROPERTY(QVariantList devices READ devices NOTIFY devicesChanged)
     Q_PROPERTY(QString deviceName READ deviceName WRITE setDeviceName NOTIFY devicesChanged)
+    // The device that removed this one from the account while it was away,
+    // until the person has seen it; empty otherwise.
+    Q_PROPERTY(QString removedBy READ removedBy NOTIFY devicesChanged)
     // "default", "off", or a relay URL.
     Q_PROPERTY(QString relay READ relay WRITE setRelay NOTIFY devicesChanged)
     // While the status is "cert": {server, fingerprint}; otherwise empty.
@@ -71,6 +74,10 @@ class MailApp : public QObject
     // New-mail notifications on this device: off | sender | full.
     Q_PROPERTY(QString notificationMode READ notificationMode WRITE setNotificationMode NOTIFY notificationsChanged)
     Q_PROPERTY(bool notificationsAvailable READ notificationsAvailable CONSTANT)
+    // Android: keep syncing while e3mail is not in front, through a
+    // foreground service and its notification (ADR 0018). Per device.
+    Q_PROPERTY(bool backgroundSync READ backgroundSync WRITE setBackgroundSync NOTIFY backgroundSyncChanged)
+    Q_PROPERTY(bool backgroundSyncAvailable READ backgroundSyncAvailable CONSTANT)
 
 public:
     explicit MailApp(e3::AccountManager *manager, QObject *parent = nullptr);
@@ -167,6 +174,8 @@ public:
     bool scanAvailable() const;
     QVariantList devices() const;
     QString deviceName() const;
+    QString removedBy() const;
+    Q_INVOKABLE void dismissRemoved();
     void setDeviceName(const QString &name);
     QString relay() const;
     void setRelay(const QString &relay);
@@ -204,6 +213,9 @@ public:
     QString notificationMode() const;
     void setNotificationMode(const QString &mode);
     bool notificationsAvailable() const;
+    bool backgroundSync() const;
+    void setBackgroundSync(bool on);
+    bool backgroundSyncAvailable() const;
     QVariantList languages() const;
 
 Q_SIGNALS:
@@ -228,6 +240,7 @@ Q_SIGNALS:
     // Translators were replaced: the QML engine must retranslate.
     void languageChanged();
     void notificationsChanged();
+    void backgroundSyncChanged();
     // A notification was clicked: the window should come to the front.
     void raiseRequested();
 

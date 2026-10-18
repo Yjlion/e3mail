@@ -50,7 +50,10 @@ IrohTransport::IrohTransport(Database &db, const QString &self, const Options &o
     initAndroid();
 #endif
     m_node = e3p2p_start(reinterpret_cast<const uint8_t *>(options.secret.constData()), relay,
-                         url.isEmpty() ? nullptr : url.constData(), options.port, options.loopback ? 1 : 0,
+                         url.isEmpty() ? nullptr : url.constData(), options.port,
+                         options.relayOnly ? E3P2P_NETWORK_RELAY_ONLY
+                         : options.loopback ? E3P2P_NETWORK_LOOPBACK
+                                            : E3P2P_NETWORK_ANY,
                          &IrohTransport::wake, this);
     if (!m_node) {
         qCWarning(lcSync) << "cannot start the device endpoint";
@@ -234,8 +237,23 @@ void IrohTransport::onHello(quint64 conn, const QByteArray &data)
     const QString addr = QJsonDocument::fromJson(data).object().value(QLatin1String("addr")).toString();
     if (!addr.isEmpty())
         m_db.run("UPDATE devices SET addr=? WHERE id=?", addr, device);
-    qCInfo(lcSync) << "device connected:" << device;
+    qCInfo(lcSync) << "device connected:" << device << "path:" << path(device);
     Q_EMIT connected(device);
+}
+
+QString IrohTransport::path(const QString &device) const
+{
+    const auto it = m_byDevice.constFind(device);
+    if (!m_node || it == m_byDevice.cend())
+        return {};
+    switch (e3p2p_conn_path(m_node, *it)) {
+    case E3P2P_PATH_DIRECT:
+        return QStringLiteral("direct");
+    case E3P2P_PATH_RELAY:
+        return QStringLiteral("relay");
+    default:
+        return {};
+    }
 }
 
 void IrohTransport::onFrame(quint64 conn, quint8 kind, const QByteArray &data)
@@ -273,6 +291,14 @@ void IrohTransport::onClosed(quint64 conn, const QString &why)
 {
     m_dialing.remove(conn);
     const Conn c = m_conns.take(conn);
+    // The crate closes a stranger's connection with "not paired" before
+    // reading anything (src/p2p accept_loop).
+    if (!c.incoming && c.device.isEmpty() && why.contains(QLatin1String("not paired"))) {
+        if (const auto device = m_db.queryText("SELECT id FROM devices WHERE node_id=?", c.peer)) {
+            qCInfo(lcSync) << "refused as not paired by" << *device;
+            Q_EMIT refusedBy(*device);
+        }
+    }
     if (!c.device.isEmpty() && m_byDevice.value(c.device) == conn) {
         m_byDevice.remove(c.device);
         qCInfo(lcSync) << "device disconnected:" << c.device << why;

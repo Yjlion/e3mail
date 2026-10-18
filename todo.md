@@ -9,11 +9,10 @@ is done.
 
 Phase 8 is built (see `docs/handoff.md`, ADR 0010 and its amendments).
 
-**Open:**
-- How Android keeps a peer reachable with no background service
-  (ADR 0016). Until then the mailbox fallback carries its changes.
-- Running a relay (`iroh-relay`) beside `server/compose`, and trying two
-  machines on different networks.
+**Open:** only what needs hardware this project does not have here: two
+machines on different networks (through n0's relays, and through
+`server/compose`'s relay exposed to both), and a real phone with background
+sync on for a day (battery, and what its maker's power manager does to it).
 
 ## Encrypted backups to cloud storage
 

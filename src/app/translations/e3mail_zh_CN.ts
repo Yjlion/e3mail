@@ -9,6 +9,25 @@
     </message>
 </context>
 <context>
+    <name>AndroidSync</name>
+    <message>
+        <source>Background sync</source>
+        <translation>后台同步</translation>
+    </message>
+    <message>
+        <source>e3mail is keeping in sync</source>
+        <translation>e3mail 正在保持同步</translation>
+    </message>
+    <message>
+        <source>New mail and other devices&apos; changes arrive while e3mail is in the background.</source>
+        <translation>e3mail 在后台时，新邮件和其他设备的更改仍会到达。</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation>停止</translation>
+    </message>
+</context>
+<context>
     <name>Compose</name>
     <message>
         <source>On %1 at %2, %3 wrote:</source>
@@ -1070,6 +1089,14 @@ To: %4
         <translation>此系统不提供桌面通知。</translation>
     </message>
     <message>
+        <source>Keep syncing in the background</source>
+        <translation>在后台继续同步</translation>
+    </message>
+    <message>
+        <source>Mail and your other devices&apos; changes keep arriving while e3mail is not in front. Android shows a notification for as long as this is on, and it uses more battery. Swiping e3mail away from the recent apps ends it.</source>
+        <translation>e3mail 不在前台时，邮件和你其他设备的更改仍会继续到达。开启期间 Android 会一直显示一条通知，并且会更耗电。从最近使用的应用中划掉 e3mail 会结束它。</translation>
+    </message>
+    <message>
         <source>You</source>
         <translation>您</translation>
     </message>
@@ -1272,6 +1299,14 @@ To: %4
     <message>
         <source>This build of e3mail cannot sync with other devices.</source>
         <translation>此版本的 e3mail 无法与其他设备同步。</translation>
+    </message>
+    <message>
+        <source>“%1” removed this device from the account, so they no longer sync. Mail still arrives here from the server.</source>
+        <translation>“%1”已将此设备从账户中移除，因此它们不再同步。邮件仍会从服务器到达此处。</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>确定</translation>
     </message>
     <message>
         <source>This device</source>

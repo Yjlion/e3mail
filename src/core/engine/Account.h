@@ -124,6 +124,9 @@ public:
     // Removes a paired device here and, through a device.unpair op, on the
     // others; it is refused from then on.
     void removeDevice(const QString &device);
+    // Another device refused this one as no longer paired: it is dropped
+    // here, and cfg::P2pRemovedBy says by whom.
+    void refusedBy(const QString &device);
 
     MailContext &ctx() { return *m_ctx; }
     // UI-side mutations call this so every view refreshes.

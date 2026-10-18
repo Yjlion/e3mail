@@ -10,6 +10,7 @@
 #include "engine/Autoconfig.h"
 #ifdef E3MAIL_HAVE_P2P
 #include "engine/Pairing.h"
+#include "sync/IrohTransport.h"
 #endif
 #include "mail/Compose.h"
 #include "mail/Contacts.h"
@@ -145,6 +146,8 @@ int main(int argc, char **argv)
         "  key                            this account's public key, armoured\n"
         "  run [seconds]                  run the account as the app does (mail and device sync) for a while\n"
         "  devices                        this device and the devices paired with it\n"
+        "  fallback-now                   mail this device's changes to the account now, if a paired\n"
+        "                                 device lacks them, and send it (the mailbox fallback)\n"
         "  pair-offer [--yes]             print a code for a new device, wait for it, and send it a copy\n"
         "  pair-join <code> [--device-name name]\n"
         "                                 become a device of the account the code is for\n"
@@ -480,9 +483,22 @@ int main(int argc, char **argv)
             QEventLoop loop;
             QTimer::singleShot(seconds * 1000, &loop, &QEventLoop::quit);
             loop.exec();
+            // How each connected device was reached at the end: direct or relay.
+            QJsonObject paths;
+#ifdef E3MAIL_HAVE_P2P
+            if (auto *t = qobject_cast<sync::IrohTransport *>(acc->deviceTransport()))
+                for (const QString &d : t->connectedDevices())
+                    paths.insert(d, t->path(d));
+#endif
             acc->stop();
             acc->stopDevices();
-            print(QJsonObject{{QStringLiteral("status"), acc->status()}, {QStringLiteral("detail"), acc->statusDetail()}});
+            print(QJsonObject{{QStringLiteral("status"), acc->status()}, {QStringLiteral("detail"), acc->statusDetail()},
+                              {QStringLiteral("paths"), paths}});
+        } else if (cmd == QLatin1String("fallback-now")) {
+            const bool queued = acc->mailFallbackNow();
+            if (queued)
+                MailWorker::runOnce(acc->dir(), acc->credentials());
+            print(QJsonObject{{QStringLiteral("queued"), queued}});
         } else if (cmd == QLatin1String("devices")) {
             QJsonArray devices;
             Statement st(ctx.db, "SELECT id, name, node_id, last_seen FROM devices ORDER BY paired_at");

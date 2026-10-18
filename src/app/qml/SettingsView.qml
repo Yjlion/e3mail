@@ -86,6 +86,16 @@ Rectangle {
                       ? qsTr("For this device, while e3mail is open and not in front. A subject shown here is kept in the system's notification history, outside e3mail's encryption.")
                       : qsTr("This system offers no desktop notifications.")
             }
+            CheckBox {
+                visible: MailApp.backgroundSyncAvailable
+                text: qsTr("Keep syncing in the background")
+                checked: MailApp.backgroundSync
+                onToggled: MailApp.backgroundSync = checked
+            }
+            Note {
+                visible: MailApp.backgroundSyncAvailable
+                text: qsTr("Mail and your other devices' changes keep arriving while e3mail is not in front. Android shows a notification for as long as this is on, and it uses more battery. Swiping e3mail away from the recent apps ends it.")
+            }
 
             Heading { text: qsTr("You") }
             Label { text: qsTr("Name"); color: Theme.muted }
@@ -285,6 +295,28 @@ Rectangle {
                 Layout.fillWidth: true
                 visible: MailApp.devicesAvailable
                 spacing: 6
+                // Removed on another device while this one was away.
+                Rectangle {
+                    Layout.fillWidth: true
+                    visible: MailApp.removedBy.length > 0
+                    implicitHeight: removedRow.implicitHeight + 16
+                    radius: Theme.radius
+                    color: Theme.badBg
+                    border.color: Qt.alpha(Theme.bad, 0.4)
+                    RowLayout {
+                        id: removedRow
+                        anchors.fill: parent
+                        anchors.margins: 8
+                        spacing: 8
+                        Label {
+                            Layout.fillWidth: true
+                            wrapMode: Text.Wrap
+                            color: Theme.text
+                            text: qsTr("“%1” removed this device from the account, so they no longer sync. Mail still arrives here from the server.").arg(MailApp.removedBy)
+                        }
+                        Button { text: qsTr("OK"); flat: true; onClicked: MailApp.dismissRemoved() }
+                    }
+                }
                 Label { text: qsTr("This device"); color: Theme.muted }
                 Field {
                     Layout.fillWidth: true
