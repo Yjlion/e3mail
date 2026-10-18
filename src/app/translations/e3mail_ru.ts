@@ -396,12 +396,20 @@ To: %4
         <translation>Скопировать учётную запись с другого устройства</translation>
     </message>
     <message>
+        <source>On the device that has the account, open Settings, Devices, “Pair a new device”, and scan the QR code it shows, or enter its code here.</source>
+        <translation>На устройстве, где есть учётная запись, откройте Настройки, Устройства, «Привязать новое устройство» и отсканируйте показанный QR-код или введите здесь его код.</translation>
+    </message>
+    <message>
         <source>On the device that has the account, open Settings, Devices, “Pair a new device”, and enter the code it shows here.</source>
         <translation>На устройстве, где есть учётная запись, откройте Настройки, Устройства, «Привязать новое устройство» и введите здесь показанный код.</translation>
     </message>
     <message>
         <source>Code</source>
         <translation>Код</translation>
+    </message>
+    <message>
+        <source>Scan QR code</source>
+        <translation>Сканировать QR-код</translation>
     </message>
     <message>
         <source>For %1</source>
@@ -1014,6 +1022,29 @@ To: %4
     <message>
         <source>All files (*)</source>
         <translation>Все файлы (*)</translation>
+    </message>
+</context>
+<context>
+    <name>ScanView</name>
+    <message>
+        <source>This device has no camera. Type the code instead.</source>
+        <translation>У этого устройства нет камеры. Введите код вручную.</translation>
+    </message>
+    <message>
+        <source>e3mail may not use the camera. Allow it in the system settings, or type the code instead.</source>
+        <translation>e3mail не может использовать камеру. Разрешите это в настройках системы или введите код вручную.</translation>
+    </message>
+    <message>
+        <source>Asking for the camera…</source>
+        <translation>Запрашиваем доступ к камере…</translation>
+    </message>
+    <message>
+        <source>Point the camera at the QR code on the other device.</source>
+        <translation>Наведите камеру на QR-код на другом устройстве.</translation>
+    </message>
+    <message>
+        <source>Type the code instead</source>
+        <translation>Ввести код вручную</translation>
     </message>
 </context>
 <context>

@@ -396,12 +396,20 @@ To: %4
         <translation>別のデバイスからアカウントをコピー</translation>
     </message>
     <message>
+        <source>On the device that has the account, open Settings, Devices, “Pair a new device”, and scan the QR code it shows, or enter its code here.</source>
+        <translation>アカウントがあるデバイスで「設定」→「デバイス」→「新しいデバイスをペアリング」を開き、表示された QR コードをスキャンするか、コードをここに入力してください。</translation>
+    </message>
+    <message>
         <source>On the device that has the account, open Settings, Devices, “Pair a new device”, and enter the code it shows here.</source>
         <translation>アカウントがあるデバイスで「設定」→「デバイス」→「新しいデバイスをペアリング」を開き、表示されたコードをここに入力してください。</translation>
     </message>
     <message>
         <source>Code</source>
         <translation>コード</translation>
+    </message>
+    <message>
+        <source>Scan QR code</source>
+        <translation>QR コードをスキャン</translation>
     </message>
     <message>
         <source>For %1</source>
@@ -994,6 +1002,29 @@ To: %4
     <message>
         <source>All files (*)</source>
         <translation>すべてのファイル (*)</translation>
+    </message>
+</context>
+<context>
+    <name>ScanView</name>
+    <message>
+        <source>This device has no camera. Type the code instead.</source>
+        <translation>このデバイスにはカメラがありません。代わりにコードを入力してください。</translation>
+    </message>
+    <message>
+        <source>e3mail may not use the camera. Allow it in the system settings, or type the code instead.</source>
+        <translation>e3mail はカメラを使用できません。システム設定で許可するか、代わりにコードを入力してください。</translation>
+    </message>
+    <message>
+        <source>Asking for the camera…</source>
+        <translation>カメラの使用を確認しています…</translation>
+    </message>
+    <message>
+        <source>Point the camera at the QR code on the other device.</source>
+        <translation>もう一方のデバイスの QR コードにカメラを向けてください。</translation>
+    </message>
+    <message>
+        <source>Type the code instead</source>
+        <translation>コードを入力する</translation>
     </message>
 </context>
 <context>

@@ -396,12 +396,20 @@ To: %4
         <translation>העתקת חשבון ממכשיר אחר</translation>
     </message>
     <message>
+        <source>On the device that has the account, open Settings, Devices, “Pair a new device”, and scan the QR code it shows, or enter its code here.</source>
+        <translation>במכשיר שיש בו את החשבון, פתחו הגדרות, מכשירים, „צימוד מכשיר חדש”, וסרקו את קוד ה־QR שהוא מציג, או הזינו כאן את הקוד שלו.</translation>
+    </message>
+    <message>
         <source>On the device that has the account, open Settings, Devices, “Pair a new device”, and enter the code it shows here.</source>
         <translation>במכשיר שיש בו את החשבון, פתחו הגדרות, מכשירים, „צימוד מכשיר חדש”, והזינו כאן את הקוד שהוא מציג.</translation>
     </message>
     <message>
         <source>Code</source>
         <translation>קוד</translation>
+    </message>
+    <message>
+        <source>Scan QR code</source>
+        <translation>סריקת קוד QR</translation>
     </message>
     <message>
         <source>For %1</source>
@@ -1004,6 +1012,29 @@ To: %4
     <message>
         <source>All files (*)</source>
         <translation>כל הקבצים (*)</translation>
+    </message>
+</context>
+<context>
+    <name>ScanView</name>
+    <message>
+        <source>This device has no camera. Type the code instead.</source>
+        <translation>אין מצלמה במכשיר הזה. הקלידו את הקוד במקום.</translation>
+    </message>
+    <message>
+        <source>e3mail may not use the camera. Allow it in the system settings, or type the code instead.</source>
+        <translation>ל־e3mail אין הרשאה להשתמש במצלמה. אפשרו זאת בהגדרות המערכת, או הקלידו את הקוד במקום.</translation>
+    </message>
+    <message>
+        <source>Asking for the camera…</source>
+        <translation>מבקשים גישה למצלמה…</translation>
+    </message>
+    <message>
+        <source>Point the camera at the QR code on the other device.</source>
+        <translation>כוונו את המצלמה אל קוד ה־QR במכשיר השני.</translation>
+    </message>
+    <message>
+        <source>Type the code instead</source>
+        <translation>הקלדת הקוד במקום</translation>
     </message>
 </context>
 <context>

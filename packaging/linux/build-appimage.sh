@@ -21,7 +21,7 @@ done
 rm -rf "$APPDIR"
 DESTDIR="$APPDIR" cmake --install "$BUILD" --prefix /usr
 export QML_SOURCES_PATHS="$ROOT/src/app/qml"
-export EXTRA_QT_MODULES="svg;waylandcompositor"
+export EXTRA_QT_MODULES="svg;waylandcompositor;multimedia"
 # xcb is deployed by default; Wayland for modern desktops, offscreen for CI.
 # The Wayland plugin's name depends on the Qt version (libqwayland.so since
 # 6.10, libqwayland-generic.so and libqwayland-egl.so before), so take

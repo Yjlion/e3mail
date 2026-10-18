@@ -12,6 +12,9 @@
 #ifdef E3MAIL_HAVE_P2P
 #include "engine/Pairing.h"
 #endif
+#ifdef E3MAIL_HAVE_CAMERA
+#include "QrScanner.h"
+#endif
 #include "mail/ContactsCsv.h"
 #include "mail/Export.h"
 #include "mail/Organize.h"
@@ -247,6 +250,16 @@ void MailApp::forgetCertificate(const QString &server)
 bool MailApp::devicesAvailable() const
 {
     return Account::devicesAvailable();
+}
+
+bool MailApp::scanAvailable() const
+{
+#ifdef E3MAIL_HAVE_CAMERA
+    // Screenshots show the scan button on machines without a camera.
+    return QrScanner::cameraPresent() || qEnvironmentVariableIsSet("E3MAIL_SCREENSHOT_CAMERA");
+#else
+    return false;
+#endif
 }
 
 QVariantList MailApp::devices() const
