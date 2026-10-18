@@ -28,6 +28,160 @@
     </message>
 </context>
 <context>
+    <name>BackupController</name>
+    <message>
+        <source>The passphrase does not open the backups there.</source>
+        <translation>ביטוי הסיסמה לא פותח את הגיבויים שנמצאים שם.</translation>
+    </message>
+    <message>
+        <source>Google Drive, folder “%1”</source>
+        <translation>Google Drive, תיקייה „%1”</translation>
+    </message>
+    <message>
+        <source>OneDrive, Apps/e3mail</source>
+        <translation>OneDrive, ‏Apps/e3mail</translation>
+    </message>
+    <message>
+        <source>Use a passphrase of at least 12 characters, or a recovery code.</source>
+        <translation>השתמשו בביטוי סיסמה של 12 תווים לפחות, או בקוד שחזור.</translation>
+    </message>
+</context>
+<context>
+    <name>BackupForm</name>
+    <message>
+        <source>Where</source>
+        <translation>לאן</translation>
+    </message>
+    <message>
+        <source>A folder (a drive, or one another program syncs)</source>
+        <translation>תיקייה (כונן, או תיקייה שתוכנה אחרת מסנכרנת)</translation>
+    </message>
+    <message>
+        <source>WebDAV (Nextcloud and others)</source>
+        <translation>WebDAV ‏(Nextcloud ואחרים)</translation>
+    </message>
+    <message>
+        <source>S3 and compatible (Backblaze, Wasabi, R2…)</source>
+        <translation>S3 ותואמים (Backblaze, Wasabi, R2…)</translation>
+    </message>
+    <message>
+        <source>SFTP (an SSH server)</source>
+        <translation>SFTP (שרת SSH)</translation>
+    </message>
+    <message>
+        <source>Google Drive</source>
+        <translation>Google Drive</translation>
+    </message>
+    <message>
+        <source>OneDrive</source>
+        <translation>OneDrive</translation>
+    </message>
+    <message>
+        <source>Server</source>
+        <translation>שרת</translation>
+    </message>
+    <message>
+        <source>Endpoint</source>
+        <translation>נקודת קצה</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>כתובת</translation>
+    </message>
+    <message>
+        <source>Bucket</source>
+        <translation>דלי</translation>
+    </message>
+    <message>
+        <source>Region</source>
+        <translation>אזור</translation>
+    </message>
+    <message>
+        <source>Folder in the bucket</source>
+        <translation>תיקייה בדלי</translation>
+    </message>
+    <message>
+        <source>Folder</source>
+        <translation>תיקייה</translation>
+    </message>
+    <message>
+        <source>Folder on the server</source>
+        <translation>תיקייה בשרת</translation>
+    </message>
+    <message>
+        <source>Access key</source>
+        <translation>מפתח גישה</translation>
+    </message>
+    <message>
+        <source>User name</source>
+        <translation>שם משתמש</translation>
+    </message>
+    <message>
+        <source>Secret key</source>
+        <translation>מפתח סודי</translation>
+    </message>
+    <message>
+        <source>Password</source>
+        <translation>סיסמה</translation>
+    </message>
+    <message>
+        <source>Signed in</source>
+        <translation>מחובר</translation>
+    </message>
+    <message>
+        <source>Sign in to Google Drive</source>
+        <translation>התחברות ל־Google Drive</translation>
+    </message>
+    <message>
+        <source>Sign in to OneDrive</source>
+        <translation>התחברות ל־OneDrive</translation>
+    </message>
+    <message>
+        <source>Passphrase for the backups</source>
+        <translation>ביטוי סיסמה לגיבויים</translation>
+    </message>
+    <message>
+        <source>Passphrase or recovery code</source>
+        <translation>ביטוי סיסמה או קוד שחזור</translation>
+    </message>
+    <message>
+        <source>Again</source>
+        <translation>שוב</translation>
+    </message>
+    <message>
+        <source>Use a passphrase instead</source>
+        <translation>להשתמש בביטוי סיסמה במקום</translation>
+    </message>
+    <message>
+        <source>Make a recovery code instead</source>
+        <translation>ליצור קוד שחזור במקום</translation>
+    </message>
+    <message>
+        <source>Everything is encrypted on this device with it before it leaves. Without it the backups cannot be opened, by anyone: write it down and keep it apart from this device.</source>
+        <translation>הכול מוצפן בו במכשיר הזה לפני שהוא יוצא ממנו. בלעדיו אף אחד לא יכול לפתוח את הגיבויים: רשמו אותו ושמרו אותו בנפרד מהמכשיר.</translation>
+    </message>
+    <message>
+        <source>A new device of the account is made from the newest backup there. It does not sync with your other devices until you pair it.</source>
+        <translation>מהגיבוי החדש ביותר שם נוצר מכשיר חדש של החשבון. הוא לא מסתנכרן עם המכשירים האחרים שלכם עד שתצמדו אותו.</translation>
+    </message>
+    <message>
+        <source>The server&apos;s SSH host key has changed. Trust the new one only if the server&apos;s administrator says it changed:</source>
+        <translation>מפתח המארח SSH של השרת השתנה. בטחו בחדש רק אם מנהל השרת אומר שהוא השתנה:</translation>
+    </message>
+    <message>
+        <source>The server&apos;s SSH host key is not known yet. Trust it only if it matches what the server&apos;s administrator gives you:</source>
+        <translation>מפתח המארח SSH של השרת עדיין לא מוכר. בטחו בו רק אם הוא תואם למה שמנהל השרת נותן לכם:</translation>
+    </message>
+    <message>
+        <source>The server&apos;s certificate is not trusted. Trust it only if its fingerprint matches what the server&apos;s administrator gives you:</source>
+        <translation>האישור של השרת אינו מהימן. בטחו בו רק אם טביעת האצבע שלו תואמת למה שמנהל השרת נותן לכם:</translation>
+    </message>
+    <message>
+        <source>Trust it</source>
+        <translation>לבטוח</translation>
+    </message>
+</context>
+<context>
     <name>Compose</name>
     <message>
         <source>On %1 at %2, %3 wrote:</source>
@@ -968,6 +1122,21 @@ To: %4
     </message>
 </context>
 <context>
+    <name>RestoreDialog</name>
+    <message>
+        <source>Restore from a backup</source>
+        <translation>שחזור מגיבוי</translation>
+    </message>
+    <message>
+        <source>Restoring…</source>
+        <translation>משחזר…</translation>
+    </message>
+    <message>
+        <source>Restore</source>
+        <translation>שחזור</translation>
+    </message>
+</context>
+<context>
     <name>RichEditor</name>
     <message>
         <source>Bold</source>
@@ -1367,6 +1536,50 @@ To: %4
         <translation>מכשירי החשבון הזה מסתנכרנים ישירות זה עם זה, בהצפנה מקצה לקצה. כשהם לא מצליחים להגיע זה לזה, ממסר מעביר את התעבורה המוצפנת; הוא אינו יכול לקרוא אותה.</translation>
     </message>
     <message>
+        <source>Backups</source>
+        <translation>גיבויים</translation>
+    </message>
+    <message>
+        <source>Encrypted, to %1, once a day while e3mail runs.</source>
+        <translation>מוצפנים, אל %1, פעם ביום כל עוד e3mail פועל.</translation>
+    </message>
+    <message>
+        <source>Backing up…</source>
+        <translation>מגבה…</translation>
+    </message>
+    <message>
+        <source>The last backup failed: %1</source>
+        <translation>הגיבוי האחרון נכשל: %1</translation>
+    </message>
+    <message>
+        <source>Last backup: %1, checked by reading it back.</source>
+        <translation>גיבוי אחרון: %1, נבדק בקריאה חוזרת.</translation>
+    </message>
+    <message>
+        <source>No backup yet.</source>
+        <translation>אין עדיין גיבוי.</translation>
+    </message>
+    <message>
+        <source>Back up now</source>
+        <translation>לגבות עכשיו</translation>
+    </message>
+    <message>
+        <source>Stop backing up</source>
+        <translation>להפסיק לגבות</translation>
+    </message>
+    <message>
+        <source>Back this mailbox up, encrypted, to a place of your choice. The place sees only encrypted data and its size.</source>
+        <translation>גבו את תיבת הדואר הזו, מוצפנת, במקום שתבחרו. המקום רואה רק נתונים מוצפנים ואת גודלם.</translation>
+    </message>
+    <message>
+        <source>Setting up…</source>
+        <translation>מגדיר…</translation>
+    </message>
+    <message>
+        <source>Set up backups</source>
+        <translation>הגדרת גיבויים</translation>
+    </message>
+    <message>
         <source>Data</source>
         <translation>נתונים</translation>
     </message>
@@ -1555,6 +1768,10 @@ To: %4
     <message>
         <source>Copy an account from another device…</source>
         <translation>העתקת חשבון ממכשיר אחר…</translation>
+    </message>
+    <message>
+        <source>Restore from a backup…</source>
+        <translation>שחזור מגיבוי…</translation>
     </message>
 </context>
 <context>

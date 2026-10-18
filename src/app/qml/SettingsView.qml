@@ -371,6 +371,43 @@ Rectangle {
                 Note { text: qsTr("Devices of this account sync directly with each other, end-to-end encrypted. When they cannot reach each other, a relay passes the encrypted traffic along; it cannot read it.") }
             }
 
+            Heading { id: backupsHeading; text: qsTr("Backups") }
+            BackupController { id: backups }
+            ColumnLayout {
+                Layout.fillWidth: true
+                visible: backups.isSetUp
+                spacing: 6
+                Note { text: qsTr("Encrypted, to %1, once a day while e3mail runs.").arg(backups.where) }
+                Note {
+                    text: backups.busy ? qsTr("Backing up…")
+                        : backups.lastError.length ? qsTr("The last backup failed: %1").arg(backups.lastError)
+                        : backups.last.length ? qsTr("Last backup: %1, checked by reading it back.").arg(backups.last)
+                        : qsTr("No backup yet.")
+                    color: backups.lastError.length && !backups.busy ? Theme.bad : Theme.muted
+                }
+                Flow {
+                    Layout.fillWidth: true
+                    spacing: 6
+                    Button { text: qsTr("Back up now"); enabled: !backups.busy; onClicked: backups.backUpNow() }
+                    Button { text: qsTr("Stop backing up"); flat: true; onClicked: backups.stop() }
+                }
+            }
+            ColumnLayout {
+                Layout.fillWidth: true
+                visible: !backups.isSetUp
+                spacing: 6
+                Note { text: qsTr("Back this mailbox up, encrypted, to a place of your choice. The place sees only encrypted data and its size.") }
+                BackupForm { id: backupForm; Layout.fillWidth: true; controller: backups; purpose: "setup" }
+                RowLayout {
+                    PrimaryButton {
+                        text: backups.busy ? qsTr("Setting up…") : qsTr("Set up backups")
+                        enabled: !backups.busy && backupForm.ready()
+                        onClicked: backups.setUp(backupForm.destination(), backupForm.secret(), backupForm.passphrase())
+                    }
+                    BusyIndicator { running: backups.busy; visible: running; implicitWidth: 28; implicitHeight: 28 }
+                }
+            }
+
             Heading { text: qsTr("Data") }
             Note { text: qsTr("Your mail lives only here: %1. Back this folder up — the server keeps no copy.").arg(view.s.dataDir || "") }
             Note { visible: MailApp.portable; text: qsTr("Portable mode: data is kept beside the program.") }
@@ -391,6 +428,9 @@ Rectangle {
     function pairDevice() { pairDialog.begin() }
     // After layout, which has not happened when the page has just opened.
     function showDevices() { scrollToDevices.start() }
+    // For screenshots (--page backups).
+    function showBackups() { scrollToBackups.start() }
+    Timer { id: scrollToBackups; interval: 300; onTriggered: flick.contentY = Math.max(0, backupsHeading.y - 12) }
     Timer { id: scrollToDevices; interval: 300; onTriggered: flick.contentY = Math.max(0, devicesHeading.y - 12) }
     Dialog {
         id: removeDeviceConfirm

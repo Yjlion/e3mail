@@ -31,3 +31,13 @@ fetches nothing and tells the sender nothing; both barriers stand.
 - Decoding a stranger's image is new attack surface (Qt's image plugins).
   Before this, those bytes were only ever written to a file the person chose.
 - A part shown inline is not listed again as an attachment.
+
+## Amendment — 2026-10-17: encrypted backups
+
+Backups (ADR 0020) send message content to a place the person chose. It goes
+only from the core, sealed with a key that never leaves the person's
+devices and passphrase, and over the backup destinations' own connections,
+never through the QML engine's network manager. Neither barrier changes. The
+rule "message content never reaches the network" now reads: never
+unencrypted, and never to anywhere but the person's mail server, their own
+devices, and their own backups.

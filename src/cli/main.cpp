@@ -22,6 +22,11 @@
 #include "mail/Search.h"
 #include "mail/VCard.h"
 #include "SignIn.h"
+#include "backup/Repository.h"
+#ifdef E3MAIL_HAVE_SFTP
+#include "backup/Sftp.h"
+#endif
+#include "engine/Backups.h"
 #include "net/Imap.h"
 #include "net/OAuth.h"
 #include "net/Pop3.h"
@@ -153,6 +158,13 @@ int main(int argc, char **argv)
         "  pair-offer [--yes]             print a code for a new device, wait for it, and send it a copy\n"
         "  pair-join <code> [--device-name name]\n"
         "                                 become a device of the account the code is for\n"
+        "  backup-setup --dest <json> [--dest-secret] --passphrase\n"
+        "                                 back this account up there, encrypted (signs in for gdrive/onedrive)\n"
+        "  backup-now                     back up now, check what was written, prune old backups\n"
+        "  backup-list                    the backups there\n"
+        "  backup-forget                  stop backing up from this device\n"
+        "  restore --dest <json> [--dest-secret] --passphrase [--snapshot] [--device-name]\n"
+        "                                 a new account from a backup\n"
         "  cert --in-host --in-port --in-security [--protocol imap|pop3|smtp]\n"
         "                                 a server's certificate and its SHA-256, to check before\n"
         "                                 trusting it with add --in-cert / --smtp-cert"));
@@ -192,6 +204,11 @@ int main(int argc, char **argv)
         {QStringLiteral("encrypt"), QStringLiteral("auto, required or plaintext."), QStringLiteral("mode"), QStringLiteral("auto")},
         {QStringLiteral("important"), QStringLiteral("Mark as important.")},
         {QStringLiteral("reply-to"), QStringLiteral("Message id this replies to."), QStringLiteral("id")},
+        {QStringLiteral("dest"), QStringLiteral("Backups: where, as JSON ({\"type\":\"folder\",\"path\":…}, webdav, s3, sftp, gdrive, onedrive)."),
+         QStringLiteral("json")},
+        {QStringLiteral("dest-secret"), QStringLiteral("Backups: the destination's password or secret key."), QStringLiteral("secret")},
+        {QStringLiteral("passphrase"), QStringLiteral("Backups: the passphrase that opens them."), QStringLiteral("text")},
+        {QStringLiteral("snapshot"), QStringLiteral("With restore: which backup (default: the newest)."), QStringLiteral("name")},
     };
     p.addOptions(opts);
     p.addPositionalArgument(QStringLiteral("command"), QStringLiteral("What to do."));
@@ -259,6 +276,33 @@ int main(int argc, char **argv)
             print(a);
             return 0;
         }
+        if (cmd == QLatin1String("restore")) {
+            QJsonObject dest = QJsonDocument::fromJson(p.value(QStringLiteral("dest")).toUtf8()).object();
+            const QString secret = p.value(QStringLiteral("dest-secret"));
+            auto d = backups::destination(dest, secret);
+            if (!d)
+                fail(QStringLiteral("restore needs --dest (a JSON object with a known type)"));
+            const QByteArray passphrase = p.value(QStringLiteral("passphrase")).toUtf8();
+            backup::Repository repo(*d);
+            try {
+                repo.unlock(passphrase);
+                const auto snaps = repo.snapshots();
+                if (snaps.isEmpty())
+                    fail(QStringLiteral("there are no backups there"));
+                const QString snapshot = p.isSet(QStringLiteral("snapshot")) ? p.value(QStringLiteral("snapshot")) : snaps.first().name;
+                const QString name = p.isSet(QStringLiteral("device-name")) ? p.value(QStringLiteral("device-name"))
+                                                                            : QSysInfo::machineHostName();
+                Account *a = backups::restore(mgr, *d, passphrase, snapshot, name);
+                print(QJsonObject{{QStringLiteral("id"), a->id()}, {QStringLiteral("addr"), a->addr()},
+                                  {QStringLiteral("snapshot"), snapshot}});
+            } catch (const backup::BadPassphrase &) {
+                fail(QStringLiteral("wrong passphrase"));
+            } catch (const std::exception &e) {
+                fail(QString::fromUtf8(e.what()));
+            }
+            return 0;
+        }
+
         if (cmd == QLatin1String("add")) {
             const QString addr = p.value(QStringLiteral("addr"));
             const bool oauth = p.isSet(QStringLiteral("oauth"));
@@ -533,6 +577,87 @@ int main(int argc, char **argv)
             if (queued)
                 MailWorker::runOnce(acc->dir(), acc->credentials());
             print(QJsonObject{{QStringLiteral("queued"), queued}});
+        } else if (cmd == QLatin1String("backup-setup")) {
+            QJsonObject dest = QJsonDocument::fromJson(p.value(QStringLiteral("dest")).toUtf8()).object();
+            QString secret = p.value(QStringLiteral("dest-secret"));
+            const QString type = dest.value(QLatin1String("type")).toString();
+            if ((type == QLatin1String("gdrive") || type == QLatin1String("onedrive")) && secret.isEmpty()) {
+                // Signing in for the storage, with the scopes for backups.
+                const auto provider = net::oauth::forBackups(type == QLatin1String("gdrive") ? QStringLiteral("google")
+                                                                                              : QStringLiteral("microsoft"));
+                if (!provider)
+                    fail(QStringLiteral("no OAuth client ID in this build for %1").arg(type));
+                SignIn signIn(*provider, QString());
+                QEventLoop loop;
+                QString error;
+                QObject::connect(&signIn, &SignIn::openBrowser, &loop, [](const QUrl &url) {
+                    std::fprintf(stderr, "Open this in a browser on this machine to sign in:\n\n%s\n\n",
+                                 url.toString(QUrl::FullyEncoded).toUtf8().constData());
+                });
+                QObject::connect(&signIn, &SignIn::finished, &loop, [&](const QString &e) {
+                    error = e;
+                    loop.quit();
+                });
+                signIn.start();
+                loop.exec();
+                if (!error.isEmpty())
+                    fail(error);
+                secret = signIn.refreshToken();
+                dest.insert(QStringLiteral("clientId"), provider->clientId);
+                dest.insert(QStringLiteral("clientSecret"), provider->clientSecret);
+                dest.insert(QStringLiteral("tokenUrl"), provider->tokenUrl.toString());
+            }
+            try {
+                backups::setUp(*acc, dest, secret, p.value(QStringLiteral("passphrase")).toUtf8());
+                print(QJsonObject{{QStringLiteral("set_up"), true}});
+            } catch (const backup::BadPassphrase &) {
+                fail(QStringLiteral("there is a backup there already, and the passphrase does not open it"));
+#ifdef E3MAIL_HAVE_SFTP
+            } catch (const backup::HostKeyError &e) {
+                // As for a self-signed certificate: shown, then pinned by the person.
+                print(QJsonObject{{QStringLiteral("host_key"), QString::fromLatin1(e.sha256)},
+                                  {QStringLiteral("changed"), e.changed},
+                                  {QStringLiteral("hint"), QStringLiteral("check it, then add \"hostKey\" to --dest")}});
+                return 3;
+#endif
+            } catch (const net::CertError &e) {
+                print(QJsonObject{{QStringLiteral("certificate"), QString::fromLatin1(e.info.sha256)},
+                                  {QStringLiteral("hint"), QStringLiteral("check it, then add \"pin\" to --dest")}});
+                return 3;
+            } catch (const std::exception &e) {
+                fail(QString::fromUtf8(e.what()));
+            }
+        } else if (cmd == QLatin1String("backup-now")) {
+            if (!backups::isSetUp(*acc))
+                fail(QStringLiteral("backups are not set up on this device; see backup-setup"));
+            const backups::Outcome o = backups::run(*acc).result();
+            backups::record(*acc, o);
+            print(QJsonObject{{QStringLiteral("ok"), o.ok}, {QStringLiteral("error"), o.error},
+                              {QStringLiteral("snapshot"), o.result.snapshot},
+                              {QStringLiteral("uploaded"), o.result.uploaded}, {QStringLiteral("reused"), o.result.reused},
+                              {QStringLiteral("bytes"), o.result.bytes}});
+            return o.ok ? 0 : 1;
+        } else if (cmd == QLatin1String("backup-list")) {
+            if (!backups::isSetUp(*acc))
+                fail(QStringLiteral("backups are not set up on this device; see backup-setup"));
+            auto d = backups::destination(backups::config(*acc), acc->secret("backup-dest", cfg::BackupDestSecret));
+            backup::Repository repo(*d);
+            repo.setKey(QByteArray::fromBase64(acc->secret("backup", cfg::BackupKey).toLatin1()));
+            QJsonArray list;
+            try {
+                for (const backup::Snapshot &s : repo.snapshots())
+                    list.append(QJsonObject{{QStringLiteral("snapshot"), s.name},
+                                            {QStringLiteral("created"), s.created.toString(Qt::ISODate)},
+                                            {QStringLiteral("this_device"), s.device == repo.deviceTag(ctx.ops.deviceId())}});
+            } catch (const std::exception &e) {
+                fail(QString::fromUtf8(e.what()));
+            }
+            print(QJsonObject{{QStringLiteral("snapshots"), list},
+                              {QStringLiteral("last"), ctx.config.get(cfg::BackupLast)},
+                              {QStringLiteral("last_error"), ctx.config.get(cfg::BackupLastError)}});
+        } else if (cmd == QLatin1String("backup-forget")) {
+            backups::forget(*acc);
+            print(QJsonObject{{QStringLiteral("set_up"), false}});
         } else if (cmd == QLatin1String("devices")) {
             QJsonArray devices;
             Statement st(ctx.db, "SELECT id, name, node_id, last_seen FROM devices ORDER BY paired_at");

@@ -28,6 +28,160 @@
     </message>
 </context>
 <context>
+    <name>BackupController</name>
+    <message>
+        <source>The passphrase does not open the backups there.</source>
+        <translation>Die Passphrase öffnet die Sicherungen dort nicht.</translation>
+    </message>
+    <message>
+        <source>Google Drive, folder “%1”</source>
+        <translation>Google Drive, Ordner „%1“</translation>
+    </message>
+    <message>
+        <source>OneDrive, Apps/e3mail</source>
+        <translation>OneDrive, Apps/e3mail</translation>
+    </message>
+    <message>
+        <source>Use a passphrase of at least 12 characters, or a recovery code.</source>
+        <translation>Verwenden Sie eine Passphrase mit mindestens 12 Zeichen oder einen Wiederherstellungscode.</translation>
+    </message>
+</context>
+<context>
+    <name>BackupForm</name>
+    <message>
+        <source>Where</source>
+        <translation>Wohin</translation>
+    </message>
+    <message>
+        <source>A folder (a drive, or one another program syncs)</source>
+        <translation>Ein Ordner (ein Laufwerk oder einer, den ein anderes Programm synchronisiert)</translation>
+    </message>
+    <message>
+        <source>WebDAV (Nextcloud and others)</source>
+        <translation>WebDAV (Nextcloud und andere)</translation>
+    </message>
+    <message>
+        <source>S3 and compatible (Backblaze, Wasabi, R2…)</source>
+        <translation>S3 und kompatible (Backblaze, Wasabi, R2…)</translation>
+    </message>
+    <message>
+        <source>SFTP (an SSH server)</source>
+        <translation>SFTP (ein SSH-Server)</translation>
+    </message>
+    <message>
+        <source>Google Drive</source>
+        <translation>Google Drive</translation>
+    </message>
+    <message>
+        <source>OneDrive</source>
+        <translation>OneDrive</translation>
+    </message>
+    <message>
+        <source>Server</source>
+        <translation>Server</translation>
+    </message>
+    <message>
+        <source>Endpoint</source>
+        <translation>Endpunkt</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Adresse</translation>
+    </message>
+    <message>
+        <source>Bucket</source>
+        <translation>Bucket</translation>
+    </message>
+    <message>
+        <source>Region</source>
+        <translation>Region</translation>
+    </message>
+    <message>
+        <source>Folder in the bucket</source>
+        <translation>Ordner im Bucket</translation>
+    </message>
+    <message>
+        <source>Folder</source>
+        <translation>Ordner</translation>
+    </message>
+    <message>
+        <source>Folder on the server</source>
+        <translation>Ordner auf dem Server</translation>
+    </message>
+    <message>
+        <source>Access key</source>
+        <translation>Zugriffsschlüssel</translation>
+    </message>
+    <message>
+        <source>User name</source>
+        <translation>Benutzername</translation>
+    </message>
+    <message>
+        <source>Secret key</source>
+        <translation>Geheimer Schlüssel</translation>
+    </message>
+    <message>
+        <source>Password</source>
+        <translation>Passwort</translation>
+    </message>
+    <message>
+        <source>Signed in</source>
+        <translation>Angemeldet</translation>
+    </message>
+    <message>
+        <source>Sign in to Google Drive</source>
+        <translation>Bei Google Drive anmelden</translation>
+    </message>
+    <message>
+        <source>Sign in to OneDrive</source>
+        <translation>Bei OneDrive anmelden</translation>
+    </message>
+    <message>
+        <source>Passphrase for the backups</source>
+        <translation>Passphrase für die Sicherungen</translation>
+    </message>
+    <message>
+        <source>Passphrase or recovery code</source>
+        <translation>Passphrase oder Wiederherstellungscode</translation>
+    </message>
+    <message>
+        <source>Again</source>
+        <translation>Wiederholen</translation>
+    </message>
+    <message>
+        <source>Use a passphrase instead</source>
+        <translation>Stattdessen eine Passphrase verwenden</translation>
+    </message>
+    <message>
+        <source>Make a recovery code instead</source>
+        <translation>Stattdessen einen Wiederherstellungscode erstellen</translation>
+    </message>
+    <message>
+        <source>Everything is encrypted on this device with it before it leaves. Without it the backups cannot be opened, by anyone: write it down and keep it apart from this device.</source>
+        <translation>Alles wird damit auf diesem Gerät verschlüsselt, bevor es das Gerät verlässt. Ohne sie kann niemand die Sicherungen öffnen: Schreiben Sie sie auf und bewahren Sie sie getrennt von diesem Gerät auf.</translation>
+    </message>
+    <message>
+        <source>A new device of the account is made from the newest backup there. It does not sync with your other devices until you pair it.</source>
+        <translation>Aus der neuesten Sicherung dort wird ein neues Gerät des Kontos. Es synchronisiert nicht mit Ihren anderen Geräten, bis Sie es koppeln.</translation>
+    </message>
+    <message>
+        <source>The server&apos;s SSH host key has changed. Trust the new one only if the server&apos;s administrator says it changed:</source>
+        <translation>Der SSH-Hostschlüssel des Servers hat sich geändert. Vertrauen Sie dem neuen nur, wenn der Administrator des Servers sagt, dass er sich geändert hat:</translation>
+    </message>
+    <message>
+        <source>The server&apos;s SSH host key is not known yet. Trust it only if it matches what the server&apos;s administrator gives you:</source>
+        <translation>Der SSH-Hostschlüssel des Servers ist noch nicht bekannt. Vertrauen Sie ihm nur, wenn er mit dem übereinstimmt, was Ihnen der Administrator des Servers nennt:</translation>
+    </message>
+    <message>
+        <source>The server&apos;s certificate is not trusted. Trust it only if its fingerprint matches what the server&apos;s administrator gives you:</source>
+        <translation>Dem Zertifikat des Servers wird nicht vertraut. Vertrauen Sie ihm nur, wenn sein Fingerabdruck mit dem übereinstimmt, was Ihnen der Administrator des Servers nennt:</translation>
+    </message>
+    <message>
+        <source>Trust it</source>
+        <translation>Vertrauen</translation>
+    </message>
+</context>
+<context>
     <name>Compose</name>
     <message>
         <source>On %1 at %2, %3 wrote:</source>
@@ -968,6 +1122,21 @@ An: %4
     </message>
 </context>
 <context>
+    <name>RestoreDialog</name>
+    <message>
+        <source>Restore from a backup</source>
+        <translation>Aus einer Sicherung wiederherstellen</translation>
+    </message>
+    <message>
+        <source>Restoring…</source>
+        <translation>Wird wiederhergestellt…</translation>
+    </message>
+    <message>
+        <source>Restore</source>
+        <translation>Wiederherstellen</translation>
+    </message>
+</context>
+<context>
     <name>RichEditor</name>
     <message>
         <source>Bold</source>
@@ -1367,6 +1536,50 @@ An: %4
         <translation>Die Geräte dieses Kontos synchronisieren direkt miteinander, Ende-zu-Ende-verschlüsselt. Erreichen sie einander nicht, leitet ein Relay den verschlüsselten Verkehr weiter; lesen kann es ihn nicht.</translation>
     </message>
     <message>
+        <source>Backups</source>
+        <translation>Sicherungen</translation>
+    </message>
+    <message>
+        <source>Encrypted, to %1, once a day while e3mail runs.</source>
+        <translation>Verschlüsselt, nach %1, einmal am Tag, solange e3mail läuft.</translation>
+    </message>
+    <message>
+        <source>Backing up…</source>
+        <translation>Wird gesichert…</translation>
+    </message>
+    <message>
+        <source>The last backup failed: %1</source>
+        <translation>Die letzte Sicherung ist fehlgeschlagen: %1</translation>
+    </message>
+    <message>
+        <source>Last backup: %1, checked by reading it back.</source>
+        <translation>Letzte Sicherung: %1, durch Zurücklesen geprüft.</translation>
+    </message>
+    <message>
+        <source>No backup yet.</source>
+        <translation>Noch keine Sicherung.</translation>
+    </message>
+    <message>
+        <source>Back up now</source>
+        <translation>Jetzt sichern</translation>
+    </message>
+    <message>
+        <source>Stop backing up</source>
+        <translation>Sicherung beenden</translation>
+    </message>
+    <message>
+        <source>Back this mailbox up, encrypted, to a place of your choice. The place sees only encrypted data and its size.</source>
+        <translation>Sichern Sie dieses Postfach verschlüsselt an einem Ort Ihrer Wahl. Der Ort sieht nur verschlüsselte Daten und ihre Größe.</translation>
+    </message>
+    <message>
+        <source>Setting up…</source>
+        <translation>Wird eingerichtet…</translation>
+    </message>
+    <message>
+        <source>Set up backups</source>
+        <translation>Sicherungen einrichten</translation>
+    </message>
+    <message>
         <source>Data</source>
         <translation>Daten</translation>
     </message>
@@ -1555,6 +1768,10 @@ An: %4
     <message>
         <source>Copy an account from another device…</source>
         <translation>Konto von einem anderen Gerät übernehmen…</translation>
+    </message>
+    <message>
+        <source>Restore from a backup…</source>
+        <translation>Aus einer Sicherung wiederherstellen…</translation>
     </message>
 </context>
 <context>

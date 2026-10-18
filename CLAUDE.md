@@ -32,7 +32,7 @@ which is usually the whole suite (about two seconds). Changes to QML: run
 proves the QML loads. Changes to transports or TLS: run `scripts/e2e.py`
 against `server/compose`.
 
-Dependencies on Arch: `qt6-base qt6-declarative qt6-svg qt6-tools qt6-multimedia qt6-networkauth icu botan
+Dependencies on Arch: `qt6-base qt6-declarative qt6-svg qt6-tools qt6-multimedia qt6-networkauth icu botan libssh
 json-c sqlite`, plus RNP from `scripts/build-rnp.sh /usr/local` (it is not
 packaged), and Rust from rustup for device sync (`src/p2p`, built by cargo
 through Corrosion; keep `~/.cargo/bin` on `PATH`, or configure with
@@ -62,8 +62,9 @@ unfinished. Changes to layout: look at an Arabic screenshot too.
   edit one that has shipped.
 - **Every user-visible change goes through `OpLog::record`** in the same
   transaction. Multi-client sync (Phase 8) depends on it.
-- **Message content never reaches the network**: keep both barriers
-  (ADR 0009).
+- **Message content never reaches the network** unencrypted, nor anywhere but
+  the mail server, the person's devices and their backups: keep both
+  barriers (ADR 0009 and its 2026-10-17 amendment).
 - Commit subjects are imperative and sentence case, with no prefixes. The body
   explains why.
 

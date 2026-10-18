@@ -1,6 +1,7 @@
 # Shared test helpers: the in-process fake mail system, and an in-process
 # network between devices.
 add_library(e3testsupport STATIC FakeMailServer.cpp FakeMailServer.h FakeOAuthServer.cpp FakeOAuthServer.h
+    FakeCloud.cpp FakeCloud.h
     LoopbackTransport.cpp LoopbackTransport.h DeviceClone.cpp DeviceClone.h)
 target_link_libraries(e3testsupport PUBLIC e3core Qt6::Network Qt6::Test)
 target_include_directories(e3testsupport PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

@@ -6,6 +6,7 @@
 #include <QObject>
 #include <QPointer>
 #include <QQuickTextDocument>
+#include <QSet>
 #include <QTimer>
 #include <QUrl>
 #include <QVariant>
@@ -102,6 +103,11 @@ public:
     // Signs in again in the browser, for an account whose sign-in a
     // provider no longer renews.
     Q_INVOKABLE void signInAgain();
+    // Encrypted backups (ADR 0020): one account's now, in the background;
+    // and whether one is running. The schedule backs each account that is
+    // set up on this device up once a day while e3mail runs.
+    void backUp(e3::Account *a);
+    bool backingUp(const e3::Account *a) const;
     int olderRemaining() const;
     QString currentTag() const { return m_tag; }
     qint64 currentLabelId() const { return m_labelId; }
@@ -247,11 +253,13 @@ Q_SIGNALS:
     // Translators were replaced: the QML engine must retranslate.
     void languageChanged();
     void notificationsChanged();
+    void backupsChanged();
     void backgroundSyncChanged();
     // A notification was clicked: the window should come to the front.
     void raiseRequested();
 
 private:
+    QSet<int> m_backingUp; // accounts whose backup is running
     void switchAccount();
     void reloadMessages();
     void reloadLabels();

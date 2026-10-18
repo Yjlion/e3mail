@@ -179,3 +179,8 @@ Bluetooth and the audio settings, none of which e3mail uses. The list is
 INTERNET, ACCESS_NETWORK_STATE, WRITE_EXTERNAL_STORAGE (up to API 29, as Qt
 Core asks), POST_NOTIFICATIONS and CAMERA. A new Qt module that needs a
 permission must have it added there by hand.
+
+## Amendment — 2026-10-17: backups
+
+Android's own backup stays off. e3mail's encrypted backups (ADR 0020) work on
+Android, to every place but SFTP, which this build does not have yet.

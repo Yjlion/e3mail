@@ -77,6 +77,18 @@ std::optional<Provider> known(const QString &id)
     return std::nullopt;
 }
 
+std::optional<Provider> forBackups(const QString &id)
+{
+    std::optional<Provider> p = provider(id);
+    if (!p)
+        return std::nullopt;
+    if (p->id == QLatin1String("google"))
+        p->scopes = {QStringLiteral("https://www.googleapis.com/auth/drive.file")};
+    else
+        p->scopes = {QStringLiteral("Files.ReadWrite.AppFolder"), QStringLiteral("offline_access")};
+    return p;
+}
+
 std::optional<Provider> provider(const QString &id)
 {
     std::optional<Provider> p = known(id);

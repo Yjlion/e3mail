@@ -1,6 +1,8 @@
 # docker compose up -d --build
 # With iroh's relay too (scripts/p2p-e2e.py --relay):
 #   docker compose --profile relay up -d --build
+# With places to back up to (scripts/backup-e2e.py):
+#   docker compose --profile backup up -d
 # Users alice, bob, carol, dana @e3.test, password "pw". Self-signed TLS:
 # clients must be told to accept it (e3mail-cli add --insecure).
 # An explicit project name: without it Compose names the project after this
@@ -36,3 +38,30 @@ services:
       RUST_LOG: "iroh_relay=info"   # shows each client that connects
     ports:
       - "127.0.0.1:3340:3340"
+
+  # Backup destinations (ADR 0020), only with --profile backup. Throwaway
+  # credentials; never expose them.
+  # An S3 gateway that checks Signature Version 4 (MinIO no longer
+  # publishes images); e3mail makes the bucket.
+  s3:
+    profiles: [backup]
+    image: versity/versitygw:v1.8.0
+    container_name: e3mail-test-s3
+    entrypoint: ["sh", "-c", "mkdir -p /data && exec versitygw --access e3backup --secret e3backup-secret --port :7070 posix /data"]
+    ports:
+      - "127.0.0.1:17070:7070"
+  webdav:
+    profiles: [backup]
+    image: rclone/rclone:1.69.1
+    container_name: e3mail-test-webdav
+    # No directory cache: the tests empty /data under it.
+    command: serve webdav /data --addr :8080 --user e3 --pass pw --dir-cache-time 0s
+    ports:
+      - "127.0.0.1:18080:8080"
+  sftp:
+    profiles: [backup]
+    image: atmoz/sftp:alpine
+    container_name: e3mail-test-sftp
+    command: e3:pw:::backup
+    ports:
+      - "127.0.0.1:12222:22"

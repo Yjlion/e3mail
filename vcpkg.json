@@ -1,6 +1,6 @@
 {
   "name": "e3mail",
-  "description": "Windows and Android dependencies (ICU for charsets and date patterns; RNP itself is built by scripts/build-rnp.sh; getopt and dirent are for RNP's command-line tools on Windows, which it always builds). QtKeychain is left out: its port builds a second Qt; scripts/android-deps.sh builds it against Qt for Android.",
+  "description": "Windows and Android dependencies (ICU for charsets and date patterns; RNP itself is built by scripts/build-rnp.sh; getopt and dirent are for RNP's command-line tools on Windows, which it always builds; libssh is for backups to SFTP, Windows only, see ADR 0020). QtKeychain is left out: its port builds a second Qt; scripts/android-deps.sh builds it against Qt for Android.",
   "dependencies": [
     "botan",
     "json-c",
@@ -19,6 +19,11 @@
     },
     {
       "name": "dirent",
+      "platform": "windows"
+    },
+    {
+      "name": "libssh",
+      "default-features": false,
       "platform": "windows"
     }
   ]

@@ -28,6 +28,160 @@
     </message>
 </context>
 <context>
+    <name>BackupController</name>
+    <message>
+        <source>The passphrase does not open the backups there.</source>
+        <translation>このパスフレーズではそこにあるバックアップを開けません。</translation>
+    </message>
+    <message>
+        <source>Google Drive, folder “%1”</source>
+        <translation>Google Drive、フォルダー「%1」</translation>
+    </message>
+    <message>
+        <source>OneDrive, Apps/e3mail</source>
+        <translation>OneDrive、Apps/e3mail</translation>
+    </message>
+    <message>
+        <source>Use a passphrase of at least 12 characters, or a recovery code.</source>
+        <translation>12 文字以上のパスフレーズか、回復コードを使ってください。</translation>
+    </message>
+</context>
+<context>
+    <name>BackupForm</name>
+    <message>
+        <source>Where</source>
+        <translation>保存先</translation>
+    </message>
+    <message>
+        <source>A folder (a drive, or one another program syncs)</source>
+        <translation>フォルダー（ドライブ、または他のプログラムが同期するフォルダー）</translation>
+    </message>
+    <message>
+        <source>WebDAV (Nextcloud and others)</source>
+        <translation>WebDAV（Nextcloud など）</translation>
+    </message>
+    <message>
+        <source>S3 and compatible (Backblaze, Wasabi, R2…)</source>
+        <translation>S3 と互換サービス（Backblaze、Wasabi、R2…）</translation>
+    </message>
+    <message>
+        <source>SFTP (an SSH server)</source>
+        <translation>SFTP（SSH サーバー）</translation>
+    </message>
+    <message>
+        <source>Google Drive</source>
+        <translation>Google Drive</translation>
+    </message>
+    <message>
+        <source>OneDrive</source>
+        <translation>OneDrive</translation>
+    </message>
+    <message>
+        <source>Server</source>
+        <translation>サーバー</translation>
+    </message>
+    <message>
+        <source>Endpoint</source>
+        <translation>エンドポイント</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>アドレス</translation>
+    </message>
+    <message>
+        <source>Bucket</source>
+        <translation>バケット</translation>
+    </message>
+    <message>
+        <source>Region</source>
+        <translation>リージョン</translation>
+    </message>
+    <message>
+        <source>Folder in the bucket</source>
+        <translation>バケット内のフォルダー</translation>
+    </message>
+    <message>
+        <source>Folder</source>
+        <translation>フォルダー</translation>
+    </message>
+    <message>
+        <source>Folder on the server</source>
+        <translation>サーバー上のフォルダー</translation>
+    </message>
+    <message>
+        <source>Access key</source>
+        <translation>アクセス キー</translation>
+    </message>
+    <message>
+        <source>User name</source>
+        <translation>ユーザー名</translation>
+    </message>
+    <message>
+        <source>Secret key</source>
+        <translation>シークレット キー</translation>
+    </message>
+    <message>
+        <source>Password</source>
+        <translation>パスワード</translation>
+    </message>
+    <message>
+        <source>Signed in</source>
+        <translation>サインイン済み</translation>
+    </message>
+    <message>
+        <source>Sign in to Google Drive</source>
+        <translation>Google Drive にサインイン</translation>
+    </message>
+    <message>
+        <source>Sign in to OneDrive</source>
+        <translation>OneDrive にサインイン</translation>
+    </message>
+    <message>
+        <source>Passphrase for the backups</source>
+        <translation>バックアップのパスフレーズ</translation>
+    </message>
+    <message>
+        <source>Passphrase or recovery code</source>
+        <translation>パスフレーズまたは回復コード</translation>
+    </message>
+    <message>
+        <source>Again</source>
+        <translation>もう一度</translation>
+    </message>
+    <message>
+        <source>Use a passphrase instead</source>
+        <translation>代わりにパスフレーズを使う</translation>
+    </message>
+    <message>
+        <source>Make a recovery code instead</source>
+        <translation>代わりに回復コードを作る</translation>
+    </message>
+    <message>
+        <source>Everything is encrypted on this device with it before it leaves. Without it the backups cannot be opened, by anyone: write it down and keep it apart from this device.</source>
+        <translation>すべてはこのデバイスを離れる前にこれで暗号化されます。これがなければ誰もバックアップを開けません。書き留めて、このデバイスとは別に保管してください。</translation>
+    </message>
+    <message>
+        <source>A new device of the account is made from the newest backup there. It does not sync with your other devices until you pair it.</source>
+        <translation>そこにある最新のバックアップから、このアカウントの新しいデバイスが作られます。ペアリングするまで他のデバイスとは同期しません。</translation>
+    </message>
+    <message>
+        <source>The server&apos;s SSH host key has changed. Trust the new one only if the server&apos;s administrator says it changed:</source>
+        <translation>サーバーの SSH ホスト鍵が変わりました。サーバー管理者が変更したと言う場合にのみ新しい鍵を信頼してください:</translation>
+    </message>
+    <message>
+        <source>The server&apos;s SSH host key is not known yet. Trust it only if it matches what the server&apos;s administrator gives you:</source>
+        <translation>サーバーの SSH ホスト鍵はまだ不明です。サーバー管理者から伝えられたものと一致する場合にのみ信頼してください:</translation>
+    </message>
+    <message>
+        <source>The server&apos;s certificate is not trusted. Trust it only if its fingerprint matches what the server&apos;s administrator gives you:</source>
+        <translation>サーバーの証明書は信頼されていません。フィンガープリントがサーバー管理者から伝えられたものと一致する場合にのみ信頼してください:</translation>
+    </message>
+    <message>
+        <source>Trust it</source>
+        <translation>信頼する</translation>
+    </message>
+</context>
+<context>
     <name>Compose</name>
     <message>
         <source>On %1 at %2, %3 wrote:</source>
@@ -958,6 +1112,21 @@ To: %4
     </message>
 </context>
 <context>
+    <name>RestoreDialog</name>
+    <message>
+        <source>Restore from a backup</source>
+        <translation>バックアップから復元</translation>
+    </message>
+    <message>
+        <source>Restoring…</source>
+        <translation>復元しています…</translation>
+    </message>
+    <message>
+        <source>Restore</source>
+        <translation>復元</translation>
+    </message>
+</context>
+<context>
     <name>RichEditor</name>
     <message>
         <source>Bold</source>
@@ -1357,6 +1526,50 @@ To: %4
         <translation>このアカウントのデバイスはエンドツーエンドで暗号化して直接同期します。互いに届かないときはリレーが暗号化された通信を中継しますが、内容は読めません。</translation>
     </message>
     <message>
+        <source>Backups</source>
+        <translation>バックアップ</translation>
+    </message>
+    <message>
+        <source>Encrypted, to %1, once a day while e3mail runs.</source>
+        <translation>暗号化して %1 へ、e3mail の実行中に 1 日 1 回。</translation>
+    </message>
+    <message>
+        <source>Backing up…</source>
+        <translation>バックアップしています…</translation>
+    </message>
+    <message>
+        <source>The last backup failed: %1</source>
+        <translation>前回のバックアップは失敗しました: %1</translation>
+    </message>
+    <message>
+        <source>Last backup: %1, checked by reading it back.</source>
+        <translation>前回のバックアップ: %1（読み戻して確認済み）</translation>
+    </message>
+    <message>
+        <source>No backup yet.</source>
+        <translation>まだバックアップはありません。</translation>
+    </message>
+    <message>
+        <source>Back up now</source>
+        <translation>今すぐバックアップ</translation>
+    </message>
+    <message>
+        <source>Stop backing up</source>
+        <translation>バックアップをやめる</translation>
+    </message>
+    <message>
+        <source>Back this mailbox up, encrypted, to a place of your choice. The place sees only encrypted data and its size.</source>
+        <translation>このメールボックスを暗号化して、好きな場所にバックアップします。その場所には暗号化されたデータとそのサイズしか見えません。</translation>
+    </message>
+    <message>
+        <source>Setting up…</source>
+        <translation>設定しています…</translation>
+    </message>
+    <message>
+        <source>Set up backups</source>
+        <translation>バックアップを設定</translation>
+    </message>
+    <message>
         <source>Data</source>
         <translation>データ</translation>
     </message>
@@ -1545,6 +1758,10 @@ To: %4
     <message>
         <source>Copy an account from another device…</source>
         <translation>別のデバイスからアカウントをコピー…</translation>
+    </message>
+    <message>
+        <source>Restore from a backup…</source>
+        <translation>バックアップから復元…</translation>
     </message>
 </context>
 <context>

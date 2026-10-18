@@ -37,6 +37,9 @@ struct Provider
 std::optional<Provider> provider(const QString &id);
 // The same, with or without a client ID (an account's own is stored with it).
 std::optional<Provider> known(const QString &id);
+// The same provider, asking for storage for backups instead of mail (ADR
+// 0020): Drive's files e3mail creates, or OneDrive's folder for e3mail.
+std::optional<Provider> forBackups(const QString &id);
 std::optional<Provider> forIssuer(const QString &issuer);
 // The provider for a mail domain, by name, before any lookup: gmail.com,
 // outlook.com and the like.

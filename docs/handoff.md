@@ -969,6 +969,81 @@ Accounts can sign in with Google or Microsoft instead of a password
   Android included (the loopback there is the open question in ADR 0019).
 - "Sign in again" from the sidebar: built, not clicked.
 
+## Encrypted backups (2026-10-17)
+
+An account can be backed up, encrypted, to a folder, WebDAV, S3, SFTP,
+Google Drive or OneDrive, and restored as a new device
+([ADR 0020](adr/0020-encrypted-backups.md)).
+
+- `src/core/backup/`:
+  - `Crypto`: Botan, now linked directly; Argon2id, XChaCha20-Poly1305 and
+    HMAC, using only APIs that Botan 2.19 and 3 share.
+  - `Repository`: the format, incremental upload, read-back check, retention
+    and restore.
+  - `Destination` and its implementations: `FolderDestination`, `WebDav`,
+    `S3` (SigV4, makes the bucket), `Sftp` (libssh, host key pinned),
+    `Cloud` (Drive, OneDrive).
+- `engine/Backups`: setting up per device (secrets in the keyring), running
+  on a thread with a database connection of its own, staging a restore and
+  adopting it. Pairing's database copy is now `snapshotDatabase()`, and the
+  device-only settings are one list, `cfg::DeviceOnly`.
+- **The app:**
+  - Settings, Backups: the form, a recovery code, "Back up now", the last
+    result.
+  - Setup: "Restore from a backup…".
+  - Daily backups while e3mail runs (`MailApp`).
+- **The CLI:** `backup-setup`, `backup-now`, `backup-list`, `backup-forget`,
+  `restore`.
+- **Test servers:** `server/compose --profile backup` runs Versity's S3
+  gateway (MinIO no longer publishes images), rclone's WebDAV (with no
+  directory cache, or it serves files deleted under it) and an SFTP server.
+  `scripts/backup-e2e.py` drives them.
+
+**Verified here:**
+- `tst_backup` (new, 13 tests):
+  - a round trip to a new device that reads its encrypted mail, has the
+    passwords, no peers and its own id, then fetches and sends;
+  - the second backup sends only what changed;
+  - no blob hash, address or text appears in any file of the repository;
+  - a wrong passphrase, a flipped byte and an object put in another's place
+    are all refused, and a failed restore leaves nothing behind;
+  - retention over 41 daily snapshots, with grace for new objects;
+  - two devices in one repository, with a wrong passphrase refused on the
+    second;
+  - Drive and OneDrive against `FakeCloud`, with paged listings, an expired
+    token renewed, and a 5 MiB message (OneDrive's upload session);
+  - AWS's SigV4 test vectors (get-vanilla, query order), a Nextcloud
+    PROPFIND, Botan against RFC 4231.
+- Breaking the name binding (sealing without the object's name) did **not**
+  fail the swap test, because the content hash catches the swap first. The
+  binding is checked directly in `cryptoBasics`.
+- `scripts/backup-e2e.py` against WebDAV, S3 and SFTP, three runs after the
+  last fix:
+  - `tst_backup`'s live checks (put, get, list, remove, backup and restore);
+  - the CLI as a person would use it: the SFTP host key shown then pinned, a
+    backup, a second one sending only the changed database, the listing, a
+    wrong passphrase refused, and the restore on a new data directory whose
+    note decrypts.
+- Three real bugs found by this: two backups in one second overwrote each
+  other (names now carry milliseconds); WebDAV's "GMT" dates did not parse;
+  S3 listing pointed at the prefix, not the bucket.
+- `ctest --preset dev`: all 20 pass. The x86_64 APK builds with backups
+  (without SFTP).
+- Screenshots: Backups, set up and not, desktop, Arabic and phone; the
+  restore dialog, desktop and Arabic phone.
+
+**Not verified:**
+- Google Drive and OneDrive themselves: fakes only, until the OAuth clients
+  exist.
+- Real S3 (AWS, Backblaze, R2), Nextcloud, or an SFTP server with a key
+  file: only the containers here, with passwords.
+- Botan 2 (Ubuntu's): written to the APIs both have, but compiled only
+  against Botan 3 here; CI's Linux job is the first Botan 2 build.
+- libssh on Windows through vcpkg, and the packages carrying it.
+- A large mailbox: objects go one request each, with no parallelism.
+- The daily schedule in the running app, and the app's forms against real
+  servers. They were driven only through the CLI and the tests.
+
 ## Known gaps
 
 - **Signed-only mail** is checked only for PGP/MIME (`multipart/signed`);

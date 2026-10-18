@@ -42,6 +42,14 @@ inline constexpr char OAuthClientSecret[] = "oauth_client_secret";
 inline constexpr char OAuthTokenUrl[] = "oauth_token_url"; // where it was issued
 // The refresh token, when no OS keyring is available (as the passwords).
 inline constexpr char OAuthRefresh[] = "oauth_refresh";
+// Encrypted backups (ADR 0020), per device: where (JSON, no secret), and,
+// without an OS keyring, the destination's secret and the master key; then
+// how the last one went.
+inline constexpr char BackupDest[] = "backup_dest";
+inline constexpr char BackupDestSecret[] = "backup_dest_secret";
+inline constexpr char BackupKey[] = "backup_key";
+inline constexpr char BackupLast[] = "backup_last";        // ISO time of the last success
+inline constexpr char BackupLastError[] = "backup_last_error";
 // Policy
 inline constexpr char EncryptionMode[] = "encryption_mode";  // 0 lenient, 1 opportunistic, 2 strict
 inline constexpr char ServerRetention[] = "server_retention";// "delete" | "keep" | "never"
@@ -92,5 +100,14 @@ public:
 private:
     Database &m_db;
 };
+
+// Settings that belong to one device and never travel in a snapshot (pairing,
+// backups): its identity, its secrets, how it reaches the others.
+namespace cfg {
+inline constexpr const char *DeviceOnly[] = {DeviceId,     P2pSecret,   P2pPort,      P2pLoopback,
+                                             P2pRelayOnly, P2pRemovedBy, DeviceName,  InPassword,
+                                             SmtpPassword, OAuthRefresh, BackupDest,  BackupDestSecret,
+                                             BackupKey,    BackupLast,   BackupLastError};
+} // namespace cfg
 
 } // namespace e3

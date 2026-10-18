@@ -37,6 +37,18 @@ shot source-ar --open inbox:0 --page source --lang ar
 shot settings-ar --page settings --lang ar
 shot signature-ar --page signature --lang ar
 shot devices-ar --page devices --lang ar
+shot backups --page backups
+shot backups-ar --page backups --lang ar
+shot phone-backups --page backups --size 400x820
+# Set up, backed up once, into a folder.
+REPO=$(mktemp -d)
+"$BUILD/src/cli/e3mail-cli" --data-dir "$DATA" backup-setup --dest "{\"type\":\"folder\",\"path\":\"$REPO\"}" \
+    --passphrase "screenshot passphrase" >/dev/null
+"$BUILD/src/cli/e3mail-cli" --data-dir "$DATA" backup-now >/dev/null
+shot backups-on --page backups
+shot phone-backups-on-ar --page backups --lang ar --size 400x820
+"$BUILD/src/cli/e3mail-cli" --data-dir "$DATA" backup-forget >/dev/null
+rm -rf "$REPO"
 shot pair-ar --page pair --lang ar
 # Removed on another device while away.
 "$BUILD/src/cli/e3mail-cli" --data-dir "$DATA" config p2p_removed_by Desktop >/dev/null
@@ -59,6 +71,8 @@ touch "$SEEN/first-run-acknowledged"
 "$APP" --data-dir "$SEEN" --grab "$OUT/setup-oauth.png" --page setup-oauth; echo "$OUT/setup-oauth.png"
 "$APP" --data-dir "$SEEN" --grab "$OUT/setup-oauth-ar.png" --page setup-oauth --lang ar; echo "$OUT/setup-oauth-ar.png"
 "$APP" --data-dir "$SEEN" --grab "$OUT/phone-setup-oauth.png" --page setup-oauth --size 400x820; echo "$OUT/phone-setup-oauth.png"
+"$APP" --data-dir "$SEEN" --grab "$OUT/restore.png" --page restore; echo "$OUT/restore.png"
+"$APP" --data-dir "$SEEN" --grab "$OUT/phone-restore-ar.png" --page restore --lang ar --size 400x820; echo "$OUT/phone-restore-ar.png"
 rm -rf "$SEEN"
 unset E3MAIL_OAUTH_GOOGLE_ID
 # A phone: one pane at a time.

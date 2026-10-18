@@ -28,6 +28,160 @@
     </message>
 </context>
 <context>
+    <name>BackupController</name>
+    <message>
+        <source>The passphrase does not open the backups there.</source>
+        <translation>La phrase de passe n'ouvre pas les sauvegardes qui s'y trouvent.</translation>
+    </message>
+    <message>
+        <source>Google Drive, folder “%1”</source>
+        <translation>Google Drive, dossier « %1 »</translation>
+    </message>
+    <message>
+        <source>OneDrive, Apps/e3mail</source>
+        <translation>OneDrive, Apps/e3mail</translation>
+    </message>
+    <message>
+        <source>Use a passphrase of at least 12 characters, or a recovery code.</source>
+        <translation>Utilisez une phrase de passe d'au moins 12 caractères, ou un code de récupération.</translation>
+    </message>
+</context>
+<context>
+    <name>BackupForm</name>
+    <message>
+        <source>Where</source>
+        <translation>Où</translation>
+    </message>
+    <message>
+        <source>A folder (a drive, or one another program syncs)</source>
+        <translation>Un dossier (un disque, ou un dossier qu'un autre programme synchronise)</translation>
+    </message>
+    <message>
+        <source>WebDAV (Nextcloud and others)</source>
+        <translation>WebDAV (Nextcloud et autres)</translation>
+    </message>
+    <message>
+        <source>S3 and compatible (Backblaze, Wasabi, R2…)</source>
+        <translation>S3 et compatibles (Backblaze, Wasabi, R2…)</translation>
+    </message>
+    <message>
+        <source>SFTP (an SSH server)</source>
+        <translation>SFTP (un serveur SSH)</translation>
+    </message>
+    <message>
+        <source>Google Drive</source>
+        <translation>Google Drive</translation>
+    </message>
+    <message>
+        <source>OneDrive</source>
+        <translation>OneDrive</translation>
+    </message>
+    <message>
+        <source>Server</source>
+        <translation>Serveur</translation>
+    </message>
+    <message>
+        <source>Endpoint</source>
+        <translation>Point de terminaison</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Adresse</translation>
+    </message>
+    <message>
+        <source>Bucket</source>
+        <translation>Compartiment</translation>
+    </message>
+    <message>
+        <source>Region</source>
+        <translation>Région</translation>
+    </message>
+    <message>
+        <source>Folder in the bucket</source>
+        <translation>Dossier dans le compartiment</translation>
+    </message>
+    <message>
+        <source>Folder</source>
+        <translation>Dossier</translation>
+    </message>
+    <message>
+        <source>Folder on the server</source>
+        <translation>Dossier sur le serveur</translation>
+    </message>
+    <message>
+        <source>Access key</source>
+        <translation>Clé d'accès</translation>
+    </message>
+    <message>
+        <source>User name</source>
+        <translation>Nom d'utilisateur</translation>
+    </message>
+    <message>
+        <source>Secret key</source>
+        <translation>Clé secrète</translation>
+    </message>
+    <message>
+        <source>Password</source>
+        <translation>Mot de passe</translation>
+    </message>
+    <message>
+        <source>Signed in</source>
+        <translation>Connecté</translation>
+    </message>
+    <message>
+        <source>Sign in to Google Drive</source>
+        <translation>Se connecter à Google Drive</translation>
+    </message>
+    <message>
+        <source>Sign in to OneDrive</source>
+        <translation>Se connecter à OneDrive</translation>
+    </message>
+    <message>
+        <source>Passphrase for the backups</source>
+        <translation>Phrase de passe des sauvegardes</translation>
+    </message>
+    <message>
+        <source>Passphrase or recovery code</source>
+        <translation>Phrase de passe ou code de récupération</translation>
+    </message>
+    <message>
+        <source>Again</source>
+        <translation>Encore</translation>
+    </message>
+    <message>
+        <source>Use a passphrase instead</source>
+        <translation>Utiliser plutôt une phrase de passe</translation>
+    </message>
+    <message>
+        <source>Make a recovery code instead</source>
+        <translation>Créer plutôt un code de récupération</translation>
+    </message>
+    <message>
+        <source>Everything is encrypted on this device with it before it leaves. Without it the backups cannot be opened, by anyone: write it down and keep it apart from this device.</source>
+        <translation>Tout est chiffré avec elle sur cet appareil avant de le quitter. Sans elle, personne ne peut ouvrir les sauvegardes : notez-la et gardez-la à l'écart de cet appareil.</translation>
+    </message>
+    <message>
+        <source>A new device of the account is made from the newest backup there. It does not sync with your other devices until you pair it.</source>
+        <translation>Un nouvel appareil du compte est créé à partir de la sauvegarde la plus récente. Il ne se synchronise pas avec vos autres appareils tant que vous ne l'associez pas.</translation>
+    </message>
+    <message>
+        <source>The server&apos;s SSH host key has changed. Trust the new one only if the server&apos;s administrator says it changed:</source>
+        <translation>La clé d'hôte SSH du serveur a changé. Ne faites confiance à la nouvelle que si l'administrateur du serveur confirme ce changement :</translation>
+    </message>
+    <message>
+        <source>The server&apos;s SSH host key is not known yet. Trust it only if it matches what the server&apos;s administrator gives you:</source>
+        <translation>La clé d'hôte SSH du serveur n'est pas encore connue. Ne lui faites confiance que si elle correspond à ce que vous donne l'administrateur du serveur :</translation>
+    </message>
+    <message>
+        <source>The server&apos;s certificate is not trusted. Trust it only if its fingerprint matches what the server&apos;s administrator gives you:</source>
+        <translation>Le certificat du serveur n'est pas approuvé. Ne lui faites confiance que si son empreinte correspond à ce que vous donne l'administrateur du serveur :</translation>
+    </message>
+    <message>
+        <source>Trust it</source>
+        <translation>Faire confiance</translation>
+    </message>
+</context>
+<context>
     <name>Compose</name>
     <message>
         <source>On %1 at %2, %3 wrote:</source>
@@ -968,6 +1122,21 @@ Objet : %3
     </message>
 </context>
 <context>
+    <name>RestoreDialog</name>
+    <message>
+        <source>Restore from a backup</source>
+        <translation>Restaurer depuis une sauvegarde</translation>
+    </message>
+    <message>
+        <source>Restoring…</source>
+        <translation>Restauration…</translation>
+    </message>
+    <message>
+        <source>Restore</source>
+        <translation>Restaurer</translation>
+    </message>
+</context>
+<context>
     <name>RichEditor</name>
     <message>
         <source>Bold</source>
@@ -1367,6 +1536,50 @@ Objet : %3
         <translation>Les appareils de ce compte se synchronisent directement entre eux, chiffrés de bout en bout. Quand ils ne peuvent pas se joindre, un relais transmet le trafic chiffré ; il ne peut pas le lire.</translation>
     </message>
     <message>
+        <source>Backups</source>
+        <translation>Sauvegardes</translation>
+    </message>
+    <message>
+        <source>Encrypted, to %1, once a day while e3mail runs.</source>
+        <translation>Chiffrées, vers %1, une fois par jour tant qu'e3mail fonctionne.</translation>
+    </message>
+    <message>
+        <source>Backing up…</source>
+        <translation>Sauvegarde…</translation>
+    </message>
+    <message>
+        <source>The last backup failed: %1</source>
+        <translation>La dernière sauvegarde a échoué : %1</translation>
+    </message>
+    <message>
+        <source>Last backup: %1, checked by reading it back.</source>
+        <translation>Dernière sauvegarde : %1, vérifiée en la relisant.</translation>
+    </message>
+    <message>
+        <source>No backup yet.</source>
+        <translation>Pas encore de sauvegarde.</translation>
+    </message>
+    <message>
+        <source>Back up now</source>
+        <translation>Sauvegarder maintenant</translation>
+    </message>
+    <message>
+        <source>Stop backing up</source>
+        <translation>Arrêter les sauvegardes</translation>
+    </message>
+    <message>
+        <source>Back this mailbox up, encrypted, to a place of your choice. The place sees only encrypted data and its size.</source>
+        <translation>Sauvegardez cette boîte, chiffrée, à l'endroit de votre choix. Cet endroit ne voit que des données chiffrées et leur taille.</translation>
+    </message>
+    <message>
+        <source>Setting up…</source>
+        <translation>Configuration…</translation>
+    </message>
+    <message>
+        <source>Set up backups</source>
+        <translation>Configurer les sauvegardes</translation>
+    </message>
+    <message>
         <source>Data</source>
         <translation>Données</translation>
     </message>
@@ -1435,7 +1648,7 @@ Objet : %3
     </message>
     <message>
         <source>You signed in as %1, not as %2. Sign in with the account of the address you are adding.</source>
-        <translation>Vous vous êtes connecté en tant que %1, et non %2. Connectez-vous avec le compte de l'adresse que vous ajoutez.</translation>
+        <translation>Vous vous êtes connecté en tant que %1, et non %2. Connectez-vous avec le compte de l&apos;adresse que vous ajoutez.</translation>
     </message>
     <message>
         <source>Enter your email address and password.</source>
@@ -1466,7 +1679,7 @@ Objet : %3
     </message>
     <message>
         <source>Opens %1 in your browser. e3mail never sees your password there. Or use an app password below.</source>
-        <translation>Ouvre %1 dans votre navigateur. e3mail n'y voit jamais votre mot de passe. Ou utilisez un mot de passe d'application ci-dessous.</translation>
+        <translation>Ouvre %1 dans votre navigateur. e3mail n&apos;y voit jamais votre mot de passe. Ou utilisez un mot de passe d&apos;application ci-dessous.</translation>
     </message>
     <message>
         <source>Password</source>
@@ -1474,7 +1687,7 @@ Objet : %3
     </message>
     <message>
         <source>App password</source>
-        <translation>Mot de passe d'application</translation>
+        <translation>Mot de passe d&apos;application</translation>
     </message>
     <message>
         <source>Your name (optional)</source>
@@ -1555,6 +1768,10 @@ Objet : %3
     <message>
         <source>Copy an account from another device…</source>
         <translation>Copier un compte depuis un autre appareil…</translation>
+    </message>
+    <message>
+        <source>Restore from a backup…</source>
+        <translation>Restaurer depuis une sauvegarde…</translation>
     </message>
 </context>
 <context>
@@ -1671,7 +1888,7 @@ Objet : %3
     </message>
     <message>
         <source>%1 did not allow e3mail to stay signed in.</source>
-        <translation>%1 n'a pas permis à e3mail de rester connecté.</translation>
+        <translation>%1 n&apos;a pas permis à e3mail de rester connecté.</translation>
     </message>
     <message>
         <source>%1 refused the sign-in.</source>

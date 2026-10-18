@@ -128,6 +128,10 @@ int main(int argc, char *argv[])
             QMetaObject::invokeMethod(root, "showScan");
         else if (p.value(page) == QLatin1String("setup-oauth")) // first run, a Gmail address
             QMetaObject::invokeMethod(root, "showSetupOAuth");
+        else if (p.value(page) == QLatin1String("restore")) // first run, restoring a backup
+            QMetaObject::invokeMethod(root, "showRestore");
+        else if (p.value(page) == QLatin1String("backups")) // settings, at Backups
+            QMetaObject::invokeMethod(root, "showBackups");
         else if (p.value(page) == QLatin1String("menu")) // the narrow layout's drawer
             QMetaObject::invokeMethod(root, "openMenu");
         else if (p.value(page) == QLatin1String("source")) // of the message --open selected

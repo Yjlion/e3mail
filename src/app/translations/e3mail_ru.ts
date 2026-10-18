@@ -28,6 +28,160 @@
     </message>
 </context>
 <context>
+    <name>BackupController</name>
+    <message>
+        <source>The passphrase does not open the backups there.</source>
+        <translation>Эта парольная фраза не открывает находящиеся там резервные копии.</translation>
+    </message>
+    <message>
+        <source>Google Drive, folder “%1”</source>
+        <translation>Google Диск, папка «%1»</translation>
+    </message>
+    <message>
+        <source>OneDrive, Apps/e3mail</source>
+        <translation>OneDrive, Apps/e3mail</translation>
+    </message>
+    <message>
+        <source>Use a passphrase of at least 12 characters, or a recovery code.</source>
+        <translation>Используйте парольную фразу не короче 12 символов или код восстановления.</translation>
+    </message>
+</context>
+<context>
+    <name>BackupForm</name>
+    <message>
+        <source>Where</source>
+        <translation>Куда</translation>
+    </message>
+    <message>
+        <source>A folder (a drive, or one another program syncs)</source>
+        <translation>Папка (диск или папка, которую синхронизирует другая программа)</translation>
+    </message>
+    <message>
+        <source>WebDAV (Nextcloud and others)</source>
+        <translation>WebDAV (Nextcloud и другие)</translation>
+    </message>
+    <message>
+        <source>S3 and compatible (Backblaze, Wasabi, R2…)</source>
+        <translation>S3 и совместимые (Backblaze, Wasabi, R2…)</translation>
+    </message>
+    <message>
+        <source>SFTP (an SSH server)</source>
+        <translation>SFTP (SSH-сервер)</translation>
+    </message>
+    <message>
+        <source>Google Drive</source>
+        <translation>Google Диск</translation>
+    </message>
+    <message>
+        <source>OneDrive</source>
+        <translation>OneDrive</translation>
+    </message>
+    <message>
+        <source>Server</source>
+        <translation>Сервер</translation>
+    </message>
+    <message>
+        <source>Endpoint</source>
+        <translation>Конечная точка</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Адрес</translation>
+    </message>
+    <message>
+        <source>Bucket</source>
+        <translation>Бакет</translation>
+    </message>
+    <message>
+        <source>Region</source>
+        <translation>Регион</translation>
+    </message>
+    <message>
+        <source>Folder in the bucket</source>
+        <translation>Папка в бакете</translation>
+    </message>
+    <message>
+        <source>Folder</source>
+        <translation>Папка</translation>
+    </message>
+    <message>
+        <source>Folder on the server</source>
+        <translation>Папка на сервере</translation>
+    </message>
+    <message>
+        <source>Access key</source>
+        <translation>Ключ доступа</translation>
+    </message>
+    <message>
+        <source>User name</source>
+        <translation>Имя пользователя</translation>
+    </message>
+    <message>
+        <source>Secret key</source>
+        <translation>Секретный ключ</translation>
+    </message>
+    <message>
+        <source>Password</source>
+        <translation>Пароль</translation>
+    </message>
+    <message>
+        <source>Signed in</source>
+        <translation>Вход выполнен</translation>
+    </message>
+    <message>
+        <source>Sign in to Google Drive</source>
+        <translation>Войти в Google Диск</translation>
+    </message>
+    <message>
+        <source>Sign in to OneDrive</source>
+        <translation>Войти в OneDrive</translation>
+    </message>
+    <message>
+        <source>Passphrase for the backups</source>
+        <translation>Парольная фраза для резервных копий</translation>
+    </message>
+    <message>
+        <source>Passphrase or recovery code</source>
+        <translation>Парольная фраза или код восстановления</translation>
+    </message>
+    <message>
+        <source>Again</source>
+        <translation>Ещё раз</translation>
+    </message>
+    <message>
+        <source>Use a passphrase instead</source>
+        <translation>Использовать парольную фразу</translation>
+    </message>
+    <message>
+        <source>Make a recovery code instead</source>
+        <translation>Создать код восстановления</translation>
+    </message>
+    <message>
+        <source>Everything is encrypted on this device with it before it leaves. Without it the backups cannot be opened, by anyone: write it down and keep it apart from this device.</source>
+        <translation>Всё шифруется ею на этом устройстве, прежде чем покинуть его. Без неё никто не сможет открыть резервные копии: запишите её и храните отдельно от этого устройства.</translation>
+    </message>
+    <message>
+        <source>A new device of the account is made from the newest backup there. It does not sync with your other devices until you pair it.</source>
+        <translation>Из самой новой резервной копии создаётся новое устройство учётной записи. Оно не синхронизируется с другими вашими устройствами, пока вы его не привяжете.</translation>
+    </message>
+    <message>
+        <source>The server&apos;s SSH host key has changed. Trust the new one only if the server&apos;s administrator says it changed:</source>
+        <translation>SSH-ключ сервера изменился. Доверяйте новому, только если администратор сервера подтверждает изменение:</translation>
+    </message>
+    <message>
+        <source>The server&apos;s SSH host key is not known yet. Trust it only if it matches what the server&apos;s administrator gives you:</source>
+        <translation>SSH-ключ сервера ещё не известен. Доверяйте ему, только если он совпадает с тем, что сообщил администратор сервера:</translation>
+    </message>
+    <message>
+        <source>The server&apos;s certificate is not trusted. Trust it only if its fingerprint matches what the server&apos;s administrator gives you:</source>
+        <translation>Сертификату сервера нет доверия. Доверяйте ему, только если его отпечаток совпадает с тем, что сообщил администратор сервера:</translation>
+    </message>
+    <message>
+        <source>Trust it</source>
+        <translation>Доверять</translation>
+    </message>
+</context>
+<context>
     <name>Compose</name>
     <message>
         <source>On %1 at %2, %3 wrote:</source>
@@ -978,6 +1132,21 @@ To: %4
     </message>
 </context>
 <context>
+    <name>RestoreDialog</name>
+    <message>
+        <source>Restore from a backup</source>
+        <translation>Восстановить из резервной копии</translation>
+    </message>
+    <message>
+        <source>Restoring…</source>
+        <translation>Восстановление…</translation>
+    </message>
+    <message>
+        <source>Restore</source>
+        <translation>Восстановить</translation>
+    </message>
+</context>
+<context>
     <name>RichEditor</name>
     <message>
         <source>Bold</source>
@@ -1377,6 +1546,50 @@ To: %4
         <translation>Устройства этой учётной записи синхронизируются напрямую, со сквозным шифрованием. Когда они не могут связаться, ретранслятор передаёт зашифрованный трафик; прочитать его он не может.</translation>
     </message>
     <message>
+        <source>Backups</source>
+        <translation>Резервные копии</translation>
+    </message>
+    <message>
+        <source>Encrypted, to %1, once a day while e3mail runs.</source>
+        <translation>Зашифрованные, в %1, раз в день, пока работает e3mail.</translation>
+    </message>
+    <message>
+        <source>Backing up…</source>
+        <translation>Создание копии…</translation>
+    </message>
+    <message>
+        <source>The last backup failed: %1</source>
+        <translation>Последняя копия не удалась: %1</translation>
+    </message>
+    <message>
+        <source>Last backup: %1, checked by reading it back.</source>
+        <translation>Последняя копия: %1, проверена повторным чтением.</translation>
+    </message>
+    <message>
+        <source>No backup yet.</source>
+        <translation>Резервных копий ещё нет.</translation>
+    </message>
+    <message>
+        <source>Back up now</source>
+        <translation>Создать копию сейчас</translation>
+    </message>
+    <message>
+        <source>Stop backing up</source>
+        <translation>Прекратить резервное копирование</translation>
+    </message>
+    <message>
+        <source>Back this mailbox up, encrypted, to a place of your choice. The place sees only encrypted data and its size.</source>
+        <translation>Создавайте зашифрованные копии этого ящика в выбранном вами месте. Это место видит только зашифрованные данные и их размер.</translation>
+    </message>
+    <message>
+        <source>Setting up…</source>
+        <translation>Настройка…</translation>
+    </message>
+    <message>
+        <source>Set up backups</source>
+        <translation>Настроить резервное копирование</translation>
+    </message>
+    <message>
         <source>Data</source>
         <translation>Данные</translation>
     </message>
@@ -1565,6 +1778,10 @@ To: %4
     <message>
         <source>Copy an account from another device…</source>
         <translation>Скопировать учётную запись с другого устройства…</translation>
+    </message>
+    <message>
+        <source>Restore from a backup…</source>
+        <translation>Восстановить из резервной копии…</translation>
     </message>
 </context>
 <context>

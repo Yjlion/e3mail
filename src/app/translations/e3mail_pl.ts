@@ -28,6 +28,160 @@
     </message>
 </context>
 <context>
+    <name>BackupController</name>
+    <message>
+        <source>The passphrase does not open the backups there.</source>
+        <translation>To hasło nie otwiera znajdujących się tam kopii zapasowych.</translation>
+    </message>
+    <message>
+        <source>Google Drive, folder “%1”</source>
+        <translation>Dysk Google, folder „%1”</translation>
+    </message>
+    <message>
+        <source>OneDrive, Apps/e3mail</source>
+        <translation>OneDrive, Apps/e3mail</translation>
+    </message>
+    <message>
+        <source>Use a passphrase of at least 12 characters, or a recovery code.</source>
+        <translation>Użyj hasła o długości co najmniej 12 znaków lub kodu odzyskiwania.</translation>
+    </message>
+</context>
+<context>
+    <name>BackupForm</name>
+    <message>
+        <source>Where</source>
+        <translation>Gdzie</translation>
+    </message>
+    <message>
+        <source>A folder (a drive, or one another program syncs)</source>
+        <translation>Folder (dysk lub folder synchronizowany przez inny program)</translation>
+    </message>
+    <message>
+        <source>WebDAV (Nextcloud and others)</source>
+        <translation>WebDAV (Nextcloud i inne)</translation>
+    </message>
+    <message>
+        <source>S3 and compatible (Backblaze, Wasabi, R2…)</source>
+        <translation>S3 i zgodne (Backblaze, Wasabi, R2…)</translation>
+    </message>
+    <message>
+        <source>SFTP (an SSH server)</source>
+        <translation>SFTP (serwer SSH)</translation>
+    </message>
+    <message>
+        <source>Google Drive</source>
+        <translation>Dysk Google</translation>
+    </message>
+    <message>
+        <source>OneDrive</source>
+        <translation>OneDrive</translation>
+    </message>
+    <message>
+        <source>Server</source>
+        <translation>Serwer</translation>
+    </message>
+    <message>
+        <source>Endpoint</source>
+        <translation>Punkt końcowy</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Adres</translation>
+    </message>
+    <message>
+        <source>Bucket</source>
+        <translation>Zasobnik</translation>
+    </message>
+    <message>
+        <source>Region</source>
+        <translation>Region</translation>
+    </message>
+    <message>
+        <source>Folder in the bucket</source>
+        <translation>Folder w zasobniku</translation>
+    </message>
+    <message>
+        <source>Folder</source>
+        <translation>Folder</translation>
+    </message>
+    <message>
+        <source>Folder on the server</source>
+        <translation>Folder na serwerze</translation>
+    </message>
+    <message>
+        <source>Access key</source>
+        <translation>Klucz dostępu</translation>
+    </message>
+    <message>
+        <source>User name</source>
+        <translation>Nazwa użytkownika</translation>
+    </message>
+    <message>
+        <source>Secret key</source>
+        <translation>Klucz tajny</translation>
+    </message>
+    <message>
+        <source>Password</source>
+        <translation>Hasło</translation>
+    </message>
+    <message>
+        <source>Signed in</source>
+        <translation>Zalogowano</translation>
+    </message>
+    <message>
+        <source>Sign in to Google Drive</source>
+        <translation>Zaloguj się do Dysku Google</translation>
+    </message>
+    <message>
+        <source>Sign in to OneDrive</source>
+        <translation>Zaloguj się do OneDrive</translation>
+    </message>
+    <message>
+        <source>Passphrase for the backups</source>
+        <translation>Hasło do kopii zapasowych</translation>
+    </message>
+    <message>
+        <source>Passphrase or recovery code</source>
+        <translation>Hasło lub kod odzyskiwania</translation>
+    </message>
+    <message>
+        <source>Again</source>
+        <translation>Ponownie</translation>
+    </message>
+    <message>
+        <source>Use a passphrase instead</source>
+        <translation>Użyj hasła</translation>
+    </message>
+    <message>
+        <source>Make a recovery code instead</source>
+        <translation>Utwórz kod odzyskiwania</translation>
+    </message>
+    <message>
+        <source>Everything is encrypted on this device with it before it leaves. Without it the backups cannot be opened, by anyone: write it down and keep it apart from this device.</source>
+        <translation>Wszystko jest nim szyfrowane na tym urządzeniu, zanim je opuści. Bez niego nikt nie otworzy kopii: zapisz je i przechowuj z dala od tego urządzenia.</translation>
+    </message>
+    <message>
+        <source>A new device of the account is made from the newest backup there. It does not sync with your other devices until you pair it.</source>
+        <translation>Z najnowszej kopii powstaje nowe urządzenie konta. Nie synchronizuje się z innymi twoimi urządzeniami, dopóki go nie sparujesz.</translation>
+    </message>
+    <message>
+        <source>The server&apos;s SSH host key has changed. Trust the new one only if the server&apos;s administrator says it changed:</source>
+        <translation>Klucz hosta SSH serwera się zmienił. Zaufaj nowemu tylko wtedy, gdy administrator serwera potwierdzi zmianę:</translation>
+    </message>
+    <message>
+        <source>The server&apos;s SSH host key is not known yet. Trust it only if it matches what the server&apos;s administrator gives you:</source>
+        <translation>Klucz hosta SSH serwera nie jest jeszcze znany. Zaufaj mu tylko wtedy, gdy zgadza się z tym, który podał administrator serwera:</translation>
+    </message>
+    <message>
+        <source>The server&apos;s certificate is not trusted. Trust it only if its fingerprint matches what the server&apos;s administrator gives you:</source>
+        <translation>Certyfikat serwera nie jest zaufany. Zaufaj mu tylko wtedy, gdy jego odcisk zgadza się z tym, który podał administrator serwera:</translation>
+    </message>
+    <message>
+        <source>Trust it</source>
+        <translation>Zaufaj</translation>
+    </message>
+</context>
+<context>
     <name>Compose</name>
     <message>
         <source>On %1 at %2, %3 wrote:</source>
@@ -978,6 +1132,21 @@ Do: %4
     </message>
 </context>
 <context>
+    <name>RestoreDialog</name>
+    <message>
+        <source>Restore from a backup</source>
+        <translation>Przywróć z kopii zapasowej</translation>
+    </message>
+    <message>
+        <source>Restoring…</source>
+        <translation>Przywracanie…</translation>
+    </message>
+    <message>
+        <source>Restore</source>
+        <translation>Przywróć</translation>
+    </message>
+</context>
+<context>
     <name>RichEditor</name>
     <message>
         <source>Bold</source>
@@ -1377,6 +1546,50 @@ Do: %4
         <translation>Urządzenia tego konta synchronizują się bezpośrednio, z szyfrowaniem end-to-end. Gdy nie mogą się połączyć, przekaźnik przekazuje zaszyfrowany ruch; nie może go odczytać.</translation>
     </message>
     <message>
+        <source>Backups</source>
+        <translation>Kopie zapasowe</translation>
+    </message>
+    <message>
+        <source>Encrypted, to %1, once a day while e3mail runs.</source>
+        <translation>Zaszyfrowane, do %1, raz dziennie, gdy e3mail działa.</translation>
+    </message>
+    <message>
+        <source>Backing up…</source>
+        <translation>Tworzenie kopii…</translation>
+    </message>
+    <message>
+        <source>The last backup failed: %1</source>
+        <translation>Ostatnia kopia nie powiodła się: %1</translation>
+    </message>
+    <message>
+        <source>Last backup: %1, checked by reading it back.</source>
+        <translation>Ostatnia kopia: %1, sprawdzona przez ponowny odczyt.</translation>
+    </message>
+    <message>
+        <source>No backup yet.</source>
+        <translation>Brak kopii.</translation>
+    </message>
+    <message>
+        <source>Back up now</source>
+        <translation>Utwórz kopię teraz</translation>
+    </message>
+    <message>
+        <source>Stop backing up</source>
+        <translation>Przestań tworzyć kopie</translation>
+    </message>
+    <message>
+        <source>Back this mailbox up, encrypted, to a place of your choice. The place sees only encrypted data and its size.</source>
+        <translation>Twórz zaszyfrowane kopie tej skrzynki w wybranym miejscu. To miejsce widzi tylko zaszyfrowane dane i ich rozmiar.</translation>
+    </message>
+    <message>
+        <source>Setting up…</source>
+        <translation>Konfigurowanie…</translation>
+    </message>
+    <message>
+        <source>Set up backups</source>
+        <translation>Skonfiguruj kopie zapasowe</translation>
+    </message>
+    <message>
         <source>Data</source>
         <translation>Dane</translation>
     </message>
@@ -1565,6 +1778,10 @@ Do: %4
     <message>
         <source>Copy an account from another device…</source>
         <translation>Skopiuj konto z innego urządzenia…</translation>
+    </message>
+    <message>
+        <source>Restore from a backup…</source>
+        <translation>Przywróć z kopii zapasowej…</translation>
     </message>
 </context>
 <context>
