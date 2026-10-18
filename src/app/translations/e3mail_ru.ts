@@ -492,6 +492,10 @@ To: %4
         <translation>Устройство без имени</translation>
     </message>
     <message>
+        <source>You signed in as %1, not as %2.</source>
+        <translation>Вы вошли как %1, а не как %2.</translation>
+    </message>
+    <message>
         <source>(no subject)</source>
         <translation>(без темы)</translation>
     </message>
@@ -1440,6 +1444,10 @@ To: %4
         <translation>Настройки сервера угаданы по адресу. Проверьте их перед подключением.</translation>
     </message>
     <message>
+        <source>You signed in as %1, not as %2. Sign in with the account of the address you are adding.</source>
+        <translation>Вы вошли как %1, а не как %2. Войдите с учётной записью добавляемого адреса.</translation>
+    </message>
+    <message>
         <source>Enter your email address and password.</source>
         <translation>Введите адрес электронной почты и пароль.</translation>
     </message>
@@ -1459,8 +1467,24 @@ To: %4
         <translation>Адрес электронной почты</translation>
     </message>
     <message>
+        <source>Signed in with %1</source>
+        <translation>Вход через %1 выполнен</translation>
+    </message>
+    <message>
+        <source>Sign in with %1</source>
+        <translation>Войти через %1</translation>
+    </message>
+    <message>
+        <source>Opens %1 in your browser. e3mail never sees your password there. Or use an app password below.</source>
+        <translation>Открывает %1 в браузере. e3mail никогда не видит там ваш пароль. Или используйте ниже пароль приложения.</translation>
+    </message>
+    <message>
         <source>Password</source>
         <translation>Пароль</translation>
+    </message>
+    <message>
+        <source>App password</source>
+        <translation>Пароль приложения</translation>
     </message>
     <message>
         <source>Your name (optional)</source>
@@ -1626,6 +1650,10 @@ To: %4
         <translation>Подключено</translation>
     </message>
     <message>
+        <source>Signed out by %1 — sign in again</source>
+        <translation>%1 завершил сеанс — войдите снова</translation>
+    </message>
+    <message>
         <source>Login failed — check the password</source>
         <translation>Не удалось войти — проверьте пароль</translation>
     </message>
@@ -1636,6 +1664,29 @@ To: %4
     <message>
         <source>Offline</source>
         <translation>Не в сети</translation>
+    </message>
+</context>
+<context>
+    <name>SignIn</name>
+    <message>
+        <source>The sign-in took too long. Try again.</source>
+        <translation>Вход занял слишком много времени. Попробуйте ещё раз.</translation>
+    </message>
+    <message>
+        <source>Cannot listen for the browser&apos;s answer on this device.</source>
+        <translation>На этом устройстве не удаётся получить ответ браузера.</translation>
+    </message>
+    <message>
+        <source>Signed in. You can close this page and go back to e3mail.</source>
+        <translation>Вход выполнен. Можно закрыть эту страницу и вернуться в e3mail.</translation>
+    </message>
+    <message>
+        <source>%1 did not allow e3mail to stay signed in.</source>
+        <translation>%1 не разрешил e3mail оставаться в системе.</translation>
+    </message>
+    <message>
+        <source>%1 refused the sign-in.</source>
+        <translation>%1 отклонил вход.</translation>
     </message>
 </context>
 <context>

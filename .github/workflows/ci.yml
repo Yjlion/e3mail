@@ -16,8 +16,8 @@ concurrency:
 
 env:
   QT_VERSION: "6.10.3"
-  # Add-on modules: the camera for pairing codes.
-  QT_MODULES: "qtmultimedia"
+  # Add-on modules: the camera for pairing codes, OAuth sign-in.
+  QT_MODULES: "qtmultimedia qtnetworkauth"
   RNP_VERSION: "v0.18.1"
 
 jobs:

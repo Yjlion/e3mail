@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 #include "Imap.h"
+#include "Sasl.h"
 
 #include "util/Log.h"
 
@@ -149,7 +150,33 @@ void ImapClient::connect(const ServerSettings &server)
     const QByteArray user = server.user.toUtf8();
     const QByteArray pass = server.password.toUtf8();
     Response r;
-    if (hasCapability("AUTH=PLAIN")) {
+    if (!server.accessToken.isEmpty()) {
+        const bool bearer = !hasCapability("AUTH=XOAUTH2");
+        if (bearer && !hasCapability("AUTH=OAUTHBEARER"))
+            throw NetError(QStringLiteral("IMAP: %1 does not offer OAuth sign-in").arg(server.host));
+        const QByteArray token = server.accessToken.toUtf8();
+        const QByteArray initial = bearer ? sasl::oauthBearer(user, token, server.host.toUtf8(), server.port)
+                                          : sasl::xoauth2(user, token);
+        const QByteArray mech = bearer ? "OAUTHBEARER" : "XOAUTH2";
+        const QByteArray tag = nextTag();
+        if (hasCapability("SASL-IR")) {
+            m_socket.write(tag + " AUTHENTICATE " + mech + ' ' + initial + "\r\n");
+        } else {
+            m_socket.write(tag + " AUTHENTICATE " + mech + "\r\n");
+            r = readUntilTagged(tag);
+            if (r.status.isEmpty())
+                m_socket.write(initial + "\r\n");
+        }
+        if (r.status.isEmpty())
+            r = readUntilTagged(tag);
+        if (r.status.isEmpty()) {
+            // A refused token: the server explains in a challenge, then fails.
+            const QByteArray why = sasl::challengeText(r.untagged.last());
+            m_socket.write(sasl::abortResponse(bearer) + "\r\n");
+            r = readUntilTagged(tag);
+            throw AuthError(QStringLiteral("IMAP sign-in refused: %1").arg(QString::fromUtf8(why)));
+        }
+    } else if (hasCapability("AUTH=PLAIN")) {
         const QByteArray tag = nextTag();
         const QByteArray initial = (QByteArray(1, '\0') + user + '\0' + pass).toBase64();
         if (hasCapability("SASL-IR")) {

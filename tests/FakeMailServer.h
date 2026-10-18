@@ -48,6 +48,12 @@ public:
     bool imapUidPlus = true;
     bool imapAuthPlain = true;
     bool pop3SaslPlain = false;
+    // OAuth sign-in (XOAUTH2, or OAUTHBEARER alone with oauthBearerOnly),
+    // accepting the token set for a user with setToken.
+    bool oauth = false;
+    bool oauthBearerOnly = false;
+    void setToken(const QString &addr, const QString &token) { m_tokens.insert(addr.toLower(), token); }
+    int oauthRefused = 0;
     quint32 uidValidity = 777;
     // Reads every command and answers none: a server that has hung.
     bool stalled = false;
@@ -66,9 +72,12 @@ private:
     void pop3Line(QTcpSocket *s, Pop3Conn &c, const QByteArray &line);
     void smtpLine(QTcpSocket *s, SmtpConn &c, const QByteArray &line);
     bool checkPlain(const QByteArray &b64, QString *user) const;
+    bool checkOAuth(const QByteArray &b64, QString *user);
+    QByteArray oauthChallenge() const;
 
     QTcpServer m_smtp, m_imap, m_pop3;
     QHash<QString, QString> m_passwords;
+    QHash<QString, QString> m_tokens;
     QHash<QString, QList<Stored>> m_boxes;
     QHash<QString, quint32> m_nextUid;
     QList<Envelope> m_envelopes;

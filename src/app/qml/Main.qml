@@ -54,6 +54,7 @@ ApplicationWindow {
     function showDevices() { page = "settings"; settingsView.showDevices() }
     function showJoin() { firstSetup.openJoin() }
     function showScan() { firstSetup.scanJoin() }
+    function showSetupOAuth() { firstSetup.prefill("dora@gmail.com") }
     onClosing: (close) => { if (narrow && back()) close.accepted = false }
 
     Shortcut { sequences: [StandardKey.New]; onActivated: window.compose("new", 0) }

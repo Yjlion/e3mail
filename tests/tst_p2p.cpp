@@ -223,6 +223,9 @@ private Q_SLOTS:
         iroh(m_a)->dialPaired();
         QTRY_VERIFY_WITH_TIMEOUT(iroh(m_b)->isConnected(device(m_a)), 15000);
 
+        // An OAuth refresh token travels as the passwords do (ADR 0019).
+        m_a->ctx().config.set(cfg::Auth, QStringLiteral("oauth:google"));
+        m_a->storeRefreshToken(QStringLiteral("refresh-for-alice"));
         PairingOffer offer(*m_a);
         QVERIFY(offer.isReady());
         connect(&offer, &PairingOffer::requested, &offer, [&](const QString &name) {
@@ -248,6 +251,7 @@ private Q_SLOTS:
         QVERIFY(c->ctx().config.get(cfg::P2pSecret) != m_a->ctx().config.get(cfg::P2pSecret));
         QCOMPARE(c->ctx().config.get(cfg::DeviceName), QStringLiteral("Laptop"));
         QCOMPARE(c->settings().inPassword, QStringLiteral("pw"));
+        QCOMPARE(c->settings().oauthRefresh, QStringLiteral("refresh-for-alice"));
         QVERIFY(idOf(c, mid) != 0);
         QCOMPARE(mail::Search::detail(c->ctx(), idOf(c, mid))->bodyText.trimmed(), QStringLiteral("text of before pairing"));
         // It holds what the server holds, so the others need not wait for it.

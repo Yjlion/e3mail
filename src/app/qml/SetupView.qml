@@ -51,9 +51,29 @@ Rectangle {
                 onTextChanged: setup.addr = text
                 onEditingFinished: setup.suggest()
             }
-            Label { text: qsTr("Password"); color: Theme.muted }
+            // OAuth 2 (ADR 0019), where the provider takes it.
+            ColumnLayout {
+                Layout.fillWidth: true
+                visible: setup.oauthProvider.length > 0
+                spacing: 6
+                PrimaryButton {
+                    text: setup.signedIn ? qsTr("Signed in with %1").arg(setup.oauthProvider)
+                                         : qsTr("Sign in with %1").arg(setup.oauthProvider)
+                    enabled: !setup.busy && !setup.signedIn
+                    onClicked: setup.signIn()
+                }
+                Text {
+                    Layout.fillWidth: true
+                    wrapMode: Text.Wrap
+                    color: Theme.muted
+                    font.pixelSize: Theme.fontSmall + 1
+                    text: qsTr("Opens %1 in your browser. e3mail never sees your password there. Or use an app password below.").arg(setup.oauthProvider)
+                }
+            }
+            Label { text: setup.oauthProvider.length > 0 ? qsTr("App password") : qsTr("Password"); color: Theme.muted; visible: !setup.signedIn }
             Field {
                 Layout.fillWidth: true
+                visible: !setup.signedIn
                 echoMode: TextInput.Password
                 text: setup.password
                 onTextChanged: setup.password = text
@@ -228,6 +248,8 @@ Rectangle {
         }
     }
     function openJoin() { joinDialog.open() }
+    // For screenshots (--page setup-oauth): an address a provider signs in for.
+    function prefill(addr) { setup.addr = addr }
     function scanJoin() { joinDialog.open(); joinDialog.scan() }
     JoinDialog {
         id: joinDialog

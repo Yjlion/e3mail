@@ -492,6 +492,10 @@ An: %4
         <translation>Unbenanntes Gerät</translation>
     </message>
     <message>
+        <source>You signed in as %1, not as %2.</source>
+        <translation>Sie haben sich als %1 angemeldet, nicht als %2.</translation>
+    </message>
+    <message>
         <source>(no subject)</source>
         <translation>(kein Betreff)</translation>
     </message>
@@ -1430,6 +1434,10 @@ An: %4
         <translation>Servereinstellungen aus der Adresse erraten. Prüfen Sie sie vor dem Verbinden.</translation>
     </message>
     <message>
+        <source>You signed in as %1, not as %2. Sign in with the account of the address you are adding.</source>
+        <translation>Sie haben sich als %1 angemeldet, nicht als %2. Melden Sie sich mit dem Konto der Adresse an, die Sie hinzufügen.</translation>
+    </message>
+    <message>
         <source>Enter your email address and password.</source>
         <translation>Geben Sie Ihre E-Mail-Adresse und Ihr Passwort ein.</translation>
     </message>
@@ -1449,8 +1457,24 @@ An: %4
         <translation>E-Mail-Adresse</translation>
     </message>
     <message>
+        <source>Signed in with %1</source>
+        <translation>Angemeldet mit %1</translation>
+    </message>
+    <message>
+        <source>Sign in with %1</source>
+        <translation>Mit %1 anmelden</translation>
+    </message>
+    <message>
+        <source>Opens %1 in your browser. e3mail never sees your password there. Or use an app password below.</source>
+        <translation>Öffnet %1 in Ihrem Browser. e3mail sieht Ihr Passwort dort nie. Oder verwenden Sie unten ein App-Passwort.</translation>
+    </message>
+    <message>
         <source>Password</source>
         <translation>Passwort</translation>
+    </message>
+    <message>
+        <source>App password</source>
+        <translation>App-Passwort</translation>
     </message>
     <message>
         <source>Your name (optional)</source>
@@ -1615,6 +1639,10 @@ An: %4
         <translation>Verbunden</translation>
     </message>
     <message>
+        <source>Signed out by %1 — sign in again</source>
+        <translation>Von %1 abgemeldet — erneut anmelden</translation>
+    </message>
+    <message>
         <source>Login failed — check the password</source>
         <translation>Anmeldung fehlgeschlagen — Passwort prüfen</translation>
     </message>
@@ -1625,6 +1653,29 @@ An: %4
     <message>
         <source>Offline</source>
         <translation>Offline</translation>
+    </message>
+</context>
+<context>
+    <name>SignIn</name>
+    <message>
+        <source>The sign-in took too long. Try again.</source>
+        <translation>Die Anmeldung hat zu lange gedauert. Versuchen Sie es erneut.</translation>
+    </message>
+    <message>
+        <source>Cannot listen for the browser&apos;s answer on this device.</source>
+        <translation>Die Antwort des Browsers kann auf diesem Gerät nicht empfangen werden.</translation>
+    </message>
+    <message>
+        <source>Signed in. You can close this page and go back to e3mail.</source>
+        <translation>Angemeldet. Sie können diese Seite schließen und zu e3mail zurückkehren.</translation>
+    </message>
+    <message>
+        <source>%1 did not allow e3mail to stay signed in.</source>
+        <translation>%1 hat e3mail nicht erlaubt, angemeldet zu bleiben.</translation>
+    </message>
+    <message>
+        <source>%1 refused the sign-in.</source>
+        <translation>%1 hat die Anmeldung abgelehnt.</translation>
     </message>
 </context>
 <context>

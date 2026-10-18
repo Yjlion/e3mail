@@ -2,8 +2,11 @@
 #pragma once
 
 #include "engine/Autoconfig.h"
+#include "net/OAuth.h"
 
+#include <QDateTime>
 #include <QObject>
+#include <QPointer>
 #include <QtQml/qqmlregistration.h>
 
 // The add-a-mailbox form: suggests servers, then checks them before saving.
@@ -31,6 +34,11 @@ class SetupController : public QObject
     // ("in"/"smtp"), host, port, fingerprint, subject, issuer, expires,
     // problems, changed}; empty when there is none (ADR 0017).
     Q_PROPERTY(QVariantMap untrustedCertificate READ untrustedCertificate NOTIFY busyChanged)
+    // OAuth 2 (ADR 0019): the provider that signs in for this address
+    // ("Google", "Microsoft"), empty when there is none or this build has no
+    // client ID for it; and whether the person has signed in.
+    Q_PROPERTY(QString oauthProvider READ oauthProvider NOTIFY changed)
+    Q_PROPERTY(bool signedIn READ signedIn NOTIFY changed)
 
 public:
     explicit SetupController(QObject *parent = nullptr);
@@ -38,7 +46,12 @@ public:
     bool busy() const { return m_busy; }
     QString error() const { return m_error; }
     QVariantMap untrustedCertificate() const { return m_cert; }
+    QString oauthProvider() const;
+    bool signedIn() const { return !m_oauthRefresh.isEmpty() && m_oauthFor == m_addr.trimmed().toLower(); }
 
+    // Opens the provider's sign-in in the browser; when it comes back, the
+    // account is checked and added as submit() does.
+    Q_INVOKABLE void signIn();
     // Fills the server fields from the address. Called when the address is
     // entered; the user can still edit everything.
     Q_INVOKABLE void suggest();
@@ -74,4 +87,11 @@ private:
     bool m_looking = false;     // a lookup is running
     bool m_submitAfter = false; // Connect was pressed during it
     QList<QVariantMap> m_incomingSuggestions;
+    std::optional<e3::net::oauth::Provider> currentProvider() const;
+    QString m_oauthIssuer; // from the last lookup
+    QString m_oauthFor;    // the address signed in for
+    QString m_oauthRefresh, m_oauthAccess;
+    QDateTime m_oauthExpires;
+    std::optional<e3::net::oauth::Provider> m_oauthProvider;
+    QPointer<QObject> m_signIn;
 };

@@ -53,6 +53,16 @@ public:
         // trust them (ADR 0017); empty for none.
         QByteArray inCertSha256;
         QByteArray smtpCertSha256;
+        // OAuth 2 instead of passwords (ADR 0019): "oauth:google" etc., the
+        // refresh token, and the client it was issued to. A fresh access
+        // token, when one was just obtained, saves a refresh for the check.
+        QString auth;
+        QString oauthRefresh;
+        QString oauthClientId;
+        QString oauthClientSecret;
+        QString oauthTokenUrl;
+        QString oauthAccess;
+        QDateTime oauthExpires;
     };
 
     // What checking a server found: nothing (it works), an error, or a
@@ -81,6 +91,7 @@ public:
     void configure(const Settings &s);
     // In the OS keyring if there is one, otherwise in the database.
     void storePasswords(const QString &inPassword, const QString &smtpPassword);
+    void storeRefreshToken(const QString &token);
     Settings settings() const;
     MailWorker::Credentials credentials() const;
 

@@ -21,7 +21,9 @@
 #include "mail/Preferences.h"
 #include "mail/Search.h"
 #include "mail/VCard.h"
+#include "SignIn.h"
 #include "net/Imap.h"
+#include "net/OAuth.h"
 #include "net/Pop3.h"
 #include "net/Smtp.h"
 #include "store/BlobStore.h"
@@ -127,7 +129,7 @@ int main(int argc, char **argv)
         "Headless e3mail.\n\nCommands:\n"
         "  accounts                       list accounts\n"
         "  discover                       find server settings for --addr\n"
-        "  add                            add an account (--addr, --password, server options)\n"
+        "  add                            add an account (--addr, --password or --oauth, server options)\n"
         "  sync                           send the outbox and fetch once (new mail, then a page of older)\n"
         "  list                           list messages (--tag, --search)\n"
         "  show <id>                      show a message (--raw for the original)\n"
@@ -162,6 +164,8 @@ int main(int argc, char **argv)
         {QStringLiteral("addr"), QStringLiteral("Email address."), QStringLiteral("addr")},
         {QStringLiteral("name"), QStringLiteral("Display name."), QStringLiteral("name")},
         {QStringLiteral("password"), QStringLiteral("Password."), QStringLiteral("password")},
+        {QStringLiteral("oauth"), QStringLiteral("With add: sign in with google or microsoft in a browser instead of a password."),
+         QStringLiteral("provider")},
         {QStringLiteral("protocol"), QStringLiteral("imap or pop3."), QStringLiteral("protocol"), QStringLiteral("imap")},
         {QStringLiteral("in-host"), QStringLiteral("Incoming server."), QStringLiteral("host")},
         {QStringLiteral("in-port"), QStringLiteral("Incoming port."), QStringLiteral("port")},
@@ -257,8 +261,9 @@ int main(int argc, char **argv)
         }
         if (cmd == QLatin1String("add")) {
             const QString addr = p.value(QStringLiteral("addr"));
-            if (!addr.contains(u'@') || !p.isSet(QStringLiteral("password")))
-                fail(QStringLiteral("add needs --addr and --password"));
+            const bool oauth = p.isSet(QStringLiteral("oauth"));
+            if (!addr.contains(u'@') || (!p.isSet(QStringLiteral("password")) && !oauth))
+                fail(QStringLiteral("add needs --addr and --password (or --oauth google|microsoft)"));
             const bool given = p.isSet(QStringLiteral("in-host")) && p.isSet(QStringLiteral("smtp-host"));
             const Autoconfig::Result guess = given ? Autoconfig::guess(addr) : discover(addr);
             const QString protocol = p.value(QStringLiteral("protocol"));
@@ -287,6 +292,35 @@ int main(int argc, char **argv)
             if (!p.isSet(QStringLiteral("smtp-host")))
                 s.smtpUser = guess.smtp.username;
             s.inPassword = p.value(QStringLiteral("password"));
+            if (oauth) {
+                // The browser comes back to a listener on 127.0.0.1 (ADR 0019).
+                const auto provider = net::oauth::provider(p.value(QStringLiteral("oauth")));
+                if (!provider)
+                    fail(QStringLiteral("no client ID for %1 in this build; set E3MAIL_OAUTH_%2_ID")
+                             .arg(p.value(QStringLiteral("oauth")), p.value(QStringLiteral("oauth")).toUpper()));
+                SignIn signIn(*provider, addr);
+                QEventLoop loop;
+                QString error;
+                QObject::connect(&signIn, &SignIn::openBrowser, &loop, [](const QUrl &url) {
+                    std::fprintf(stderr, "Open this in a browser on this machine to sign in:\n\n%s\n\n",
+                                 url.toString(QUrl::FullyEncoded).toUtf8().constData());
+                });
+                QObject::connect(&signIn, &SignIn::finished, &loop, [&](const QString &e) {
+                    error = e;
+                    loop.quit();
+                });
+                signIn.start();
+                loop.exec();
+                if (!error.isEmpty())
+                    fail(error);
+                if (!signIn.email().isEmpty() && signIn.email().compare(addr, Qt::CaseInsensitive) != 0)
+                    fail(QStringLiteral("signed in as %1, not %2").arg(signIn.email(), addr));
+                s.auth = QStringLiteral("oauth:") + provider->id;
+                s.oauthRefresh = signIn.refreshToken();
+                s.oauthClientId = provider->clientId;
+                s.oauthClientSecret = provider->clientSecret;
+                s.oauthTokenUrl = provider->tokenUrl.toString();
+            }
             s.acceptInvalidCertificates = p.isSet(QStringLiteral("insecure"));
             for (const auto &[opt, pin] : {std::pair{QStringLiteral("in-cert"), &s.inCertSha256},
                                            std::pair{QStringLiteral("smtp-cert"), &s.smtpCertSha256}}) {

@@ -34,6 +34,14 @@ inline constexpr char AcceptInvalidCerts[] = "accept_invalid_certs";
 // Fallback secret storage when no OS keyring is available. See SecretStore.
 inline constexpr char InPassword[] = "in_password";
 inline constexpr char SmtpPassword[] = "smtp_password";
+// How the account signs in: "password" (or unset), or "oauth:google" /
+// "oauth:microsoft" (ADR 0019), with the client the refresh token belongs to.
+inline constexpr char Auth[] = "auth";
+inline constexpr char OAuthClientId[] = "oauth_client_id";
+inline constexpr char OAuthClientSecret[] = "oauth_client_secret";
+inline constexpr char OAuthTokenUrl[] = "oauth_token_url"; // where it was issued
+// The refresh token, when no OS keyring is available (as the passwords).
+inline constexpr char OAuthRefresh[] = "oauth_refresh";
 // Policy
 inline constexpr char EncryptionMode[] = "encryption_mode";  // 0 lenient, 1 opportunistic, 2 strict
 inline constexpr char ServerRetention[] = "server_retention";// "delete" | "keep" | "never"

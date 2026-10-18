@@ -20,5 +20,7 @@ if(TARGET Qt6Keychain::Qt6Keychain)
 endif()
 target_compile_definitions(e3core PUBLIC
     E3MAIL_VERSION="${PROJECT_VERSION}")
+set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/net/OAuth.cpp PROPERTIES COMPILE_DEFINITIONS
+    "E3MAIL_OAUTH_GOOGLE_ID=\"${E3MAIL_OAUTH_GOOGLE_ID}\";E3MAIL_OAUTH_GOOGLE_SECRET=\"${E3MAIL_OAUTH_GOOGLE_SECRET}\";E3MAIL_OAUTH_MICROSOFT_ID=\"${E3MAIL_OAUTH_MICROSOFT_ID}\"")
 set_target_properties(e3core PROPERTIES AUTOMOC ON)
 e3mail_set_warnings(e3core)

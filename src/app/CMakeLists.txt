@@ -67,7 +67,7 @@ qt_add_qml_module(e3mail
 # them from the sources with `cmake --build --preset dev --target
 # update_translations`. Compiled into the binary under :/i18n.
 qt_add_translations(TARGETS e3mail
-    SOURCE_TARGETS e3mail e3core e3notifier
+    SOURCE_TARGETS e3mail e3core e3notifier e3oauthflow
     TS_FILE_DIR translations
     PLURALS_TS_FILE translations/e3mail_en.ts
     RESOURCE_PREFIX /i18n
@@ -76,7 +76,7 @@ qt_add_translations(TARGETS e3mail
 target_include_directories(e3mail PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/controllers ${CMAKE_CURRENT_SOURCE_DIR}/models)
 target_link_libraries(e3mail PRIVATE
-    e3core e3richtext e3notifier qrcodegen Qt6::Gui Qt6::Qml Qt6::Quick Qt6::QuickControls2 Qt6::Svg)
+    e3core e3oauthflow e3richtext e3notifier qrcodegen Qt6::Gui Qt6::Qml Qt6::Quick Qt6::QuickControls2 Qt6::Svg)
 if(E3MAIL_CAMERA)
     target_link_libraries(e3mail PRIVATE e3qrdecode Qt6::Multimedia Qt6::Concurrent)
     target_compile_definitions(e3mail PRIVATE E3MAIL_HAVE_CAMERA=1)

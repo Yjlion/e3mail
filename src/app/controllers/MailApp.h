@@ -40,6 +40,9 @@ class MailApp : public QObject
     Q_PROPERTY(QString accountName READ accountName NOTIFY accountChanged)
     Q_PROPERTY(QString accountStatus READ accountStatus NOTIFY statusChanged)
     Q_PROPERTY(QString accountStatusDetail READ accountStatusDetail NOTIFY statusChanged)
+    // The provider the account signs in with (ADR 0019), "Google" or
+    // "Microsoft"; empty for a password.
+    Q_PROPERTY(QString accountSignsInWith READ accountSignsInWith NOTIFY statusChanged)
     // Older mail the first sync is still downloading, newest first.
     Q_PROPERTY(int olderRemaining READ olderRemaining NOTIFY statusChanged)
     // Other devices of this account (ADR 0010).
@@ -95,6 +98,10 @@ public:
     QString accountName() const;
     QString accountStatus() const;
     QString accountStatusDetail() const;
+    QString accountSignsInWith() const;
+    // Signs in again in the browser, for an account whose sign-in a
+    // provider no longer renews.
+    Q_INVOKABLE void signInAgain();
     int olderRemaining() const;
     QString currentTag() const { return m_tag; }
     qint64 currentLabelId() const { return m_labelId; }

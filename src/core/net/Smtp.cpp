@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 #include "Smtp.h"
+#include "Sasl.h"
 
 #include "util/Log.h"
 
@@ -78,7 +79,18 @@ void SmtpClient::connect(const ServerSettings &server)
     const QByteArray user = server.user.toUtf8();
     const QByteArray pass = server.password.toUtf8();
     Reply r;
-    if (m_authMechs.contains("PLAIN") || m_authMechs.isEmpty()) {
+    if (!server.accessToken.isEmpty()) {
+        const bool bearer = !m_authMechs.contains("XOAUTH2") && m_authMechs.contains("OAUTHBEARER");
+        const QByteArray token = server.accessToken.toUtf8();
+        r = command(QByteArray(bearer ? "AUTH OAUTHBEARER " : "AUTH XOAUTH2 ")
+                    + (bearer ? sasl::oauthBearer(user, token, server.host.toUtf8(), server.port)
+                              : sasl::xoauth2(user, token)));
+        if (r.code == 334) {
+            const QByteArray why = sasl::challengeText(r.lines.value(0));
+            r = command(sasl::abortResponse(bearer));
+            throw AuthError(QStringLiteral("SMTP sign-in refused: %1").arg(QString::fromUtf8(why)));
+        }
+    } else if (m_authMechs.contains("PLAIN") || m_authMechs.isEmpty()) {
         r = command("AUTH PLAIN " + (QByteArray(1, '\0') + user + '\0' + pass).toBase64());
     } else if (m_authMechs.contains("LOGIN")) {
         r = command("AUTH LOGIN");

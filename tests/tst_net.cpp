@@ -143,6 +143,67 @@ private Q_SLOTS:
         QVERIFY_THROWS_EXCEPTION(AuthError, imap.connect(settings(srv.imapPort(), QStringLiteral("bob@x.test"), QStringLiteral("x"))));
     }
 
+    // OAuth 2 sign-in (ADR 0019): XOAUTH2, or OAUTHBEARER where it is all
+    // the server offers; with the initial response inline and after a
+    // continuation; and a refused token as an AuthError naming the reason.
+    void oauth_data()
+    {
+        QTest::addColumn<bool>("bearerOnly");
+        QTest::addColumn<bool>("saslIr");
+        QTest::newRow("xoauth2, inline") << false << true;
+        QTest::newRow("xoauth2, continuation") << false << false;
+        QTest::newRow("oauthbearer, inline") << true << true;
+        QTest::newRow("oauthbearer, continuation") << true << false;
+    }
+
+    void oauth()
+    {
+        QFETCH(bool, bearerOnly);
+        QFETCH(bool, saslIr);
+        FakeMailServer srv;
+        srv.oauth = true;
+        srv.oauthBearerOnly = bearerOnly;
+        srv.imapAuthPlain = saslIr; // the fake offers SASL-IR with PLAIN
+        srv.addUser(QStringLiteral("bob@x.test"), QStringLiteral("pw"));
+        srv.setToken(QStringLiteral("bob@x.test"), QStringLiteral("ya29.good"));
+        srv.deliver(QStringLiteral("bob@x.test"), "Subject: one\r\n\r\nbody\r\n");
+        auto withToken = [&](quint16 port, const QString &token) {
+            ServerSettings s = settings(port, QStringLiteral("bob@x.test"), QString());
+            s.accessToken = token;
+            return s;
+        };
+
+        ImapClient imap;
+        imap.connect(withToken(srv.imapPort(), QStringLiteral("ya29.good")));
+        QCOMPARE(imap.select().exists, 1u);
+        imap.logout();
+        Pop3Client pop;
+        pop.connect(withToken(srv.pop3Port(), QStringLiteral("ya29.good")));
+        QCOMPARE(pop.list().size(), 1);
+        pop.quit();
+        SmtpClient smtp;
+        smtp.connect(withToken(srv.smtpPort(), QStringLiteral("ya29.good")));
+        QVERIFY(smtp.send(QStringLiteral("bob@x.test"), {QStringLiteral("bob@x.test")}, "Subject: x\r\n\r\nx\r\n").isEmpty());
+        smtp.quit();
+        QCOMPARE(srv.oauthRefused, 0);
+
+        // An expired token: each says why, and the exchange is ended cleanly.
+        for (int proto = 0; proto < 3; ++proto) {
+            try {
+                if (proto == 0)
+                    ImapClient().connect(withToken(srv.imapPort(), QStringLiteral("ya29.expired")));
+                else if (proto == 1)
+                    Pop3Client().connect(withToken(srv.pop3Port(), QStringLiteral("ya29.expired")));
+                else
+                    SmtpClient().connect(withToken(srv.smtpPort(), QStringLiteral("ya29.expired")));
+                QFAIL("an expired token was accepted");
+            } catch (const AuthError &e) {
+                QVERIFY2(e.message().contains(QLatin1String("\"status\":\"401\"")), qPrintable(e.message()));
+            }
+        }
+        QCOMPARE(srv.oauthRefused, 3);
+    }
+
     void pop3_data()
     {
         QTest::addColumn<bool>("sasl");
