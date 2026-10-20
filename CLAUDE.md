@@ -5,10 +5,10 @@ including what is broken.
 
 ## What this is
 
-e3mail is an end-to-end encrypted classic email client: a ground-up port of
-[eeemail](https://github.com/Yjlion/eeemail)'s ideas to C++20 and Qt 6 (QML),
-with no Delta Chat code. IMAP and POP3 are transport only, and the local
-database is the mailbox. Unaudited, prerelease.
+e3mail is an end-to-end encrypted classic email client in C++20 and Qt 6 (QML).
+Message content is never sent back to the server, not even drafts: IMAP, POP3
+and SMTP are transport only, and the local database is the mailbox. Unaudited,
+prerelease.
 
 | Path | What it is |
 |---|---|
