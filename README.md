@@ -3,11 +3,12 @@
 An end-to-end encrypted email client with classic email functionality, built
 with Qt for Linux, Windows and macOS.
 
-e3mail is a ground-up port of [eeemail](https://github.com/Yjlion/eeemail). It
-keeps eeemail's ideas and drops its foundation: there is no Delta Chat engine
-underneath. The engine is new C++ on Qt, with OpenPGP from
-[RNP](https://www.rnpgp.org), and because it owns its own transport it receives
-mail over **POP3 as well as IMAP**.
+e3mail is an email client built around end-to-end encryption (E2EE). Message
+content is never sent back to the server, not even drafts: the mail server
+only transports new mail, and standard protocols (IMAP, POP3 and SMTP) are used
+only to fetch and send messages. The engine is written in C++ on Qt, with
+OpenPGP from [RNP](https://www.rnpgp.org), and because it owns its own
+transport it receives mail over **POP3 as well as IMAP**.
 
 > **How this was built.** Most of the code and documentation here was written by
 > a large language model working under human direction. It is reviewed and
@@ -81,9 +82,11 @@ over TLS in [`scripts/e2e.py`](scripts/e2e.py).
 | CI builds and tests on Linux, Windows and macOS | ✅ |
 | `.deb`, AppImage, Windows installer + portable zip, macOS `.dmg` | ⏳ release workflow not yet run; AppImage built locally |
 | Interop with GnuPG (our PGP/MIME decrypts and verifies) | ✅ |
-| Multi-device sync over Iroh | ⏳ designed, Phase 8 |
+| Multi-device sync over Iroh, with a mailbox fallback | ✅ |
 | SecureJoin QR verification (Delta Chat compatible) | ⏳ Phase 9 |
-| At-rest encryption, encrypted backup, read receipts, structured email | ⏳ later phases |
+| Encrypted backups to a folder, WebDAV, S3, SFTP, Google Drive or OneDrive | ✅ |
+| Sign-in with OAuth 2 for Gmail and Outlook | ⏳ built, not yet tried against Google or Microsoft |
+| At-rest encryption, read receipts, structured email | ⏳ later phases |
 | Interop with Thunderbird, Delta Chat or a mainstream provider | ❌ |
 | Code signing | ❌ |
 
