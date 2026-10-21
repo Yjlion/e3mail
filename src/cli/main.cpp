@@ -139,11 +139,14 @@ int main(int argc, char **argv)
         "  sync                           send the outbox and fetch once (new mail, then a page of older)\n"
         "  list                           list messages (--tag, --search)\n"
         "  show <id>                      show a message (--raw for the original)\n"
+        "  read <id>                      mark it read, as opening it in the app does (a receipt, a timer)\n"
         "  send                           queue a message (--to, --subject, --body ...); run sync to deliver\n"
         "  accept <addr>                  accept a sender held in Unverified\n"
         "  block <pattern> | unblock <pattern>\n"
         "  trash <id> | restore <id> | archive <id>\n"
         "  contacts                       list contacts\n"
+        "  contact-trust <addr> on|off|auto\n"
+        "                                 trust their mail or not, or leave it to the address book\n"
         "  contact-add                    add a contact (--addr, --name)\n"
         "  contact-remove <addr>          remove a contact\n"
         "  vcard-import <file>            import contacts from a vCard file\n"
@@ -207,6 +210,9 @@ int main(int argc, char **argv)
         {QStringLiteral("attach"), QStringLiteral("Attach a file (repeatable)."), QStringLiteral("file")},
         {QStringLiteral("encrypt"), QStringLiteral("auto, required or plaintext."), QStringLiteral("mode"), QStringLiteral("auto")},
         {QStringLiteral("important"), QStringLiteral("Mark as important.")},
+        {QStringLiteral("receipt"), QStringLiteral("With send: ask for a read receipt.")},
+        {QStringLiteral("disappear"), QStringLiteral("With send: the message goes to Trash this long after it is read."),
+         QStringLiteral("seconds")},
         {QStringLiteral("reply-to"), QStringLiteral("Message id this replies to."), QStringLiteral("id")},
         {QStringLiteral("dest"), QStringLiteral("Backups: where, as JSON ({\"type\":\"folder\",\"path\":…}, webdav, s3, sftp, gdrive, onedrive)."),
          QStringLiteral("json")},
@@ -451,6 +457,18 @@ int main(int argc, char **argv)
             o.insert(QStringLiteral("body"), d->bodyText);
             o.insert(QStringLiteral("held"), d->held);
             o.insert(QStringLiteral("trashed"), d->trashed);
+            if (d->trashed)
+                o.insert(QStringLiteral("trash_reason"), int(d->trashReason));
+            o.insert(QStringLiteral("receipt_to"), d->receiptTo);
+            QJsonArray readBy;
+            for (const auto &r : d->readBy)
+                readBy.append(QJsonObject{{QStringLiteral("addr"), r.addr},
+                                          {QStringLiteral("at"), r.at.toUTC().toString(Qt::ISODate)}});
+            o.insert(QStringLiteral("read_by"), readBy);
+            if (d->ephemeralSeconds)
+                o.insert(QStringLiteral("disappear_seconds"), d->ephemeralSeconds);
+            if (d->expiresAt.isValid())
+                o.insert(QStringLiteral("expires"), d->expiresAt.toUTC().toString(Qt::ISODate));
             o.insert(QStringLiteral("undelivered"), QJsonArray::fromStringList(d->undelivered));
             QJsonArray att;
             for (const auto &a : d->attachments)
@@ -473,6 +491,8 @@ int main(int argc, char **argv)
             // an HTML quote without the new text in it.
             d.html.clear();
             d.importance = p.isSet(QStringLiteral("important")) ? 1 : 0;
+            d.requestReceipt = p.isSet(QStringLiteral("receipt"));
+            d.ephemeralSeconds = p.value(QStringLiteral("disappear")).toInt();
             const QString enc = p.value(QStringLiteral("encrypt"));
             d.encryption = enc == QLatin1String("required") ? SendEncryption::Required
                 : enc == QLatin1String("plaintext")         ? SendEncryption::Plaintext
@@ -486,6 +506,17 @@ int main(int argc, char **argv)
             const qint64 id = mail::Compose::queue(ctx, d);
             print(QJsonObject{{QStringLiteral("id"), id},
                               {QStringLiteral("encrypted"), mail::Search::detail(ctx, id)->encrypted}});
+        } else if (cmd == QLatin1String("read")) {
+            mail::Organize::markRead(ctx, idArg, true);
+            print(QJsonObject{{QStringLiteral("read"), idArg}});
+        } else if (cmd == QLatin1String("contact-trust")) {
+            const QString v = args.value(2);
+            if (v != QLatin1String("on") && v != QLatin1String("off") && v != QLatin1String("auto"))
+                fail(QStringLiteral("contact-trust <addr> on|off|auto"));
+            mail::Contacts::setTrust(ctx, args.value(1),
+                                     v == QLatin1String("auto") ? std::nullopt : std::optional<bool>(v == QLatin1String("on")));
+            print(QJsonObject{{QStringLiteral("addr"), args.value(1)},
+                              {QStringLiteral("trusted"), mail::Contacts::isTrusted(ctx, args.value(1))}});
         } else if (cmd == QLatin1String("accept")) {
             print(QJsonObject{{QStringLiteral("released"), mail::Organize::accept(ctx, args.value(1))}});
         } else if (cmd == QLatin1String("block")) {
@@ -729,7 +760,7 @@ int main(int argc, char **argv)
         } else if (cmd == QLatin1String("housekeeping")) {
             const auto r = mail::Organize::housekeeping(ctx);
             print(QJsonObject{{QStringLiteral("purged"), r.purged}, {QStringLiteral("swept"), r.swept},
-                              {QStringLiteral("raw_expired"), r.rawExpired}});
+                              {QStringLiteral("raw_expired"), r.rawExpired}, {QStringLiteral("expired"), r.expired}});
         } else {
             fail(QStringLiteral("unknown command: %1").arg(cmd));
         }

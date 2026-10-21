@@ -127,7 +127,8 @@ std::optional<MessageDetail> Search::detail(MailContext &ctx, qint64 msgId)
 {
     Statement st(ctx.db, (QByteArray("SELECT ") + kSummaryColumns
                           + ", m.message_id, m.in_reply_to, m.reply_to, m.body_text, m.body_html, m.raw_blob, "
-                            "m.raw_expires_at, m.send_encryption FROM messages m WHERE m.id=?")
+                            "m.raw_expires_at, m.send_encryption, m.mdn_to, m.ephemeral_seconds, m.expires_at "
+                            "FROM messages m WHERE m.id=?")
                              .constData());
     st.bind(1, msgId);
     if (!st.step())
@@ -148,6 +149,14 @@ std::optional<MessageDetail> Search::detail(MailContext &ctx, qint64 msgId)
         d.rawExpiresAt = QDateTime::fromMSecsSinceEpoch(st.int64(21));
     if (!st.isNull(22))
         d.sendEncryption = SendEncryption(st.integer(22));
+    d.receiptTo = st.text(23);
+    d.ephemeralSeconds = st.integer(24);
+    if (!st.isNull(25))
+        d.expiresAt = QDateTime::fromMSecsSinceEpoch(st.int64(25));
+    Statement rc(ctx.db, "SELECT addr, at FROM receipts WHERE msg_id=? ORDER BY at");
+    rc.bind(1, msgId);
+    while (rc.step())
+        d.readBy.append({rc.text(0), QDateTime::fromMSecsSinceEpoch(rc.int64(1))});
     d.cc = recipientsOf(ctx, msgId, RecipientKind::Cc);
     d.bcc = recipientsOf(ctx, msgId, RecipientKind::Bcc);
 

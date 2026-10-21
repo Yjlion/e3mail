@@ -25,6 +25,9 @@ class Composer : public QObject
     Q_PROPERTY(QString bcc READ bcc WRITE setBcc NOTIFY recipientsChanged)
     Q_PROPERTY(QString subject MEMBER m_subject NOTIFY subjectChanged)
     Q_PROPERTY(bool important MEMBER m_important NOTIFY optionsChanged)
+    // Read receipt asked for, and how long it lives once read (0: kept).
+    Q_PROPERTY(bool requestReceipt MEMBER m_requestReceipt NOTIFY optionsChanged)
+    Q_PROPERTY(int disappearSeconds MEMBER m_disappearSeconds NOTIFY optionsChanged)
     Q_PROPERTY(bool encrypt READ encrypt WRITE setEncrypt NOTIFY readinessChanged)
     Q_PROPERTY(QVariantList attachments READ attachments NOTIFY attachmentsChanged)
     Q_PROPERTY(qint64 draftId READ draftId NOTIFY draftChanged)
@@ -99,6 +102,8 @@ private:
     std::optional<e3::mail::Signature> m_initialSignature;
     SignatureRange m_signature;
     bool m_important = false;
+    bool m_requestReceipt = false;
+    int m_disappearSeconds = 0;
     bool m_encrypt = false;
     bool m_userSetPadlock = false;
     bool m_canSend = false;

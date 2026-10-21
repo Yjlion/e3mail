@@ -314,6 +314,26 @@ To: %4
         <translation>צייכענען ווי וויכטיק</translation>
     </message>
     <message>
+        <source>Ask for a read receipt</source>
+        <translation>בעטן אַ לייען־באַשטעטיקונג</translation>
+    </message>
+    <message>
+        <source>Disappears %1 after it is read</source>
+        <translation>פֿאַרשווינדט %1 נאָכן לייענען</translation>
+    </message>
+    <message>
+        <source>Disappear after reading</source>
+        <translation>פֿאַרשווינדן נאָכן לייענען</translation>
+    </message>
+    <message>
+        <source>Keep it</source>
+        <translation>האַלטן</translation>
+    </message>
+    <message>
+        <source>Disappear %1 after reading</source>
+        <translation>פֿאַרשווינדן %1 נאָכן לייענען</translation>
+    </message>
+    <message>
         <source>Encryption is required for these recipients</source>
         <translation>פֿאַר די אָנבאַקומערס איז פֿאַרשיפֿרירונג נייטיק</translation>
     </message>
@@ -451,6 +471,26 @@ To: %4
     <message>
         <source>No key yet. Mail to them goes unencrypted until they send you one.</source>
         <translation>נאָך קיין שליסל. בריוו צו דעם קאָנטאַקט גייען ניט פֿאַרשיפֿרירט ביז ער שיקט אײַך אַ שליסל.</translation>
+    </message>
+    <message>
+        <source>Trusted</source>
+        <translation>געטרויט</translation>
+    </message>
+    <message>
+        <source>Set by being in your contacts or verified.</source>
+        <translation>באַשטימט דורכן זײַן אין דײַנע קאָנטאַקטן אָדער באַשטעטיקט.</translation>
+    </message>
+    <message>
+        <source>Set by you.</source>
+        <translation>באַשטימט פֿון דיר.</translation>
+    </message>
+    <message>
+        <source>Mail from someone trusted goes to the Inbox and may get a read receipt; from anyone else it waits in Unverified.</source>
+        <translation>פּאָסט פֿון אַ געטרויטן גייט אין די אַרײַנקומענדיקע און קען באַקומען אַ לייען־באַשטעטיקונג; פֿון אַלע אַנדערע וואַרט זי אין „נישט באַשטעטיקט“.</translation>
+    </message>
+    <message>
+        <source>Let e3mail decide</source>
+        <translation>לאָזן e3mail באַשליסן</translation>
     </message>
     <message>
         <source>Encryption with this contact</source>
@@ -662,6 +702,14 @@ To: %4
         <translation>(אָן טעמע)</translation>
     </message>
     <message>
+        <source>disappears %1 after reading</source>
+        <translation>פֿאַרשווינדט %1 נאָכן לייענען</translation>
+    </message>
+    <message>
+        <source>disappears in %1</source>
+        <translation>פֿאַרשווינדט אין %1</translation>
+    </message>
+    <message>
         <source>Moved to Trash.</source>
         <translation>אַריבערגעפֿירט אין מיסט.</translation>
     </message>
@@ -707,6 +755,34 @@ To: %4
     <message>
         <source>This is not a contact&apos;s code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
         <translation>דאָס איז נישט קיין קאָנטאַקט־קאָד. אַ קאָד צו באַשטעטיקן הייבט זיך אָן מיט OPENPGP4FPR: אָדער https://i.delta.chat/.</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation>
+            <numerusform>%n וואָך</numerusform>
+            <numerusform>%n וואָכן</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation>
+            <numerusform>%n טאָג</numerusform>
+            <numerusform>%n טעג</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation>
+            <numerusform>%n שעה</numerusform>
+            <numerusform>%n שעה</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n minute(s)</source>
+        <translation>
+            <numerusform>%n מינוט</numerusform>
+            <numerusform>%n מינוט</numerusform>
+        </translation>
     </message>
     <message>
         <source>%1 is not an email address, or is in your contacts already.</source>
@@ -823,6 +899,14 @@ To: %4
     <message>
         <source>unsigned</source>
         <translation>ניט אונטערגעשריבן</translation>
+    </message>
+    <message>
+        <source>read by %1</source>
+        <translation>געלייענט פֿון %1</translation>
+    </message>
+    <message>
+        <source>read receipt asked</source>
+        <translation>לייען־באַשטעטיקונג געבעטן</translation>
     </message>
     <message>
         <source>Not delivered to: %1 (the server refused them).</source>
@@ -1377,6 +1461,22 @@ To: %4
     <message>
         <source>days (0: never)</source>
         <translation>טעג (0: קיינמאָל)</translation>
+    </message>
+    <message>
+        <source>Read receipts</source>
+        <translation>לייען־באַשטעטיקונגען</translation>
+    </message>
+    <message>
+        <source>Send a read receipt to trusted senders who ask for one</source>
+        <translation>שיקן אַ לייען־באַשטעטיקונג געטרויטע שיקער וואָס בעטן</translation>
+    </message>
+    <message>
+        <source>Never send read receipts</source>
+        <translation>קיינמאָל נישט שיקן לייען־באַשטעטיקונגען</translation>
+    </message>
+    <message>
+        <source>A receipt goes once, when you first open the message, on whichever device. Strangers and anyone you do not trust never get one.</source>
+        <translation>אַ באַשטעטיקונג גייט איין מאָל, ווען דו עפֿנסט ערשט דעם בריוו, אויף וועלכן עס איז מכשיר. פֿרעמדע און ווער דו טרויסט נישט באַקומען קיינמאָל נישט.</translation>
     </message>
     <message>
         <source>Trash</source>

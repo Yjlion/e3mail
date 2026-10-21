@@ -314,6 +314,26 @@ To: %4
         <translation>Пометить как важное</translation>
     </message>
     <message>
+        <source>Ask for a read receipt</source>
+        <translation>Запросить уведомление о прочтении</translation>
+    </message>
+    <message>
+        <source>Disappears %1 after it is read</source>
+        <translation>Исчезнет через %1 после прочтения</translation>
+    </message>
+    <message>
+        <source>Disappear after reading</source>
+        <translation>Исчезнуть после прочтения</translation>
+    </message>
+    <message>
+        <source>Keep it</source>
+        <translation>Сохранить</translation>
+    </message>
+    <message>
+        <source>Disappear %1 after reading</source>
+        <translation>Исчезнуть через %1 после прочтения</translation>
+    </message>
+    <message>
         <source>Encryption is required for these recipients</source>
         <translation>Для этих получателей шифрование обязательно</translation>
     </message>
@@ -451,6 +471,26 @@ To: %4
     <message>
         <source>No key yet. Mail to them goes unencrypted until they send you one.</source>
         <translation>Ключа пока нет. Письма этому контакту уходят без шифрования, пока он не пришлёт свой ключ.</translation>
+    </message>
+    <message>
+        <source>Trusted</source>
+        <translation>Доверенный</translation>
+    </message>
+    <message>
+        <source>Set by being in your contacts or verified.</source>
+        <translation>Определяется тем, есть ли человек в контактах или проверен ли он.</translation>
+    </message>
+    <message>
+        <source>Set by you.</source>
+        <translation>Задано вами.</translation>
+    </message>
+    <message>
+        <source>Mail from someone trusted goes to the Inbox and may get a read receipt; from anyone else it waits in Unverified.</source>
+        <translation>Письма от доверенных попадают во «Входящие» и могут получить уведомление о прочтении; от остальных — ждут в «Непроверенных».</translation>
+    </message>
+    <message>
+        <source>Let e3mail decide</source>
+        <translation>Пусть решает e3mail</translation>
     </message>
     <message>
         <source>Encryption with this contact</source>
@@ -662,6 +702,14 @@ To: %4
         <translation>(без темы)</translation>
     </message>
     <message>
+        <source>disappears %1 after reading</source>
+        <translation>исчезнет через %1 после прочтения</translation>
+    </message>
+    <message>
+        <source>disappears in %1</source>
+        <translation>исчезнет через %1</translation>
+    </message>
+    <message>
         <source>Moved to Trash.</source>
         <translation>Перемещено в корзину.</translation>
     </message>
@@ -708,6 +756,38 @@ To: %4
     <message>
         <source>This is not a contact&apos;s code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
         <translation>Это не код контакта. Код для проверки начинается с OPENPGP4FPR: или https://i.delta.chat/.</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation>
+            <numerusform>%n неделю</numerusform>
+            <numerusform>%n недели</numerusform>
+            <numerusform>%n недель</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation>
+            <numerusform>%n день</numerusform>
+            <numerusform>%n дня</numerusform>
+            <numerusform>%n дней</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation>
+            <numerusform>%n час</numerusform>
+            <numerusform>%n часа</numerusform>
+            <numerusform>%n часов</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n minute(s)</source>
+        <translation>
+            <numerusform>%n минуту</numerusform>
+            <numerusform>%n минуты</numerusform>
+            <numerusform>%n минут</numerusform>
+        </translation>
     </message>
     <message>
         <source>%1 is not an email address, or is in your contacts already.</source>
@@ -830,6 +910,14 @@ To: %4
     <message>
         <source>unsigned</source>
         <translation>без подписи</translation>
+    </message>
+    <message>
+        <source>read by %1</source>
+        <translation>прочитано: %1</translation>
+    </message>
+    <message>
+        <source>read receipt asked</source>
+        <translation>запрошено уведомление о прочтении</translation>
     </message>
     <message>
         <source>Not delivered to: %1 (the server refused them).</source>
@@ -1387,6 +1475,22 @@ To: %4
     <message>
         <source>days (0: never)</source>
         <translation>дн. (0: никогда)</translation>
+    </message>
+    <message>
+        <source>Read receipts</source>
+        <translation>Уведомления о прочтении</translation>
+    </message>
+    <message>
+        <source>Send a read receipt to trusted senders who ask for one</source>
+        <translation>Отправлять уведомление о прочтении доверенным отправителям, которые его просят</translation>
+    </message>
+    <message>
+        <source>Never send read receipts</source>
+        <translation>Никогда не отправлять уведомления о прочтении</translation>
+    </message>
+    <message>
+        <source>A receipt goes once, when you first open the message, on whichever device. Strangers and anyone you do not trust never get one.</source>
+        <translation>Уведомление уходит один раз, когда вы впервые открываете письмо, на любом устройстве. Незнакомцы и те, кому вы не доверяете, его не получают.</translation>
     </message>
     <message>
         <source>Trash</source>

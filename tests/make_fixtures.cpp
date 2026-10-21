@@ -170,6 +170,18 @@ int main(int argc, char **argv)
     if (const auto t = mail::Contacts::get(ctx, QStringLiteral("tomas@example.net")))
         mail::Contacts::setVerified(ctx, t->addr, t->fingerprint);
     ctx.db.run("UPDATE messages SET verified=1 WHERE from_addr='tomas@example.net' AND signed_fpr IS NOT NULL");
+    // Ada asked Mira for a read receipt, and it came back; Tomas's answer
+    // disappears a day after Ada read it, about twenty hours from now (P12;
+    // the outcomes, recorded).
+    const qint64 now = QDateTime::currentMSecsSinceEpoch();
+    ctx.db.run("UPDATE messages SET mdn_to='ada@example.org' WHERE subject=? AND direction=1",
+               QStringLiteral("Thursday's numbers"));
+    ctx.db.run("INSERT INTO receipts(msg_id, addr, at) SELECT id, 'mira@example.org', ? FROM messages "
+               "WHERE subject=? AND direction=1",
+               now - 3600 * 1000, QStringLiteral("Thursday's numbers"));
+    ctx.db.run("UPDATE messages SET ephemeral_seconds=86400, expires_at=?, unread=0 "
+               "WHERE from_addr='tomas@example.net'",
+               now + 20LL * 3600 * 1000);
 
     Draft draft;
     draft.to = {{QStringLiteral("Mira Dorn"), QStringLiteral("mira@example.org")}};

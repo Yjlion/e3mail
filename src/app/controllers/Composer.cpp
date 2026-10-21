@@ -97,6 +97,8 @@ void Composer::load(const Draft &d, const QString &title)
     m_bcc = format(d.bcc);
     m_subject = d.subject;
     m_important = d.importance > 0;
+    m_requestReceipt = d.requestReceipt;
+    m_disappearSeconds = d.ephemeralSeconds;
     m_title = title;
     m_userSetPadlock = d.encryption != SendEncryption::Auto;
     m_encrypt = d.encryption == SendEncryption::Required;
@@ -215,6 +217,8 @@ Draft Composer::collect(QQuickTextDocument *doc) const
     d.bcc = parse(m_bcc);
     d.subject = m_subject.trimmed();
     d.importance = m_important ? 1 : 0;
+    d.requestReceipt = m_requestReceipt;
+    d.ephemeralSeconds = m_disappearSeconds;
     // The composer always decides; it never sends "auto".
     d.encryption = m_encrypt ? SendEncryption::Required : SendEncryption::Plaintext;
     if (doc) {

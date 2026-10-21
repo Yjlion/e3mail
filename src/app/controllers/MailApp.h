@@ -188,6 +188,10 @@ public:
     // none | waiting | done | failed, for the address an invite named.
     Q_INVOKABLE QString secureJoinState(const QString &addr) const;
     Q_INVOKABLE QString secureJoinAddress(const QString &text) const;
+    // A disappearing message's lifetime in words: "1 hour", "4 weeks".
+    Q_INVOKABLE QString lifetime(int seconds) const;
+    // Trust set by hand (ADR 0022): "on", "off" or "auto".
+    Q_INVOKABLE void setContactTrust(qint64 id, const QString &trust);
     Q_INVOKABLE QStringList completeAddress(const QString &prefix) const;
 
     Q_INVOKABLE QVariantMap settings() const;
@@ -295,5 +299,8 @@ private:
     qint64 m_selected = 0;
     QVariantList m_thread;
     QTimer m_refresh;
+    // Wakes when the next disappearing message is due (ADR 0022).
+    QTimer m_expiry;
+    void armExpiry();
     Notifier *m_notifier;
 };

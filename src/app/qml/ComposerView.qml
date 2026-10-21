@@ -205,6 +205,34 @@ Rectangle {
             }
             IconButton { iconName: "flag"; tip: qsTr("Mark as important"); on: composer.important; onClicked: composer.important = !composer.important }
             IconButton {
+                id: receiptButton
+                iconName: "receipt"
+                tip: qsTr("Ask for a read receipt")
+                on: composer.requestReceipt
+                onClicked: composer.requestReceipt = !composer.requestReceipt
+            }
+            IconButton {
+                id: timerButton
+                iconName: "timer"
+                tip: composer.disappearSeconds > 0 ? qsTr("Disappears %1 after it is read").arg(MailApp.lifetime(composer.disappearSeconds))
+                                                   : qsTr("Disappear after reading")
+                on: composer.disappearSeconds > 0
+                onClicked: timerMenu.popup(timerButton, 0, -timerMenu.implicitHeight)
+                Menu {
+                    id: timerMenu
+                    Repeater {
+                        model: [0, 3600, 86400, 604800, 2419200]
+                        MenuItem {
+                            required property int modelData
+                            checkable: true
+                            checked: composer.disappearSeconds === modelData
+                            text: modelData === 0 ? qsTr("Keep it") : qsTr("Disappear %1 after reading").arg(MailApp.lifetime(modelData))
+                            onTriggered: composer.disappearSeconds = modelData
+                        }
+                    }
+                }
+            }
+            IconButton {
                 iconName: composer.encrypt ? "lock" : "lock-open"
                 tip: composer.padlockLocked ? qsTr("Encryption is required for these recipients")
                      : composer.encrypt ? qsTr("Encrypted — click to send unencrypted") : qsTr("Not encrypted — click to require encryption")

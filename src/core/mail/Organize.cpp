@@ -2,6 +2,7 @@
 #include "Organize.h"
 
 #include "Contacts.h"
+#include "Receipts.h"
 #include "SecureJoin.h"
 #include "store/BlobStore.h"
 #include "store/Config.h"
@@ -41,8 +42,47 @@ void Organize::markRead(MailContext &ctx, qint64 msgId, bool read)
         QJsonObject p = msgRef(ctx, msgId);
         p.insert(QStringLiteral("read"), read);
         ctx.ops.record(op::ReadState, p);
+        if (read) {
+            startTimer(ctx, msgId, nowMs());
+            Receipts::sendIfDue(ctx, msgId);
+        }
     }
     tx.commit();
+}
+
+void Organize::startTimer(MailContext &ctx, qint64 msgId, qint64 readAt)
+{
+    // Disappearing mail starts its timer when first read, on whichever
+    // device; marking it unread again does not stop it.
+    ctx.db.run("UPDATE messages SET expires_at = ?2 + ephemeral_seconds * 1000 "
+               "WHERE id=?1 AND ephemeral_seconds > 0 AND expires_at IS NULL",
+               msgId, readAt);
+}
+
+int Organize::expireDue(MailContext &ctx, qint64 now)
+{
+    QList<qint64> due;
+    {
+        Statement st(ctx.db, "SELECT id FROM messages WHERE expires_at IS NOT NULL AND expires_at <= ? "
+                             "AND id NOT IN (SELECT msg_id FROM trashed)");
+        st.bind(1, now);
+        while (st.step())
+            due.append(st.int64(0));
+    }
+    if (due.isEmpty())
+        return 0;
+    Transaction tx(ctx.db);
+    for (qint64 id : std::as_const(due))
+        trash(ctx, id, TrashReason::Expired);
+    tx.commit();
+    qCInfo(lcMail) << due.size() << "disappearing messages went to Trash";
+    return int(due.size());
+}
+
+std::optional<qint64> Organize::nextExpiry(MailContext &ctx)
+{
+    return ctx.db.queryInt("SELECT min(expires_at) FROM messages WHERE expires_at IS NOT NULL "
+                           "AND id NOT IN (SELECT msg_id FROM trashed)");
 }
 
 void Organize::trash(MailContext &ctx, qint64 msgId, TrashReason reason)
@@ -202,6 +242,7 @@ Organize::HousekeepingResult Organize::housekeeping(MailContext &ctx)
 {
     HousekeepingResult r;
     const qint64 now = nowMs();
+    r.expired = expireDue(ctx, now);
     Transaction tx(ctx.db);
 
     // Unverified mail past its window goes to Trash. The deadline is read

@@ -58,6 +58,7 @@ inline constexpr char RawMimeDays[] = "raw_mime_days";        // 0 off, N days, 
 inline constexpr char TrashPurgeDays[] = "trash_purge_days";  // 0 destroys at once
 inline constexpr char UnverifiedTrashDays[] = "unverified_trash_days"; // 0 never sweeps
 inline constexpr char Gating[] = "gating";                    // hold strangers' mail
+inline constexpr char MdnSend[] = "mdn_send";                 // read receipts: "trusted" | "never"
 inline constexpr char PollSeconds[] = "poll_seconds";
 // Engine state
 inline constexpr char DeviceId[] = "device_id";

@@ -79,6 +79,9 @@ inline const QString DeviceUnpair = QStringLiteral("device.unpair");
 // (ADR 0021).
 inline const QString SecureJoinInvite = QStringLiteral("sj.invite");
 inline const QString SecureJoinJoin = QStringLiteral("sj.join");
+// Trust set by hand, and a read receipt sent once for all devices (ADR 0022).
+inline const QString ContactTrust = QStringLiteral("contact.trust");
+inline const QString ReceiptSent = QStringLiteral("mdn.sent");
 } // namespace op
 
 } // namespace e3

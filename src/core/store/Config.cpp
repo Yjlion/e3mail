@@ -29,6 +29,7 @@ QString Config::defaultFor(const char *key)
         {cfg::TrashPurgeDays, "30"},
         {cfg::UnverifiedTrashDays, "30"},
         {cfg::Gating, "1"},
+        {cfg::MdnSend, "trusted"},
         {cfg::PollSeconds, "300"},
         {cfg::P2pRelay, "default"},
     };

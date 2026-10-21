@@ -275,11 +275,15 @@ public:
     void housekeepingIfDue(MailWorker *w)
     {
         const qint64 now = QDateTime::currentMSecsSinceEpoch();
+        // Disappearing mail is due to the minute, not the hour; the app also
+        // wakes for it while it runs (ADR 0022).
+        if (mail::Organize::expireDue(ctx, now) && w)
+            Q_EMIT w->mailChanged();
         if (now - lastHousekeeping < kHousekeepingMs)
             return;
         lastHousekeeping = now;
         const auto r = mail::Organize::housekeeping(ctx);
-        if (w && (r.purged || r.swept))
+        if (w && (r.purged || r.swept || r.expired))
             Q_EMIT w->mailChanged();
     }
 };

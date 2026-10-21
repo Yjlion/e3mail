@@ -95,6 +95,17 @@ MailApp::MailApp(AccountManager *manager, QObject *parent) : QObject(parent), m_
     m_refresh.setSingleShot(true);
     m_refresh.setInterval(120);
     connect(&m_refresh, &QTimer::timeout, this, &MailApp::refresh);
+    connect(&m_refresh, &QTimer::timeout, this, &MailApp::armExpiry);
+    m_expiry.setSingleShot(true);
+    connect(&m_expiry, &QTimer::timeout, this, [this] {
+        const qint64 now = QDateTime::currentMSecsSinceEpoch();
+        for (Account *a : m_mgr->accounts()) {
+            if (mail::Organize::expireDue(a->ctx(), now))
+                a->notifyChanged();
+        }
+        armExpiry();
+    });
+    QTimer::singleShot(0, this, &MailApp::armExpiry);
     connect(m_mgr, &AccountManager::accountsChanged, this, &MailApp::accountsChanged);
     connect(m_mgr, &AccountManager::selectedChanged, this, &MailApp::switchAccount);
     for (Account *a : m_mgr->accounts()) {
@@ -806,7 +817,42 @@ QVariantMap MailApp::messageMap(qint64 id) const
         {QStringLiteral("rawAvailable"), d->rawAvailable},
         {QStringLiteral("labels"), labels},
         {QStringLiteral("unread"), d->unread},
+        {QStringLiteral("receiptAsked"), d->direction == Direction::Outgoing && !d->receiptTo.isEmpty()},
+        {QStringLiteral("readBy"), [&] {
+             QStringList names;
+             for (const auto &r : d->readBy) {
+                 const auto c = mail::Contacts::get(account()->ctx(), r.addr);
+                 names.append(c && !c->name.isEmpty() ? c->name : r.addr);
+             }
+             return names.join(QStringLiteral(", "));
+         }()},
+        {QStringLiteral("disappear"), [&] {
+             // Rounded up, in the largest whole unit: "in 3 hours", not "in 2 h 59".
+             if (d->trashed || d->ephemeralSeconds <= 0)
+                 return QString();
+             if (!d->expiresAt.isValid())
+                 return tr("disappears %1 after reading").arg(lifetime(d->ephemeralSeconds));
+             const qint64 left = qMax<qint64>(60, QDateTime::currentDateTime().secsTo(d->expiresAt));
+             const qint64 unit = left > 2 * 86400 ? 86400 : left > 2 * 3600 ? 3600 : 60;
+             return tr("disappears in %1").arg(lifetime(int((left + unit - 1) / unit * unit)));
+         }()},
     };
+}
+
+void MailApp::armExpiry()
+{
+    std::optional<qint64> next;
+    for (Account *a : m_mgr->accounts()) {
+        if (const auto at = mail::Organize::nextExpiry(a->ctx()))
+            next = next ? qMin(*next, *at) : *at;
+    }
+    if (!next) {
+        m_expiry.stop();
+        return;
+    }
+    // At most a day ahead, so a clock change is noticed; never in the past.
+    const qint64 wait = qBound<qint64>(0, *next - QDateTime::currentMSecsSinceEpoch() + 500, 24LL * 3600 * 1000);
+    m_expiry.start(int(wait));
 }
 
 void MailApp::syncNow()
@@ -1051,6 +1097,9 @@ QVariantMap MailApp::contact(qint64 id) const
             {QStringLiteral("addr"), c->addr},
             {QStringLiteral("name"), c->name},
             {QStringLiteral("known"), c->isKnown()},
+            {QStringLiteral("trusted"), mail::Contacts::isTrusted(account()->ctx(), c->addr)},
+            {QStringLiteral("trustSet"), c->trust ? (*c->trust ? QStringLiteral("on") : QStringLiteral("off"))
+                                                  : QStringLiteral("auto")},
             {QStringLiteral("fingerprint"), fpr},
             {QStringLiteral("verified"), c->verified},
             {QStringLiteral("joining"), secureJoinState(c->addr)},
@@ -1105,6 +1154,31 @@ QString MailApp::secureJoin(const QString &text)
     account()->notifyChanged();
     account()->syncNow();
     return {};
+}
+
+QString MailApp::lifetime(int seconds) const
+{
+    constexpr int kHour = 3600, kDay = 24 * kHour, kWeek = 7 * kDay;
+    if (seconds >= kWeek && seconds % kWeek == 0)
+        return tr("%n week(s)", nullptr, seconds / kWeek);
+    if (seconds >= kDay && seconds % kDay == 0)
+        return tr("%n day(s)", nullptr, seconds / kDay);
+    if (seconds >= kHour && seconds % kHour == 0)
+        return tr("%n hour(s)", nullptr, seconds / kHour);
+    return tr("%n minute(s)", nullptr, qMax(1, seconds / 60));
+}
+
+void MailApp::setContactTrust(qint64 id, const QString &trust)
+{
+    if (!account())
+        return;
+    const auto c = mail::Contacts::byId(account()->ctx(), id);
+    if (!c)
+        return;
+    mail::Contacts::setTrust(account()->ctx(), c->addr,
+                             trust == QLatin1String("auto") ? std::nullopt
+                                                            : std::optional<bool>(trust == QLatin1String("on")));
+    account()->notifyChanged();
 }
 
 QString MailApp::secureJoinState(const QString &addr) const
@@ -1258,6 +1332,7 @@ QVariantMap MailApp::settings() const
             {QStringLiteral("trashPurgeDays"), c.getInt(cfg::TrashPurgeDays)},
             {QStringLiteral("unverifiedTrashDays"), c.getInt(cfg::UnverifiedTrashDays)},
             {QStringLiteral("gating"), c.getBool(cfg::Gating)},
+            {QStringLiteral("mdnSend"), c.get(cfg::MdnSend)},
             {QStringLiteral("pollSeconds"), c.getInt(cfg::PollSeconds)},
             {QStringLiteral("fingerprint"), [&] {
                  QString f = c.get(cfg::SelfFingerprint);
@@ -1305,6 +1380,7 @@ void MailApp::setSetting(const QString &key, const QVariant &value)
         {QStringLiteral("trashPurgeDays"), cfg::TrashPurgeDays},
         {QStringLiteral("unverifiedTrashDays"), cfg::UnverifiedTrashDays},
         {QStringLiteral("gating"), cfg::Gating},
+        {QStringLiteral("mdnSend"), cfg::MdnSend},
         {QStringLiteral("pollSeconds"), cfg::PollSeconds},
     };
     const char *k = keys.value(key);

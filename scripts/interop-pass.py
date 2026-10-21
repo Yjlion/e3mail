@@ -174,6 +174,32 @@ def main():
             shown = from_dc()
             check(shown.get("encrypted"), "it was encrypted")
             check(shown.get("verified"), "and signed by the verified key")
+
+            print("Read receipts both ways")
+            # Delta Chat asks for one on every message; jude reads it.
+            check(shown.get("receipt_to") == f"dchat@{DOMAIN}", "Delta Chat's mail asks for a receipt")
+            dc_sent = [m for m in chat.get_messages() if "hello from Delta Chat" in (m.get_snapshot().text or "")][0]
+            jude.run("read", str(shown["id"]))
+            until(lambda: dc_sent.get_snapshot().state == 28, "Delta Chat shows its mail as read by jude")
+            # jude asks; Delta Chat reads.
+            jude.run("send", "--to", f"dchat@{DOMAIN}", "--subject", "receipt please", "--body", "receipt please",
+                     "--receipt")
+            got = None
+            deadline = time.time() + 90
+            while time.time() < deadline and not got:
+                for m in acc.get_next_messages():
+                    if "receipt please" in (m.get_snapshot().text or ""):
+                        got = m
+                time.sleep(1)
+            check(got is not None, "Delta Chat received jude's request")
+            acc.mark_seen_messages([got])
+
+            def read_by():
+                for m in jude.run("list", "--tag", "sent"):
+                    if m["subject"] == "receipt please":
+                        return jude.run("show", str(m["id"]))["read_by"]
+                return []
+            until(lambda: any(r["addr"] == f"dchat@{DOMAIN}" for r in read_by()), "jude sees it read by Delta Chat")
         finally:
             stop.set()
             syncer.join()

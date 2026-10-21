@@ -314,6 +314,26 @@ To: %4
         <translation>סימון כחשובה</translation>
     </message>
     <message>
+        <source>Ask for a read receipt</source>
+        <translation>בקשת אישור קריאה</translation>
+    </message>
+    <message>
+        <source>Disappears %1 after it is read</source>
+        <translation>תיעלם %1 אחרי הקריאה</translation>
+    </message>
+    <message>
+        <source>Disappear after reading</source>
+        <translation>היעלמות אחרי קריאה</translation>
+    </message>
+    <message>
+        <source>Keep it</source>
+        <translation>לשמור</translation>
+    </message>
+    <message>
+        <source>Disappear %1 after reading</source>
+        <translation>להיעלם %1 אחרי הקריאה</translation>
+    </message>
+    <message>
         <source>Encryption is required for these recipients</source>
         <translation>הצפנה נדרשת עבור הנמענים האלה</translation>
     </message>
@@ -451,6 +471,26 @@ To: %4
     <message>
         <source>No key yet. Mail to them goes unencrypted until they send you one.</source>
         <translation>עדיין אין מפתח. דואר אל איש הקשר הזה נשלח ללא הצפנה עד שישלח לך מפתח.</translation>
+    </message>
+    <message>
+        <source>Trusted</source>
+        <translation>מהימן</translation>
+    </message>
+    <message>
+        <source>Set by being in your contacts or verified.</source>
+        <translation>נקבע לפי היותו באנשי הקשר שלך או מאומת.</translation>
+    </message>
+    <message>
+        <source>Set by you.</source>
+        <translation>נקבע על ידך.</translation>
+    </message>
+    <message>
+        <source>Mail from someone trusted goes to the Inbox and may get a read receipt; from anyone else it waits in Unverified.</source>
+        <translation>דואר ממי שמהימן נכנס לדואר הנכנס ועשוי לקבל אישור קריאה; דואר מכל אחד אחר ממתין ב„לא מאומת”.</translation>
+    </message>
+    <message>
+        <source>Let e3mail decide</source>
+        <translation>לתת ל־e3mail להחליט</translation>
     </message>
     <message>
         <source>Encryption with this contact</source>
@@ -662,6 +702,14 @@ To: %4
         <translation>(ללא נושא)</translation>
     </message>
     <message>
+        <source>disappears %1 after reading</source>
+        <translation>תיעלם %1 אחרי הקריאה</translation>
+    </message>
+    <message>
+        <source>disappears in %1</source>
+        <translation>תיעלם בעוד %1</translation>
+    </message>
+    <message>
         <source>Moved to Trash.</source>
         <translation>הועבר לאשפה.</translation>
     </message>
@@ -707,6 +755,34 @@ To: %4
     <message>
         <source>This is not a contact&apos;s code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
         <translation>זה אינו קוד של איש קשר. קוד לאימות מתחיל ב־OPENPGP4FPR: או ב־https://i.delta.chat/.</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation>
+            <numerusform>שבוע</numerusform>
+            <numerusform>%n שבועות</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation>
+            <numerusform>יום</numerusform>
+            <numerusform>%n ימים</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation>
+            <numerusform>שעה</numerusform>
+            <numerusform>%n שעות</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n minute(s)</source>
+        <translation>
+            <numerusform>דקה</numerusform>
+            <numerusform>%n דקות</numerusform>
+        </translation>
     </message>
     <message>
         <source>%1 is not an email address, or is in your contacts already.</source>
@@ -823,6 +899,14 @@ To: %4
     <message>
         <source>unsigned</source>
         <translation>לא חתומה</translation>
+    </message>
+    <message>
+        <source>read by %1</source>
+        <translation>נקרא על ידי %1</translation>
+    </message>
+    <message>
+        <source>read receipt asked</source>
+        <translation>התבקש אישור קריאה</translation>
     </message>
     <message>
         <source>Not delivered to: %1 (the server refused them).</source>
@@ -1377,6 +1461,22 @@ To: %4
     <message>
         <source>days (0: never)</source>
         <translation>ימים (0: אף פעם)</translation>
+    </message>
+    <message>
+        <source>Read receipts</source>
+        <translation>אישורי קריאה</translation>
+    </message>
+    <message>
+        <source>Send a read receipt to trusted senders who ask for one</source>
+        <translation>שליחת אישור קריאה לשולחים מהימנים שמבקשים אותו</translation>
+    </message>
+    <message>
+        <source>Never send read receipts</source>
+        <translation>לעולם לא לשלוח אישורי קריאה</translation>
+    </message>
+    <message>
+        <source>A receipt goes once, when you first open the message, on whichever device. Strangers and anyone you do not trust never get one.</source>
+        <translation>אישור נשלח פעם אחת, כשפותחים את ההודעה לראשונה, בכל מכשיר שהוא. זרים ומי שאינו מהימן עליך לא יקבלו אותו לעולם.</translation>
     </message>
     <message>
         <source>Trash</source>

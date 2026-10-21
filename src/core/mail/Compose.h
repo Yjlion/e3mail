@@ -3,6 +3,8 @@
 
 #include "Types.h"
 
+#include "mime/Builder.h"
+
 #include <stdexcept>
 
 namespace e3::mail {
@@ -26,6 +28,12 @@ public:
     // outbox. The message becomes Sent once the transport delivers it.
     // Throws ComposeError when the policy refuses.
     static qint64 queue(MailContext &ctx, const Draft &draft);
+
+    // Machine mail (a SecureJoin step, a read receipt): queued as a hidden
+    // message that is never listed, threaded or synced as mail. Inside the
+    // caller's transaction.
+    static qint64 queueMachineMail(MailContext &ctx, const mime::OutgoingMail &mail, const QByteArray &raw,
+                                   const QString &rcpt, bool encrypted);
 
     // Prefilled drafts. Reply goes to Reply-To or From, never to the reader's
     // own address taken from the original's To line.

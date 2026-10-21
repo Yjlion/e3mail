@@ -154,6 +154,17 @@ Rectangle {
                 fg: card.m.verified ? Theme.info : Theme.muted
                 bg: card.m.verified ? Theme.infoBg : "transparent"
             }
+            Badge {
+                visible: card.m.outgoing && (card.m.readBy.length > 0 || card.m.receiptAsked)
+                text: card.m.readBy.length > 0 ? qsTr("read by %1").arg(card.m.readBy) : qsTr("read receipt asked")
+                fg: card.m.readBy.length > 0 ? Theme.good : Theme.muted
+            }
+            Badge {
+                visible: card.m.disappear.length > 0
+                text: card.m.disappear
+                fg: Theme.warn
+                bg: Theme.warnBg
+            }
             Repeater {
                 model: card.m.labels
                 Badge {

@@ -1100,10 +1100,71 @@ contact has no such field; the joiner's success event and the inviter's
 confirmation are what was seen); two devices of the inviter answering the
 same step live (a duplicate answer is expected to be harmless, ADR 0021).
 
+## Read receipts, disappearing mail, trust by hand (2026-10-21)
+
+P12 ([ADR 0022](adr/0022-read-receipts-disappearing-mail-and-trust.md)).
+- **Read receipts:**
+  - The composer can ask for a receipt.
+  - Opening a message that asks sends one, once across all devices, and only
+    to a trusted sender asking for it at their own address, and only while
+    Settings, Read receipts allows (the default: to trusted senders).
+  - Receipts that come back show as "read by …".
+- **Disappearing mail:**
+  - The composer offers 1 hour to 4 weeks after reading.
+  - The message goes to Trash with reason Expired, checked on every worker
+    pass and by a timer in the app.
+- **Trust by hand:** each contact has a Trusted switch, which overrides the
+  rule everywhere trust is asked, the Unverified hold included.
+- **CLI:** `send --receipt --disappear`, `read`, and `contact-trust`.
+
+**What it taught:**
+- **Delta Chat honours only `Chat-Disposition-Notification-To`**, not the
+  standard header, so e3mail sends both and reads both.
+- **Two rules looked tested but were not.** With gating on, an untrusted
+  sender's mail is always held, so the "no receipt to the untrusted" rule
+  never ran: the held check stopped it first. Breaking that rule failed
+  nothing until a case with gating off was added.
+- **A wait loop that greps `pgrep -f "cmake --build"` matches itself**
+  (its own command line contains the text) and never ends. Wait on a marker
+  file instead. Several such loops were left running for an hour here.
+- `make_fixtures` records the outcomes (a receipt from Mira, a countdown on
+  Tomas's reply) instead of running them.
+
+**Verified here:**
+- `tst_receipts` (new) covers:
+  - a receipt round trip, and an encrypted receipt for encrypted mail;
+  - none to a held, untrusted or ungated stranger, under "never", or to an
+    address that is not the sender's;
+  - a forged receipt from a non-recipient, ignored;
+  - one receipt across two devices;
+  - the clock starting on read, here and from another device's `msg.read`;
+  - our own copy's clock starting at sending;
+  - trust given, taken away and returned to the rule.
+
+  Breaking each rule once (the sender check, the trust check, once-only, the
+  recipient check, the remote clock, the trust override) failed it.
+- `scripts/interop-pass.py` against Delta Chat 2.64: Delta Chat shows its
+  mail as read once e3mail reads it, and e3mail shows its own mail read by
+  Delta Chat after Delta Chat marks it seen.
+- `scripts/e2e.py`: all passed.
+- Screenshots: the contact's Trusted switch (English, Arabic, phone) and the
+  countdown badge.
+
+**Not verified:**
+- The "read by" badge is not pictured: the fixture's receipt is on a message
+  that the thread screenshot shows collapsed.
+- Disappearing mail against Delta Chat, which sets its timer per chat rather
+  than per message.
+- Thunderbird's receipts.
+- The app's expiry timer firing in a running app (`expireDue` and
+  `nextExpiry` are tested directly, not the QTimer around them).
+
 ## Known gaps
 
 - **Signed-only mail** is checked only for PGP/MIME (`multipart/signed`);
   S/MIME signatures read as unsigned.
+- **Disappearing mail** only moves to Trash, on our side; nothing makes the
+  other side's clients honour the timer (ADR 0022).
 - **SecureJoin** speaks Delta Chat's older handshake only, and only
   setup-contact: no group invites (ADR 0021).
 - **Inline PGP**: only the first armoured block of the text part is read.

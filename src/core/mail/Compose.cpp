@@ -52,6 +52,9 @@ QStringList allAddrs(const Draft &d)
 
 void writeBody(MailContext &ctx, qint64 id, const Draft &d)
 {
+    ctx.db.run("UPDATE messages SET mdn_to=?, ephemeral_seconds=? WHERE id=?",
+               d.requestReceipt ? QVariant(ctx.config.get(cfg::Addr)) : QVariant(),
+               d.ephemeralSeconds > 0 ? QVariant(d.ephemeralSeconds) : QVariant(), id);
     ctx.db.run("DELETE FROM recipients WHERE msg_id=?", id);
     int kindIdx = 0;
     for (const auto &list : {d.to, d.cc, d.bcc}) {
@@ -147,6 +150,8 @@ Draft Compose::loadDraft(MailContext &ctx, qint64 msgId)
     d.html = ctx.db.queryText("SELECT body_html FROM messages WHERE id=?", msgId).value_or(QString());
     d.importance = m->importance;
     d.encryption = m->sendEncryption;
+    d.requestReceipt = !m->receiptTo.isEmpty();
+    d.ephemeralSeconds = m->ephemeralSeconds;
     if (!m->inReplyTo.isEmpty())
         d.inReplyToId = ctx.db.queryInt("SELECT id FROM messages WHERE message_id=?", m->inReplyTo).value_or(0);
     for (const AttachmentInfo &a : m->attachments)
@@ -196,6 +201,20 @@ qint64 Compose::queue(MailContext &ctx, const Draft &draft)
         mail.attachments.append({a.filename, a.mimeType.toLatin1(), a.data});
     mail.extraHeaders.append(
         {"Autocrypt", crypto::Autocrypt::format(selfAddr, ctx.pgp.exportAutocrypt(selfFpr, selfAddr), true)});
+    // Asking for a read receipt, and how long the message should live: inside
+    // the encryption when there is one, so the server does not learn it.
+    QList<QPair<QByteArray, QByteArray>> asks;
+    if (draft.requestReceipt) {
+        asks.append({"Disposition-Notification-To", mime::formatAddress(mail.from)});
+        // Delta Chat answers only its own name for the same request.
+        asks.append({"Chat-Disposition-Notification-To", mail.from.addr.toUtf8()});
+    }
+    if (draft.ephemeralSeconds > 0)
+        asks.append({"Ephemeral-Timer", QByteArray::number(draft.ephemeralSeconds)});
+    if (ready.willEncrypt)
+        mail.innerHeaders.append(asks);
+    else
+        mail.extraHeaders.append(asks);
 
     QByteArray raw;
     if (ready.willEncrypt) {
@@ -231,6 +250,9 @@ qint64 Compose::queue(MailContext &ctx, const Draft &draft)
                "preview=? WHERE id=?",
                int(MessageState::Pending), now, ready.willEncrypt, ready.willEncrypt ? selfFpr : QString(),
                nullIfEmpty(rawBlob), rawExpires, Ingest::makePreview(draft.text), id);
+    // Our own copy of disappearing mail starts its timer as it is sent.
+    if (draft.ephemeralSeconds > 0)
+        ctx.db.run("UPDATE messages SET expires_at=? WHERE id=?", now + qint64(draft.ephemeralSeconds) * 1000, id);
     ctx.db.run("INSERT INTO outbox(msg_id, raw, mail_from, rcpts) VALUES(?, ?, ?, ?)", id, raw, selfAddr,
                rcpts.join(u'\n'));
     // Writing to someone puts them in the address book, on every device, and
@@ -252,6 +274,20 @@ qint64 Compose::queue(MailContext &ctx, const Draft &draft)
     ctx.ops.record(op::MessageAdded, {{QStringLiteral("mid"), mail.messageId}, {QStringLiteral("raw"), rawBlob}});
     tx.commit();
     qCInfo(lcMail) << "queued message" << id << (ready.willEncrypt ? "encrypted" : "cleartext") << "to" << rcpts;
+    return id;
+}
+
+qint64 Compose::queueMachineMail(MailContext &ctx, const mime::OutgoingMail &mail, const QByteArray &raw,
+                                 const QString &rcpt, bool encrypted)
+{
+    const QString self = ctx.config.get(cfg::Addr);
+    const qint64 now = mail.date.toMSecsSinceEpoch();
+    ctx.db.run("INSERT INTO messages(message_id, direction, state, subject, from_addr, date, received_at, encrypted, "
+               "signed_fpr, hidden) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, 1)",
+               mail.messageId, int(Direction::Outgoing), int(MessageState::Pending), mail.subject, self, now, now,
+               encrypted, encrypted ? Keyring::selfFingerprint(ctx) : QString());
+    const qint64 id = ctx.db.lastInsertId();
+    ctx.db.run("INSERT INTO outbox(msg_id, raw, mail_from, rcpts) VALUES(?, ?, ?, ?)", id, raw, self, rcpt);
     return id;
 }
 

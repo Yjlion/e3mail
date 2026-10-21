@@ -58,6 +58,7 @@ ApplicationWindow {
     function showRestore() { firstSetup.openRestore() }
     // For screenshots (--page verify).
     function showVerify() { page = "contacts"; contactsView.verify() }
+    function showContact() { page = "contacts"; contactsView.showFirst() }
     function showBackups() { page = "settings"; settingsView.showBackups() }
     onClosing: (close) => { if (narrow && back()) close.accepted = false }
 

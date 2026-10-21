@@ -292,6 +292,28 @@ CREATE TABLE sj_joins (
     started_at   INTEGER NOT NULL
 );
 )sql",
+
+    // 6 — read receipts, disappearing messages, trust by hand (P12, ADR 0022).
+    R"sql(
+-- A person's say on whether mail from someone is trusted: NULL leaves it to
+-- the rule (in the address book, or verified), 1 trusts, 0 does not.
+ALTER TABLE contacts ADD COLUMN trust INTEGER;
+-- Incoming: where the sender asked a read receipt to go. Our own mail: our
+-- address, when we asked for one.
+ALTER TABLE messages ADD COLUMN mdn_to TEXT;
+-- Disappearing mail: how long it lives once read (sent: once sent), and
+-- when it goes to Trash, once that is known.
+ALTER TABLE messages ADD COLUMN ephemeral_seconds INTEGER;
+ALTER TABLE messages ADD COLUMN expires_at INTEGER;
+CREATE INDEX messages_expires ON messages(expires_at) WHERE expires_at IS NOT NULL;
+-- Read receipts that came back for our own mail.
+CREATE TABLE receipts (
+    msg_id INTEGER NOT NULL REFERENCES messages(id) ON DELETE CASCADE,
+    addr   TEXT NOT NULL,
+    at     INTEGER NOT NULL,
+    PRIMARY KEY (msg_id, addr)
+);
+)sql",
 };
 
 } // namespace

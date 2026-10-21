@@ -115,3 +115,15 @@ Iroh joins the build.
   device fetches the inviter's next step has what it needs to answer.
 - **`contact.verify`** now also releases the contact's held mail where it is
   applied, as verifying does on the device that verified (ADR 0021).
+
+## Amendment — 2026-10-21: trust by hand, read receipts, disappearing mail
+
+- **`contact.trust`** `{addr, trust}` (`true`, `false` or `null` for the
+  rule) is keyed `ctrust:<addr>`, last writer wins, and counts as a contact
+  op for `contact.remove` (ADR 0022).
+- **`mdn.sent`** `{mid}` is keyed `mdn:<mid>`. It changes nothing when
+  applied; its presence is what stops another device sending a second read
+  receipt for that message.
+- **`msg.read`** with `read: true` also starts a disappearing message's
+  clock, from the op's HLC time, unless the clock already runs. An expired
+  message then travels as `msg.trash` with reason `Expired`, as before.

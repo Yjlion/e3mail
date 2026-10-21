@@ -16,6 +16,8 @@ Rectangle {
                                         { v: "home", t: qsTr("Home") }, { v: "other", t: qsTr("Other") }]
 
     function verify() { verifyDialog.begin() }
+    // For screenshots (--page contact): the first contact, opened.
+    function showFirst() { reload(); if (contacts.length) show(contacts[0].id) }
     function reload() { contacts = MailApp.contacts(search.text) }
     function show(id) {
         current = id ? MailApp.contact(id) : ({})
@@ -250,6 +252,30 @@ Rectangle {
                         color: Theme.muted
                         Layout.fillWidth: true
                         wrapMode: Text.WrapAnywhere
+                    }
+                    Switch {
+                        id: trustSwitch
+                        Layout.topMargin: 12
+                        Layout.fillWidth: true
+                        text: qsTr("Trusted")
+                        checked: view.current.trusted === true
+                        onToggled: { MailApp.setContactTrust(view.current.id, checked ? "on" : "off"); view.show(view.current.id); view.reload() }
+                    }
+                    Text {
+                        Layout.fillWidth: true
+                        wrapMode: Text.Wrap
+                        color: Theme.muted
+                        font.pixelSize: Theme.fontSmall
+                        text: (view.current.trustSet === "auto"
+                               ? qsTr("Set by being in your contacts or verified.")
+                               : qsTr("Set by you."))
+                            + " " + qsTr("Mail from someone trusted goes to the Inbox and may get a read receipt; from anyone else it waits in Unverified.")
+                    }
+                    Button {
+                        visible: view.current.trustSet !== "auto"
+                        flat: true
+                        text: qsTr("Let e3mail decide")
+                        onClicked: { MailApp.setContactTrust(view.current.id, "auto"); view.show(view.current.id); view.reload() }
                     }
                     Label { Layout.topMargin: 12; text: qsTr("Encryption with this contact"); color: Theme.muted }
                     ChoiceBox {

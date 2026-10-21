@@ -86,7 +86,8 @@ over TLS in [`scripts/e2e.py`](scripts/e2e.py).
 | SecureJoin QR verification (Delta Chat compatible) | ✅ tried against Delta Chat 2.64 |
 | Encrypted backups to a folder, WebDAV, S3, SFTP, Google Drive or OneDrive | ✅ |
 | Sign-in with OAuth 2 for Gmail and Outlook | ⏳ built, not yet tried against Google or Microsoft |
-| At-rest encryption, read receipts, structured email | ⏳ later phases |
+| Read receipts (to trusted senders) and disappearing mail | ✅ |
+| At-rest encryption, structured email | ⏳ later phases |
 | Interop with Delta Chat ([`scripts/interop-pass.py`](scripts/interop-pass.py)) | ✅ verification and encrypted mail, both ways |
 | Interop with Thunderbird or a mainstream provider | ❌ |
 | Code signing | ❌ |
