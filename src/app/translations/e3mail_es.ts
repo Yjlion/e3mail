@@ -365,6 +365,10 @@ Para: %4
         <translation>Nuevo contacto</translation>
     </message>
     <message>
+        <source>Verify in person</source>
+        <translation>Verificar en persona</translation>
+    </message>
+    <message>
         <source>Import or export</source>
         <translation>Importar o exportar</translation>
     </message>
@@ -435,6 +439,10 @@ Para: %4
     <message>
         <source>Verified in person.</source>
         <translation>Verificado en persona.</translation>
+    </message>
+    <message>
+        <source>Verifying in person: waiting for their answer.</source>
+        <translation>Verificación en persona: esperando su respuesta.</translation>
     </message>
     <message>
         <source>Key learned from their mail. Not verified: this proves continuity, not identity.</source>
@@ -695,6 +703,10 @@ Para: %4
     <message>
         <source>The original of this message is no longer kept.</source>
         <translation>El original de este mensaje ya no se conserva.</translation>
+    </message>
+    <message>
+        <source>This is not a contact&apos;s code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
+        <translation>Esto no es el código de un contacto. Un código para verificar a alguien empieza por OPENPGP4FPR: o https://i.delta.chat/.</translation>
     </message>
     <message>
         <source>%1 is not an email address, or is in your contacts already.</source>
@@ -1227,6 +1239,17 @@ Para: %4
     <message>
         <source>Type the code instead</source>
         <translation>Escribir el código</translation>
+    </message>
+</context>
+<context>
+    <name>SecureJoin</name>
+    <message>
+        <source>This is your own code. Scan the other person&apos;s code instead.</source>
+        <translation>Este es tu propio código. Escanea el código de la otra persona.</translation>
+    </message>
+    <message>
+        <source>%1 is blocked. Unblock them first.</source>
+        <translation>%1 está bloqueado. Desbloquéalo primero.</translation>
     </message>
 </context>
 <context>
@@ -1976,6 +1999,61 @@ Para: %4
     <message>
         <source>Create a tag…</source>
         <translation>Crear una etiqueta…</translation>
+    </message>
+</context>
+<context>
+    <name>VerifyDialog</name>
+    <message>
+        <source>Verify in person</source>
+        <translation>Verificar en persona</translation>
+    </message>
+    <message>
+        <source>Meet, or call on video. Let them scan this code with e3mail or Delta Chat, or scan theirs. Each of you then has the other’s key verified.</source>
+        <translation>Reuníos o haced una videollamada. Deja que escanee este código con e3mail o Delta Chat, o escanea el suyo. Así cada uno tendrá verificada la clave del otro.</translation>
+    </message>
+    <message>
+        <source>Your code as a QR code</source>
+        <translation>Tu código como código QR</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Copiar</translation>
+    </message>
+    <message>
+        <source>Anyone who sees this code can verify themselves to you. If the wrong person saw it, make a new one.</source>
+        <translation>Cualquiera que vea este código puede verificarse ante ti. Si lo vio la persona equivocada, crea uno nuevo.</translation>
+    </message>
+    <message>
+        <source>New code</source>
+        <translation>Código nuevo</translation>
+    </message>
+    <message>
+        <source>Point the camera at the other person’s code.</source>
+        <translation>Apunta la cámara al código de la otra persona.</translation>
+    </message>
+    <message>
+        <source>Their code</source>
+        <translation>Su código</translation>
+    </message>
+    <message>
+        <source>Scan</source>
+        <translation>Escanear</translation>
+    </message>
+    <message>
+        <source>Verify</source>
+        <translation>Verificar</translation>
+    </message>
+    <message>
+        <source>Exchanging keys with %1 by mail. This takes as long as your mail does; you can close this and come back.</source>
+        <translation>Intercambiando claves con %1 por correo. Tarda lo que tarde tu correo; puedes cerrar esto y volver más tarde.</translation>
+    </message>
+    <message>
+        <source>%1 is verified.</source>
+        <translation>%1 está verificado.</translation>
+    </message>
+    <message>
+        <source>%1 did not answer within a week. Try again when you can both check your mail.</source>
+        <translation>%1 no respondió en una semana. Inténtalo de nuevo cuando ambos podáis revisar el correo.</translation>
     </message>
 </context>
 <context>

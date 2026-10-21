@@ -16,7 +16,9 @@ docker compose up -d --build
 | 1993 / 1143 | IMAP, implicit TLS / STARTTLS |
 | 1995 / 1110 | POP3, implicit TLS / STARTTLS |
 
-Users `alice`, `bob`, `carol`, `dana` at `e3.test`, password `pw`. The
+Users `alice`, `bob`, `carol`, `dana` at `e3.test`, password `pw`; also `iris`,
+`jude` and `dchat`, which `scripts/interop-pass.py` uses (and adds to a running
+container that lacks them). The
 certificate is self-signed, so clients must be told to accept it
 (`e3mail-cli add --insecure`). Credentials are refused on the STARTTLS ports
 until TLS is negotiated.

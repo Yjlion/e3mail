@@ -75,6 +75,10 @@ inline const QString Setting = QStringLiteral("config.set");
 // Another device joined or left the account (ADR 0013, amended 2026-10-11).
 inline const QString DevicePair = QStringLiteral("device.pair");
 inline const QString DeviceUnpair = QStringLiteral("device.unpair");
+// SecureJoin invites and joins, so any device can answer the next step
+// (ADR 0021).
+inline const QString SecureJoinInvite = QStringLiteral("sj.invite");
+inline const QString SecureJoinJoin = QStringLiteral("sj.join");
 } // namespace op
 
 } // namespace e3

@@ -2,6 +2,7 @@
 #include "Organize.h"
 
 #include "Contacts.h"
+#include "SecureJoin.h"
 #include "store/BlobStore.h"
 #include "store/Config.h"
 #include "store/Database.h"
@@ -234,6 +235,7 @@ Organize::HousekeepingResult Organize::housekeeping(MailContext &ctx)
                "WHERE raw_blob IS NOT NULL AND raw_expires_at IS NOT NULL AND raw_expires_at <= ?",
                now);
     r.rawExpired = ctx.db.changes();
+    r.joinsExpired = SecureJoin::expire(ctx, now);
     ctx.db.run("DELETE FROM threads WHERE id NOT IN (SELECT DISTINCT thread_id FROM messages WHERE thread_id IS NOT NULL)");
     tx.commit();
 

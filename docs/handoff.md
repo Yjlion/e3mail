@@ -35,7 +35,8 @@ suites, including the GnuPG interop test against Git for Windows' gpg.
   none has been installed and run on its own platform.
 - The app has not been used interactively on a real display. Offscreen
   rendering and the smoke test are all there is.
-- No interop with Delta Chat, Thunderbird, Gmail or any mainstream provider.
+- No interop with Thunderbird, Gmail or any mainstream provider. Delta Chat
+  interop is tried since 2026-10-21 (see "SecureJoin" below).
   OAuth 2 is built (2026-10-16) but has not met Google or Microsoft yet.
 
 ## P8 in progress: the sync core (2026-10-06)
@@ -1045,10 +1046,66 @@ Google Drive or OneDrive, and restored as a new device
 - The daily schedule in the running app, and the app's forms against real
   servers. They were driven only through the CLI and the tests.
 
+## SecureJoin, and reading Delta Chat's mail (2026-10-21)
+
+Contacts can be verified by scanning a code ([ADR 0021](adr/0021-securejoin.md)):
+Contacts, the shield button, shows this account's `OPENPGP4FPR:` code and
+takes someone else's, by camera or pasted. `e3mail-cli verify-invite`,
+`verify-join` and `verify-status` do the same. Handshake mail is hidden; the
+result is `contact.verify`, and verifying releases the person's held mail.
+
+**What it taught:**
+- **Delta Chat's newest handshake (`v=3`) needs SEIPDv2** (AES-128-OCB to a
+  password from the token), which RNP 0.18 does only behind its experimental
+  crypto-refresh build. Delta Chat 2.64 still answers the older four-step
+  handshake, so e3mail speaks that, both as inviter and as joiner.
+- **e3mail could not read any encrypted mail from Delta Chat.** Delta Chat
+  hides recipients (every session key packet names key id 0). RNP ignores
+  those unless `RNP_VERIFY_ALLOW_HIDDEN_RECIPIENT` is set, and even then, in
+  0.18.1, tries only the first such packet: Delta Chat puts its own key
+  first, so ours was never tried. `Pgp::decrypt` now sets the flag and, when
+  decryption fails, retries with each later hidden packet moved to the
+  front. GnuPG (`--try-all-secrets`) read the same message. Worth reporting
+  to RNP upstream; not done yet.
+- **Delta Chat checks that each step gossips the recipient's own key**
+  (against surreptitious forwarding); e3mail now sends and checks that too.
+- A worker pass sends before it fetches, so an answer leaves on the pass
+  after the one that wrote it: a full handshake is seven passes between two
+  e3mail accounts that only poll.
+- An exception while answering a step rolled back storing the message, which
+  would have been fetched forever. Ingest now logs it and stores the message.
+
+**Verified here:**
+- `tst_securejoin` (new): both verified, the shortcut when the key is known,
+  a code naming the wrong key, a wrong token, a renewed code, a token signed
+  by another key, cleartext and without gossip, a second device of the
+  inviter answering, expiry, and the code's two text forms. Breaking the
+  signer check, the gossip check, the revocation check and the code's
+  fingerprint check each failed it.
+- `tst_crypto::gnupgHiddenRecipient`: GnuPG `--throw-keyids`, one recipient
+  and two with ours second; it fails without the reordering.
+- `tst_qrscan`: a contact code photographed at 15° reads back; a pairing
+  scanner ignores it.
+- `scripts/interop-pass.py` against `server/compose` with
+  `deltachat-rpc-server` 2.64.0 from PyPI: e3mail scans Delta Chat's code and
+  Delta Chat confirms; Delta Chat scans e3mail's and finishes joining; then
+  mail both ways arrives encrypted, and Delta Chat's is shown verified.
+- `scripts/e2e.py`: all passed (after emptying mailboxes an earlier run left;
+  it is not idempotent: section 4 leaves one message for dana).
+- Screenshots: the dialog in English, Arabic and on a phone.
+
+**Not verified:** a real camera reading a Delta Chat app's screen; the newer
+handshake; Delta Chat's own view of the contact as verified (2.64's JSON-RPC
+contact has no such field; the joiner's success event and the inviter's
+confirmation are what was seen); two devices of the inviter answering the
+same step live (a duplicate answer is expected to be harmless, ADR 0021).
+
 ## Known gaps
 
 - **Signed-only mail** is checked only for PGP/MIME (`multipart/signed`);
   S/MIME signatures read as unsigned.
+- **SecureJoin** speaks Delta Chat's older handshake only, and only
+  setup-contact: no group invites (ADR 0021).
 - **Inline PGP**: only the first armoured block of the text part is read.
 - **Bcc and encryption**: Bcc recipients' key IDs are in the encrypted message,
   so recipients who inspect it can tell that Bcc recipients exist
@@ -1377,8 +1434,8 @@ same job passed. A failed Play job can be re-run alone (`gh run rerun
 4. Install each published package on its own platform. Pre-releases
    v0.1.1 to v0.1.5 are on GitHub (v0.1.5 with both APKs); v0.1.0 is still
    marked Latest.
-5. P9 SecureJoin, then an interop pass against Delta Chat's released
-   `deltachat-rpc-server`, as eeemail's `scripts/interop-pass.py` does.
+5. Report RNP's hidden-recipient limit upstream (see "SecureJoin" above),
+   and add Delta Chat's newer handshake once RNP has SEIPDv2 by default.
 6. Try notifications on a real Windows and macOS desktop, and import real
    vCard exports (Google, Apple, Thunderbird).
 7. Install v0.1.5's arm64 APK on a phone and try each export there

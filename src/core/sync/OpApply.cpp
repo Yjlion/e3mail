@@ -4,6 +4,7 @@
 #include "mail/Contacts.h"
 #include "mail/Organize.h"
 #include "mail/Preferences.h"
+#include "mail/SecureJoin.h"
 #include "mime/Headers.h"
 #include "store/BlobStore.h"
 #include "store/Config.h"
@@ -211,6 +212,15 @@ bool applyOne(MailContext &ctx, const Op &o, OpApply::Result *r)
         mail::Contacts::touch(ctx, addr, QString(), ContactOrigin::Manual);
         ctx.db.run("UPDATE contacts SET fingerprint=?, verified=1 WHERE addr=?", str(o, "fpr"),
                    mime::normalizeAddr(addr));
+        mail::Organize::releaseHeld(ctx, addr);
+        return true;
+    }
+    if (o.kind == op::SecureJoinInvite) {
+        mail::SecureJoin::applyInvite(ctx, o.payload);
+        return true;
+    }
+    if (o.kind == op::SecureJoinJoin) {
+        mail::SecureJoin::applyJoin(ctx, o.payload);
         return true;
     }
     if (o.kind == op::DevicePair || o.kind == op::DeviceUnpair) {

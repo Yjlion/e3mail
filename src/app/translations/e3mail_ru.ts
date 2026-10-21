@@ -365,6 +365,10 @@ To: %4
         <translation>Новый контакт</translation>
     </message>
     <message>
+        <source>Verify in person</source>
+        <translation>Проверить лично</translation>
+    </message>
+    <message>
         <source>Import or export</source>
         <translation>Импорт или экспорт</translation>
     </message>
@@ -435,6 +439,10 @@ To: %4
     <message>
         <source>Verified in person.</source>
         <translation>Проверен лично.</translation>
+    </message>
+    <message>
+        <source>Verifying in person: waiting for their answer.</source>
+        <translation>Личная проверка: ждём ответа.</translation>
     </message>
     <message>
         <source>Key learned from their mail. Not verified: this proves continuity, not identity.</source>
@@ -696,6 +704,10 @@ To: %4
     <message>
         <source>The original of this message is no longer kept.</source>
         <translation>Оригинал этого сообщения больше не хранится.</translation>
+    </message>
+    <message>
+        <source>This is not a contact&apos;s code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
+        <translation>Это не код контакта. Код для проверки начинается с OPENPGP4FPR: или https://i.delta.chat/.</translation>
     </message>
     <message>
         <source>%1 is not an email address, or is in your contacts already.</source>
@@ -1237,6 +1249,17 @@ To: %4
     <message>
         <source>Type the code instead</source>
         <translation>Ввести код вручную</translation>
+    </message>
+</context>
+<context>
+    <name>SecureJoin</name>
+    <message>
+        <source>This is your own code. Scan the other person&apos;s code instead.</source>
+        <translation>Это ваш собственный код. Отсканируйте код другого человека.</translation>
+    </message>
+    <message>
+        <source>%1 is blocked. Unblock them first.</source>
+        <translation>%1 заблокирован. Сначала разблокируйте.</translation>
     </message>
 </context>
 <context>
@@ -1987,6 +2010,61 @@ To: %4
     <message>
         <source>Create a tag…</source>
         <translation>Создать метку…</translation>
+    </message>
+</context>
+<context>
+    <name>VerifyDialog</name>
+    <message>
+        <source>Verify in person</source>
+        <translation>Проверить лично</translation>
+    </message>
+    <message>
+        <source>Meet, or call on video. Let them scan this code with e3mail or Delta Chat, or scan theirs. Each of you then has the other’s key verified.</source>
+        <translation>Встретьтесь или созвонитесь по видео. Пусть собеседник отсканирует этот код в e3mail или Delta Chat, или отсканируйте его код. После этого у каждого будет проверенный ключ другого.</translation>
+    </message>
+    <message>
+        <source>Your code as a QR code</source>
+        <translation>Ваш код в виде QR-кода</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Копировать</translation>
+    </message>
+    <message>
+        <source>Anyone who sees this code can verify themselves to you. If the wrong person saw it, make a new one.</source>
+        <translation>Любой, кто увидит этот код, сможет пройти у вас проверку. Если его увидел не тот человек, создайте новый.</translation>
+    </message>
+    <message>
+        <source>New code</source>
+        <translation>Новый код</translation>
+    </message>
+    <message>
+        <source>Point the camera at the other person’s code.</source>
+        <translation>Наведите камеру на код собеседника.</translation>
+    </message>
+    <message>
+        <source>Their code</source>
+        <translation>Код собеседника</translation>
+    </message>
+    <message>
+        <source>Scan</source>
+        <translation>Сканировать</translation>
+    </message>
+    <message>
+        <source>Verify</source>
+        <translation>Проверить</translation>
+    </message>
+    <message>
+        <source>Exchanging keys with %1 by mail. This takes as long as your mail does; you can close this and come back.</source>
+        <translation>Обмен ключами с %1 по почте. Это займёт столько же, сколько ваша почта; можно закрыть окно и вернуться позже.</translation>
+    </message>
+    <message>
+        <source>%1 is verified.</source>
+        <translation>%1 проверен.</translation>
+    </message>
+    <message>
+        <source>%1 did not answer within a week. Try again when you can both check your mail.</source>
+        <translation>%1 не ответил за неделю. Попробуйте снова, когда вы оба сможете проверить почту.</translation>
     </message>
 </context>
 <context>

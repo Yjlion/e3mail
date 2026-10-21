@@ -178,6 +178,16 @@ public:
     Q_INVOKABLE void exportContacts(const QUrl &file, const QString &format);
     Q_INVOKABLE void exportContact(qint64 id, const QUrl &file);
     Q_INVOKABLE QString suggestedContactFileName(qint64 id) const;
+    // SecureJoin (ADR 0021): this account's invite, as QR code text; a new
+    // one that revokes the old; starting from someone else's. `secureJoin`
+    // returns an error to show, or empty once the first message is queued.
+    Q_INVOKABLE QString secureJoinInvite();
+    Q_INVOKABLE QString renewSecureJoinInvite();
+    Q_INVOKABLE bool isSecureJoinInvite(const QString &text) const;
+    Q_INVOKABLE QString secureJoin(const QString &text);
+    // none | waiting | done | failed, for the address an invite named.
+    Q_INVOKABLE QString secureJoinState(const QString &addr) const;
+    Q_INVOKABLE QString secureJoinAddress(const QString &text) const;
     Q_INVOKABLE QStringList completeAddress(const QString &prefix) const;
 
     Q_INVOKABLE QVariantMap settings() const;

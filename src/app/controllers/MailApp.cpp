@@ -12,6 +12,7 @@
 
 #include "crypto/Pgp.h"
 #include "engine/AccountManager.h"
+#include "mail/Compose.h"
 #include "mail/Contacts.h"
 #ifdef E3MAIL_HAVE_P2P
 #include "engine/Pairing.h"
@@ -24,6 +25,7 @@
 #include "mail/Organize.h"
 #include "mail/Preferences.h"
 #include "mail/Search.h"
+#include "mail/SecureJoin.h"
 #include "mail/Signatures.h"
 #include "mail/VCard.h"
 #include "mime/Html.h"
@@ -1051,6 +1053,7 @@ QVariantMap MailApp::contact(qint64 id) const
             {QStringLiteral("known"), c->isKnown()},
             {QStringLiteral("fingerprint"), fpr},
             {QStringLiteral("verified"), c->verified},
+            {QStringLiteral("joining"), secureJoinState(c->addr)},
             {QStringLiteral("preferEncrypt"), c->preferEncrypt},
             {QStringLiteral("blocked"), c->blocked},
             {QStringLiteral("encryption"), c->encryptionOverride ? int(*c->encryptionOverride) : -1},
@@ -1064,6 +1067,65 @@ QVariantMap MailApp::contact(qint64 id) const
                      out.append(QVariantMap{{QStringLiteral("label"), p.label}, {QStringLiteral("number"), p.number}});
                  return out;
              }()}};
+}
+
+QString MailApp::secureJoinInvite()
+{
+    return account() ? mail::SecureJoin::invite(account()->ctx()) : QString();
+}
+
+QString MailApp::renewSecureJoinInvite()
+{
+    return account() ? mail::SecureJoin::renewInvite(account()->ctx()) : QString();
+}
+
+bool MailApp::isSecureJoinInvite(const QString &text) const
+{
+    return mail::SecureJoin::parse(text).has_value();
+}
+
+QString MailApp::secureJoinAddress(const QString &text) const
+{
+    const auto inv = mail::SecureJoin::parse(text);
+    return inv ? inv->addr : QString();
+}
+
+QString MailApp::secureJoin(const QString &text)
+{
+    if (!account())
+        return {};
+    const auto inv = mail::SecureJoin::parse(text);
+    if (!inv)
+        return tr("This is not a contact's code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.");
+    try {
+        mail::SecureJoin::join(account()->ctx(), *inv);
+    } catch (const mail::ComposeError &e) {
+        return e.message();
+    }
+    account()->notifyChanged();
+    account()->syncNow();
+    return {};
+}
+
+QString MailApp::secureJoinState(const QString &addr) const
+{
+    if (!account())
+        return QStringLiteral("none");
+    const auto j = mail::SecureJoin::joinFor(account()->ctx(), addr);
+    if (!j)
+        return QStringLiteral("none");
+    switch (j->state) {
+    case mail::SecureJoin::JoinState::Requested:
+    case mail::SecureJoin::JoinState::AuthSent:
+        return QStringLiteral("waiting");
+    case mail::SecureJoin::JoinState::Done:
+        return QStringLiteral("done");
+    case mail::SecureJoin::JoinState::Failed:
+        return QStringLiteral("failed");
+    case mail::SecureJoin::JoinState::None:
+        break;
+    }
+    return QStringLiteral("none");
 }
 
 qint64 MailApp::createContact(const QString &addr, const QString &name)

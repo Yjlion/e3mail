@@ -104,3 +104,14 @@ Iroh joins the build.
   `server.ack` server deletion waits for.
 - A device ignores ops about itself: it knows it is paired, and learns it
   was removed by being refused.
+
+## Amendment — 2026-10-21: SecureJoin
+
+- **`sj.invite`** `{i, s, at, revoked}` is keyed `sjinvite:<i>` (the invite
+  number), last writer wins. Renewing an invite writes the old ones again
+  with `revoked: true`, so a revocation spreads like any edit.
+- **`sj.join`** `{addr, name, fpr, i, s, state, error, at}` is keyed
+  `sjjoin:<addr>`, last writer wins, and carries the whole row: whichever
+  device fetches the inviter's next step has what it needs to answer.
+- **`contact.verify`** now also releases the contact's held mail where it is
+  applied, as verifying does on the device that verified (ADR 0021).

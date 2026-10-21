@@ -270,6 +270,28 @@ ALTER TABLE devices ADD COLUMN addr      TEXT;
 ALTER TABLE devices ADD COLUMN have_json TEXT;
 CREATE UNIQUE INDEX devices_node ON devices(node_id) WHERE node_id IS NOT NULL;
 )sql",
+
+    // 5 — SecureJoin (P9, ADR 0021).
+    R"sql(
+-- Our invites: the tokens a QR code carries. Kept until revoked.
+CREATE TABLE sj_invites (
+    invitenumber TEXT PRIMARY KEY,
+    authcode     TEXT NOT NULL,
+    created_at   INTEGER NOT NULL,
+    revoked      INTEGER NOT NULL DEFAULT 0
+);
+-- Invites we scanned, one per inviter address.
+CREATE TABLE sj_joins (
+    addr         TEXT PRIMARY KEY,
+    name         TEXT NOT NULL DEFAULT '',
+    fpr          TEXT NOT NULL,
+    invitenumber TEXT NOT NULL,
+    authcode     TEXT NOT NULL,
+    state        INTEGER NOT NULL,         -- 1 requested, 2 token sent, 3 confirmed, -1 failed
+    error        TEXT NOT NULL DEFAULT '',
+    started_at   INTEGER NOT NULL
+);
+)sql",
 };
 
 } // namespace

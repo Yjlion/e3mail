@@ -115,7 +115,7 @@ public:
         tx.commit();
         if (w && !r.duplicate) {
             Q_EMIT w->mailChanged();
-            if (!r.held && !r.trashed && !preexisting)
+            if (!r.held && !r.trashed && !r.hidden && !preexisting)
                 Q_EMIT w->newMail(r.msgId);
         }
         return r.msgId;

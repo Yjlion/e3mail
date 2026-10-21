@@ -365,6 +365,10 @@ To: %4
         <translation>נײַער קאָנטאַקט</translation>
     </message>
     <message>
+        <source>Verify in person</source>
+        <translation>באַשטעטיקן פּנים־אל־פּנים</translation>
+    </message>
+    <message>
         <source>Import or export</source>
         <translation>אימפּאָרטירן אָדער עקספּאָרטירן</translation>
     </message>
@@ -435,6 +439,10 @@ To: %4
     <message>
         <source>Verified in person.</source>
         <translation>באַשטעטיקט פּנים־אל־פּנים.</translation>
+    </message>
+    <message>
+        <source>Verifying in person: waiting for their answer.</source>
+        <translation>באַשטעטיקן פּנים־אל־פּנים: מע וואַרט אויפֿן ענטפֿער.</translation>
     </message>
     <message>
         <source>Key learned from their mail. Not verified: this proves continuity, not identity.</source>
@@ -695,6 +703,10 @@ To: %4
     <message>
         <source>The original of this message is no longer kept.</source>
         <translation>דער אָריגינאַל פֿון דעם בריוו ווערט מער נישט אָפּגעהיט.</translation>
+    </message>
+    <message>
+        <source>This is not a contact&apos;s code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
+        <translation>דאָס איז נישט קיין קאָנטאַקט־קאָד. אַ קאָד צו באַשטעטיקן הייבט זיך אָן מיט OPENPGP4FPR: אָדער https://i.delta.chat/.</translation>
     </message>
     <message>
         <source>%1 is not an email address, or is in your contacts already.</source>
@@ -1227,6 +1239,17 @@ To: %4
     <message>
         <source>Type the code instead</source>
         <translation>אַרײַנשרײַבן דעם קאָד אַנשטאָט</translation>
+    </message>
+</context>
+<context>
+    <name>SecureJoin</name>
+    <message>
+        <source>This is your own code. Scan the other person&apos;s code instead.</source>
+        <translation>דאָס איז דײַן אייגענער קאָד. סקאַנירט אַנשטאָט דעם דעם אַנדערנס קאָד.</translation>
+    </message>
+    <message>
+        <source>%1 is blocked. Unblock them first.</source>
+        <translation>%1 איז בלאָקירט. אַנטבלאָקירט פֿריִער.</translation>
     </message>
 </context>
 <context>
@@ -1976,6 +1999,61 @@ To: %4
     <message>
         <source>Create a tag…</source>
         <translation>שאַפֿן אַן עטיקעט…</translation>
+    </message>
+</context>
+<context>
+    <name>VerifyDialog</name>
+    <message>
+        <source>Verify in person</source>
+        <translation>באַשטעטיקן פּנים־אל־פּנים</translation>
+    </message>
+    <message>
+        <source>Meet, or call on video. Let them scan this code with e3mail or Delta Chat, or scan theirs. Each of you then has the other’s key verified.</source>
+        <translation>טרעפֿט זיך, אָדער רופֿט מיט ווידעאָ. לאָזט זיי סקאַנירן דעם קאָד מיט e3mail אָדער Delta Chat, אָדער סקאַנירט זייערן. דערנאָך האָט יעדער פֿון אײַך דעם אַנדערנס שליסל באַשטעטיקט.</translation>
+    </message>
+    <message>
+        <source>Your code as a QR code</source>
+        <translation>דײַן קאָד ווי אַ QR־קאָד</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>קאָפּירן</translation>
+    </message>
+    <message>
+        <source>Anyone who sees this code can verify themselves to you. If the wrong person saw it, make a new one.</source>
+        <translation>ווער עס זעט דעם קאָד קען זיך באַשטעטיקן בײַ דיר. אויב דער אומרעכטער מענטש האָט אים געזען, מאַכט אַ נײַעם.</translation>
+    </message>
+    <message>
+        <source>New code</source>
+        <translation>נײַער קאָד</translation>
+    </message>
+    <message>
+        <source>Point the camera at the other person’s code.</source>
+        <translation>ווײַזט די קאַמערע אויפֿן אַנדערנס קאָד.</translation>
+    </message>
+    <message>
+        <source>Their code</source>
+        <translation>זייער קאָד</translation>
+    </message>
+    <message>
+        <source>Scan</source>
+        <translation>סקאַנירן</translation>
+    </message>
+    <message>
+        <source>Verify</source>
+        <translation>באַשטעטיקן</translation>
+    </message>
+    <message>
+        <source>Exchanging keys with %1 by mail. This takes as long as your mail does; you can close this and come back.</source>
+        <translation>מע בײַט שליסלען מיט %1 דורך פּאָסט. דאָס דויערט אַזוי לאַנג ווי דײַן פּאָסט; דו קענסט עס פֿאַרמאַכן און צוריקקומען.</translation>
+    </message>
+    <message>
+        <source>%1 is verified.</source>
+        <translation>%1 איז באַשטעטיקט.</translation>
+    </message>
+    <message>
+        <source>%1 did not answer within a week. Try again when you can both check your mail.</source>
+        <translation>%1 האָט נישט געענטפֿערט אין משך פֿון אַ וואָך. פּרוּווט ווידער ווען איר קענט ביידע קוקן אין דער פּאָסט.</translation>
     </message>
 </context>
 <context>

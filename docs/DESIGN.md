@@ -148,7 +148,7 @@ amendments, [ADR 0013](adr/0013-op-merge-rules.md)), and tried live against
 | P6 | Desktop app (QML) | ✅ |
 | P7 | Packaging and CI: `.deb`, AppImage, NSIS, portable zip, `.dmg` | ✅ CI green on all three; release workflow not yet run |
 | P8 | Multi-client over Iroh | ✅ transport, pairing (scanned), mailbox fallback, relay, Android in the background (2026-10-16) |
-| P9 | SecureJoin and QR (Delta Chat compatible) | |
+| P9 | SecureJoin and QR (Delta Chat compatible) | ✅ setup-contact, older variant ([ADR 0021](adr/0021-securejoin.md)); tried against Delta Chat 2.64 |
 | P10 | Address book: details, phones, vCard import and export, CSV export | ✅ (categories not built) |
 | P11 | At rest: SQLCipher passphrase, blob encryption, encrypted backup | encrypted backup ✅ ([ADR 0020](adr/0020-encrypted-backups.md)); the rest not started |
 | P12 | Read receipts (MDN) and disappearing messages into Trash | |
@@ -163,6 +163,8 @@ amendments, [ADR 0013](adr/0013-op-merge-rules.md)), and tried live against
   - crypto round trips, including GnuPG decrypting and verifying our output;
   - an engine test where real accounts exchange mail end to end;
   - a smoke test that boots the real QML app offscreen.
+- `scripts/interop-pass.py` against `server/compose`: SecureJoin and encrypted
+  mail both ways with Delta Chat's released core (`deltachat-rpc-server`).
 - `scripts/e2e.py` against `server/compose`: real TLS (implicit and STARTTLS)
   on every protocol, both receive paths, and retention observed from the
   server's side.

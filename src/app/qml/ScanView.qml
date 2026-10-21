@@ -6,9 +6,12 @@ import QtMultimedia
 import E3mail
 
 // The camera, reading the pairing code that the other device shows
-// (JoinDialog). Loaded only in builds with a camera (E3MAIL_CAMERA).
+// (JoinDialog), or a contact's SecureJoin code (VerifyDialog). Loaded only in
+// builds with a camera (E3MAIL_CAMERA).
 ColumnLayout {
     id: view
+    property var prefixes: ["E3PAIR1:"]
+    property string hint: qsTr("Point the camera at the QR code on the other device.")
     signal found(string code)
     signal cancelled()
     spacing: 8
@@ -16,6 +19,7 @@ ColumnLayout {
     QrScanner {
         id: scanner
         videoSink: output.videoSink
+        prefixes: view.prefixes
         onFound: (code) => view.found(code)
     }
     MediaDevices { id: devices }
@@ -73,7 +77,7 @@ ColumnLayout {
         Layout.fillWidth: true
         wrapMode: Text.Wrap
         visible: scanner.state === "ready"
-        text: qsTr("Point the camera at the QR code on the other device.")
+        text: view.hint
     }
     Button {
         flat: true

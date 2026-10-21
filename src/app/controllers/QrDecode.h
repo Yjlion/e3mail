@@ -2,6 +2,7 @@
 #pragma once
 
 #include <QString>
+#include <QStringList>
 
 class QImage;
 
@@ -12,5 +13,7 @@ namespace qrdecode {
 QString decode(const QImage &image);
 // The same, but only a pairing code (E3PAIR1:…); anything else is empty.
 QString pairingCode(const QImage &image);
+// The same, but only text starting with one of `prefixes` (any case).
+QString codeWithPrefix(const QImage &image, const QStringList &prefixes);
 
 } // namespace qrdecode

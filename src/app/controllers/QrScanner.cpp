@@ -92,5 +92,6 @@ void QrScanner::frame(const QVideoFrame &frame)
         return;
     if (qMax(image.width(), image.height()) > kMaxSide)
         image = image.scaled(kMaxSide, kMaxSide, Qt::KeepAspectRatio, Qt::FastTransformation);
-    m_watcher.setFuture(QtConcurrent::run([image] { return qrdecode::pairingCode(image); }));
+    m_watcher.setFuture(
+        QtConcurrent::run([image, prefixes = m_prefixes] { return qrdecode::codeWithPrefix(image, prefixes); }));
 }

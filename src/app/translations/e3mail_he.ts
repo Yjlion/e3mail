@@ -365,6 +365,10 @@ To: %4
         <translation>איש קשר חדש</translation>
     </message>
     <message>
+        <source>Verify in person</source>
+        <translation>אימות פנים אל פנים</translation>
+    </message>
+    <message>
         <source>Import or export</source>
         <translation>ייבוא או ייצוא</translation>
     </message>
@@ -435,6 +439,10 @@ To: %4
     <message>
         <source>Verified in person.</source>
         <translation>אומת פנים אל פנים.</translation>
+    </message>
+    <message>
+        <source>Verifying in person: waiting for their answer.</source>
+        <translation>אימות פנים אל פנים: ממתינים לתשובה.</translation>
     </message>
     <message>
         <source>Key learned from their mail. Not verified: this proves continuity, not identity.</source>
@@ -695,6 +703,10 @@ To: %4
     <message>
         <source>The original of this message is no longer kept.</source>
         <translation>העותק המקורי של הודעה זו כבר לא נשמר.</translation>
+    </message>
+    <message>
+        <source>This is not a contact&apos;s code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
+        <translation>זה אינו קוד של איש קשר. קוד לאימות מתחיל ב־OPENPGP4FPR: או ב־https://i.delta.chat/.</translation>
     </message>
     <message>
         <source>%1 is not an email address, or is in your contacts already.</source>
@@ -1227,6 +1239,17 @@ To: %4
     <message>
         <source>Type the code instead</source>
         <translation>הקלדת הקוד במקום</translation>
+    </message>
+</context>
+<context>
+    <name>SecureJoin</name>
+    <message>
+        <source>This is your own code. Scan the other person&apos;s code instead.</source>
+        <translation>זה הקוד שלך. יש לסרוק את הקוד של האדם השני.</translation>
+    </message>
+    <message>
+        <source>%1 is blocked. Unblock them first.</source>
+        <translation>%1 חסום. יש לבטל את החסימה תחילה.</translation>
     </message>
 </context>
 <context>
@@ -1976,6 +1999,61 @@ To: %4
     <message>
         <source>Create a tag…</source>
         <translation>יצירת תגית…</translation>
+    </message>
+</context>
+<context>
+    <name>VerifyDialog</name>
+    <message>
+        <source>Verify in person</source>
+        <translation>אימות פנים אל פנים</translation>
+    </message>
+    <message>
+        <source>Meet, or call on video. Let them scan this code with e3mail or Delta Chat, or scan theirs. Each of you then has the other’s key verified.</source>
+        <translation>היפגשו, או התקשרו בווידאו. תנו לצד השני לסרוק את הקוד הזה ב־e3mail או ב־Delta Chat, או סרקו את שלו. כך לכל אחד מכם יהיה המפתח של השני מאומת.</translation>
+    </message>
+    <message>
+        <source>Your code as a QR code</source>
+        <translation>הקוד שלך כקוד QR</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>העתקה</translation>
+    </message>
+    <message>
+        <source>Anyone who sees this code can verify themselves to you. If the wrong person saw it, make a new one.</source>
+        <translation>כל מי שרואה את הקוד הזה יכול לאמת את עצמו מולך. אם האדם הלא נכון ראה אותו, צרו קוד חדש.</translation>
+    </message>
+    <message>
+        <source>New code</source>
+        <translation>קוד חדש</translation>
+    </message>
+    <message>
+        <source>Point the camera at the other person’s code.</source>
+        <translation>יש לכוון את המצלמה אל הקוד של האדם השני.</translation>
+    </message>
+    <message>
+        <source>Their code</source>
+        <translation>הקוד של הצד השני</translation>
+    </message>
+    <message>
+        <source>Scan</source>
+        <translation>סריקה</translation>
+    </message>
+    <message>
+        <source>Verify</source>
+        <translation>אימות</translation>
+    </message>
+    <message>
+        <source>Exchanging keys with %1 by mail. This takes as long as your mail does; you can close this and come back.</source>
+        <translation>מחליפים מפתחות עם %1 בדואר. זה לוקח כמו שהדואר שלך לוקח; אפשר לסגור ולחזור אחר כך.</translation>
+    </message>
+    <message>
+        <source>%1 is verified.</source>
+        <translation>%1 מאומת.</translation>
+    </message>
+    <message>
+        <source>%1 did not answer within a week. Try again when you can both check your mail.</source>
+        <translation>%1 לא ענה תוך שבוע. נסו שוב כששניכם תוכלו לבדוק את הדואר.</translation>
     </message>
 </context>
 <context>

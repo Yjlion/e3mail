@@ -124,6 +124,8 @@ QByteArray Builder::contentEntity(const OutgoingMail &mail, bool protectedHeader
         if (name.startsWith("Autocrypt-Gossip"))
             hdr += foldHeader(name, value);
     }
+    for (const auto &[name, value] : mail.innerHeaders)
+        hdr += foldHeader(name, value);
 
     const QByteArray boundary = newBoundary();
     QByteArray out = "Content-Type: multipart/mixed; boundary=\"" + boundary

@@ -43,6 +43,7 @@ public:
         int swept = 0;
         int rawExpired = 0;
         int blobsRemoved = 0;
+        int joinsExpired = 0; // SecureJoin handshakes given up
     };
     static HousekeepingResult housekeeping(MailContext &ctx);
 

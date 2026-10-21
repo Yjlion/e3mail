@@ -61,6 +61,10 @@ QString OpLog::mergeKey(const QString &kind, const QJsonObject &p)
         return QStringLiteral("cfg:") + s("key");
     if (kind == op::DevicePair || kind == op::DeviceUnpair)
         return QStringLiteral("device:") + s("device");
+    if (kind == op::SecureJoinInvite)
+        return QStringLiteral("sjinvite:") + s("i");
+    if (kind == op::SecureJoinJoin)
+        return QStringLiteral("sjjoin:") + s("addr");
     return {};
 }
 
