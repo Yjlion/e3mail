@@ -314,6 +314,12 @@ CREATE TABLE receipts (
     PRIMARY KEY (msg_id, addr)
 );
 )sql",
+
+    // 7 — structured email (P13, ADR 0024): the JSON-LD a message carried,
+    // as received, read again when the message is shown.
+    R"sql(
+ALTER TABLE messages ADD COLUMN structured TEXT;
+)sql",
 };
 
 } // namespace

@@ -202,6 +202,13 @@ Rectangle {
 
         Rectangle { Layout.fillWidth: true; height: 1; color: Theme.border; visible: card.expanded }
 
+        StructuredCard {
+            Layout.fillWidth: true
+            m: card.m
+            visible: card.expanded && (card.m.structured || []).length > 0
+            onAskOpenLink: (link) => card.askOpenLink(link)
+        }
+
         // The body. HTML has already been through the sanitizer; plain text is
         // shown as plain text.
         TextEdit {

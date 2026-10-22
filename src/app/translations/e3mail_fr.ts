@@ -702,6 +702,14 @@ Objet : %3
         <translation>(sans objet)</translation>
     </message>
     <message>
+        <source>When</source>
+        <translation>Quand</translation>
+    </message>
+    <message>
+        <source>Where</source>
+        <translation>Où</translation>
+    </message>
+    <message>
         <source>disappears %1 after reading</source>
         <translation>disparaît %1 après lecture</translation>
     </message>
@@ -743,6 +751,10 @@ Objet : %3
     <message>
         <source>Could not save the attachment.</source>
         <translation>Impossible d’enregistrer la pièce jointe.</translation>
+    </message>
+    <message>
+        <source>Could not save the event.</source>
+        <translation>Impossible d’enregistrer l’événement.</translation>
     </message>
     <message>
         <source>This message cannot be decrypted, or its original is no longer kept.</source>
@@ -2160,6 +2172,124 @@ Objet : %3
     <message>
         <source>This message cannot be decrypted: %1</source>
         <translation>Ce message ne peut pas être déchiffré : %1</translation>
+    </message>
+</context>
+<context>
+    <name>Structured</name>
+    <message>
+        <source>Flight %1</source>
+        <translation>Vol %1</translation>
+    </message>
+    <message>
+        <source>Airline</source>
+        <translation>Compagnie</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>De</translation>
+    </message>
+    <message>
+        <source>To</source>
+        <translation>À</translation>
+    </message>
+    <message>
+        <source>Booking</source>
+        <translation>Réservation</translation>
+    </message>
+    <message>
+        <source>Seat</source>
+        <translation>Siège</translation>
+    </message>
+    <message>
+        <source>Passenger</source>
+        <translation>Passager</translation>
+    </message>
+    <message>
+        <source>Train</source>
+        <translation>Train</translation>
+    </message>
+    <message>
+        <source>Stay</source>
+        <translation>Séjour</translation>
+    </message>
+    <message>
+        <source>Guest</source>
+        <translation>Client</translation>
+    </message>
+    <message>
+        <source>Event</source>
+        <translation>Événement</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>Nom</translation>
+    </message>
+    <message>
+        <source>Parcel</source>
+        <translation>Colis</translation>
+    </message>
+    <message>
+        <source>Carrier</source>
+        <translation>Transporteur</translation>
+    </message>
+    <message>
+        <source>Tracking number</source>
+        <translation>Numéro de suivi</translation>
+    </message>
+    <message>
+        <source>Order</source>
+        <translation>Commande</translation>
+    </message>
+    <message>
+        <source>Order from %1</source>
+        <translation>Commande chez %1</translation>
+    </message>
+    <message>
+        <source>Order number</source>
+        <translation>Numéro de commande</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation>État</translation>
+    </message>
+    <message>
+        <source>Total</source>
+        <translation>Total</translation>
+    </message>
+    <message>
+        <source>Invoice</source>
+        <translation>Facture</translation>
+    </message>
+    <message>
+        <source>Invoice from %1</source>
+        <translation>Facture de %1</translation>
+    </message>
+    <message>
+        <source>Amount due</source>
+        <translation>Montant dû</translation>
+    </message>
+    <message>
+        <source>Reference</source>
+        <translation>Référence</translation>
+    </message>
+</context>
+<context>
+    <name>StructuredCard</name>
+    <message>
+        <source>Add to calendar…</source>
+        <translation>Ajouter au calendrier…</translation>
+    </message>
+    <message>
+        <source>Open…</source>
+        <translation>Ouvrir…</translation>
+    </message>
+    <message>
+        <source>Shown as text only. Buttons appear for senders you trust whose mail is signed by their key; check these details against the message.</source>
+        <translation>Affiché en texte seulement. Les boutons apparaissent pour les expéditeurs de confiance dont le courrier est signé par leur clé ; vérifiez ces informations dans le message.</translation>
+    </message>
+    <message>
+        <source>Calendar files (*.ics)</source>
+        <translation>Fichiers de calendrier (*.ics)</translation>
     </message>
 </context>
 <context>

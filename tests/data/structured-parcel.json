@@ -1,0 +1,3 @@
+{"@context": "http://schema.org", "@type": "ParcelDelivery",
+  "carrier": {"name": "Swift Post"}, "trackingNumber": "SP123", "itemShipped": {"name": "Brass compass"},
+  "expectedArrivalUntil": "2026-11-05", "trackingUrl": "javascript:alert(1)"}

@@ -702,6 +702,14 @@ To: %4
         <translation>（无主题）</translation>
     </message>
     <message>
+        <source>When</source>
+        <translation>时间</translation>
+    </message>
+    <message>
+        <source>Where</source>
+        <translation>地点</translation>
+    </message>
+    <message>
         <source>disappears %1 after reading</source>
         <translation>阅读后 %1 消失</translation>
     </message>
@@ -742,6 +750,10 @@ To: %4
     <message>
         <source>Could not save the attachment.</source>
         <translation>无法保存附件。</translation>
+    </message>
+    <message>
+        <source>Could not save the event.</source>
+        <translation>无法保存该事件。</translation>
     </message>
     <message>
         <source>This message cannot be decrypted, or its original is no longer kept.</source>
@@ -2145,6 +2157,124 @@ To: %4
     <message>
         <source>This message cannot be decrypted: %1</source>
         <translation>此邮件无法解密：%1</translation>
+    </message>
+</context>
+<context>
+    <name>Structured</name>
+    <message>
+        <source>Flight %1</source>
+        <translation>航班 %1</translation>
+    </message>
+    <message>
+        <source>Airline</source>
+        <translation>航空公司</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>出发</translation>
+    </message>
+    <message>
+        <source>To</source>
+        <translation>到达</translation>
+    </message>
+    <message>
+        <source>Booking</source>
+        <translation>预订号</translation>
+    </message>
+    <message>
+        <source>Seat</source>
+        <translation>座位</translation>
+    </message>
+    <message>
+        <source>Passenger</source>
+        <translation>乘客</translation>
+    </message>
+    <message>
+        <source>Train</source>
+        <translation>列车</translation>
+    </message>
+    <message>
+        <source>Stay</source>
+        <translation>住宿</translation>
+    </message>
+    <message>
+        <source>Guest</source>
+        <translation>住客</translation>
+    </message>
+    <message>
+        <source>Event</source>
+        <translation>活动</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>姓名</translation>
+    </message>
+    <message>
+        <source>Parcel</source>
+        <translation>包裹</translation>
+    </message>
+    <message>
+        <source>Carrier</source>
+        <translation>承运商</translation>
+    </message>
+    <message>
+        <source>Tracking number</source>
+        <translation>运单号</translation>
+    </message>
+    <message>
+        <source>Order</source>
+        <translation>订单</translation>
+    </message>
+    <message>
+        <source>Order from %1</source>
+        <translation>来自 %1 的订单</translation>
+    </message>
+    <message>
+        <source>Order number</source>
+        <translation>订单号</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation>状态</translation>
+    </message>
+    <message>
+        <source>Total</source>
+        <translation>合计</translation>
+    </message>
+    <message>
+        <source>Invoice</source>
+        <translation>发票</translation>
+    </message>
+    <message>
+        <source>Invoice from %1</source>
+        <translation>来自 %1 的发票</translation>
+    </message>
+    <message>
+        <source>Amount due</source>
+        <translation>应付金额</translation>
+    </message>
+    <message>
+        <source>Reference</source>
+        <translation>参考号</translation>
+    </message>
+</context>
+<context>
+    <name>StructuredCard</name>
+    <message>
+        <source>Add to calendar…</source>
+        <translation>添加到日历…</translation>
+    </message>
+    <message>
+        <source>Open…</source>
+        <translation>打开…</translation>
+    </message>
+    <message>
+        <source>Shown as text only. Buttons appear for senders you trust whose mail is signed by their key; check these details against the message.</source>
+        <translation>仅以文本显示。只有你信任且邮件由其密钥签名的发件人才会显示按钮；请对照邮件正文核对这些信息。</translation>
+    </message>
+    <message>
+        <source>Calendar files (*.ics)</source>
+        <translation>日历文件 (*.ics)</translation>
     </message>
 </context>
 <context>

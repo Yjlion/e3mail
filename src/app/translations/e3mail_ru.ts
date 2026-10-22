@@ -702,6 +702,14 @@ To: %4
         <translation>(без темы)</translation>
     </message>
     <message>
+        <source>When</source>
+        <translation>Когда</translation>
+    </message>
+    <message>
+        <source>Where</source>
+        <translation>Где</translation>
+    </message>
+    <message>
         <source>disappears %1 after reading</source>
         <translation>исчезнет через %1 после прочтения</translation>
     </message>
@@ -744,6 +752,10 @@ To: %4
     <message>
         <source>Could not save the attachment.</source>
         <translation>Не удалось сохранить вложение.</translation>
+    </message>
+    <message>
+        <source>Could not save the event.</source>
+        <translation>Не удалось сохранить событие.</translation>
     </message>
     <message>
         <source>This message cannot be decrypted, or its original is no longer kept.</source>
@@ -2175,6 +2187,124 @@ To: %4
     <message>
         <source>This message cannot be decrypted: %1</source>
         <translation>Это сообщение нельзя расшифровать: %1</translation>
+    </message>
+</context>
+<context>
+    <name>Structured</name>
+    <message>
+        <source>Flight %1</source>
+        <translation>Рейс %1</translation>
+    </message>
+    <message>
+        <source>Airline</source>
+        <translation>Авиакомпания</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>Откуда</translation>
+    </message>
+    <message>
+        <source>To</source>
+        <translation>Куда</translation>
+    </message>
+    <message>
+        <source>Booking</source>
+        <translation>Бронирование</translation>
+    </message>
+    <message>
+        <source>Seat</source>
+        <translation>Место</translation>
+    </message>
+    <message>
+        <source>Passenger</source>
+        <translation>Пассажир</translation>
+    </message>
+    <message>
+        <source>Train</source>
+        <translation>Поезд</translation>
+    </message>
+    <message>
+        <source>Stay</source>
+        <translation>Проживание</translation>
+    </message>
+    <message>
+        <source>Guest</source>
+        <translation>Гость</translation>
+    </message>
+    <message>
+        <source>Event</source>
+        <translation>Событие</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>Имя</translation>
+    </message>
+    <message>
+        <source>Parcel</source>
+        <translation>Посылка</translation>
+    </message>
+    <message>
+        <source>Carrier</source>
+        <translation>Перевозчик</translation>
+    </message>
+    <message>
+        <source>Tracking number</source>
+        <translation>Трек-номер</translation>
+    </message>
+    <message>
+        <source>Order</source>
+        <translation>Заказ</translation>
+    </message>
+    <message>
+        <source>Order from %1</source>
+        <translation>Заказ в %1</translation>
+    </message>
+    <message>
+        <source>Order number</source>
+        <translation>Номер заказа</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation>Статус</translation>
+    </message>
+    <message>
+        <source>Total</source>
+        <translation>Итого</translation>
+    </message>
+    <message>
+        <source>Invoice</source>
+        <translation>Счёт</translation>
+    </message>
+    <message>
+        <source>Invoice from %1</source>
+        <translation>Счёт от %1</translation>
+    </message>
+    <message>
+        <source>Amount due</source>
+        <translation>К оплате</translation>
+    </message>
+    <message>
+        <source>Reference</source>
+        <translation>Номер</translation>
+    </message>
+</context>
+<context>
+    <name>StructuredCard</name>
+    <message>
+        <source>Add to calendar…</source>
+        <translation>Добавить в календарь…</translation>
+    </message>
+    <message>
+        <source>Open…</source>
+        <translation>Открыть…</translation>
+    </message>
+    <message>
+        <source>Shown as text only. Buttons appear for senders you trust whose mail is signed by their key; check these details against the message.</source>
+        <translation>Показано только как текст. Кнопки появляются для доверенных отправителей, чьи письма подписаны их ключом; сверьте эти данные с письмом.</translation>
+    </message>
+    <message>
+        <source>Calendar files (*.ics)</source>
+        <translation>Файлы календаря (*.ics)</translation>
     </message>
 </context>
 <context>

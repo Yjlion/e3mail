@@ -1230,6 +1230,66 @@ P11 ([ADR 0023](adr/0023-encryption-at-rest.md)).
   upgraded.
 - Speed on a phone.
 
+## Structured email, trusted or inert (2026-10-21)
+
+P13 ([ADR 0024](adr/0024-structured-email.md)), after
+draft-ietf-sml-structured-email-06 and draft-ietf-sml-trust-01.
+- **What is read:**
+  - an `application/ld+json` part (or, in older HTML mail, its
+    `<script type="application/ld+json">`), within limits on size, depth
+    and item count;
+  - flights, trains and buses, stays, events, parcels, orders and invoices.
+- **How it shows:** a card above the body, with every value as plain text.
+- **Who gets buttons:** a trusted sender whose message is signed by their
+  key gets "Add to calendar…" (an `.ics` file) and "Open…" (through the
+  link dialog). Anyone else gets the same facts, inert, with a note saying
+  why. Nothing is fetched.
+
+**What it taught:**
+- **moc gives up on files with raw string literals** that use a custom
+  delimiter, `R"json(...)json"`. It reported no classes, which surfaced
+  only as "undefined reference to vtable" at link time. The test's JSON
+  samples now live in `tests/data/`.
+- **A `)"` inside a `R"(...)"` literal ends it early**, and GCC rejects a
+  bidi control character in source (`-Wbidi-chars`). The test escapes it.
+- **Breaking the "not an attachment" rule failed nothing at first.** The
+  test sent JSON-LD only inside `multipart/alternative`, which is handled
+  elsewhere. `partNotListed` now covers the partial representation and an
+  ordinary `.json` attachment.
+- **A flight's link was never read** (only events, parcels, orders and
+  invoices read theirs); the first test run caught it. The parcel's
+  date-only arrival showed as midnight; a screenshot caught that.
+- **The `e3mail-test-webdav` container** (`rclone serve webdav`) had been
+  spinning at over 200% CPU since 2026-10-17, slowing every build here.
+  Restarting it brought it down. If it comes back, it is the container,
+  not the build.
+
+**Verified here:**
+- `tst_structured` (new) covers:
+  - the flight read in full, with its iCalendar export (times, folding);
+  - only web links;
+  - markup kept as text, bidi and control characters dropped;
+  - too large, too deep, too many and too long, all refused or cut;
+  - legacy HTML;
+  - a partial representation not listed, while a `.json` attachment stays
+    listed;
+  - trusted and signed giving actions; unsigned, or untrusted by hand,
+    giving inert.
+
+  Breaking the signature rule, the trust rule, the link scheme, the depth
+  limit and both attachment rules each failed it.
+- The whole suite (24) passes; `scripts/e2e.py` all passed.
+- Screenshots: a trusted flight (English, Arabic, phone) and an inert parcel
+  from a stranger.
+
+**Not verified:**
+- Real senders' JSON-LD: every sample here was written by hand after
+  schema.org.
+- Signed structured mail from any real sender (few sign with OpenPGP), so in
+  practice cards will mostly be inert.
+- The saved `.ics` opened in a real calendar.
+- Microdata, which is not read.
+
 ## Known gaps
 
 - **Signed-only mail** is checked only for PGP/MIME (`multipart/signed`);

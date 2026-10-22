@@ -38,6 +38,9 @@ public:
             QByteArray data;
         };
         QList<Attachment> attachments;
+        // Structured data (ADR 0024): the first application/ld+json part,
+        // never listed as an attachment.
+        QByteArray structured;
     };
     static Content extract(const mime::Part &root);
 

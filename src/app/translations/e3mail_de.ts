@@ -702,6 +702,14 @@ An: %4
         <translation>(kein Betreff)</translation>
     </message>
     <message>
+        <source>When</source>
+        <translation>Wann</translation>
+    </message>
+    <message>
+        <source>Where</source>
+        <translation>Wo</translation>
+    </message>
+    <message>
         <source>disappears %1 after reading</source>
         <translation>verschwindet %1 nach dem Lesen</translation>
     </message>
@@ -743,6 +751,10 @@ An: %4
     <message>
         <source>Could not save the attachment.</source>
         <translation>Der Anhang konnte nicht gespeichert werden.</translation>
+    </message>
+    <message>
+        <source>Could not save the event.</source>
+        <translation>Der Termin konnte nicht gespeichert werden.</translation>
     </message>
     <message>
         <source>This message cannot be decrypted, or its original is no longer kept.</source>
@@ -2160,6 +2172,124 @@ An: %4
     <message>
         <source>This message cannot be decrypted: %1</source>
         <translation>Diese Nachricht lässt sich nicht entschlüsseln: %1</translation>
+    </message>
+</context>
+<context>
+    <name>Structured</name>
+    <message>
+        <source>Flight %1</source>
+        <translation>Flug %1</translation>
+    </message>
+    <message>
+        <source>Airline</source>
+        <translation>Fluggesellschaft</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>Von</translation>
+    </message>
+    <message>
+        <source>To</source>
+        <translation>Nach</translation>
+    </message>
+    <message>
+        <source>Booking</source>
+        <translation>Buchung</translation>
+    </message>
+    <message>
+        <source>Seat</source>
+        <translation>Sitz</translation>
+    </message>
+    <message>
+        <source>Passenger</source>
+        <translation>Fluggast</translation>
+    </message>
+    <message>
+        <source>Train</source>
+        <translation>Zug</translation>
+    </message>
+    <message>
+        <source>Stay</source>
+        <translation>Aufenthalt</translation>
+    </message>
+    <message>
+        <source>Guest</source>
+        <translation>Gast</translation>
+    </message>
+    <message>
+        <source>Event</source>
+        <translation>Veranstaltung</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>Name</translation>
+    </message>
+    <message>
+        <source>Parcel</source>
+        <translation>Paket</translation>
+    </message>
+    <message>
+        <source>Carrier</source>
+        <translation>Zusteller</translation>
+    </message>
+    <message>
+        <source>Tracking number</source>
+        <translation>Sendungsnummer</translation>
+    </message>
+    <message>
+        <source>Order</source>
+        <translation>Bestellung</translation>
+    </message>
+    <message>
+        <source>Order from %1</source>
+        <translation>Bestellung bei %1</translation>
+    </message>
+    <message>
+        <source>Order number</source>
+        <translation>Bestellnummer</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation>Status</translation>
+    </message>
+    <message>
+        <source>Total</source>
+        <translation>Summe</translation>
+    </message>
+    <message>
+        <source>Invoice</source>
+        <translation>Rechnung</translation>
+    </message>
+    <message>
+        <source>Invoice from %1</source>
+        <translation>Rechnung von %1</translation>
+    </message>
+    <message>
+        <source>Amount due</source>
+        <translation>Fälliger Betrag</translation>
+    </message>
+    <message>
+        <source>Reference</source>
+        <translation>Referenz</translation>
+    </message>
+</context>
+<context>
+    <name>StructuredCard</name>
+    <message>
+        <source>Add to calendar…</source>
+        <translation>Zum Kalender hinzufügen…</translation>
+    </message>
+    <message>
+        <source>Open…</source>
+        <translation>Öffnen…</translation>
+    </message>
+    <message>
+        <source>Shown as text only. Buttons appear for senders you trust whose mail is signed by their key; check these details against the message.</source>
+        <translation>Nur als Text angezeigt. Schaltflächen erscheinen bei vertrauenswürdigen Absendern, deren E-Mail mit ihrem Schlüssel signiert ist; prüfen Sie diese Angaben anhand der Nachricht.</translation>
+    </message>
+    <message>
+        <source>Calendar files (*.ics)</source>
+        <translation>Kalenderdateien (*.ics)</translation>
     </message>
 </context>
 <context>

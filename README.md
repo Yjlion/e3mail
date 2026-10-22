@@ -88,7 +88,7 @@ over TLS in [`scripts/e2e.py`](scripts/e2e.py).
 | Sign-in with OAuth 2 for Gmail and Outlook | ⏳ built, not yet tried against Google or Microsoft |
 | Read receipts (to trusted senders) and disappearing mail | ✅ |
 | Encryption at rest: database and attachments, keyring or passphrase | ✅ |
-| Structured email | ⏳ later phase |
+| Structured email (bookings, parcels, orders), inert unless trusted and signed | ✅ |
 | Interop with Delta Chat ([`scripts/interop-pass.py`](scripts/interop-pass.py)) | ✅ verification and encrypted mail, both ways |
 | Interop with Thunderbird or a mainstream provider | ❌ |
 | Code signing | ❌ |

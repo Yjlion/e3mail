@@ -702,6 +702,14 @@ To: %4
         <translation>(بلا موضوع)</translation>
     </message>
     <message>
+        <source>When</source>
+        <translation>متى</translation>
+    </message>
+    <message>
+        <source>Where</source>
+        <translation>أين</translation>
+    </message>
+    <message>
         <source>disappears %1 after reading</source>
         <translation>تختفي بعد %1 من القراءة</translation>
     </message>
@@ -747,6 +755,10 @@ To: %4
     <message>
         <source>Could not save the attachment.</source>
         <translation>تعذّر حفظ المرفق.</translation>
+    </message>
+    <message>
+        <source>Could not save the event.</source>
+        <translation>تعذّر حفظ الحدث.</translation>
     </message>
     <message>
         <source>This message cannot be decrypted, or its original is no longer kept.</source>
@@ -2220,6 +2232,124 @@ To: %4
     <message>
         <source>This message cannot be decrypted: %1</source>
         <translation>لا يمكن فك تشفير هذه الرسالة: %1</translation>
+    </message>
+</context>
+<context>
+    <name>Structured</name>
+    <message>
+        <source>Flight %1</source>
+        <translation>الرحلة %1</translation>
+    </message>
+    <message>
+        <source>Airline</source>
+        <translation>شركة الطيران</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>من</translation>
+    </message>
+    <message>
+        <source>To</source>
+        <translation>إلى</translation>
+    </message>
+    <message>
+        <source>Booking</source>
+        <translation>الحجز</translation>
+    </message>
+    <message>
+        <source>Seat</source>
+        <translation>المقعد</translation>
+    </message>
+    <message>
+        <source>Passenger</source>
+        <translation>المسافر</translation>
+    </message>
+    <message>
+        <source>Train</source>
+        <translation>القطار</translation>
+    </message>
+    <message>
+        <source>Stay</source>
+        <translation>الإقامة</translation>
+    </message>
+    <message>
+        <source>Guest</source>
+        <translation>النزيل</translation>
+    </message>
+    <message>
+        <source>Event</source>
+        <translation>حدث</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>الاسم</translation>
+    </message>
+    <message>
+        <source>Parcel</source>
+        <translation>طرد</translation>
+    </message>
+    <message>
+        <source>Carrier</source>
+        <translation>شركة الشحن</translation>
+    </message>
+    <message>
+        <source>Tracking number</source>
+        <translation>رقم التتبع</translation>
+    </message>
+    <message>
+        <source>Order</source>
+        <translation>طلب</translation>
+    </message>
+    <message>
+        <source>Order from %1</source>
+        <translation>طلب من %1</translation>
+    </message>
+    <message>
+        <source>Order number</source>
+        <translation>رقم الطلب</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation>الحالة</translation>
+    </message>
+    <message>
+        <source>Total</source>
+        <translation>الإجمالي</translation>
+    </message>
+    <message>
+        <source>Invoice</source>
+        <translation>فاتورة</translation>
+    </message>
+    <message>
+        <source>Invoice from %1</source>
+        <translation>فاتورة من %1</translation>
+    </message>
+    <message>
+        <source>Amount due</source>
+        <translation>المبلغ المستحق</translation>
+    </message>
+    <message>
+        <source>Reference</source>
+        <translation>المرجع</translation>
+    </message>
+</context>
+<context>
+    <name>StructuredCard</name>
+    <message>
+        <source>Add to calendar…</source>
+        <translation>أضف إلى التقويم…</translation>
+    </message>
+    <message>
+        <source>Open…</source>
+        <translation>افتح…</translation>
+    </message>
+    <message>
+        <source>Shown as text only. Buttons appear for senders you trust whose mail is signed by their key; check these details against the message.</source>
+        <translation>معروض كنص فقط. تظهر الأزرار للمرسلين الموثوقين الذين يوقّعون بريدهم بمفتاحهم؛ تحقّق من هذه التفاصيل في الرسالة.</translation>
+    </message>
+    <message>
+        <source>Calendar files (*.ics)</source>
+        <translation>ملفات التقويم (*.ics)</translation>
     </message>
 </context>
 <context>

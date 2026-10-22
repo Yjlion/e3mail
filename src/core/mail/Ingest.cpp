@@ -7,6 +7,7 @@
 #include "Search.h"
 #include "Receipts.h"
 #include "SecureJoin.h"
+#include "Structured.h"
 #include "Threading.h"
 #include "crypto/Autocrypt.h"
 #include "crypto/Pgp.h"
@@ -125,6 +126,8 @@ void walk(const mime::Part &p, Ingest::Content &out, bool inAlternative)
                     text = &c;
                 else if (c.mimeType == "text/html")
                     html = &c;
+                else if (c.mimeType == "application/ld+json" && out.structured.isEmpty())
+                    out.structured = c.body; // the full representation (SML)
                 else if (c.isMultipart())
                     walk(c, out, true);
             }
@@ -143,6 +146,14 @@ void walk(const mime::Part &p, Ingest::Content &out, bool inAlternative)
     // Machine-readable and signature parts are not something to show.
     if (p.mimeType == "application/pgp-signature" || p.mimeType == "application/pgp-encrypted")
         return;
+    // Structured data (ADR 0024): what the sender marked machine-readable,
+    // or did not offer as a file, is read, not listed.
+    if (p.mimeType == "application/ld+json"
+        && (!attachment || p.headers.raw("Content-Purpose").trimmed().toLower() == "machine-readable")) {
+        if (out.structured.isEmpty())
+            out.structured = p.body;
+        return;
+    }
     if (!attachment && p.mimeType == "text/plain" && out.text.isEmpty()) {
         out.text = p.text();
         return;
@@ -167,6 +178,10 @@ Ingest::Content Ingest::extract(const mime::Part &root)
 {
     Content c;
     walk(root, c, false);
+    // Senders from before SML put JSON-LD in the HTML (schema.org for
+    // email); read it, since the sanitizer will drop it.
+    if (c.structured.isEmpty() && !c.html.isEmpty())
+        c.structured = Structured::fromHtml(c.html);
     if (c.text.isEmpty() && !c.html.isEmpty())
         c.text = mime::htmlToText(c.html);
     c.text.replace(QStringLiteral("\r\n"), QStringLiteral("\n"));
@@ -447,14 +462,15 @@ Ingest::Result Ingest::process(MailContext &ctx, const QByteArray &raw)
 
     ctx.db.run("INSERT INTO messages(message_id, direction, state, subject, from_addr, from_name, reply_to, date, "
                "received_at, in_reply_to, body_text, body_html, preview, importance, encrypted, signed_fpr, "
-               "verified, has_attachments, raw_blob, raw_expires_at, hidden, unread) "
-               "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+               "verified, has_attachments, raw_blob, raw_expires_at, hidden, unread, structured) "
+               "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                messageId, int(fromSelf ? Direction::Outgoing : Direction::Incoming),
                int(fromSelf ? MessageState::Sent : MessageState::Received), subject, from.addr, from.name,
                replyTo.isEmpty() ? std::optional<QString>() : nullIfEmpty(replyTo.first().addr), date.toMSecsSinceEpoch(), now, inReplyTo,
                body.text, nullIfEmpty(body.html), makePreview(body.text), importance,
                encrypted, nullIfEmpty(signedFpr), verified, !body.attachments.isEmpty(),
-               nullIfEmpty(rawBlob), rawExpires, hidden, !fromSelf);
+               nullIfEmpty(rawBlob), rawExpires, hidden, !fromSelf,
+               nullIfEmpty(Structured::accept(body.structured)));
     const qint64 id = ctx.db.lastInsertId();
     result.msgId = id;
     if (!receiptTo.isEmpty() || ephemeralSeconds > 0) {
