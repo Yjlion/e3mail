@@ -314,6 +314,26 @@ To: %4
         <translation>标为重要</translation>
     </message>
     <message>
+        <source>Ask for a read receipt</source>
+        <translation>请求已读回执</translation>
+    </message>
+    <message>
+        <source>Disappears %1 after it is read</source>
+        <translation>阅读后 %1 消失</translation>
+    </message>
+    <message>
+        <source>Disappear after reading</source>
+        <translation>阅读后消失</translation>
+    </message>
+    <message>
+        <source>Keep it</source>
+        <translation>保留</translation>
+    </message>
+    <message>
+        <source>Disappear %1 after reading</source>
+        <translation>阅读后 %1 消失</translation>
+    </message>
+    <message>
         <source>Encryption is required for these recipients</source>
         <translation>这些收件人必须使用加密</translation>
     </message>
@@ -451,6 +471,26 @@ To: %4
     <message>
         <source>No key yet. Mail to them goes unencrypted until they send you one.</source>
         <translation>还没有密钥。在对方发来密钥之前，发给此联系人的邮件不加密。</translation>
+    </message>
+    <message>
+        <source>Trusted</source>
+        <translation>受信任</translation>
+    </message>
+    <message>
+        <source>Set by being in your contacts or verified.</source>
+        <translation>由是否在你的联系人中或已验证决定。</translation>
+    </message>
+    <message>
+        <source>Set by you.</source>
+        <translation>由你设置。</translation>
+    </message>
+    <message>
+        <source>Mail from someone trusted goes to the Inbox and may get a read receipt; from anyone else it waits in Unverified.</source>
+        <translation>受信任者的邮件进入收件箱，并可能收到已读回执；其他人的邮件在“未验证”中等待。</translation>
+    </message>
+    <message>
+        <source>Let e3mail decide</source>
+        <translation>由 e3mail 决定</translation>
     </message>
     <message>
         <source>Encryption with this contact</source>
@@ -662,6 +702,14 @@ To: %4
         <translation>（无主题）</translation>
     </message>
     <message>
+        <source>disappears %1 after reading</source>
+        <translation>阅读后 %1 消失</translation>
+    </message>
+    <message>
+        <source>disappears in %1</source>
+        <translation>%1 后消失</translation>
+    </message>
+    <message>
         <source>Moved to Trash.</source>
         <translation>已移至废纸篓。</translation>
     </message>
@@ -706,6 +754,30 @@ To: %4
     <message>
         <source>This is not a contact&apos;s code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
         <translation>这不是联系人的代码。用于验证的代码以 OPENPGP4FPR: 或 https://i.delta.chat/ 开头。</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation>
+            <numerusform>%n 周</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation>
+            <numerusform>%n 天</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation>
+            <numerusform>%n 小时</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n minute(s)</source>
+        <translation>
+            <numerusform>%n 分钟</numerusform>
+        </translation>
     </message>
     <message>
         <source>%1 is not an email address, or is in your contacts already.</source>
@@ -816,6 +888,14 @@ To: %4
     <message>
         <source>unsigned</source>
         <translation>未签名</translation>
+    </message>
+    <message>
+        <source>read by %1</source>
+        <translation>%1 已读</translation>
+    </message>
+    <message>
+        <source>read receipt asked</source>
+        <translation>已请求已读回执</translation>
     </message>
     <message>
         <source>Not delivered to: %1 (the server refused them).</source>
@@ -1367,6 +1447,22 @@ To: %4
     <message>
         <source>days (0: never)</source>
         <translation>天（0：从不）</translation>
+    </message>
+    <message>
+        <source>Read receipts</source>
+        <translation>已读回执</translation>
+    </message>
+    <message>
+        <source>Send a read receipt to trusted senders who ask for one</source>
+        <translation>向请求回执的受信任发件人发送已读回执</translation>
+    </message>
+    <message>
+        <source>Never send read receipts</source>
+        <translation>从不发送已读回执</translation>
+    </message>
+    <message>
+        <source>A receipt goes once, when you first open the message, on whichever device. Strangers and anyone you do not trust never get one.</source>
+        <translation>回执只发送一次，在你首次打开邮件时，无论在哪台设备上。陌生人和你不信任的人永远不会收到。</translation>
     </message>
     <message>
         <source>Trash</source>

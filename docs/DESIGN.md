@@ -151,7 +151,7 @@ amendments, [ADR 0013](adr/0013-op-merge-rules.md)), and tried live against
 | P9 | SecureJoin and QR (Delta Chat compatible) | ✅ setup-contact, older variant ([ADR 0021](adr/0021-securejoin.md)); tried against Delta Chat 2.64 |
 | P10 | Address book: details, phones, vCard import and export, CSV export | ✅ (categories not built) |
 | P11 | At rest: SQLCipher passphrase, blob encryption, encrypted backup | encrypted backup ✅ ([ADR 0020](adr/0020-encrypted-backups.md)); the rest not started |
-| P12 | Read receipts (MDN) and disappearing messages into Trash | |
+| P12 | Read receipts (MDN) and disappearing messages into Trash | ✅ plus trust set by hand ([ADR 0022](adr/0022-read-receipts-disappearing-mail-and-trust.md)) |
 | P13 | Structured email (SML), trusted vs inert | |
 | P14 | Android: the same app, adaptive layout, foreground sync ([ADR 0016](adr/0016-android.md)) | APK builds and boots in an emulator; background sync if asked ([ADR 0018](adr/0018-background-sync-on-android.md)) |
 

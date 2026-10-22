@@ -26,6 +26,8 @@ shot pair --page pair
 shot reply-html --open inbox:0 --page reply
 shot contacts --page contacts
 shot verify --page verify
+shot contact --page contact
+shot disappearing --open inbox:2
 shot source --open inbox:0 --page source
 shot settings --page settings
 # Other languages: right to left, CJK, and a long-worded one. CJK needs a
@@ -52,6 +54,7 @@ shot phone-backups-on-ar --page backups --lang ar --size 400x820
 rm -rf "$REPO"
 shot pair-ar --page pair --lang ar
 shot verify-ar --page verify --lang ar
+shot contact-ar --page contact --lang ar
 # Removed on another device while away.
 "$BUILD/src/cli/e3mail-cli" --data-dir "$DATA" config p2p_removed_by Desktop >/dev/null
 shot devices-removed --page devices
@@ -85,6 +88,7 @@ shot phone-reading --open inbox:0 "${PHONE[@]}"
 shot phone-composer --page compose "${PHONE[@]}"
 shot phone-contacts --page contacts "${PHONE[@]}"
 shot phone-verify --page verify "${PHONE[@]}"
+shot phone-contact --page contact "${PHONE[@]}"
 shot phone-settings --page settings "${PHONE[@]}"
 shot phone-signature --page signature "${PHONE[@]}"
 shot phone-devices --page devices "${PHONE[@]}"

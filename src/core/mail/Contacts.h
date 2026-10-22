@@ -22,9 +22,15 @@ public:
     // Address book listing: everyone, matched on name or address.
     static QList<ContactInfo> list(MailContext &ctx, const QString &filter = {}, int limit = 2000);
 
-    // Is mail from this address trusted enough for the Inbox? Verified, known,
-    // or ourselves.
+    // Is mail from this address trusted enough for the Inbox, a read receipt
+    // and a structured card's buttons? What the person set, else verified or
+    // in the address book; and always ourselves.
     static bool isTrusted(MailContext &ctx, const QString &addr);
+    // Trusted or not by hand; nullopt goes back to the rule. Trusting
+    // releases their held mail. Records contact.trust.
+    static void setTrust(MailContext &ctx, const QString &addr, std::optional<bool> trust);
+    // For ops from other devices, and for setTrust: no transaction, no op.
+    static void applyTrust(MailContext &ctx, const QString &addr, std::optional<bool> trust);
 
     // Adopts a key for a contact. `seenAt` is the Date of the message that
     // carried it; an older message never replaces a newer key, and a verified

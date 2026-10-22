@@ -314,6 +314,26 @@ To: %4
         <translation>重要としてマーク</translation>
     </message>
     <message>
+        <source>Ask for a read receipt</source>
+        <translation>開封確認を求める</translation>
+    </message>
+    <message>
+        <source>Disappears %1 after it is read</source>
+        <translation>読まれてから %1 後に消えます</translation>
+    </message>
+    <message>
+        <source>Disappear after reading</source>
+        <translation>読後に消える</translation>
+    </message>
+    <message>
+        <source>Keep it</source>
+        <translation>残す</translation>
+    </message>
+    <message>
+        <source>Disappear %1 after reading</source>
+        <translation>読後 %1 で消える</translation>
+    </message>
+    <message>
         <source>Encryption is required for these recipients</source>
         <translation>これらの宛先には暗号化が必須です</translation>
     </message>
@@ -451,6 +471,26 @@ To: %4
     <message>
         <source>No key yet. Mail to them goes unencrypted until they send you one.</source>
         <translation>まだ鍵がありません。相手から鍵が届くまで、この連絡先へのメールは暗号化されずに送られます。</translation>
+    </message>
+    <message>
+        <source>Trusted</source>
+        <translation>信頼済み</translation>
+    </message>
+    <message>
+        <source>Set by being in your contacts or verified.</source>
+        <translation>連絡先にあるか確認済みかで決まります。</translation>
+    </message>
+    <message>
+        <source>Set by you.</source>
+        <translation>あなたが設定しました。</translation>
+    </message>
+    <message>
+        <source>Mail from someone trusted goes to the Inbox and may get a read receipt; from anyone else it waits in Unverified.</source>
+        <translation>信頼済みの相手からのメールは受信トレイに入り、開封確認が送られることがあります。それ以外は「未確認」で待ちます。</translation>
+    </message>
+    <message>
+        <source>Let e3mail decide</source>
+        <translation>e3mail に任せる</translation>
     </message>
     <message>
         <source>Encryption with this contact</source>
@@ -662,6 +702,14 @@ To: %4
         <translation>(件名なし)</translation>
     </message>
     <message>
+        <source>disappears %1 after reading</source>
+        <translation>読後 %1 で消えます</translation>
+    </message>
+    <message>
+        <source>disappears in %1</source>
+        <translation>あと %1 で消えます</translation>
+    </message>
+    <message>
         <source>Moved to Trash.</source>
         <translation>ゴミ箱に移動しました。</translation>
     </message>
@@ -706,6 +754,30 @@ To: %4
     <message>
         <source>This is not a contact&apos;s code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
         <translation>連絡先のコードではありません。確認用のコードは OPENPGP4FPR: または https://i.delta.chat/ で始まります。</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation>
+            <numerusform>%n 週間</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation>
+            <numerusform>%n 日</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation>
+            <numerusform>%n 時間</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n minute(s)</source>
+        <translation>
+            <numerusform>%n 分</numerusform>
+        </translation>
     </message>
     <message>
         <source>%1 is not an email address, or is in your contacts already.</source>
@@ -816,6 +888,14 @@ To: %4
     <message>
         <source>unsigned</source>
         <translation>署名なし</translation>
+    </message>
+    <message>
+        <source>read by %1</source>
+        <translation>%1 が開封</translation>
+    </message>
+    <message>
+        <source>read receipt asked</source>
+        <translation>開封確認を依頼済み</translation>
     </message>
     <message>
         <source>Not delivered to: %1 (the server refused them).</source>
@@ -1367,6 +1447,22 @@ To: %4
     <message>
         <source>days (0: never)</source>
         <translation>日 (0: 移動しない)</translation>
+    </message>
+    <message>
+        <source>Read receipts</source>
+        <translation>開封確認</translation>
+    </message>
+    <message>
+        <source>Send a read receipt to trusted senders who ask for one</source>
+        <translation>求められた場合、信頼済みの差出人に開封確認を送る</translation>
+    </message>
+    <message>
+        <source>Never send read receipts</source>
+        <translation>開封確認を送らない</translation>
+    </message>
+    <message>
+        <source>A receipt goes once, when you first open the message, on whichever device. Strangers and anyone you do not trust never get one.</source>
+        <translation>開封確認は、どの端末であれ最初にメッセージを開いたときに一度だけ送られます。知らない人や信頼していない相手には送られません。</translation>
     </message>
     <message>
         <source>Trash</source>

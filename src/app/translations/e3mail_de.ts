@@ -314,6 +314,26 @@ An: %4
         <translation>Als wichtig markieren</translation>
     </message>
     <message>
+        <source>Ask for a read receipt</source>
+        <translation>Lesebestätigung anfordern</translation>
+    </message>
+    <message>
+        <source>Disappears %1 after it is read</source>
+        <translation>Verschwindet %1 nach dem Lesen</translation>
+    </message>
+    <message>
+        <source>Disappear after reading</source>
+        <translation>Nach dem Lesen verschwinden</translation>
+    </message>
+    <message>
+        <source>Keep it</source>
+        <translation>Behalten</translation>
+    </message>
+    <message>
+        <source>Disappear %1 after reading</source>
+        <translation>%1 nach dem Lesen verschwinden</translation>
+    </message>
+    <message>
         <source>Encryption is required for these recipients</source>
         <translation>Für diese Empfänger ist Verschlüsselung vorgeschrieben</translation>
     </message>
@@ -451,6 +471,26 @@ An: %4
     <message>
         <source>No key yet. Mail to them goes unencrypted until they send you one.</source>
         <translation>Noch kein Schlüssel. Nachrichten an diesen Kontakt gehen unverschlüsselt, bis er Ihnen einen schickt.</translation>
+    </message>
+    <message>
+        <source>Trusted</source>
+        <translation>Vertrauenswürdig</translation>
+    </message>
+    <message>
+        <source>Set by being in your contacts or verified.</source>
+        <translation>Ergibt sich daraus, dass die Person in Ihren Kontakten steht oder verifiziert ist.</translation>
+    </message>
+    <message>
+        <source>Set by you.</source>
+        <translation>Von Ihnen festgelegt.</translation>
+    </message>
+    <message>
+        <source>Mail from someone trusted goes to the Inbox and may get a read receipt; from anyone else it waits in Unverified.</source>
+        <translation>E-Mails von vertrauenswürdigen Personen kommen in den Posteingang und können eine Lesebestätigung erhalten; von allen anderen warten sie unter „Nicht verifiziert“.</translation>
+    </message>
+    <message>
+        <source>Let e3mail decide</source>
+        <translation>e3mail entscheiden lassen</translation>
     </message>
     <message>
         <source>Encryption with this contact</source>
@@ -662,6 +702,14 @@ An: %4
         <translation>(kein Betreff)</translation>
     </message>
     <message>
+        <source>disappears %1 after reading</source>
+        <translation>verschwindet %1 nach dem Lesen</translation>
+    </message>
+    <message>
+        <source>disappears in %1</source>
+        <translation>verschwindet in %1</translation>
+    </message>
+    <message>
         <source>Moved to Trash.</source>
         <translation>In den Papierkorb verschoben.</translation>
     </message>
@@ -707,6 +755,34 @@ An: %4
     <message>
         <source>This is not a contact&apos;s code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
         <translation>Das ist kein Kontaktcode. Ein Code zum Verifizieren beginnt mit OPENPGP4FPR: oder https://i.delta.chat/.</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation>
+            <numerusform>%n Woche</numerusform>
+            <numerusform>%n Wochen</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation>
+            <numerusform>%n Tag</numerusform>
+            <numerusform>%n Tagen</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation>
+            <numerusform>%n Stunde</numerusform>
+            <numerusform>%n Stunden</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n minute(s)</source>
+        <translation>
+            <numerusform>%n Minute</numerusform>
+            <numerusform>%n Minuten</numerusform>
+        </translation>
     </message>
     <message>
         <source>%1 is not an email address, or is in your contacts already.</source>
@@ -823,6 +899,14 @@ An: %4
     <message>
         <source>unsigned</source>
         <translation>nicht signiert</translation>
+    </message>
+    <message>
+        <source>read by %1</source>
+        <translation>gelesen von %1</translation>
+    </message>
+    <message>
+        <source>read receipt asked</source>
+        <translation>Lesebestätigung angefordert</translation>
     </message>
     <message>
         <source>Not delivered to: %1 (the server refused them).</source>
@@ -1377,6 +1461,22 @@ An: %4
     <message>
         <source>days (0: never)</source>
         <translation>Tagen (0: nie)</translation>
+    </message>
+    <message>
+        <source>Read receipts</source>
+        <translation>Lesebestätigungen</translation>
+    </message>
+    <message>
+        <source>Send a read receipt to trusted senders who ask for one</source>
+        <translation>Vertrauenswürdigen Absendern, die darum bitten, eine Lesebestätigung senden</translation>
+    </message>
+    <message>
+        <source>Never send read receipts</source>
+        <translation>Nie Lesebestätigungen senden</translation>
+    </message>
+    <message>
+        <source>A receipt goes once, when you first open the message, on whichever device. Strangers and anyone you do not trust never get one.</source>
+        <translation>Eine Bestätigung wird einmal gesendet, wenn Sie die Nachricht zum ersten Mal öffnen, auf welchem Gerät auch immer. Fremde und alle, denen Sie nicht vertrauen, erhalten nie eine.</translation>
     </message>
     <message>
         <source>Trash</source>

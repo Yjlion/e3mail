@@ -161,13 +161,7 @@ void send(MailContext &ctx, const QString &to, const QString &step,
         raw = mime::Builder::build(mail);
     }
 
-    const qint64 now = mail.date.toMSecsSinceEpoch();
-    ctx.db.run("INSERT INTO messages(message_id, direction, state, subject, from_addr, date, received_at, encrypted, "
-               "signed_fpr, hidden) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, 1)",
-               mail.messageId, int(Direction::Outgoing), int(MessageState::Pending), mail.subject, self, now, now,
-               encrypt, encrypt ? selfFpr : QString());
-    const qint64 id = ctx.db.lastInsertId();
-    ctx.db.run("INSERT INTO outbox(msg_id, raw, mail_from, rcpts) VALUES(?, ?, ?, ?)", id, raw, self, to);
+    Compose::queueMachineMail(ctx, mail, raw, to, encrypt);
     qCInfo(lcMail) << "queued SecureJoin" << step << "to" << to;
 }
 

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MPL-2.0
 #include "Contacts.h"
 
+#include "Organize.h"
 #include "store/Config.h"
 #include "store/Database.h"
 #include "store/OpLog.h"
@@ -30,6 +31,8 @@ ContactInfo read(MailContext &ctx, Statement &st)
     c.title = st.text(10);
     c.notes = st.text(11);
     c.birthday = st.text(12);
+    if (!st.isNull(13))
+        c.trust = st.integer(13) != 0;
     c.blocked = Contacts::isBlocked(ctx, c.addr);
     Statement ph(ctx.db, "SELECT label, number FROM contact_phones WHERE contact_id=? ORDER BY idx");
     ph.bind(1, c.id);
@@ -39,7 +42,7 @@ ContactInfo read(MailContext &ctx, Statement &st)
 }
 
 constexpr char kSelect[] = "SELECT c.id, c.addr, c.name, c.origin, c.fingerprint, c.verified, c.prefer_encrypt, "
-                           "c.last_seen, p.encryption_mode, c.organization, c.title, c.notes, c.birthday "
+                           "c.last_seen, p.encryption_mode, c.organization, c.title, c.notes, c.birthday, c.trust "
                            "FROM contacts c LEFT JOIN contact_policy p ON p.contact_id = c.id ";
 
 QJsonObject detailsPayload(const QString &addr, const ContactInfo &d)
@@ -144,7 +147,30 @@ bool Contacts::isTrusted(MailContext &ctx, const QString &addr)
     if (a == mime::normalizeAddr(ctx.config.get(cfg::Addr)))
         return true;
     const auto c = get(ctx, a);
+    if (c && c->trust)
+        return *c->trust;
     return c && c->isKnown();
+}
+
+void Contacts::setTrust(MailContext &ctx, const QString &addr, std::optional<bool> trust)
+{
+    const QString a = mime::normalizeAddr(addr);
+    if (!a.contains(u'@'))
+        return;
+    Transaction tx(ctx.db);
+    applyTrust(ctx, a, trust);
+    ctx.ops.record(op::ContactTrust, {{QStringLiteral("addr"), a},
+                                      {QStringLiteral("trust"), trust ? QJsonValue(*trust) : QJsonValue()}});
+    tx.commit();
+}
+
+void Contacts::applyTrust(MailContext &ctx, const QString &addr, std::optional<bool> trust)
+{
+    touch(ctx, addr, QString(), ContactOrigin::IncomingFrom);
+    ctx.db.run("UPDATE contacts SET trust=? WHERE addr=?", trust ? QVariant(int(*trust)) : QVariant(),
+               mime::normalizeAddr(addr));
+    if (isTrusted(ctx, addr))
+        Organize::releaseHeld(ctx, addr);
 }
 
 bool Contacts::adoptKey(MailContext &ctx, const QString &addr, const QString &fpr, bool preferEncrypt,

@@ -11,7 +11,16 @@ namespace e3::mail {
 class Organize
 {
 public:
+    // Reading starts a disappearing message's timer and sends a read receipt
+    // if one is due (ADR 0022).
     static void markRead(MailContext &ctx, qint64 msgId, bool read);
+    // Sets when a disappearing message goes, from when it was read, unless
+    // already set. No transaction, no op.
+    static void startTimer(MailContext &ctx, qint64 msgId, qint64 readAt);
+    // Moves disappearing mail whose time has come to Trash. Returns how many.
+    static int expireDue(MailContext &ctx, qint64 now);
+    // When the next one goes, if any.
+    static std::optional<qint64> nextExpiry(MailContext &ctx);
 
     static void trash(MailContext &ctx, qint64 msgId, TrashReason reason);
     static void restore(MailContext &ctx, qint64 msgId);
@@ -44,6 +53,7 @@ public:
         int rawExpired = 0;
         int blobsRemoved = 0;
         int joinsExpired = 0; // SecureJoin handshakes given up
+        int expired = 0;      // disappearing messages moved to Trash
     };
     static HousekeepingResult housekeeping(MailContext &ctx);
 

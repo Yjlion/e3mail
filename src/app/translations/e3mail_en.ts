@@ -11,6 +11,34 @@
         </translation>
     </message>
     <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation>
+            <numerusform>%n week</numerusform>
+            <numerusform>%n weeks</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation>
+            <numerusform>%n day</numerusform>
+            <numerusform>%n days</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation>
+            <numerusform>%n hour</numerusform>
+            <numerusform>%n hours</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n minute(s)</source>
+        <translation>
+            <numerusform>%n minute</numerusform>
+            <numerusform>%n minutes</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
         <source>%n contact(s) added</source>
         <translation>
             <numerusform>%n contact added</numerusform>

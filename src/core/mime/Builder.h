@@ -48,6 +48,13 @@ public:
     // copies inside the entity, for use as an encrypted payload.
     static QByteArray contentEntity(const OutgoingMail &mail, bool protectedHeaders = false);
 
+    // A read receipt (RFC 8098) for `originalMessageId`, as the content
+    // entity: `mail.text` is its human-readable part.
+    static QByteArray receiptEntity(const OutgoingMail &mail, const QString &originalMessageId,
+                                    const QString &finalRecipient, bool protectedHeaders);
+    // `body` wrapped with RFC 9788 copies of the headers, for encryption.
+    static QByteArray withProtectedHeaders(const OutgoingMail &mail, const QByteArray &body);
+
     // RFC 5322 header block, CRLF terminated, without the blank line.
     // `subjectOverride` replaces the subject on the outside of encrypted mail.
     static QByteArray headerBlock(const OutgoingMail &mail, const QString *subjectOverride = nullptr);

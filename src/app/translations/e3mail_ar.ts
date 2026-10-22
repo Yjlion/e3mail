@@ -314,6 +314,26 @@ To: %4
         <translation>تعليم كمهمة</translation>
     </message>
     <message>
+        <source>Ask for a read receipt</source>
+        <translation>اطلب إشعار القراءة</translation>
+    </message>
+    <message>
+        <source>Disappears %1 after it is read</source>
+        <translation>تختفي بعد %1 من قراءتها</translation>
+    </message>
+    <message>
+        <source>Disappear after reading</source>
+        <translation>الاختفاء بعد القراءة</translation>
+    </message>
+    <message>
+        <source>Keep it</source>
+        <translation>إبقاؤها</translation>
+    </message>
+    <message>
+        <source>Disappear %1 after reading</source>
+        <translation>الاختفاء بعد %1 من القراءة</translation>
+    </message>
+    <message>
         <source>Encryption is required for these recipients</source>
         <translation>التشفير إلزامي لهؤلاء المستلمين</translation>
     </message>
@@ -451,6 +471,26 @@ To: %4
     <message>
         <source>No key yet. Mail to them goes unencrypted until they send you one.</source>
         <translation>لا مفتاح بعد. الرسائل إلى جهة الاتصال هذه تُرسل دون تشفير حتى ترسل إليك مفتاحًا.</translation>
+    </message>
+    <message>
+        <source>Trusted</source>
+        <translation>موثوق</translation>
+    </message>
+    <message>
+        <source>Set by being in your contacts or verified.</source>
+        <translation>يُحدَّد بوجوده في جهات اتصالك أو بتوثيقه.</translation>
+    </message>
+    <message>
+        <source>Set by you.</source>
+        <translation>حدّدتَه أنت.</translation>
+    </message>
+    <message>
+        <source>Mail from someone trusted goes to the Inbox and may get a read receipt; from anyone else it waits in Unverified.</source>
+        <translation>يذهب بريد الموثوقين إلى الوارد وقد يتلقى إشعار قراءة؛ وبريد غيرهم ينتظر في غير الموثَّق.</translation>
+    </message>
+    <message>
+        <source>Let e3mail decide</source>
+        <translation>دع e3mail يقرر</translation>
     </message>
     <message>
         <source>Encryption with this contact</source>
@@ -662,6 +702,14 @@ To: %4
         <translation>(بلا موضوع)</translation>
     </message>
     <message>
+        <source>disappears %1 after reading</source>
+        <translation>تختفي بعد %1 من القراءة</translation>
+    </message>
+    <message>
+        <source>disappears in %1</source>
+        <translation>تختفي خلال %1</translation>
+    </message>
+    <message>
         <source>Moved to Trash.</source>
         <translation>نُقلت إلى سلة المهملات.</translation>
     </message>
@@ -711,6 +759,50 @@ To: %4
     <message>
         <source>This is not a contact&apos;s code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
         <translation>هذا ليس رمز جهة اتصال. يبدأ رمز التوثيق بـ OPENPGP4FPR: أو https://i.delta.chat/.</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation>
+            <numerusform>%n أسبوع</numerusform>
+            <numerusform>أسبوع واحد</numerusform>
+            <numerusform>أسبوعين</numerusform>
+            <numerusform>%n أسابيع</numerusform>
+            <numerusform>%n أسبوعًا</numerusform>
+            <numerusform>%n أسبوع</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation>
+            <numerusform>%n يوم</numerusform>
+            <numerusform>يوم واحد</numerusform>
+            <numerusform>يومين</numerusform>
+            <numerusform>%n أيام</numerusform>
+            <numerusform>%n يومًا</numerusform>
+            <numerusform>%n يوم</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation>
+            <numerusform>%n ساعة</numerusform>
+            <numerusform>ساعة واحدة</numerusform>
+            <numerusform>ساعتين</numerusform>
+            <numerusform>%n ساعات</numerusform>
+            <numerusform>%n ساعة</numerusform>
+            <numerusform>%n ساعة</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n minute(s)</source>
+        <translation>
+            <numerusform>%n دقيقة</numerusform>
+            <numerusform>دقيقة واحدة</numerusform>
+            <numerusform>دقيقتين</numerusform>
+            <numerusform>%n دقائق</numerusform>
+            <numerusform>%n دقيقة</numerusform>
+            <numerusform>%n دقيقة</numerusform>
+        </translation>
     </message>
     <message>
         <source>%1 is not an email address, or is in your contacts already.</source>
@@ -851,6 +943,14 @@ To: %4
     <message>
         <source>unsigned</source>
         <translation>غير موقّعة</translation>
+    </message>
+    <message>
+        <source>read by %1</source>
+        <translation>قرأها %1</translation>
+    </message>
+    <message>
+        <source>read receipt asked</source>
+        <translation>طُلب إشعار القراءة</translation>
     </message>
     <message>
         <source>Not delivered to: %1 (the server refused them).</source>
@@ -1417,6 +1517,22 @@ To: %4
     <message>
         <source>days (0: never)</source>
         <translation>يوم (0: أبدًا)</translation>
+    </message>
+    <message>
+        <source>Read receipts</source>
+        <translation>إشعارات القراءة</translation>
+    </message>
+    <message>
+        <source>Send a read receipt to trusted senders who ask for one</source>
+        <translation>أرسل إشعار القراءة إلى المرسلين الموثوقين الذين يطلبونه</translation>
+    </message>
+    <message>
+        <source>Never send read receipts</source>
+        <translation>لا ترسل إشعارات القراءة أبدًا</translation>
+    </message>
+    <message>
+        <source>A receipt goes once, when you first open the message, on whichever device. Strangers and anyone you do not trust never get one.</source>
+        <translation>يُرسَل الإشعار مرة واحدة، عند فتح الرسالة أول مرة، على أي جهاز. الغرباء ومن لا تثق بهم لا يتلقونه أبدًا.</translation>
     </message>
     <message>
         <source>Trash</source>

@@ -127,6 +127,17 @@ struct MessageDetail : MessageSummary
     QDateTime heldAt;
     bool archived = false;
     SendEncryption sendEncryption = SendEncryption::Auto;
+    // Read receipts (P12): asked for by the sender (incoming), or by us.
+    QString receiptTo;
+    struct Receipt
+    {
+        QString addr;
+        QDateTime at;
+    };
+    QList<Receipt> readBy; // our own mail, as receipts came back
+    // Disappearing mail: lifetime once read, and when it goes, once known.
+    int ephemeralSeconds = 0;
+    QDateTime expiresAt;
 };
 
 struct SearchQuery
@@ -168,6 +179,8 @@ struct ContactInfo
     bool preferEncrypt = false;
     bool blocked = false;
     std::optional<EncryptionMode> encryptionOverride;
+    // Set by hand (P12): overrides the rule below either way.
+    std::optional<bool> trust;
     QDateTime lastSeen;
 
     bool isKnown() const { return verified || int(origin) >= int(ContactOrigin::Outgoing); }
@@ -194,6 +207,8 @@ struct Draft
     qint64 inReplyToId = 0;
     int importance = 0;
     SendEncryption encryption = SendEncryption::Auto;
+    bool requestReceipt = false;
+    int ephemeralSeconds = 0; // 0: kept
 };
 
 // Everything a mail operation needs, constructed per thread: each thread has

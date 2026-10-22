@@ -128,6 +128,8 @@ int main(int argc, char *argv[])
             QMetaObject::invokeMethod(root, "showScan");
         else if (p.value(page) == QLatin1String("verify")) // contacts, verifying someone in person
             QMetaObject::invokeMethod(root, "showVerify");
+        else if (p.value(page) == QLatin1String("contact")) // contacts, the first one opened
+            QMetaObject::invokeMethod(root, "showContact");
         else if (p.value(page) == QLatin1String("setup-oauth")) // first run, a Gmail address
             QMetaObject::invokeMethod(root, "showSetupOAuth");
         else if (p.value(page) == QLatin1String("restore")) // first run, restoring a backup

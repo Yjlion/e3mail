@@ -17,7 +17,7 @@ that supersedes it, or a dated amendment block inside it, and add a row here.
 | [0010](0010-multi-client-over-iroh.md) | Devices sync with each other over Iroh | Accepted, Phase 8; amended 2026-10-11 (the transport, pairing, the mailbox fallback), 2026-10-16 (scanning the code; removed while away, relay-only) |
 | [0011](0011-linear-protocol-code-over-an-event-loop.md) | Linear protocol code over a local event loop | Accepted |
 | [0012](0012-passwords-in-the-os-keyring.md) | Passwords in the OS keyring, with an honest fallback | Accepted |
-| [0013](0013-op-merge-rules.md) | How devices merge the op-log | Accepted, Phase 8; amended 2026-10-07 (address book), 2026-10-10 (signatures), 2026-10-11 (devices), 2026-10-21 (SecureJoin) |
+| [0013](0013-op-merge-rules.md) | How devices merge the op-log | Accepted, Phase 8; amended 2026-10-07 (address book), 2026-10-10 (signatures), 2026-10-11 (devices), 2026-10-21 (SecureJoin; trust, receipts, disappearing mail) |
 | [0014](0014-languages-icu-and-qt-linguist.md) | Languages: ICU for charsets and dates, Qt Linguist for the interface | Accepted |
 | [0015](0015-finding-server-settings.md) | Finding server settings: provider, ISPDB, Autodiscover, DNS, guess | Accepted |
 | [0016](0016-android.md) | Android: the same app, one pane at a time, only while it runs | Accepted; amended 2026-10-08 (release signing), 2026-10-12 (Google Play, with a correction), 2026-10-14 (the tag is the version), 2026-10-16 (the camera), 2026-10-17 (backups); sync while not in front superseded by 0018 |
@@ -26,3 +26,4 @@ that supersedes it, or a dated amendment block inside it, and add a row here.
 | [0019](0019-oauth-for-google-and-microsoft.md) | OAuth 2 for Google and Microsoft | Accepted |
 | [0020](0020-encrypted-backups.md) | Encrypted backups, to a place the person chooses | Accepted |
 | [0021](0021-securejoin.md) | SecureJoin: verifying a contact by scanning their code, as Delta Chat does | Accepted |
+| [0022](0022-read-receipts-disappearing-mail-and-trust.md) | Read receipts to trusted senders, disappearing mail into Trash, trust set by hand | Accepted |

@@ -5,6 +5,7 @@
 #include "Keyring.h"
 #include "Organize.h"
 #include "Search.h"
+#include "Receipts.h"
 #include "SecureJoin.h"
 #include "Threading.h"
 #include "crypto/Autocrypt.h"
@@ -34,7 +35,10 @@ const QList<QByteArray> kProtected = {"From", "To", "Cc", "Reply-To", "Subject",
                                       "In-Reply-To", "References", "Importance", "X-Priority", "Priority",
                                       // SecureJoin (ADR 0021): its steps and tokens travel inside.
                                       "Secure-Join", "Secure-Join-Auth", "Secure-Join-Fingerprint",
-                                      "Secure-Join-Invitenumber"};
+                                      "Secure-Join-Invitenumber",
+                                      // Read receipts and disappearing mail (ADR 0022).
+                                      "Disposition-Notification-To", "Chat-Disposition-Notification-To",
+                                      "Ephemeral-Timer"};
 
 bool isEncryptedPart(const mime::Part &p)
 {
@@ -255,7 +259,8 @@ Ingest::Result Ingest::process(MailContext &ctx, const QByteArray &raw)
     }
 
     const bool handshake = SecureJoin::isHandshake(headers);
-    const bool hidden = deviceSync || handshake;
+    const bool report = decryptError.isEmpty() && Receipts::isReport(content);
+    const bool hidden = deviceSync || handshake || report;
     result.hidden = hidden;
 
     std::optional<mime::Part> signedPart;
@@ -300,6 +305,10 @@ Ingest::Result Ingest::process(MailContext &ctx, const QByteArray &raw)
     const QString inReplyTo = mime::parseMessageIds(headers.raw("In-Reply-To")).value(0);
     const QStringList references = mime::parseMessageIds(headers.raw("References"));
     const int importance = importanceOf(headers);
+    const QString receiptTo = Receipts::requestedBy(headers);
+    // A lifetime, in seconds, of at most a year; anything else is ignored.
+    const qint64 ephemeral = headers.raw("Ephemeral-Timer").trimmed().toLongLong();
+    const int ephemeralSeconds = ephemeral > 0 && ephemeral <= 366LL * 24 * 3600 ? int(ephemeral) : 0;
 
     Content body = extract(content);
     if (!decryptError.isEmpty()) {
@@ -433,6 +442,9 @@ Ingest::Result Ingest::process(MailContext &ctx, const QByteArray &raw)
         }
     }
 
+    if (report && !fromSelf)
+        Receipts::receive(ctx, content, from.addr, date);
+
     ctx.db.run("INSERT INTO messages(message_id, direction, state, subject, from_addr, from_name, reply_to, date, "
                "received_at, in_reply_to, body_text, body_html, preview, importance, encrypted, signed_fpr, "
                "verified, has_attachments, raw_blob, raw_expires_at, hidden, unread) "
@@ -445,6 +457,15 @@ Ingest::Result Ingest::process(MailContext &ctx, const QByteArray &raw)
                nullIfEmpty(rawBlob), rawExpires, hidden, !fromSelf);
     const qint64 id = ctx.db.lastInsertId();
     result.msgId = id;
+    if (!receiptTo.isEmpty() || ephemeralSeconds > 0) {
+        // Our own disappearing mail, from another device of ours: its timer
+        // ran from when it was sent.
+        const auto expiresAt = fromSelf && ephemeralSeconds > 0
+            ? std::optional<qint64>(date.toMSecsSinceEpoch() + qint64(ephemeralSeconds) * 1000)
+            : std::nullopt;
+        ctx.db.run("UPDATE messages SET mdn_to=?, ephemeral_seconds=?, expires_at=? WHERE id=?", nullIfEmpty(receiptTo),
+                   ephemeralSeconds > 0 ? std::optional<qint64>(ephemeralSeconds) : std::nullopt, expiresAt, id);
+    }
 
     auto addRecipients = [&](const QList<mime::Address> &list, RecipientKind kind) {
         int idx = 0;

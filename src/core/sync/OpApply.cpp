@@ -65,7 +65,7 @@ qint64 labelIdFor(MailContext &ctx, const QString &name)
 bool isContactOp(const QString &kind)
 {
     return kind == op::Accept || kind == op::ContactEdit || kind == op::ContactPolicy || kind == op::ContactVerify
-        || kind == op::ContactDetails;
+        || kind == op::ContactDetails || kind == op::ContactTrust;
 }
 
 // Removing a contact competes with every other op about that address, not
@@ -78,7 +78,7 @@ bool newerContactOp(MailContext &ctx, const Op &o, bool removals)
                                "AND lower(json_extract(payload, '$.addr')) = ?1 "
                                "AND (hlc > ?2 OR (hlc = ?2 AND device > ?3)) LIMIT 1"
                              : "SELECT 1 FROM ops WHERE kind IN ('contact.accept', 'contact.edit', 'contact.policy', "
-                               "'contact.verify', 'contact.details') "
+                               "'contact.verify', 'contact.details', 'contact.trust') "
                                "AND lower(json_extract(payload, '$.addr')) = ?1 "
                                "AND (hlc > ?2 OR (hlc = ?2 AND device > ?3)) LIMIT 1");
     st.bindAll(mime::normalizeAddr(str(o, "addr")), o.hlc, o.device);
@@ -114,8 +114,12 @@ bool applyOne(MailContext &ctx, const Op &o, OpApply::Result *r)
         if (!id)
             return false; // deferred: replayFor() applies it when the message arrives
         if (o.kind == op::ReadState) {
-            ctx.db.run("UPDATE messages SET unread=? WHERE id=?", !o.payload.value(QLatin1String("read")).toBool(),
-                       *id);
+            const bool read = o.payload.value(QLatin1String("read")).toBool();
+            ctx.db.run("UPDATE messages SET unread=? WHERE id=?", !read, *id);
+            // Read on another device: a disappearing message's time runs
+            // from then, here too.
+            if (read)
+                mail::Organize::startTimer(ctx, *id, Hlc::physicalMs(o.hlc));
         } else if (o.kind == op::Trash) {
             // The deadline runs from when it was trashed, on whichever device.
             const qint64 at = Hlc::physicalMs(o.hlc);
@@ -213,6 +217,11 @@ bool applyOne(MailContext &ctx, const Op &o, OpApply::Result *r)
         ctx.db.run("UPDATE contacts SET fingerprint=?, verified=1 WHERE addr=?", str(o, "fpr"),
                    mime::normalizeAddr(addr));
         mail::Organize::releaseHeld(ctx, addr);
+        return true;
+    }
+    if (o.kind == op::ContactTrust) {
+        const QJsonValue t = o.payload.value(QLatin1String("trust"));
+        mail::Contacts::applyTrust(ctx, str(o, "addr"), t.isBool() ? std::optional<bool>(t.toBool()) : std::nullopt);
         return true;
     }
     if (o.kind == op::SecureJoinInvite) {

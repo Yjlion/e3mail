@@ -175,6 +175,17 @@ Rectangle {
                 RowText { text: qsTr("days (0: never)"); color: Theme.muted }
             }
 
+            Heading { text: qsTr("Read receipts") }
+            ChoiceBox {
+                Layout.fillWidth: true
+                model: [{ v: "trusted", t: qsTr("Send a read receipt to trusted senders who ask for one") },
+                        { v: "never", t: qsTr("Never send read receipts") }]
+                textRole: "t"; valueRole: "v"
+                selected: view.s.mdnSend === "never" ? 1 : 0
+                onActivated: MailApp.setSetting("mdnSend", currentValue)
+            }
+            Note { text: qsTr("A receipt goes once, when you first open the message, on whichever device. Strangers and anyone you do not trust never get one.") }
+
             Heading { text: qsTr("Trash") }
             RowLayout {
                 RowText { text: qsTr("Destroy messages in Trash after"); color: Theme.text }

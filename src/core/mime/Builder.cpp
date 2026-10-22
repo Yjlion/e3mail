@@ -101,9 +101,26 @@ QByteArray Builder::contentEntity(const OutgoingMail &mail, bool protectedHeader
             parts.append(attachmentPart(a));
         body = multipart("mixed", parts);
     }
-    if (!protectedHeaders)
-        return body;
+    return protectedHeaders ? withProtectedHeaders(mail, body) : body;
+}
 
+QByteArray Builder::receiptEntity(const OutgoingMail &mail, const QString &originalMessageId,
+                                  const QString &finalRecipient, bool protectedHeaders)
+{
+    // RFC 8098: a human-readable part, then the machine-readable one. The
+    // text is not translated: it would tell the sender this reader's language.
+    const QByteArray report = "Content-Type: message/disposition-notification\r\n\r\n"
+                              "Reporting-UA: e3mail\r\n"
+                              "Final-Recipient: rfc822;"
+        + finalRecipient.toUtf8() + "\r\nOriginal-Message-ID: <" + originalMessageId.toUtf8()
+        + ">\r\nDisposition: manual-action/MDN-sent-automatically; displayed\r\n";
+    const QByteArray body = multipart("report", {textPart(mail.text, "plain"), report},
+                                      "; report-type=disposition-notification");
+    return protectedHeaders ? withProtectedHeaders(mail, body) : body;
+}
+
+QByteArray Builder::withProtectedHeaders(const OutgoingMail &mail, const QByteArray &body)
+{
     // RFC 9788: wrap in multipart/mixed carrying protected-headers="v1" and
     // copies of the real headers, so the outer ones can be minimised.
     QByteArray hdr;
