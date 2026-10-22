@@ -365,6 +365,10 @@ To: %4
         <translation>新建联系人</translation>
     </message>
     <message>
+        <source>Verify in person</source>
+        <translation>当面验证</translation>
+    </message>
+    <message>
         <source>Import or export</source>
         <translation>导入或导出</translation>
     </message>
@@ -435,6 +439,10 @@ To: %4
     <message>
         <source>Verified in person.</source>
         <translation>已当面验证。</translation>
+    </message>
+    <message>
+        <source>Verifying in person: waiting for their answer.</source>
+        <translation>正在当面验证：等待对方回应。</translation>
     </message>
     <message>
         <source>Key learned from their mail. Not verified: this proves continuity, not identity.</source>
@@ -694,6 +702,10 @@ To: %4
     <message>
         <source>The original of this message is no longer kept.</source>
         <translation>此邮件的原件已不再保留。</translation>
+    </message>
+    <message>
+        <source>This is not a contact&apos;s code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
+        <translation>这不是联系人的代码。用于验证的代码以 OPENPGP4FPR: 或 https://i.delta.chat/ 开头。</translation>
     </message>
     <message>
         <source>%1 is not an email address, or is in your contacts already.</source>
@@ -1217,6 +1229,17 @@ To: %4
     <message>
         <source>Type the code instead</source>
         <translation>改为输入代码</translation>
+    </message>
+</context>
+<context>
+    <name>SecureJoin</name>
+    <message>
+        <source>This is your own code. Scan the other person&apos;s code instead.</source>
+        <translation>这是你自己的代码。请扫描对方的代码。</translation>
+    </message>
+    <message>
+        <source>%1 is blocked. Unblock them first.</source>
+        <translation>%1 已被屏蔽。请先解除屏蔽。</translation>
     </message>
 </context>
 <context>
@@ -1965,6 +1988,61 @@ To: %4
     <message>
         <source>Create a tag…</source>
         <translation>创建标签…</translation>
+    </message>
+</context>
+<context>
+    <name>VerifyDialog</name>
+    <message>
+        <source>Verify in person</source>
+        <translation>当面验证</translation>
+    </message>
+    <message>
+        <source>Meet, or call on video. Let them scan this code with e3mail or Delta Chat, or scan theirs. Each of you then has the other’s key verified.</source>
+        <translation>见面或进行视频通话。让对方用 e3mail 或 Delta Chat 扫描此代码，或扫描对方的代码。之后你们双方都会拥有已验证的对方密钥。</translation>
+    </message>
+    <message>
+        <source>Your code as a QR code</source>
+        <translation>你的代码（二维码）</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>复制</translation>
+    </message>
+    <message>
+        <source>Anyone who sees this code can verify themselves to you. If the wrong person saw it, make a new one.</source>
+        <translation>任何看到此代码的人都可以向你验证自己。如果被不该看到的人看到了，请生成一个新代码。</translation>
+    </message>
+    <message>
+        <source>New code</source>
+        <translation>新代码</translation>
+    </message>
+    <message>
+        <source>Point the camera at the other person’s code.</source>
+        <translation>将摄像头对准对方的代码。</translation>
+    </message>
+    <message>
+        <source>Their code</source>
+        <translation>对方的代码</translation>
+    </message>
+    <message>
+        <source>Scan</source>
+        <translation>扫描</translation>
+    </message>
+    <message>
+        <source>Verify</source>
+        <translation>验证</translation>
+    </message>
+    <message>
+        <source>Exchanging keys with %1 by mail. This takes as long as your mail does; you can close this and come back.</source>
+        <translation>正在通过邮件与 %1 交换密钥。所需时间取决于你的邮件；你可以关闭此窗口稍后再回来。</translation>
+    </message>
+    <message>
+        <source>%1 is verified.</source>
+        <translation>%1 已验证。</translation>
+    </message>
+    <message>
+        <source>%1 did not answer within a week. Try again when you can both check your mail.</source>
+        <translation>%1 一周内没有回应。请在你们都能查收邮件时再试一次。</translation>
     </message>
 </context>
 <context>

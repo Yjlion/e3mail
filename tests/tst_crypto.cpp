@@ -161,6 +161,48 @@ private Q_SLOTS:
         QVERIFY(vout.contains("VALIDSIG"));
     }
 
+    // Hidden recipients, as Delta Chat sends: every session key packet names
+    // key id 0, and the reader tries its own keys.
+    void gnupgHiddenRecipient()
+    {
+        const QString gpg = QStandardPaths::findExecutable(QStringLiteral("gpg"));
+        if (gpg.isEmpty())
+            QSKIP("gpg not installed");
+        QTemporaryDir home;
+        Pgp us;
+        const QString ours = us.generate(QStringLiteral("<us@x.test>"));
+        QCOMPARE(gpgRun(gpg, home.path(), {QStringLiteral("--import")}, us.exportPublic(ours)).first, 0);
+        const auto [code, armour] = gpgRun(gpg, home.path(),
+                                           {QStringLiteral("--armor"), QStringLiteral("--trust-model"),
+                                            QStringLiteral("always"), QStringLiteral("--throw-keyids"),
+                                            QStringLiteral("--recipient"), ours, QStringLiteral("--encrypt")},
+                                           "for nobody in particular");
+        QCOMPARE(code, 0);
+        const Pgp::Decrypted d = us.decrypt(armour);
+        QVERIFY(d.encrypted);
+        QCOMPARE(d.data, QByteArray("for nobody in particular"));
+        // Someone else's key still cannot read it.
+        Pgp other;
+        const QString others = other.generate(QStringLiteral("<other@x.test>"));
+        QVERIFY_THROWS_EXCEPTION(PgpError, other.decrypt(armour));
+
+        // Two hidden recipients, ours second, as Delta Chat orders them (its
+        // own key first). RNP alone gives up after the first packet.
+        QCOMPARE(gpgRun(gpg, home.path(), {QStringLiteral("--import")}, other.exportPublic(others)).first, 0);
+        const auto [code2, both] = gpgRun(gpg, home.path(),
+                                          {QStringLiteral("--armor"), QStringLiteral("--trust-model"),
+                                           QStringLiteral("always"), QStringLiteral("--throw-keyids"),
+                                           QStringLiteral("--recipient"), others, QStringLiteral("--recipient"), ours,
+                                           QStringLiteral("--encrypt")},
+                                          "second in line");
+        QCOMPARE(code2, 0);
+        QCOMPARE(us.decrypt(both).data, QByteArray("second in line"));
+        QCOMPARE(other.decrypt(both).data, QByteArray("second in line"));
+        Pgp third;
+        third.generate(QStringLiteral("<third@x.test>"));
+        QVERIFY_THROWS_EXCEPTION(PgpError, third.decrypt(both));
+    }
+
     // Inline PGP: GnuPG's cleartext signature reads through decrypt().
     void gnupgClearsigned()
     {

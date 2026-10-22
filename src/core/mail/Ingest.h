@@ -20,6 +20,7 @@ public:
         bool purged = false; // a tombstone keeps it out; msgId is 0
         bool held = false;
         bool trashed = false;
+        bool hidden = false; // machine mail, never shown or announced
     };
 
     static Result process(MailContext &ctx, const QByteArray &raw);

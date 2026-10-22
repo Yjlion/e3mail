@@ -56,6 +56,8 @@ ApplicationWindow {
     function showScan() { firstSetup.scanJoin() }
     function showSetupOAuth() { firstSetup.prefill("dora@gmail.com") }
     function showRestore() { firstSetup.openRestore() }
+    // For screenshots (--page verify).
+    function showVerify() { page = "contacts"; contactsView.verify() }
     function showBackups() { page = "settings"; settingsView.showBackups() }
     onClosing: (close) => { if (narrow && back()) close.accepted = false }
 

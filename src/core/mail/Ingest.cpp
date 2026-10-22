@@ -5,6 +5,7 @@
 #include "Keyring.h"
 #include "Organize.h"
 #include "Search.h"
+#include "SecureJoin.h"
 #include "Threading.h"
 #include "crypto/Autocrypt.h"
 #include "crypto/Pgp.h"
@@ -30,7 +31,10 @@ constexpr qint64 kDayMs = 24LL * 3600 * 1000;
 
 // Headers an encrypted part may protect (RFC 9788); inner copies win.
 const QList<QByteArray> kProtected = {"From", "To", "Cc", "Reply-To", "Subject", "Date", "Message-ID",
-                                      "In-Reply-To", "References", "Importance", "X-Priority", "Priority"};
+                                      "In-Reply-To", "References", "Importance", "X-Priority", "Priority",
+                                      // SecureJoin (ADR 0021): its steps and tokens travel inside.
+                                      "Secure-Join", "Secure-Join-Auth", "Secure-Join-Fingerprint",
+                                      "Secure-Join-Invitenumber"};
 
 bool isEncryptedPart(const mime::Part &p)
 {
@@ -219,8 +223,9 @@ Ingest::Result Ingest::process(MailContext &ctx, const QByteArray &raw)
     const mime::Part outer = mime::parse(raw);
     mime::HeaderList headers = outer.headers;
 
-    // Hidden machine mail (device sync) is recorded but never shown.
-    const bool hidden = headers.has("X-E3-Sync");
+    // Hidden machine mail (device sync, SecureJoin) is recorded but never
+    // shown. SecureJoin is known only once decrypted.
+    const bool deviceSync = headers.has("X-E3-Sync");
 
     // Decrypt, then let protected inner headers win over the outer ones.
     mime::Part content = outer;
@@ -249,6 +254,10 @@ Ingest::Result Ingest::process(MailContext &ctx, const QByteArray &raw)
         }
     }
 
+    const bool handshake = SecureJoin::isHandshake(headers);
+    const bool hidden = deviceSync || handshake;
+    result.hidden = hidden;
+
     std::optional<mime::Part> signedPart;
     if (decryptError.isEmpty() && isSignedPart(content)) {
         signedPart = content;
@@ -276,7 +285,7 @@ Ingest::Result Ingest::process(MailContext &ctx, const QByteArray &raw)
 
     // Device sync by mail: its ops, applied before the message is stored
     // (hidden), outside the transaction that stores it.
-    if (hidden && isEncryptedPart(outer) && decryptError.isEmpty())
+    if (deviceSync && isEncryptedPart(outer) && decryptError.isEmpty())
         sync::MailboxFallback::receive(ctx, extract(content).text, validSigners);
 
     const QList<mime::Address> fromList = mime::parseAddressList(headers.raw("From"));
@@ -404,6 +413,25 @@ Ingest::Result Ingest::process(MailContext &ctx, const QByteArray &raw)
     }
     if (fromSelf && validSigners.contains(Keyring::selfFingerprint(ctx)))
         signedFpr = Keyring::selfFingerprint(ctx);
+
+    // SecureJoin: the next step, now that the keys this message carries
+    // are known.
+    if (handshake && decryptError.isEmpty()) {
+        SecureJoin::Incoming in;
+        in.headers = headers;
+        in.gossip = encrypted ? content.headers.all("Autocrypt-Gossip") : QList<QByteArray>();
+        in.from = from.addr;
+        in.encrypted = encrypted;
+        in.validSigners = validSigners;
+        in.date = date;
+        // A step that cannot be answered (a key that will not encrypt) must
+        // not stop the message being stored: it would be fetched forever.
+        try {
+            SecureJoin::receive(ctx, in);
+        } catch (const std::exception &e) {
+            qCWarning(lcMail) << "SecureJoin step from" << from.addr << "not answered:" << e.what();
+        }
+    }
 
     ctx.db.run("INSERT INTO messages(message_id, direction, state, subject, from_addr, from_name, reply_to, date, "
                "received_at, in_reply_to, body_text, body_html, preview, importance, encrypted, signed_fpr, "

@@ -72,6 +72,8 @@ public:
     static QString normalizeFingerprint(const QString &fpr);
 
 private:
+    Decrypted decryptOnce(const QByteArray &data) const;
+
     rnp_ffi_st *m_ffi = nullptr;
 };
 

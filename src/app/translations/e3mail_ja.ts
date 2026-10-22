@@ -365,6 +365,10 @@ To: %4
         <translation>新しい連絡先</translation>
     </message>
     <message>
+        <source>Verify in person</source>
+        <translation>対面で確認</translation>
+    </message>
+    <message>
         <source>Import or export</source>
         <translation>インポートまたはエクスポート</translation>
     </message>
@@ -435,6 +439,10 @@ To: %4
     <message>
         <source>Verified in person.</source>
         <translation>対面で確認済み。</translation>
+    </message>
+    <message>
+        <source>Verifying in person: waiting for their answer.</source>
+        <translation>対面で確認中：相手の返答を待っています。</translation>
     </message>
     <message>
         <source>Key learned from their mail. Not verified: this proves continuity, not identity.</source>
@@ -694,6 +702,10 @@ To: %4
     <message>
         <source>The original of this message is no longer kept.</source>
         <translation>このメッセージの原本は保存されていません。</translation>
+    </message>
+    <message>
+        <source>This is not a contact&apos;s code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
+        <translation>連絡先のコードではありません。確認用のコードは OPENPGP4FPR: または https://i.delta.chat/ で始まります。</translation>
     </message>
     <message>
         <source>%1 is not an email address, or is in your contacts already.</source>
@@ -1217,6 +1229,17 @@ To: %4
     <message>
         <source>Type the code instead</source>
         <translation>コードを入力する</translation>
+    </message>
+</context>
+<context>
+    <name>SecureJoin</name>
+    <message>
+        <source>This is your own code. Scan the other person&apos;s code instead.</source>
+        <translation>これはあなた自身のコードです。相手のコードをスキャンしてください。</translation>
+    </message>
+    <message>
+        <source>%1 is blocked. Unblock them first.</source>
+        <translation>%1 はブロックされています。先にブロックを解除してください。</translation>
     </message>
 </context>
 <context>
@@ -1965,6 +1988,61 @@ To: %4
     <message>
         <source>Create a tag…</source>
         <translation>タグを作成…</translation>
+    </message>
+</context>
+<context>
+    <name>VerifyDialog</name>
+    <message>
+        <source>Verify in person</source>
+        <translation>対面で確認</translation>
+    </message>
+    <message>
+        <source>Meet, or call on video. Let them scan this code with e3mail or Delta Chat, or scan theirs. Each of you then has the other’s key verified.</source>
+        <translation>会うか、ビデオ通話をしてください。相手に e3mail か Delta Chat でこのコードをスキャンしてもらうか、相手のコードをスキャンします。これでお互いの鍵が確認済みになります。</translation>
+    </message>
+    <message>
+        <source>Your code as a QR code</source>
+        <translation>あなたのコード（QR コード）</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>コピー</translation>
+    </message>
+    <message>
+        <source>Anyone who sees this code can verify themselves to you. If the wrong person saw it, make a new one.</source>
+        <translation>このコードを見た人は誰でもあなたに対して自分を確認できます。見られたくない人に見られた場合は、新しいコードを作ってください。</translation>
+    </message>
+    <message>
+        <source>New code</source>
+        <translation>新しいコード</translation>
+    </message>
+    <message>
+        <source>Point the camera at the other person’s code.</source>
+        <translation>カメラを相手のコードに向けてください。</translation>
+    </message>
+    <message>
+        <source>Their code</source>
+        <translation>相手のコード</translation>
+    </message>
+    <message>
+        <source>Scan</source>
+        <translation>スキャン</translation>
+    </message>
+    <message>
+        <source>Verify</source>
+        <translation>確認</translation>
+    </message>
+    <message>
+        <source>Exchanging keys with %1 by mail. This takes as long as your mail does; you can close this and come back.</source>
+        <translation>%1 とメールで鍵を交換しています。メールの到着と同じだけ時間がかかります。閉じて後で戻ってきても構いません。</translation>
+    </message>
+    <message>
+        <source>%1 is verified.</source>
+        <translation>%1 は確認済みです。</translation>
+    </message>
+    <message>
+        <source>%1 did not answer within a week. Try again when you can both check your mail.</source>
+        <translation>%1 から 1 週間以内に返答がありませんでした。お互いにメールを確認できるときにもう一度試してください。</translation>
     </message>
 </context>
 <context>

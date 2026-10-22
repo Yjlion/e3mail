@@ -2,6 +2,7 @@
 #include "QrDecode.h"
 #include "QrImageProvider.h"
 #include "engine/Pairing.h"
+#include "mail/SecureJoin.h"
 
 #include <QImage>
 #include <QPainter>
@@ -111,6 +112,23 @@ private Q_SLOTS:
         const QImage img = drawn(QStringLiteral("https://example.org/"));
         QCOMPARE(qrdecode::decode(img), QStringLiteral("https://example.org/"));
         QVERIFY(qrdecode::pairingCode(img).isEmpty());
+    }
+
+    // A SecureJoin code (ADR 0021), photographed at an angle, is read by a
+    // scanner that asks for one, and is not a pairing code.
+    void contactCodeReadsBack()
+    {
+        const e3::mail::SecureJoin::Invite inv{QStringLiteral("0123456789ABCDEF0123456789ABCDEF01234567"),
+                                               QStringLiteral("mira.dorn@example.org"), QStringLiteral("Mira Dorn"),
+                                               QStringLiteral("AbCdEfGhIjKlMnOpQrStUvWx"),
+                                               QStringLiteral("zYxWvUtSrQpOnMlKjIhGfEdC")};
+        const QString code = e3::mail::SecureJoin::format(inv);
+        const QImage img = photographed(drawn(code, 1040), 15.0);
+        const QStringList prefixes{QStringLiteral("OPENPGP4FPR:"), QStringLiteral("https://i.delta.chat")};
+        QCOMPARE(qrdecode::codeWithPrefix(img, prefixes), code);
+        QCOMPARE(e3::mail::SecureJoin::parse(qrdecode::codeWithPrefix(img, prefixes))->name, QStringLiteral("Mira Dorn"));
+        QVERIFY(qrdecode::pairingCode(img).isEmpty());
+        QVERIFY(qrdecode::codeWithPrefix(drawn(longCode()), prefixes).isEmpty());
     }
 
     void nothingToRead()

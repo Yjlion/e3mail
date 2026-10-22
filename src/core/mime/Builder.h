@@ -35,6 +35,9 @@ struct OutgoingMail
     QList<OutgoingAttachment> attachments;
     int importance = 0;         // -1 low, 0 normal (no header), 1 high
     QList<QPair<QByteArray, QByteArray>> extraHeaders; // e.g. Autocrypt
+    // Only inside the encrypted part, with the protected headers; never on
+    // the outside and never in cleartext mail (e.g. SecureJoin's tokens).
+    QList<QPair<QByteArray, QByteArray>> innerHeaders;
 };
 
 class Builder

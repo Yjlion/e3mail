@@ -15,6 +15,7 @@ Rectangle {
     readonly property var phoneLabels: [{ v: "mobile", t: qsTr("Mobile") }, { v: "work", t: qsTr("Work") },
                                         { v: "home", t: qsTr("Home") }, { v: "other", t: qsTr("Other") }]
 
+    function verify() { verifyDialog.begin() }
     function reload() { contacts = MailApp.contacts(search.text) }
     function show(id) {
         current = id ? MailApp.contact(id) : ({})
@@ -66,6 +67,7 @@ Rectangle {
                     onTextChanged: view.reload()
                 }
                 IconButton { iconName: "plus"; tip: qsTr("New contact"); onClicked: newDialog.openNew() }
+                IconButton { iconName: "shield"; tip: qsTr("Verify in person"); onClicked: verifyDialog.begin() }
                 ToolButton {
                     text: "⋯"
                     implicitWidth: 32
@@ -234,6 +236,7 @@ Rectangle {
                     Text {
                         Layout.topMargin: 12
                         text: view.current.verified ? qsTr("Verified in person.")
+                            : view.current.joining === "waiting" ? qsTr("Verifying in person: waiting for their answer.")
                             : view.current.fingerprint ? qsTr("Key learned from their mail. Not verified: this proves continuity, not identity.")
                             : qsTr("No key yet. Mail to them goes unencrypted until they send you one.")
                         color: Theme.text
@@ -288,6 +291,12 @@ Rectangle {
                 }
             }
         }
+    }
+
+    VerifyDialog {
+        id: verifyDialog
+        onVerified: view.reload()
+        onClosed: { view.reload(); if (view.current.id) view.show(view.current.id) }
     }
 
     Dialog {

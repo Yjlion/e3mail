@@ -365,6 +365,10 @@ To: %4
         <translation>جهة اتصال جديدة</translation>
     </message>
     <message>
+        <source>Verify in person</source>
+        <translation>التوثيق شخصيًّا</translation>
+    </message>
+    <message>
         <source>Import or export</source>
         <translation>استيراد أو تصدير</translation>
     </message>
@@ -435,6 +439,10 @@ To: %4
     <message>
         <source>Verified in person.</source>
         <translation>موثَّق شخصيًّا.</translation>
+    </message>
+    <message>
+        <source>Verifying in person: waiting for their answer.</source>
+        <translation>جارٍ التوثيق شخصيًّا: بانتظار الرد.</translation>
     </message>
     <message>
         <source>Key learned from their mail. Not verified: this proves continuity, not identity.</source>
@@ -699,6 +707,10 @@ To: %4
     <message>
         <source>The original of this message is no longer kept.</source>
         <translation>لم يعد أصل هذه الرسالة محفوظًا.</translation>
+    </message>
+    <message>
+        <source>This is not a contact&apos;s code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
+        <translation>هذا ليس رمز جهة اتصال. يبدأ رمز التوثيق بـ OPENPGP4FPR: أو https://i.delta.chat/.</translation>
     </message>
     <message>
         <source>%1 is not an email address, or is in your contacts already.</source>
@@ -1267,6 +1279,17 @@ To: %4
     <message>
         <source>Type the code instead</source>
         <translation>اكتب الرمز بدلًا من ذلك</translation>
+    </message>
+</context>
+<context>
+    <name>SecureJoin</name>
+    <message>
+        <source>This is your own code. Scan the other person&apos;s code instead.</source>
+        <translation>هذا رمزك أنت. امسح رمز الشخص الآخر بدلًا منه.</translation>
+    </message>
+    <message>
+        <source>%1 is blocked. Unblock them first.</source>
+        <translation>%1 محظور. ألغِ الحظر أولًا.</translation>
     </message>
 </context>
 <context>
@@ -2020,6 +2043,61 @@ To: %4
     <message>
         <source>Create a tag…</source>
         <translation>إنشاء وسم…</translation>
+    </message>
+</context>
+<context>
+    <name>VerifyDialog</name>
+    <message>
+        <source>Verify in person</source>
+        <translation>التوثيق شخصيًّا</translation>
+    </message>
+    <message>
+        <source>Meet, or call on video. Let them scan this code with e3mail or Delta Chat, or scan theirs. Each of you then has the other’s key verified.</source>
+        <translation>التقيا، أو اتصلا بالفيديو. دعه يمسح هذا الرمز بـ e3mail أو Delta Chat، أو امسح رمزه. عندها يصبح لدى كل منكما مفتاح الآخر موثَّقًا.</translation>
+    </message>
+    <message>
+        <source>Your code as a QR code</source>
+        <translation>رمزك كرمز QR</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>نسخ</translation>
+    </message>
+    <message>
+        <source>Anyone who sees this code can verify themselves to you. If the wrong person saw it, make a new one.</source>
+        <translation>يستطيع كل من يرى هذا الرمز أن يوثّق نفسه لديك. إن رآه الشخص الخطأ فأنشئ رمزًا جديدًا.</translation>
+    </message>
+    <message>
+        <source>New code</source>
+        <translation>رمز جديد</translation>
+    </message>
+    <message>
+        <source>Point the camera at the other person’s code.</source>
+        <translation>وجّه الكاميرا إلى رمز الشخص الآخر.</translation>
+    </message>
+    <message>
+        <source>Their code</source>
+        <translation>رمزه</translation>
+    </message>
+    <message>
+        <source>Scan</source>
+        <translation>مسح</translation>
+    </message>
+    <message>
+        <source>Verify</source>
+        <translation>توثيق</translation>
+    </message>
+    <message>
+        <source>Exchanging keys with %1 by mail. This takes as long as your mail does; you can close this and come back.</source>
+        <translation>جارٍ تبادل المفاتيح مع %1 عبر البريد. يستغرق ذلك قدر ما يستغرقه بريدك؛ يمكنك إغلاق هذا والعودة لاحقًا.</translation>
+    </message>
+    <message>
+        <source>%1 is verified.</source>
+        <translation>%1 موثَّق.</translation>
+    </message>
+    <message>
+        <source>%1 did not answer within a week. Try again when you can both check your mail.</source>
+        <translation>لم يرد %1 خلال أسبوع. حاول مجددًا حين يتمكن كلاكما من تفقد البريد.</translation>
     </message>
 </context>
 <context>

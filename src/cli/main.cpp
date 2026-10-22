@@ -20,6 +20,7 @@
 #include "mail/Organize.h"
 #include "mail/Preferences.h"
 #include "mail/Search.h"
+#include "mail/SecureJoin.h"
 #include "mail/VCard.h"
 #include "SignIn.h"
 #include "backup/Repository.h"
@@ -151,6 +152,9 @@ int main(int argc, char **argv)
         "  config <key> [value]           read or write an account setting\n"
         "  housekeeping                   run deadlines now\n"
         "  key                            this account's public key, armoured\n"
+        "  verify-invite [--renew]        this account's SecureJoin code, for someone to verify you with\n"
+        "  verify-join <code>             verify the person whose code this is (then sync, both sides)\n"
+        "  verify-status                  SecureJoin verifications this account started\n"
         "  run [seconds]                  run the account as the app does (mail and device sync) for a while\n"
         "  devices                        this device and the devices paired with it\n"
         "  fallback-now                   mail this device's changes to the account now, if a paired\n"
@@ -209,6 +213,7 @@ int main(int argc, char **argv)
         {QStringLiteral("dest-secret"), QStringLiteral("Backups: the destination's password or secret key."), QStringLiteral("secret")},
         {QStringLiteral("passphrase"), QStringLiteral("Backups: the passphrase that opens them."), QStringLiteral("text")},
         {QStringLiteral("snapshot"), QStringLiteral("With restore: which backup (default: the newest)."), QStringLiteral("name")},
+        {QStringLiteral("renew"), QStringLiteral("With verify-invite: a new code; earlier ones stop working.")},
     };
     p.addOptions(opts);
     p.addPositionalArgument(QStringLiteral("command"), QStringLiteral("What to do."));
@@ -702,6 +707,25 @@ int main(int argc, char **argv)
         } else if (cmd == QLatin1String("key")) {
             const QString fpr = mail::Keyring::selfFingerprint(ctx);
             std::fputs(ctx.pgp.exportPublic(fpr, true).constData(), stdout);
+        } else if (cmd == QLatin1String("verify-invite")) {
+            std::puts(qPrintable(p.isSet(QStringLiteral("renew")) ? mail::SecureJoin::renewInvite(ctx)
+                                                                    : mail::SecureJoin::invite(ctx)));
+        } else if (cmd == QLatin1String("verify-join")) {
+            const auto inv = mail::SecureJoin::parse(args.value(1));
+            if (!inv)
+                fail(QStringLiteral("not a SecureJoin code"));
+            mail::SecureJoin::join(ctx, *inv);
+            print(QJsonObject{{QStringLiteral("joining"), inv->addr}, {QStringLiteral("fingerprint"), inv->fpr}});
+        } else if (cmd == QLatin1String("verify-status")) {
+            static const QStringList kStates{QStringLiteral("failed"), QStringLiteral("none"), QStringLiteral("requested"),
+                                             QStringLiteral("token-sent"), QStringLiteral("done")};
+            QJsonArray a;
+            for (const auto &j : mail::SecureJoin::joins(ctx))
+                a.append(QJsonObject{{QStringLiteral("addr"), j.addr},
+                                     {QStringLiteral("fingerprint"), j.fpr},
+                                     {QStringLiteral("state"), kStates.value(int(j.state) + 1)},
+                                     {QStringLiteral("error"), j.error}});
+            print(a);
         } else if (cmd == QLatin1String("housekeeping")) {
             const auto r = mail::Organize::housekeeping(ctx);
             print(QJsonObject{{QStringLiteral("purged"), r.purged}, {QStringLiteral("swept"), r.swept},

@@ -126,6 +126,8 @@ int main(int argc, char *argv[])
             QMetaObject::invokeMethod(root, "showJoin");
         else if (p.value(page) == QLatin1String("scan")) // the same, reading the code with the camera
             QMetaObject::invokeMethod(root, "showScan");
+        else if (p.value(page) == QLatin1String("verify")) // contacts, verifying someone in person
+            QMetaObject::invokeMethod(root, "showVerify");
         else if (p.value(page) == QLatin1String("setup-oauth")) // first run, a Gmail address
             QMetaObject::invokeMethod(root, "showSetupOAuth");
         else if (p.value(page) == QLatin1String("restore")) // first run, restoring a backup

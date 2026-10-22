@@ -31,7 +31,7 @@
     <name>BackupController</name>
     <message>
         <source>The passphrase does not open the backups there.</source>
-        <translation>La phrase de passe n'ouvre pas les sauvegardes qui s'y trouvent.</translation>
+        <translation>La phrase de passe n&apos;ouvre pas les sauvegardes qui s&apos;y trouvent.</translation>
     </message>
     <message>
         <source>Google Drive, folder “%1”</source>
@@ -43,7 +43,7 @@
     </message>
     <message>
         <source>Use a passphrase of at least 12 characters, or a recovery code.</source>
-        <translation>Utilisez une phrase de passe d'au moins 12 caractères, ou un code de récupération.</translation>
+        <translation>Utilisez une phrase de passe d&apos;au moins 12 caractères, ou un code de récupération.</translation>
     </message>
 </context>
 <context>
@@ -54,7 +54,7 @@
     </message>
     <message>
         <source>A folder (a drive, or one another program syncs)</source>
-        <translation>Un dossier (un disque, ou un dossier qu'un autre programme synchronise)</translation>
+        <translation>Un dossier (un disque, ou un dossier qu&apos;un autre programme synchronise)</translation>
     </message>
     <message>
         <source>WebDAV (Nextcloud and others)</source>
@@ -110,11 +110,11 @@
     </message>
     <message>
         <source>Access key</source>
-        <translation>Clé d'accès</translation>
+        <translation>Clé d&apos;accès</translation>
     </message>
     <message>
         <source>User name</source>
-        <translation>Nom d'utilisateur</translation>
+        <translation>Nom d&apos;utilisateur</translation>
     </message>
     <message>
         <source>Secret key</source>
@@ -158,23 +158,23 @@
     </message>
     <message>
         <source>Everything is encrypted on this device with it before it leaves. Without it the backups cannot be opened, by anyone: write it down and keep it apart from this device.</source>
-        <translation>Tout est chiffré avec elle sur cet appareil avant de le quitter. Sans elle, personne ne peut ouvrir les sauvegardes : notez-la et gardez-la à l'écart de cet appareil.</translation>
+        <translation>Tout est chiffré avec elle sur cet appareil avant de le quitter. Sans elle, personne ne peut ouvrir les sauvegardes : notez-la et gardez-la à l&apos;écart de cet appareil.</translation>
     </message>
     <message>
         <source>A new device of the account is made from the newest backup there. It does not sync with your other devices until you pair it.</source>
-        <translation>Un nouvel appareil du compte est créé à partir de la sauvegarde la plus récente. Il ne se synchronise pas avec vos autres appareils tant que vous ne l'associez pas.</translation>
+        <translation>Un nouvel appareil du compte est créé à partir de la sauvegarde la plus récente. Il ne se synchronise pas avec vos autres appareils tant que vous ne l&apos;associez pas.</translation>
     </message>
     <message>
         <source>The server&apos;s SSH host key has changed. Trust the new one only if the server&apos;s administrator says it changed:</source>
-        <translation>La clé d'hôte SSH du serveur a changé. Ne faites confiance à la nouvelle que si l'administrateur du serveur confirme ce changement :</translation>
+        <translation>La clé d&apos;hôte SSH du serveur a changé. Ne faites confiance à la nouvelle que si l&apos;administrateur du serveur confirme ce changement :</translation>
     </message>
     <message>
         <source>The server&apos;s SSH host key is not known yet. Trust it only if it matches what the server&apos;s administrator gives you:</source>
-        <translation>La clé d'hôte SSH du serveur n'est pas encore connue. Ne lui faites confiance que si elle correspond à ce que vous donne l'administrateur du serveur :</translation>
+        <translation>La clé d&apos;hôte SSH du serveur n&apos;est pas encore connue. Ne lui faites confiance que si elle correspond à ce que vous donne l&apos;administrateur du serveur :</translation>
     </message>
     <message>
         <source>The server&apos;s certificate is not trusted. Trust it only if its fingerprint matches what the server&apos;s administrator gives you:</source>
-        <translation>Le certificat du serveur n'est pas approuvé. Ne lui faites confiance que si son empreinte correspond à ce que vous donne l'administrateur du serveur :</translation>
+        <translation>Le certificat du serveur n&apos;est pas approuvé. Ne lui faites confiance que si son empreinte correspond à ce que vous donne l&apos;administrateur du serveur :</translation>
     </message>
     <message>
         <source>Trust it</source>
@@ -365,6 +365,10 @@ Objet : %3
         <translation>Nouveau contact</translation>
     </message>
     <message>
+        <source>Verify in person</source>
+        <translation>Vérifier en personne</translation>
+    </message>
+    <message>
         <source>Import or export</source>
         <translation>Importer ou exporter</translation>
     </message>
@@ -435,6 +439,10 @@ Objet : %3
     <message>
         <source>Verified in person.</source>
         <translation>Vérifié en personne.</translation>
+    </message>
+    <message>
+        <source>Verifying in person: waiting for their answer.</source>
+        <translation>Vérification en personne : en attente de sa réponse.</translation>
     </message>
     <message>
         <source>Key learned from their mail. Not verified: this proves continuity, not identity.</source>
@@ -695,6 +703,10 @@ Objet : %3
     <message>
         <source>The original of this message is no longer kept.</source>
         <translation>L’original de ce message n’est plus conservé.</translation>
+    </message>
+    <message>
+        <source>This is not a contact&apos;s code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
+        <translation>Ce n’est pas le code d’un contact. Un code de vérification commence par OPENPGP4FPR: ou https://i.delta.chat/.</translation>
     </message>
     <message>
         <source>%1 is not an email address, or is in your contacts already.</source>
@@ -1230,6 +1242,17 @@ Objet : %3
     </message>
 </context>
 <context>
+    <name>SecureJoin</name>
+    <message>
+        <source>This is your own code. Scan the other person&apos;s code instead.</source>
+        <translation>C’est votre propre code. Scannez plutôt celui de l’autre personne.</translation>
+    </message>
+    <message>
+        <source>%1 is blocked. Unblock them first.</source>
+        <translation>%1 est bloqué. Débloquez-le d’abord.</translation>
+    </message>
+</context>
+<context>
     <name>SettingsView</name>
     <message>
         <source>Settings</source>
@@ -1541,7 +1564,7 @@ Objet : %3
     </message>
     <message>
         <source>Encrypted, to %1, once a day while e3mail runs.</source>
-        <translation>Chiffrées, vers %1, une fois par jour tant qu'e3mail fonctionne.</translation>
+        <translation>Chiffrées, vers %1, une fois par jour tant qu&apos;e3mail fonctionne.</translation>
     </message>
     <message>
         <source>Backing up…</source>
@@ -1569,7 +1592,7 @@ Objet : %3
     </message>
     <message>
         <source>Back this mailbox up, encrypted, to a place of your choice. The place sees only encrypted data and its size.</source>
-        <translation>Sauvegardez cette boîte, chiffrée, à l'endroit de votre choix. Cet endroit ne voit que des données chiffrées et leur taille.</translation>
+        <translation>Sauvegardez cette boîte, chiffrée, à l&apos;endroit de votre choix. Cet endroit ne voit que des données chiffrées et leur taille.</translation>
     </message>
     <message>
         <source>Setting up…</source>
@@ -1976,6 +1999,61 @@ Objet : %3
     <message>
         <source>Create a tag…</source>
         <translation>Créer une étiquette…</translation>
+    </message>
+</context>
+<context>
+    <name>VerifyDialog</name>
+    <message>
+        <source>Verify in person</source>
+        <translation>Vérifier en personne</translation>
+    </message>
+    <message>
+        <source>Meet, or call on video. Let them scan this code with e3mail or Delta Chat, or scan theirs. Each of you then has the other’s key verified.</source>
+        <translation>Rencontrez-vous, ou appelez-vous en vidéo. Faites scanner ce code avec e3mail ou Delta Chat, ou scannez le sien. Chacun a alors la clé de l’autre vérifiée.</translation>
+    </message>
+    <message>
+        <source>Your code as a QR code</source>
+        <translation>Votre code en QR code</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Copier</translation>
+    </message>
+    <message>
+        <source>Anyone who sees this code can verify themselves to you. If the wrong person saw it, make a new one.</source>
+        <translation>Quiconque voit ce code peut se vérifier auprès de vous. Si la mauvaise personne l’a vu, créez-en un nouveau.</translation>
+    </message>
+    <message>
+        <source>New code</source>
+        <translation>Nouveau code</translation>
+    </message>
+    <message>
+        <source>Point the camera at the other person’s code.</source>
+        <translation>Pointez la caméra vers le code de l’autre personne.</translation>
+    </message>
+    <message>
+        <source>Their code</source>
+        <translation>Son code</translation>
+    </message>
+    <message>
+        <source>Scan</source>
+        <translation>Scanner</translation>
+    </message>
+    <message>
+        <source>Verify</source>
+        <translation>Vérifier</translation>
+    </message>
+    <message>
+        <source>Exchanging keys with %1 by mail. This takes as long as your mail does; you can close this and come back.</source>
+        <translation>Échange des clés avec %1 par courriel. Cela prend le temps de votre courriel ; vous pouvez fermer ceci et revenir plus tard.</translation>
+    </message>
+    <message>
+        <source>%1 is verified.</source>
+        <translation>%1 est vérifié.</translation>
+    </message>
+    <message>
+        <source>%1 did not answer within a week. Try again when you can both check your mail.</source>
+        <translation>%1 n’a pas répondu en une semaine. Réessayez quand vous pourrez tous deux relever votre courrier.</translation>
     </message>
 </context>
 <context>

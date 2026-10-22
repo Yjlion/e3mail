@@ -32,8 +32,17 @@ QString decode(const QImage &image)
 
 QString pairingCode(const QImage &image)
 {
+    return codeWithPrefix(image, {QStringLiteral("E3PAIR1:")});
+}
+
+QString codeWithPrefix(const QImage &image, const QStringList &prefixes)
+{
     const QString text = decode(image);
-    return text.startsWith(QLatin1String("E3PAIR1:")) ? text : QString();
+    for (const QString &p : prefixes) {
+        if (text.startsWith(p, Qt::CaseInsensitive))
+            return text;
+    }
+    return {};
 }
 
 } // namespace qrdecode

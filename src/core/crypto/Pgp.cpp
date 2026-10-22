@@ -11,6 +11,7 @@
 #include <rnp/rnp_err.h>
 
 #include <memory>
+#include <optional>
 
 namespace e3::crypto {
 
@@ -299,13 +300,139 @@ QByteArray Pgp::encrypt(const QByteArray &plain, const QStringList &recipients, 
     return bytesOf(out.get());
 }
 
+namespace {
+
+// One OpenPGP packet: where it starts and ends, and its tag. Only definite
+// lengths: the session key packets that lead a message never use partial
+// ones.
+struct Packet
+{
+    qsizetype start = 0;
+    qsizetype body = 0;
+    qsizetype end = 0;
+    int tag = 0;
+};
+
+std::optional<Packet> packetAt(const QByteArray &d, qsizetype pos)
+{
+    auto byte = [&d](qsizetype i) { return i < d.size() ? int(quint8(d[i])) : -1; };
+    const int b = byte(pos);
+    if (b < 0 || !(b & 0x80))
+        return std::nullopt;
+    Packet p;
+    p.start = pos;
+    qsizetype len = 0;
+    qsizetype at = pos + 1;
+    if (b & 0x40) { // new format
+        p.tag = b & 0x3f;
+        const int o = byte(at++);
+        if (o < 0 || (o >= 224 && o < 255))
+            return std::nullopt;
+        if (o < 192) {
+            len = o;
+        } else if (o < 224) {
+            const int o2 = byte(at++);
+            if (o2 < 0)
+                return std::nullopt;
+            len = ((o - 192) << 8) + o2 + 192;
+        } else {
+            for (int i = 0; i < 4; ++i) {
+                const int x = byte(at++);
+                if (x < 0)
+                    return std::nullopt;
+                len = (len << 8) | x;
+            }
+        }
+    } else { // old format
+        p.tag = (b >> 2) & 0x0f;
+        const int bytes = (b & 3) == 0 ? 1 : (b & 3) == 1 ? 2 : (b & 3) == 2 ? 4 : 0;
+        if (!bytes)
+            return std::nullopt;
+        for (int i = 0; i < bytes; ++i) {
+            const int x = byte(at++);
+            if (x < 0)
+                return std::nullopt;
+            len = (len << 8) | x;
+        }
+    }
+    p.body = at;
+    p.end = at + len;
+    if (p.end > d.size())
+        return std::nullopt;
+    return p;
+}
+
+// RNP 0.18 tries hidden recipients (key id 0, as Delta Chat sends to
+// everyone) only in the first public-key session key packet: when ours is
+// the second, it gives up. These are the same message with each later
+// hidden-recipient packet moved to the front.
+QList<QByteArray> hiddenRecipientOrders(const QByteArray &binary)
+{
+    QList<Packet> esks;
+    qsizetype pos = 0;
+    while (const auto p = packetAt(binary, pos)) {
+        if (p->tag != 1 && p->tag != 3)
+            break;
+        esks.append(*p);
+        pos = p->end;
+    }
+    // A version 3 public-key session key packet naming key id 0.
+    const auto hidden = [&binary](const Packet &p) {
+        return p.tag == 1 && p.end - p.body >= 10 && quint8(binary[p.body]) == 3
+            && binary.mid(p.body + 1, 8) == QByteArray(8, '\0');
+    };
+    QList<QByteArray> out;
+    for (qsizetype i = 1; i < esks.size(); ++i) {
+        if (!hidden(esks[i]))
+            continue;
+        QByteArray d = binary.mid(esks[i].start, esks[i].end - esks[i].start);
+        for (qsizetype j = 0; j < esks.size(); ++j) {
+            if (j != i)
+                d += binary.mid(esks[j].start, esks[j].end - esks[j].start);
+        }
+        d += binary.mid(pos);
+        out.append(d);
+    }
+    return out;
+}
+
+} // namespace
+
 Pgp::Decrypted Pgp::decrypt(const QByteArray &data) const
+{
+    try {
+        return decryptOnce(data);
+    } catch (const PgpError &) {
+        QByteArray binary = data;
+        if (data.trimmed().startsWith("-----BEGIN PGP MESSAGE-----")) {
+            const Input in = inputFrom(data);
+            const Output out = memoryOutput();
+            if (rnp_dearmor(in.get(), out.get()) != RNP_SUCCESS)
+                throw;
+            binary = bytesOf(out.get());
+        }
+        for (const QByteArray &reordered : hiddenRecipientOrders(binary)) {
+            try {
+                return decryptOnce(reordered);
+            } catch (const PgpError &) {
+            }
+        }
+        throw;
+    }
+}
+
+Pgp::Decrypted Pgp::decryptOnce(const QByteArray &data) const
 {
     const Input in = inputFrom(data);
     const Output out = memoryOutput();
     rnp_op_verify_t op = nullptr;
     check(rnp_op_verify_create(&op, m_ffi, in.get(), out.get()), "rnp_op_verify_create");
     const std::unique_ptr<rnp_op_verify_st, decltype(&rnp_op_verify_destroy)> guard(op, &rnp_op_verify_destroy);
+#ifdef RNP_VERIFY_ALLOW_HIDDEN_RECIPIENT
+    // Delta Chat hides who a message is for: every session key packet names
+    // key id 0. RNP then tries each secret key, but only when asked to.
+    check(rnp_op_verify_set_flags(op, RNP_VERIFY_ALLOW_HIDDEN_RECIPIENT), "rnp_op_verify_set_flags");
+#endif
     const rnp_result_t rc = rnp_op_verify_execute(op);
 
     Decrypted result;

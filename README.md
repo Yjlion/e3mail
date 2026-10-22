@@ -83,11 +83,12 @@ over TLS in [`scripts/e2e.py`](scripts/e2e.py).
 | `.deb`, AppImage, Windows installer + portable zip, macOS `.dmg` | ⏳ release workflow not yet run; AppImage built locally |
 | Interop with GnuPG (our PGP/MIME decrypts and verifies) | ✅ |
 | Multi-device sync over Iroh, with a mailbox fallback | ✅ |
-| SecureJoin QR verification (Delta Chat compatible) | ⏳ Phase 9 |
+| SecureJoin QR verification (Delta Chat compatible) | ✅ tried against Delta Chat 2.64 |
 | Encrypted backups to a folder, WebDAV, S3, SFTP, Google Drive or OneDrive | ✅ |
 | Sign-in with OAuth 2 for Gmail and Outlook | ⏳ built, not yet tried against Google or Microsoft |
 | At-rest encryption, read receipts, structured email | ⏳ later phases |
-| Interop with Thunderbird, Delta Chat or a mainstream provider | ❌ |
+| Interop with Delta Chat ([`scripts/interop-pass.py`](scripts/interop-pass.py)) | ✅ verification and encrypted mail, both ways |
+| Interop with Thunderbird or a mainstream provider | ❌ |
 | Code signing | ❌ |
 
 See [`docs/handoff.md`](docs/handoff.md) for what is true right now, including
