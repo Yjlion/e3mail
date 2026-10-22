@@ -785,6 +785,10 @@ To: %4
         </translation>
     </message>
     <message>
+        <source>The current passphrase is not right.</source>
+        <translation>משפט הסיסמה הנוכחי שגוי.</translation>
+    </message>
+    <message>
         <source>%1 is not an email address, or is in your contacts already.</source>
         <translation>%1 אינה כתובת דואר, או שכבר נמצאת באנשי הקשר שלך.</translation>
     </message>
@@ -1571,6 +1575,34 @@ To: %4
         <translation>מסד הנתונים של החשבון (לא היה מחזיק מפתחות של המערכת)</translation>
     </message>
     <message>
+        <source>On this device</source>
+        <translation>במכשיר הזה</translation>
+    </message>
+    <message>
+        <source>Your mail here is encrypted, and your passphrase opens it. Without it, nobody can read it, and neither can you.</source>
+        <translation>הדואר שלך כאן מוצפן, ומשפט הסיסמה שלך פותח אותו. בלעדיו איש לא יוכל לקרוא אותו, גם לא את/ה.</translation>
+    </message>
+    <message>
+        <source>Your mail here is encrypted with a key kept in the system keyring. Anyone who can sign in to this computer as you can read it.</source>
+        <translation>הדואר שלך כאן מוצפן במפתח שנשמר במחזיק המפתחות של המערכת. כל מי שיכול להתחבר למחשב הזה בשמך יכול לקרוא אותו.</translation>
+    </message>
+    <message>
+        <source>Your mail here is encrypted, but its key is stored beside it (no system keyring was available). Set a passphrase to protect it.</source>
+        <translation>הדואר שלך כאן מוצפן, אבל המפתח שלו שמור לצידו (אין מחזיק מפתחות של המערכת). הגדירו משפט סיסמה כדי להגן עליו.</translation>
+    </message>
+    <message>
+        <source>Change passphrase…</source>
+        <translation>שינוי משפט הסיסמה…</translation>
+    </message>
+    <message>
+        <source>Set a passphrase…</source>
+        <translation>הגדרת משפט סיסמה…</translation>
+    </message>
+    <message>
+        <source>Remove passphrase…</source>
+        <translation>הסרת משפט הסיסמה…</translation>
+    </message>
+    <message>
         <source>Originals</source>
         <translation>מקורות</translation>
     </message>
@@ -1729,6 +1761,46 @@ To: %4
     <message>
         <source>e3mail %1 · unaudited development software</source>
         <translation>e3mail %1 · תוכנה בפיתוח שלא עברה ביקורת</translation>
+    </message>
+    <message>
+        <source>Passphrase</source>
+        <translation>משפט סיסמה</translation>
+    </message>
+    <message>
+        <source>Remove passphrase</source>
+        <translation>הסרת משפט הסיסמה</translation>
+    </message>
+    <message>
+        <source>e3mail will ask for it each time it starts. If you forget it, the mail on this device cannot be recovered; a backup or another device can restore it.</source>
+        <translation>e3mail יבקש אותו בכל הפעלה. אם תשכחו אותו, לא ניתן יהיה לשחזר את הדואר במכשיר הזה; גיבוי או מכשיר אחר יכולים לשחזר אותו.</translation>
+    </message>
+    <message>
+        <source>Your mail stays encrypted; its key goes back to the system keyring, or beside the mail if there is none.</source>
+        <translation>הדואר נשאר מוצפן; המפתח חוזר למחזיק המפתחות של המערכת, או לצד הדואר אם אין כזה.</translation>
+    </message>
+    <message>
+        <source>Current passphrase</source>
+        <translation>משפט הסיסמה הנוכחי</translation>
+    </message>
+    <message>
+        <source>New passphrase</source>
+        <translation>משפט סיסמה חדש</translation>
+    </message>
+    <message>
+        <source>New passphrase again</source>
+        <translation>משפט הסיסמה החדש שוב</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>שמירה</translation>
+    </message>
+    <message>
+        <source>Use at least 8 characters.</source>
+        <translation>יש להשתמש ב־8 תווים לפחות.</translation>
+    </message>
+    <message>
+        <source>The two do not match.</source>
+        <translation>השניים אינם תואמים.</translation>
     </message>
     <message>
         <source>Remove %1?</source>
@@ -2102,6 +2174,29 @@ To: %4
     </message>
 </context>
 <context>
+    <name>Unlock</name>
+    <message>
+        <source>Enter your passphrase</source>
+        <translation>הזינו את משפט הסיסמה</translation>
+    </message>
+    <message>
+        <source>Your mail on this device is encrypted with it.</source>
+        <translation>הדואר שלך במכשיר הזה מוצפן בו.</translation>
+    </message>
+    <message>
+        <source>Passphrase</source>
+        <translation>משפט סיסמה</translation>
+    </message>
+    <message>
+        <source>That passphrase does not open your mail.</source>
+        <translation>משפט הסיסמה הזה אינו פותח את הדואר שלך.</translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation>פתיחה</translation>
+    </message>
+</context>
+<context>
     <name>VerifyDialog</name>
     <message>
         <source>Verify in person</source>
@@ -2212,6 +2307,10 @@ To: %4
     <message>
         <source>A file asked for is not here.</source>
         <translation>קובץ שהתבקש אינו כאן.</translation>
+    </message>
+    <message>
+        <source>A file here is damaged; the copy was stopped.</source>
+        <translation>קובץ כאן פגום; ההעתקה נעצרה.</translation>
     </message>
     <message>
         <source>The copy of the mailbox could not be read.</source>

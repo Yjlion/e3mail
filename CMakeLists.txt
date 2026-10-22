@@ -81,13 +81,8 @@ include(E3mailRnp)
 # Charsets (every one ICU knows, whatever the Qt build) and locale-aware date
 # patterns. See ADR 0014.
 find_package(ICU 60 REQUIRED COMPONENTS uc i18n data)
-find_package(SQLite3 REQUIRED)
-# CMake 4 renamed the imported target; accept either.
-if(TARGET SQLite3::SQLite3)
-    set(E3MAIL_SQLITE_TARGET SQLite3::SQLite3)
-else()
-    set(E3MAIL_SQLITE_TARGET SQLite::SQLite3)
-endif()
+# SQLite with encryption, built here (ADR 0023).
+include(E3mailSqlite)
 find_package(Qt6Keychain CONFIG QUIET)
 # Backups to SFTP (ADR 0020) through libssh, where it is found.
 option(E3MAIL_SFTP "Back up to SFTP servers (libssh)" ON)

@@ -52,7 +52,7 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y ninja-build pkg-config libsqlite3-dev gnupg \
+          sudo apt-get install -y ninja-build pkg-config gnupg \
               libgl1-mesa-dev libxkbcommon-dev libjson-c-dev libbotan-2-dev zlib1g-dev libbz2-dev libicu-dev libssh-dev
           # Distribution RNP where available; otherwise build it.
           if ! sudo apt-get install -y librnp-dev; then
@@ -64,7 +64,7 @@ jobs:
       - name: Dependencies (macOS)
         if: runner.os == 'macOS'
         run: |
-          brew install ninja rnp sqlite pkg-config gnupg icu4c libssh botan
+          brew install ninja rnp pkg-config gnupg icu4c libssh botan
           # icu4c is keg-only: tell find_package(ICU) where it is.
           echo "ICU_ROOT=$(brew --prefix icu4c)" >> "$GITHUB_ENV"
 

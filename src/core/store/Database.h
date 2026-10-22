@@ -85,8 +85,14 @@ class Database
 {
 public:
     // Opens (creating if needed) and enables WAL, foreign keys and a busy
-    // timeout so a fetch thread and the UI thread can share one file.
-    explicit Database(const QString &path);
+    // timeout so a fetch thread and the UI thread can share one file. With a
+    // key (32 bytes, ADR 0023) the file is encrypted page by page; a wrong
+    // key throws.
+    explicit Database(const QString &path, const QByteArray &key = {});
+    // Whether the file at `path` is an ordinary, unencrypted SQLite file.
+    static bool isPlaintext(const QString &path);
+    // Encrypts with `key`, re-encrypts, or (empty) decrypts, in place.
+    void rekey(const QByteArray &key);
     ~Database();
     Database(const Database &) = delete;
     Database &operator=(const Database &) = delete;

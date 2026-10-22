@@ -3,8 +3,10 @@
 
 #include "Account.h"
 #include "AccountManager.h"
+#include "AtRest.h"
 #include "backup/Remote.h"
 #include "net/SyncSocket.h"
+#include "store/BlobStore.h"
 #include "store/Config.h"
 #include "store/Database.h"
 #include "store/OpLog.h"
@@ -77,6 +79,7 @@ void forget(Account &a)
 QFuture<Outcome> run(Account &a)
 {
     const QString dir = a.dir();
+    const QByteArray dbKey = a.dbKey();
     const QJsonObject c = config(a);
     const QString secret = a.secret(kDestSecret, cfg::BackupDestSecret);
     const QByteArray master = QByteArray::fromBase64(a.secret(kKey, cfg::BackupKey).toLatin1());
@@ -89,7 +92,7 @@ QFuture<Outcome> run(Account &a)
     about.secrets = QJsonObject{{QStringLiteral("in"), s.inPassword},
                                 {QStringLiteral("smtp"), s.smtpPassword},
                                 {QStringLiteral("oauth"), s.oauthRefresh}};
-    return QtConcurrent::run([dir, c, secret, master, about]() -> Outcome {
+    return QtConcurrent::run([dir, dbKey, c, secret, master, about]() -> Outcome {
         Outcome o;
         try {
             if (master.size() != 32)
@@ -100,8 +103,9 @@ QFuture<Outcome> run(Account &a)
             backup::Repository repo(*dest);
             repo.setKey(master);
             // Its own connection: this runs beside the app's.
-            Database db(dir + QStringLiteral("/mail.db"));
-            o.result = repo.backup(db, dir + QStringLiteral("/blobs"), about);
+            Database db(dir + QStringLiteral("/mail.db"), dbKey);
+            const BlobStore blobs(dir + QStringLiteral("/blobs"), dbKey);
+            o.result = repo.backup(db, dbKey, blobs, about);
             // A backup that cannot be read back is not a backup.
             repo.verify(o.result.snapshot);
             repo.prune({});
@@ -141,8 +145,13 @@ Staged stage(const QString &root, backup::Destination &dest, const QByteArray &p
     QDir().mkpath(root);
     QTemporaryDir tmp(root + QStringLiteral("/.restore-XXXXXX"));
     try {
-        s.contents = repo.restore(which, tmp.path(), progress);
-        Database db(tmp.path() + QStringLiteral("/mail.db"));
+        // Staged under a key of its own until it is adopted (ADR 0023).
+        const QByteArray stageKey = AtRest::stage(tmp.path());
+        s.contents = repo.restore(which, tmp.path(), stageKey, progress);
+        const QByteArray backupKey =
+            QByteArray::fromBase64(s.contents.secrets.value(QLatin1String("dbkey")).toString().toLatin1());
+        Database db(tmp.path() + QStringLiteral("/mail.db"), backupKey);
+        db.rekey(stageKey);
         Schema::migrate(db);
         // A device of its own: a new id (made on first use) and key, and no
         // peers. The others do not know it; it can be paired again.

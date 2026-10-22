@@ -785,6 +785,10 @@ An: %4
         </translation>
     </message>
     <message>
+        <source>The current passphrase is not right.</source>
+        <translation>Die aktuelle Passphrase stimmt nicht.</translation>
+    </message>
+    <message>
         <source>%1 is not an email address, or is in your contacts already.</source>
         <translation>%1 ist keine E-Mail-Adresse oder schon in Ihren Kontakten.</translation>
     </message>
@@ -1571,6 +1575,34 @@ An: %4
         <translation>in der Kontodatenbank (kein Schlüsselbund des Systems verfügbar)</translation>
     </message>
     <message>
+        <source>On this device</source>
+        <translation>Auf diesem Gerät</translation>
+    </message>
+    <message>
+        <source>Your mail here is encrypted, and your passphrase opens it. Without it, nobody can read it, and neither can you.</source>
+        <translation>Ihre E-Mails hier sind verschlüsselt, und Ihre Passphrase öffnet sie. Ohne sie kann niemand sie lesen, auch Sie nicht.</translation>
+    </message>
+    <message>
+        <source>Your mail here is encrypted with a key kept in the system keyring. Anyone who can sign in to this computer as you can read it.</source>
+        <translation>Ihre E-Mails hier sind mit einem Schlüssel aus dem Systemschlüsselbund verschlüsselt. Wer sich an diesem Computer als Sie anmelden kann, kann sie lesen.</translation>
+    </message>
+    <message>
+        <source>Your mail here is encrypted, but its key is stored beside it (no system keyring was available). Set a passphrase to protect it.</source>
+        <translation>Ihre E-Mails hier sind verschlüsselt, aber der Schlüssel liegt daneben (kein Systemschlüsselbund verfügbar). Legen Sie eine Passphrase fest, um sie zu schützen.</translation>
+    </message>
+    <message>
+        <source>Change passphrase…</source>
+        <translation>Passphrase ändern…</translation>
+    </message>
+    <message>
+        <source>Set a passphrase…</source>
+        <translation>Passphrase festlegen…</translation>
+    </message>
+    <message>
+        <source>Remove passphrase…</source>
+        <translation>Passphrase entfernen…</translation>
+    </message>
+    <message>
         <source>Originals</source>
         <translation>Originale</translation>
     </message>
@@ -1729,6 +1761,46 @@ An: %4
     <message>
         <source>e3mail %1 · unaudited development software</source>
         <translation>e3mail %1 · ungeprüfte Entwicklungssoftware</translation>
+    </message>
+    <message>
+        <source>Passphrase</source>
+        <translation>Passphrase</translation>
+    </message>
+    <message>
+        <source>Remove passphrase</source>
+        <translation>Passphrase entfernen</translation>
+    </message>
+    <message>
+        <source>e3mail will ask for it each time it starts. If you forget it, the mail on this device cannot be recovered; a backup or another device can restore it.</source>
+        <translation>e3mail fragt bei jedem Start danach. Wenn Sie sie vergessen, lassen sich die E-Mails auf diesem Gerät nicht wiederherstellen; eine Sicherung oder ein anderes Gerät kann sie wiederherstellen.</translation>
+    </message>
+    <message>
+        <source>Your mail stays encrypted; its key goes back to the system keyring, or beside the mail if there is none.</source>
+        <translation>Ihre E-Mails bleiben verschlüsselt; der Schlüssel kommt zurück in den Systemschlüsselbund oder, wenn es keinen gibt, neben die E-Mails.</translation>
+    </message>
+    <message>
+        <source>Current passphrase</source>
+        <translation>Aktuelle Passphrase</translation>
+    </message>
+    <message>
+        <source>New passphrase</source>
+        <translation>Neue Passphrase</translation>
+    </message>
+    <message>
+        <source>New passphrase again</source>
+        <translation>Neue Passphrase wiederholen</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>Speichern</translation>
+    </message>
+    <message>
+        <source>Use at least 8 characters.</source>
+        <translation>Verwenden Sie mindestens 8 Zeichen.</translation>
+    </message>
+    <message>
+        <source>The two do not match.</source>
+        <translation>Die beiden stimmen nicht überein.</translation>
     </message>
     <message>
         <source>Remove %1?</source>
@@ -2102,6 +2174,29 @@ An: %4
     </message>
 </context>
 <context>
+    <name>Unlock</name>
+    <message>
+        <source>Enter your passphrase</source>
+        <translation>Passphrase eingeben</translation>
+    </message>
+    <message>
+        <source>Your mail on this device is encrypted with it.</source>
+        <translation>Ihre E-Mails auf diesem Gerät sind damit verschlüsselt.</translation>
+    </message>
+    <message>
+        <source>Passphrase</source>
+        <translation>Passphrase</translation>
+    </message>
+    <message>
+        <source>That passphrase does not open your mail.</source>
+        <translation>Diese Passphrase öffnet Ihre E-Mails nicht.</translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation>Öffnen</translation>
+    </message>
+</context>
+<context>
     <name>VerifyDialog</name>
     <message>
         <source>Verify in person</source>
@@ -2212,6 +2307,10 @@ An: %4
     <message>
         <source>A file asked for is not here.</source>
         <translation>Eine angeforderte Datei ist nicht vorhanden.</translation>
+    </message>
+    <message>
+        <source>A file here is damaged; the copy was stopped.</source>
+        <translation>Eine Datei hier ist beschädigt; das Kopieren wurde abgebrochen.</translation>
     </message>
     <message>
         <source>The copy of the mailbox could not be read.</source>

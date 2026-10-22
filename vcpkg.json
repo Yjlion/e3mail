@@ -8,12 +8,6 @@
     "bzip2",
     "icu",
     {
-      "name": "sqlite3",
-      "features": [
-        "fts5"
-      ]
-    },
-    {
       "name": "getopt-win32",
       "platform": "windows"
     },

@@ -790,6 +790,10 @@ To: %4
         </translation>
     </message>
     <message>
+        <source>The current passphrase is not right.</source>
+        <translation>Текущая парольная фраза неверна.</translation>
+    </message>
+    <message>
         <source>%1 is not an email address, or is in your contacts already.</source>
         <translation>%1 — не адрес электронной почты, или он уже есть в контактах.</translation>
     </message>
@@ -1585,6 +1589,34 @@ To: %4
         <translation>база данных учётной записи (системного хранилища ключей не было)</translation>
     </message>
     <message>
+        <source>On this device</source>
+        <translation>На этом устройстве</translation>
+    </message>
+    <message>
+        <source>Your mail here is encrypted, and your passphrase opens it. Without it, nobody can read it, and neither can you.</source>
+        <translation>Ваша почта здесь зашифрована, и открывает её ваша парольная фраза. Без неё её никто не прочтёт — и вы тоже.</translation>
+    </message>
+    <message>
+        <source>Your mail here is encrypted with a key kept in the system keyring. Anyone who can sign in to this computer as you can read it.</source>
+        <translation>Ваша почта здесь зашифрована ключом из системной связки ключей. Любой, кто может войти в этот компьютер под вашим именем, может её прочитать.</translation>
+    </message>
+    <message>
+        <source>Your mail here is encrypted, but its key is stored beside it (no system keyring was available). Set a passphrase to protect it.</source>
+        <translation>Ваша почта здесь зашифрована, но ключ хранится рядом с ней (системной связки ключей нет). Задайте парольную фразу, чтобы защитить её.</translation>
+    </message>
+    <message>
+        <source>Change passphrase…</source>
+        <translation>Сменить парольную фразу…</translation>
+    </message>
+    <message>
+        <source>Set a passphrase…</source>
+        <translation>Задать парольную фразу…</translation>
+    </message>
+    <message>
+        <source>Remove passphrase…</source>
+        <translation>Удалить парольную фразу…</translation>
+    </message>
+    <message>
         <source>Originals</source>
         <translation>Оригиналы</translation>
     </message>
@@ -1743,6 +1775,46 @@ To: %4
     <message>
         <source>e3mail %1 · unaudited development software</source>
         <translation>e3mail %1 · непроверенная разрабатываемая программа</translation>
+    </message>
+    <message>
+        <source>Passphrase</source>
+        <translation>Парольная фраза</translation>
+    </message>
+    <message>
+        <source>Remove passphrase</source>
+        <translation>Удалить парольную фразу</translation>
+    </message>
+    <message>
+        <source>e3mail will ask for it each time it starts. If you forget it, the mail on this device cannot be recovered; a backup or another device can restore it.</source>
+        <translation>e3mail будет спрашивать её при каждом запуске. Если вы её забудете, почту на этом устройстве не восстановить; это можно сделать из резервной копии или с другого устройства.</translation>
+    </message>
+    <message>
+        <source>Your mail stays encrypted; its key goes back to the system keyring, or beside the mail if there is none.</source>
+        <translation>Почта останется зашифрованной; ключ вернётся в системную связку ключей, а если её нет — рядом с почтой.</translation>
+    </message>
+    <message>
+        <source>Current passphrase</source>
+        <translation>Текущая парольная фраза</translation>
+    </message>
+    <message>
+        <source>New passphrase</source>
+        <translation>Новая парольная фраза</translation>
+    </message>
+    <message>
+        <source>New passphrase again</source>
+        <translation>Новая парольная фраза ещё раз</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>Сохранить</translation>
+    </message>
+    <message>
+        <source>Use at least 8 characters.</source>
+        <translation>Используйте не менее 8 символов.</translation>
+    </message>
+    <message>
+        <source>The two do not match.</source>
+        <translation>Они не совпадают.</translation>
     </message>
     <message>
         <source>Remove %1?</source>
@@ -2117,6 +2189,29 @@ To: %4
     </message>
 </context>
 <context>
+    <name>Unlock</name>
+    <message>
+        <source>Enter your passphrase</source>
+        <translation>Введите парольную фразу</translation>
+    </message>
+    <message>
+        <source>Your mail on this device is encrypted with it.</source>
+        <translation>Ваша почта на этом устройстве зашифрована ею.</translation>
+    </message>
+    <message>
+        <source>Passphrase</source>
+        <translation>Парольная фраза</translation>
+    </message>
+    <message>
+        <source>That passphrase does not open your mail.</source>
+        <translation>Эта парольная фраза не открывает вашу почту.</translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation>Открыть</translation>
+    </message>
+</context>
+<context>
     <name>VerifyDialog</name>
     <message>
         <source>Verify in person</source>
@@ -2227,6 +2322,10 @@ To: %4
     <message>
         <source>A file asked for is not here.</source>
         <translation>Запрошенного файла здесь нет.</translation>
+    </message>
+    <message>
+        <source>A file here is damaged; the copy was stopped.</source>
+        <translation>Файл здесь повреждён; копирование остановлено.</translation>
     </message>
     <message>
         <source>The copy of the mailbox could not be read.</source>

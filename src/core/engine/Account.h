@@ -80,6 +80,8 @@ public:
 
     int id() const { return m_id; }
     QString dir() const { return m_dir; }
+    // The key that opens this account's database and blobs (ADR 0023).
+    QByteArray dbKey() const { return m_dbKey; }
     QString addr() const;
     QString displayName() const;
     bool isConfigured() const;
@@ -156,6 +158,7 @@ Q_SIGNALS:
 private:
     int m_id;
     QString m_dir;
+    QByteArray m_dbKey;
     std::unique_ptr<Database> m_db;
     std::unique_ptr<BlobStore> m_blobs;
     std::unique_ptr<crypto::Pgp> m_pgp;

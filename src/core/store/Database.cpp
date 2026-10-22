@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MPL-2.0
 #include "Database.h"
 
+#include <QFile>
+
 #include <sqlite3.h>
 
 namespace e3 {
@@ -127,7 +129,33 @@ QByteArray Statement::blob(int col) const
     return QByteArray(static_cast<const char *>(p), n);
 }
 
-Database::Database(const QString &path) : m_path(path)
+namespace {
+// ChaCha20-Poly1305 (SQLite3 Multiple Ciphers' default cipher) under a
+// random 256-bit key: no key stretching is needed, so one round.
+QByteArray cipherPragmas(const QByteArray &key, const char *verb)
+{
+    return "PRAGMA cipher='chacha20'; PRAGMA kdf_iter=1; PRAGMA " + QByteArray(verb) + "='" + key.toHex() + "';";
+}
+} // namespace
+
+bool Database::isPlaintext(const QString &path)
+{
+    QFile f(path);
+    return f.open(QIODevice::ReadOnly) && f.read(16) == QByteArray("SQLite format 3\0", 16);
+}
+
+void Database::rekey(const QByteArray &key)
+{
+    // Pending WAL pages are folded in first, so none is left in the old form,
+    // and the rekey itself runs with a rollback journal: SQLite3 Multiple
+    // Ciphers cannot encrypt or decrypt a database in WAL mode. Only ever
+    // done on a connection that has the file to itself.
+    exec("PRAGMA wal_checkpoint(TRUNCATE); PRAGMA journal_mode=DELETE;");
+    exec((key.isEmpty() ? QByteArray("PRAGMA rekey='';") : cipherPragmas(key, "rekey")).constData());
+    exec("PRAGMA journal_mode=WAL;");
+}
+
+Database::Database(const QString &path, const QByteArray &key) : m_path(path)
 {
     const int flags = SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_FULLMUTEX;
     if (sqlite3_open_v2(path.toUtf8().constData(), &m_db, flags, nullptr) != SQLITE_OK) {
@@ -137,7 +165,18 @@ Database::Database(const QString &path) : m_path(path)
         throw DbError("cannot open " + path.toStdString() + ": " + msg);
     }
     sqlite3_busy_timeout(m_db, 10000);
-    exec("PRAGMA journal_mode=WAL; PRAGMA foreign_keys=ON; PRAGMA synchronous=NORMAL;");
+    try {
+        if (!key.isEmpty()) {
+            exec(cipherPragmas(key, "key").constData());
+            // The key is checked on first read; read now, to fail here.
+            exec("SELECT count(*) FROM sqlite_master");
+        }
+        exec("PRAGMA journal_mode=WAL; PRAGMA foreign_keys=ON; PRAGMA synchronous=NORMAL;");
+    } catch (...) {
+        sqlite3_close(m_db);
+        m_db = nullptr;
+        throw;
+    }
 }
 
 Database::~Database()

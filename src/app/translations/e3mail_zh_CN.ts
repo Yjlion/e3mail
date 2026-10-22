@@ -780,6 +780,10 @@ To: %4
         </translation>
     </message>
     <message>
+        <source>The current passphrase is not right.</source>
+        <translation>当前密码短语不正确。</translation>
+    </message>
+    <message>
         <source>%1 is not an email address, or is in your contacts already.</source>
         <translation>%1 不是邮箱地址，或已在联系人中。</translation>
     </message>
@@ -1557,6 +1561,34 @@ To: %4
         <translation>账户数据库（没有可用的系统密钥环）</translation>
     </message>
     <message>
+        <source>On this device</source>
+        <translation>在此设备上</translation>
+    </message>
+    <message>
+        <source>Your mail here is encrypted, and your passphrase opens it. Without it, nobody can read it, and neither can you.</source>
+        <translation>此设备上的邮件已加密，由你的密码短语打开。没有它，任何人都无法读取，包括你自己。</translation>
+    </message>
+    <message>
+        <source>Your mail here is encrypted with a key kept in the system keyring. Anyone who can sign in to this computer as you can read it.</source>
+        <translation>此设备上的邮件已用系统密钥环中的密钥加密。任何能以你的身份登录此电脑的人都能读取。</translation>
+    </message>
+    <message>
+        <source>Your mail here is encrypted, but its key is stored beside it (no system keyring was available). Set a passphrase to protect it.</source>
+        <translation>此设备上的邮件已加密，但密钥就存放在旁边（没有可用的系统密钥环）。设置密码短语以保护它。</translation>
+    </message>
+    <message>
+        <source>Change passphrase…</source>
+        <translation>更改密码短语…</translation>
+    </message>
+    <message>
+        <source>Set a passphrase…</source>
+        <translation>设置密码短语…</translation>
+    </message>
+    <message>
+        <source>Remove passphrase…</source>
+        <translation>移除密码短语…</translation>
+    </message>
+    <message>
         <source>Originals</source>
         <translation>原件</translation>
     </message>
@@ -1715,6 +1747,46 @@ To: %4
     <message>
         <source>e3mail %1 · unaudited development software</source>
         <translation>e3mail %1 · 未经审计的开发中软件</translation>
+    </message>
+    <message>
+        <source>Passphrase</source>
+        <translation>密码短语</translation>
+    </message>
+    <message>
+        <source>Remove passphrase</source>
+        <translation>移除密码短语</translation>
+    </message>
+    <message>
+        <source>e3mail will ask for it each time it starts. If you forget it, the mail on this device cannot be recovered; a backup or another device can restore it.</source>
+        <translation>e3mail 每次启动都会询问。如果忘记，此设备上的邮件将无法恢复；可以从备份或其他设备恢复。</translation>
+    </message>
+    <message>
+        <source>Your mail stays encrypted; its key goes back to the system keyring, or beside the mail if there is none.</source>
+        <translation>邮件仍保持加密；密钥回到系统密钥环，若没有则放在邮件旁边。</translation>
+    </message>
+    <message>
+        <source>Current passphrase</source>
+        <translation>当前密码短语</translation>
+    </message>
+    <message>
+        <source>New passphrase</source>
+        <translation>新密码短语</translation>
+    </message>
+    <message>
+        <source>New passphrase again</source>
+        <translation>再次输入新密码短语</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>保存</translation>
+    </message>
+    <message>
+        <source>Use at least 8 characters.</source>
+        <translation>请至少使用 8 个字符。</translation>
+    </message>
+    <message>
+        <source>The two do not match.</source>
+        <translation>两次输入不一致。</translation>
     </message>
     <message>
         <source>Remove %1?</source>
@@ -2087,6 +2159,29 @@ To: %4
     </message>
 </context>
 <context>
+    <name>Unlock</name>
+    <message>
+        <source>Enter your passphrase</source>
+        <translation>输入你的密码短语</translation>
+    </message>
+    <message>
+        <source>Your mail on this device is encrypted with it.</source>
+        <translation>此设备上的邮件用它加密。</translation>
+    </message>
+    <message>
+        <source>Passphrase</source>
+        <translation>密码短语</translation>
+    </message>
+    <message>
+        <source>That passphrase does not open your mail.</source>
+        <translation>此密码短语无法打开你的邮件。</translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation>打开</translation>
+    </message>
+</context>
+<context>
     <name>VerifyDialog</name>
     <message>
         <source>Verify in person</source>
@@ -2197,6 +2292,10 @@ To: %4
     <message>
         <source>A file asked for is not here.</source>
         <translation>请求的文件不在此处。</translation>
+    </message>
+    <message>
+        <source>A file here is damaged; the copy was stopped.</source>
+        <translation>此处有文件已损坏；复制已停止。</translation>
     </message>
     <message>
         <source>The copy of the mailbox could not be read.</source>

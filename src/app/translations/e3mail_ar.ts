@@ -805,6 +805,10 @@ To: %4
         </translation>
     </message>
     <message>
+        <source>The current passphrase is not right.</source>
+        <translation>عبارة المرور الحالية غير صحيحة.</translation>
+    </message>
+    <message>
         <source>%1 is not an email address, or is in your contacts already.</source>
         <translation>%1 ليس عنوان بريد إلكتروني، أو أنه في جهات اتصالك بالفعل.</translation>
     </message>
@@ -1627,6 +1631,34 @@ To: %4
         <translation>قاعدة بيانات الحساب (لم تتوفر حلقة مفاتيح للنظام)</translation>
     </message>
     <message>
+        <source>On this device</source>
+        <translation>على هذا الجهاز</translation>
+    </message>
+    <message>
+        <source>Your mail here is encrypted, and your passphrase opens it. Without it, nobody can read it, and neither can you.</source>
+        <translation>بريدك هنا مشفّر، وعبارة مرورك تفتحه. بدونها لا يستطيع أحد قراءته، ولا أنت.</translation>
+    </message>
+    <message>
+        <source>Your mail here is encrypted with a key kept in the system keyring. Anyone who can sign in to this computer as you can read it.</source>
+        <translation>بريدك هنا مشفّر بمفتاح محفوظ في حلقة مفاتيح النظام. يستطيع قراءته كل من يمكنه تسجيل الدخول إلى هذا الحاسوب باسمك.</translation>
+    </message>
+    <message>
+        <source>Your mail here is encrypted, but its key is stored beside it (no system keyring was available). Set a passphrase to protect it.</source>
+        <translation>بريدك هنا مشفّر، لكن مفتاحه محفوظ بجانبه (لا تتوفر حلقة مفاتيح للنظام). عيّن عبارة مرور لحمايته.</translation>
+    </message>
+    <message>
+        <source>Change passphrase…</source>
+        <translation>تغيير عبارة المرور…</translation>
+    </message>
+    <message>
+        <source>Set a passphrase…</source>
+        <translation>تعيين عبارة مرور…</translation>
+    </message>
+    <message>
+        <source>Remove passphrase…</source>
+        <translation>إزالة عبارة المرور…</translation>
+    </message>
+    <message>
         <source>Originals</source>
         <translation>الأصول</translation>
     </message>
@@ -1785,6 +1817,46 @@ To: %4
     <message>
         <source>e3mail %1 · unaudited development software</source>
         <translation>e3mail %1 · برنامج قيد التطوير لم يخضع للتدقيق</translation>
+    </message>
+    <message>
+        <source>Passphrase</source>
+        <translation>عبارة المرور</translation>
+    </message>
+    <message>
+        <source>Remove passphrase</source>
+        <translation>إزالة عبارة المرور</translation>
+    </message>
+    <message>
+        <source>e3mail will ask for it each time it starts. If you forget it, the mail on this device cannot be recovered; a backup or another device can restore it.</source>
+        <translation>سيطلبها e3mail عند كل تشغيل. إن نسيتها فلا يمكن استرداد البريد على هذا الجهاز؛ يمكن استعادته من نسخة احتياطية أو من جهاز آخر.</translation>
+    </message>
+    <message>
+        <source>Your mail stays encrypted; its key goes back to the system keyring, or beside the mail if there is none.</source>
+        <translation>يبقى بريدك مشفّرًا؛ يعود مفتاحه إلى حلقة مفاتيح النظام، أو بجانب البريد إن لم تكن موجودة.</translation>
+    </message>
+    <message>
+        <source>Current passphrase</source>
+        <translation>عبارة المرور الحالية</translation>
+    </message>
+    <message>
+        <source>New passphrase</source>
+        <translation>عبارة المرور الجديدة</translation>
+    </message>
+    <message>
+        <source>New passphrase again</source>
+        <translation>عبارة المرور الجديدة مرة أخرى</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>حفظ</translation>
+    </message>
+    <message>
+        <source>Use at least 8 characters.</source>
+        <translation>استخدم 8 أحرف على الأقل.</translation>
+    </message>
+    <message>
+        <source>The two do not match.</source>
+        <translation>العبارتان غير متطابقتين.</translation>
     </message>
     <message>
         <source>Remove %1?</source>
@@ -2162,6 +2234,29 @@ To: %4
     </message>
 </context>
 <context>
+    <name>Unlock</name>
+    <message>
+        <source>Enter your passphrase</source>
+        <translation>أدخل عبارة المرور</translation>
+    </message>
+    <message>
+        <source>Your mail on this device is encrypted with it.</source>
+        <translation>بريدك على هذا الجهاز مشفّر بها.</translation>
+    </message>
+    <message>
+        <source>Passphrase</source>
+        <translation>عبارة المرور</translation>
+    </message>
+    <message>
+        <source>That passphrase does not open your mail.</source>
+        <translation>عبارة المرور هذه لا تفتح بريدك.</translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation>فتح</translation>
+    </message>
+</context>
+<context>
     <name>VerifyDialog</name>
     <message>
         <source>Verify in person</source>
@@ -2272,6 +2367,10 @@ To: %4
     <message>
         <source>A file asked for is not here.</source>
         <translation>ملف مطلوب غير موجود هنا.</translation>
+    </message>
+    <message>
+        <source>A file here is damaged; the copy was stopped.</source>
+        <translation>ملف هنا تالف؛ أُوقف النسخ.</translation>
     </message>
     <message>
         <source>The copy of the mailbox could not be read.</source>

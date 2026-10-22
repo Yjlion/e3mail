@@ -1159,6 +1159,71 @@ P12 ([ADR 0022](adr/0022-read-receipts-disappearing-mail-and-trust.md)).
 - The app's expiry timer firing in a running app (`expireDue` and
   `nextExpiry` are tested directly, not the QTimer around them).
 
+## The database and blobs encrypted at rest (2026-10-21)
+
+P11 ([ADR 0023](adr/0023-encryption-at-rest.md)).
+- **The database.** Every account's database is encrypted page by page
+  (SQLite3 Multiple Ciphers 2.5.1, ChaCha20-Poly1305), under a random key of
+  its own.
+- **Blobs** are sealed with XChaCha20-Poly1305 and named by an HMAC.
+- **Where the key lives:** in the OS keyring by default; under an app
+  passphrase if one is set (Settings, On this device; e3mail then asks for it
+  at start, and the CLI reads `E3MAIL_PASSPHRASE`); or beside the mail where
+  there is neither, which Settings says.
+- **Upgrading:** a data directory from an older version is encrypted in place
+  on first open.
+- **Copies:** snapshots for backups and new devices carry a one-time key in
+  their manifest.
+- **CLI:** `at-rest` and `set-passphrase` (`E3MAIL_NEW_PASSPHRASE`).
+
+**What it taught:**
+- **SQLite3 Multiple Ciphers will not rekey a plaintext database in WAL
+  mode.** A probe that seemed to show it working had reopened the file
+  differently. `Database::rekey` switches to a rollback journal around the
+  rekey; it only ever runs on a connection that has the file to itself.
+- **`VACUUM INTO` writes a copy encrypted with the source's key**, ignoring
+  a key in the target URI, so snapshots are rekeyed after.
+- **Blobs can no longer be listed from the directory**: their names are
+  HMACs. Backups and pairing now take the list from the database, which is
+  the set worth keeping anyway.
+- **Tampering with a sealed blob made it read back empty.** The pairing offer
+  would then have served empty pieces, and the join could finish without the
+  file. Both sides now stop on it.
+- The project enabled only C++; the amalgamation needed `enable_language(C)`.
+- `QVERIFY_THROWS_EXCEPTION(E, Database(path))` is a declaration (the most
+  vexing parse); use braces.
+
+**Verified here:**
+- `tst_atrest` (new):
+  - a new account is encrypted: no text, attachment or content hash on disk;
+  - a wrong key or no key fails;
+  - an older plaintext directory is encrypted on first open, its blobs
+    sealed and the clear ones removed;
+  - a tampered blob, or another account's blob, does not open;
+  - a snapshot opens with its own key and not the account's;
+  - a passphrase guards, refuses a wrong one, and can be removed.
+
+  Breaking the snapshot rekey, the legacy sealing and the HMAC names each
+  failed it.
+- The whole suite (23) passes, `tst_backup`, `tst_p2p` and `tst_sync`
+  included, now over encrypted stores.
+- Live passes, all ok:
+  - `scripts/e2e.py`;
+  - `scripts/backup-e2e.py` (WebDAV, S3 and SFTP: back up, restore on a new
+    data directory, the note decrypts there);
+  - `scripts/p2p-e2e.py` (two processes paired over Iroh).
+- Screenshots: the unlock window (English, Arabic) and Settings, On this
+  device, at full length.
+
+**Not verified:**
+- A real OS keyring: tests and screenshots run with `E3MAIL_NO_KEYCHAIN`, so
+  the guard was "beside the mail" throughout.
+- Windows and macOS builds of the amalgamation (CI will tell).
+- The unlock window driven by hand.
+- Upgrading a real, large mailbox: only the test's small directory was
+  upgraded.
+- Speed on a phone.
+
 ## Known gaps
 
 - **Signed-only mail** is checked only for PGP/MIME (`multipart/signed`);
@@ -1191,9 +1256,9 @@ P12 ([ADR 0022](adr/0022-read-receipts-disappearing-mail-and-trust.md)).
   back if another tags with the old name first (ADR 0013).
 - **Translations are machine-made** and unreviewed in all ten languages, and
   Settings says so. Yiddish is the least certain of them.
-- **Passwords fall back to the database in cleartext** when there is no OS
-  keyring, and Settings says so (ADR 0012). The database has no passphrase
-  until P11.
+- **Without an OS keyring and without a passphrase**, the database key sits
+  beside the mail, so encryption at rest protects nothing there; Settings says
+  so (ADR 0012, ADR 0023). Passwords fall back into that database.
 
 ## Traps
 

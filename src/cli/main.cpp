@@ -7,6 +7,7 @@
 
 #include "crypto/Pgp.h"
 #include "engine/AccountManager.h"
+#include "engine/AtRest.h"
 #include "engine/Autoconfig.h"
 #ifdef E3MAIL_HAVE_P2P
 #include "engine/Pairing.h"
@@ -155,6 +156,9 @@ int main(int argc, char **argv)
         "  config <key> [value]           read or write an account setting\n"
         "  housekeeping                   run deadlines now\n"
         "  key                            this account's public key, armoured\n"
+        "  at-rest                        what guards each account's encryption key on this device\n"
+        "  set-passphrase                 guard every account with E3MAIL_NEW_PASSPHRASE (empty: remove it);\n"
+        "                                 E3MAIL_PASSPHRASE opens accounts that already have one\n"
         "  verify-invite [--renew]        this account's SecureJoin code, for someone to verify you with\n"
         "  verify-join <code>             verify the person whose code this is (then sync, both sides)\n"
         "  verify-status                  SecureJoin verifications this account started\n"
@@ -276,7 +280,35 @@ int main(int argc, char **argv)
             }
             return 0;
         }
+        // A passphrase guards the accounts (ADR 0023): from the environment,
+        // never the command line, which other users can read.
+        const QString accountsRoot = Paths::dataDir() + QStringLiteral("/accounts");
+        if (AtRest::passphraseRequired(accountsRoot)) {
+            const QString given = qEnvironmentVariable("E3MAIL_PASSPHRASE");
+            if (given.isEmpty() || !AtRest::checkPassphrase(accountsRoot, given))
+                fail(QStringLiteral("the accounts are guarded by a passphrase; set E3MAIL_PASSPHRASE"));
+            AtRest::setPassphrase(given);
+        }
         AccountManager mgr(Paths::dataDir());
+        if (cmd == QLatin1String("set-passphrase")) {
+            // The new one from E3MAIL_NEW_PASSPHRASE; empty removes it.
+            AtRest::setPassphrase(qEnvironmentVariable("E3MAIL_NEW_PASSPHRASE"));
+            for (Account *acc : mgr.accounts())
+                AtRest::reguard(acc->dir(), acc->id(), acc->dbKey());
+        }
+        if (cmd == QLatin1String("at-rest") || cmd == QLatin1String("set-passphrase")) {
+            QJsonArray a;
+            for (Account *acc : mgr.accounts()) {
+                const AtRest::Guard g = AtRest::guard(acc->dir());
+                a.append(QJsonObject{{QStringLiteral("id"), acc->id()},
+                                     {QStringLiteral("addr"), acc->addr()},
+                                     {QStringLiteral("key"), g == AtRest::Guard::Keyring      ? QStringLiteral("keyring")
+                                                             : g == AtRest::Guard::Passphrase ? QStringLiteral("passphrase")
+                                                                                              : QStringLiteral("beside the mail")}});
+            }
+            print(a);
+            return 0;
+        }
         if (cmd == QLatin1String("accounts")) {
             QJsonArray a;
             for (Account *acc : mgr.accounts())

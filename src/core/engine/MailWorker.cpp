@@ -35,8 +35,8 @@ constexpr int kBackfillPage = 100; // older messages per round, between which ne
 class MailWorker::Session
 {
 public:
-    explicit Session(const QString &dir)
-        : db(dir + QStringLiteral("/mail.db")), blobs(dir + QStringLiteral("/blobs")), config(db), ops(db),
+    Session(const QString &dir, const QByteArray &key)
+        : db(dir + QStringLiteral("/mail.db"), key), blobs(dir + QStringLiteral("/blobs"), key), config(db), ops(db),
           ctx{db, blobs, pgp, config, ops}
     {
         mail::Keyring::loadAll(ctx);
@@ -323,7 +323,7 @@ void MailWorker::run()
 {
     std::unique_ptr<Session> s;
     try {
-        s = std::make_unique<Session>(m_dir);
+        s = std::make_unique<Session>(m_dir, m_creds.dbKey);
     } catch (const std::exception &e) {
         Q_EMIT status(QStringLiteral("error"), QString::fromUtf8(e.what()));
         return;
@@ -401,7 +401,7 @@ int MailWorker::runOnce(const QString &accountDir, const Credentials &original)
 {
     Credentials creds = original;
     fillTokens(creds, false);
-    Session s(accountDir);
+    Session s(accountDir, original.dbKey);
     s.lastHousekeeping = 0;
     s.housekeepingIfDue(nullptr);
     s.sendOutbox(creds, nullptr);

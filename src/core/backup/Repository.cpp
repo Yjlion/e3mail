@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MPL-2.0
 #include "Repository.h"
 
+#include "store/BlobStore.h"
 #include "store/Database.h"
 #include "store/Snapshot.h"
 
@@ -132,7 +133,8 @@ QByteArray Repository::getObject(const QString &name)
     return qUncompress(*plain);
 }
 
-Repository::Result Repository::backup(Database &db, const QString &blobDir, const Contents &about)
+Repository::Result Repository::backup(Database &db, const QByteArray &dbKey, const BlobStore &blobs,
+                                      const Contents &about)
 {
     if (m_master.isEmpty())
         throw Damaged("no key");
@@ -159,7 +161,9 @@ Repository::Result Repository::backup(Database &db, const QString &blobDir, cons
     // The database, from a consistent copy without this device's secrets.
     QTemporaryDir tmp;
     const QString copy = tmp.filePath(QStringLiteral("mail.db"));
-    snapshotDatabase(db, copy);
+    const QByteArray snapshotKey = crypto::random(32);
+    snapshotDatabase(db, copy, dbKey, snapshotKey);
+    c.secrets.insert(QStringLiteral("dbkey"), QString::fromLatin1(snapshotKey.toBase64()));
     QFile f(copy);
     if (!f.open(QIODevice::ReadOnly))
         throw Damaged("cannot read the copy of the database");
@@ -173,33 +177,33 @@ Repository::Result Repository::backup(Database &db, const QString &blobDir, cons
     c.dbSha256 = QString::fromLatin1(whole.result().toHex());
     c.schema = int(db.queryInt("PRAGMA user_version").value_or(0));
 
-    // Every blob, by the name it already has (its SHA-256).
-    for (const QFileInfo &fi : QDir(blobDir).entryInfoList(QDir::Files)) {
-        if (fi.fileName().size() != 64)
-            continue;
-        const QString name = objectName(fi.fileName().toLatin1());
-        c.blobs.append(fi.fileName());
+    // Every blob the database refers to, by the name it already has (its
+    // SHA-256), opened and checked through the store.
+    for (const QString &sha : BlobStore::referenced(db)) {
+        const QString name = objectName(sha.toLatin1());
+        if (!blobs.exists(sha))
+            continue; // collected meanwhile, or never fetched here
+        c.blobs.append(sha);
         if (there.contains(name)) {
             ++r.reused;
             continue;
         }
-        QFile b(fi.filePath());
-        if (!b.open(QIODevice::ReadOnly))
-            continue; // collected meanwhile
-        const QByteArray data = b.readAll();
-        if (sha256(data) != fi.fileName().toLatin1())
+        const QByteArray data = blobs.get(sha);
+        if (data.isEmpty() || sha256(data) != sha.toLatin1()) {
+            c.blobs.removeLast();
             continue; // damaged here: never back it up as if it were fine
+        }
         putObject(name, data);
         there.insert(name);
         ++r.uploaded;
         r.bytes += data.size();
     }
 
-    QJsonArray chunks, blobs;
+    QJsonArray chunks, blobNames;
     for (const QString &n : std::as_const(c.dbChunks))
         chunks.append(n);
     for (const QString &n : std::as_const(c.blobs))
-        blobs.append(n);
+        blobNames.append(n);
     const QJsonObject manifest{{QStringLiteral("v"), 1},
                                {QStringLiteral("account"), c.account},
                                {QStringLiteral("device"), c.device},
@@ -209,7 +213,7 @@ Repository::Result Repository::backup(Database &db, const QString &blobDir, cons
                                {QStringLiteral("db"), QJsonObject{{QStringLiteral("chunks"), chunks},
                                                                   {QStringLiteral("sha256"), c.dbSha256},
                                                                   {QStringLiteral("size"), c.dbSize}}},
-                               {QStringLiteral("blobs"), blobs},
+                               {QStringLiteral("blobs"), blobNames},
                                {QStringLiteral("secrets"), c.secrets}};
     r.snapshot = QStringLiteral("snapshots/%1-%2").arg(deviceTag(c.device), timeTag(c.created));
     m_dest.put(r.snapshot, crypto::seal(m_kSnapshot, qCompress(toJson(manifest), 6), r.snapshot.toUtf8()));
@@ -290,7 +294,7 @@ void Repository::verify(const QString &snapshot, int sample)
     }
 }
 
-Contents Repository::restore(const QString &snapshot, const QString &stage,
+Contents Repository::restore(const QString &snapshot, const QString &stage, const QByteArray &stageKey,
                              const std::function<void(int)> &progress)
 {
     const Contents c = contents(snapshot);
@@ -319,9 +323,11 @@ Contents Repository::restore(const QString &snapshot, const QString &stage,
         const QByteArray data = getObject(objectName(sha.toLatin1()));
         if (sha256(data) != sha.toLatin1())
             throw Damaged(QStringLiteral("a message does not match its name (%1)").arg(sha.left(12)).toStdString());
-        QSaveFile b(stage + QStringLiteral("/blobs/") + sha);
-        if (!b.open(QIODevice::WriteOnly) || b.write(data) != data.size() || !b.commit())
+        try {
+            BlobStore(stage + QStringLiteral("/blobs"), stageKey).put(data);
+        } catch (const std::exception &) {
             throw Damaged("cannot write here");
+        }
         step();
     }
     return c;

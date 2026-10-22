@@ -59,6 +59,7 @@ qt_add_qml_module(e3mail
         controllers/SourceHighlighter.cpp controllers/SourceHighlighter.h
         controllers/FileIo.cpp controllers/FileIo.h
         controllers/QrImageProvider.cpp controllers/QrImageProvider.h
+        controllers/UnlockGate.cpp controllers/UnlockGate.h
         ${E3_CAMERA_SOURCES}
         models/MessageListModel.cpp models/MessageListModel.h
 )

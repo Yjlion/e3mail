@@ -13,6 +13,7 @@
 #include "engine/MailWorker.h"
 #include "mail/Compose.h"
 #include "mail/Search.h"
+#include "store/BlobStore.h"
 #include "store/Config.h"
 #include "store/Database.h"
 #include "store/OpLog.h"
@@ -200,7 +201,7 @@ private Q_SLOTS:
     {
         backups::setUp(*m_a, folder(), QString(), "pass", light());
         QVERIFY(backUp(m_a).ok);
-        const QStringList blobs = QDir(m_a->dir() + QStringLiteral("/blobs")).entryList(QDir::Files);
+        const QStringList blobs = BlobStore::referenced(m_a->ctx().db);
         QVERIFY(!blobs.isEmpty());
         const QString all = files(m_repo).join(u'\n');
         for (const QString &b : blobs)
@@ -263,7 +264,7 @@ private Q_SLOTS:
         // A backup a day for 40 days.
         for (int day = 40; day >= 0; --day) {
             about.created = now.addDays(-day);
-            repo.backup(m_a->ctx().db, m_a->dir() + QStringLiteral("/blobs"), about);
+            repo.backup(m_a->ctx().db, m_a->dbKey(), m_a->ctx().blobs, about);
         }
         QCOMPARE(repo.snapshots().size(), 41);
         // An object nothing needs, old, and one nothing needs yet, new.

@@ -28,6 +28,8 @@ public:
         QString protocol; // imap | pop3
         // OAuth 2 (ADR 0019): fills both servers' access tokens.
         std::shared_ptr<net::oauth::TokenSource> oauth;
+        // Opens the account's database and blobs (ADR 0023).
+        QByteArray dbKey;
     };
     // Puts a valid access token into both servers' settings, refreshing it
     // if needed or `fresh`. Nothing for password accounts.
