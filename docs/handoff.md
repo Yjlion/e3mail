@@ -1214,8 +1214,14 @@ P11 ([ADR 0023](adr/0023-encryption-at-rest.md)).
   - `scripts/p2p-e2e.py` (two processes paired over Iroh).
 - Screenshots: the unlock window (English, Arabic) and Settings, On this
   device, at full length.
+- Android: `cmake --preset android-x64` builds the APK with the amalgamation
+  compiled by the NDK (no vcpkg SQLite), and it installs and starts on the
+  API 34 emulator with no QML errors (`scripts/android-smoke.sh`). The screen
+  shows the SwiftShader tearing recorded under "Android" above.
 
 **Not verified:**
+- Encryption on Android: the emulator run added no account, so no key went
+  into the Android Keystore and no database was opened.
 - A real OS keyring: tests and screenshots run with `E3MAIL_NO_KEYCHAIN`, so
   the guard was "beside the mail" throughout.
 - Windows and macOS builds of the amalgamation (CI will tell).
