@@ -11,6 +11,7 @@
 #include <stdexcept>
 
 namespace e3 {
+class BlobStore;
 class Database;
 }
 
@@ -80,14 +81,19 @@ public:
     };
     // A snapshot of `db` (copied first, without this device's own settings)
     // and every blob in `blobDir`. Only objects not there yet go up.
-    Result backup(Database &db, const QString &blobDir, const Contents &about);
+    // `db` is opened with `dbKey`; the database travels under a key of its
+    // own, kept in the sealed manifest's secrets (ADR 0023).
+    Result backup(Database &db, const QByteArray &dbKey, const BlobStore &blobs, const Contents &about);
     // Reads back the manifest, every piece of the database and `sample`
     // random blobs, and checks each; throws Damaged.
     void verify(const QString &snapshot, int sample = 16);
     QList<Snapshot> snapshots();
     Contents contents(const QString &snapshot);
     // Writes <stage>/mail.db and <stage>/blobs/, each checked; throws Damaged.
-    Contents restore(const QString &snapshot, const QString &stage,
+    // Writes the database as it was backed up (its key is in the returned
+    // secrets, "dbkey"; none for backups from before ADR 0023) and the blobs
+    // sealed with `stageKey`.
+    Contents restore(const QString &snapshot, const QString &stage, const QByteArray &stageKey,
                      const std::function<void(int percent)> &progress = {});
 
     struct Retention

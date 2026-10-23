@@ -785,6 +785,10 @@ To: %4
         </translation>
     </message>
     <message>
+        <source>The current passphrase is not right.</source>
+        <translation>די איצטיקע פּאַראָל־פֿראַזע איז נישט ריכטיק.</translation>
+    </message>
+    <message>
         <source>%1 is not an email address, or is in your contacts already.</source>
         <translation>%1 איז נישט קיין בליצבריוו־אַדרעס, אָדער איז שוין אין אײַערע קאָנטאַקטן.</translation>
     </message>
@@ -1571,6 +1575,34 @@ To: %4
         <translation>דער דאַטנבאַזע פֿון דער קאָנטע (ס׳איז ניט געווען קיין שליסל־רינג פֿון דער סיסטעם)</translation>
     </message>
     <message>
+        <source>On this device</source>
+        <translation>אויף דעם מכשיר</translation>
+    </message>
+    <message>
+        <source>Your mail here is encrypted, and your passphrase opens it. Without it, nobody can read it, and neither can you.</source>
+        <translation>דײַן פּאָסט דאָ איז פֿאַרשלאָסן, און דײַן פּאַראָל־פֿראַזע עפֿנט זי. אָן איר קען קיינער זי נישט לייענען, אויך נישט דו.</translation>
+    </message>
+    <message>
+        <source>Your mail here is encrypted with a key kept in the system keyring. Anyone who can sign in to this computer as you can read it.</source>
+        <translation>דײַן פּאָסט דאָ איז פֿאַרשלאָסן מיט אַ שליסל אינעם סיסטעם־שליסלבונד. ווער עס קען זיך אַרײַנלאָגירן אין דעם קאָמפּיוטער ווי דו, קען זי לייענען.</translation>
+    </message>
+    <message>
+        <source>Your mail here is encrypted, but its key is stored beside it (no system keyring was available). Set a passphrase to protect it.</source>
+        <translation>דײַן פּאָסט דאָ איז פֿאַרשלאָסן, נאָר דער שליסל ליגט לעבן איר (קיין סיסטעם־שליסלבונד איז נישטאָ). שטעל אײַן אַ פּאַראָל־פֿראַזע זי צו באַשיצן.</translation>
+    </message>
+    <message>
+        <source>Change passphrase…</source>
+        <translation>ענדערן די פּאַראָל־פֿראַזע…</translation>
+    </message>
+    <message>
+        <source>Set a passphrase…</source>
+        <translation>אײַנשטעלן אַ פּאַראָל־פֿראַזע…</translation>
+    </message>
+    <message>
+        <source>Remove passphrase…</source>
+        <translation>אַוועקנעמען די פּאַראָל־פֿראַזע…</translation>
+    </message>
+    <message>
         <source>Originals</source>
         <translation>אָריגינאַלן</translation>
     </message>
@@ -1729,6 +1761,46 @@ To: %4
     <message>
         <source>e3mail %1 · unaudited development software</source>
         <translation>e3mail %1 · ניט־רעוויזירטע ווייכוואַרג אין אַנטוויקלונג</translation>
+    </message>
+    <message>
+        <source>Passphrase</source>
+        <translation>פּאַראָל־פֿראַזע</translation>
+    </message>
+    <message>
+        <source>Remove passphrase</source>
+        <translation>אַוועקנעמען די פּאַראָל־פֿראַזע</translation>
+    </message>
+    <message>
+        <source>e3mail will ask for it each time it starts. If you forget it, the mail on this device cannot be recovered; a backup or another device can restore it.</source>
+        <translation>e3mail וועט זי פֿרעגן בײַ יעדן אָנהייב. אויב דו פֿאַרגעסט זי, קען מען די פּאָסט אויף דעם מכשיר נישט צוריקקריגן; אַ רעזערוו־קאָפּיע אָדער אַן אַנדער מכשיר קען זי אומקערן.</translation>
+    </message>
+    <message>
+        <source>Your mail stays encrypted; its key goes back to the system keyring, or beside the mail if there is none.</source>
+        <translation>די פּאָסט בלײַבט פֿאַרשלאָסן; דער שליסל גייט צוריק אינעם סיסטעם־שליסלבונד, אָדער לעבן דער פּאָסט אויב ס׳איז נישטאָ קיינער.</translation>
+    </message>
+    <message>
+        <source>Current passphrase</source>
+        <translation>איצטיקע פּאַראָל־פֿראַזע</translation>
+    </message>
+    <message>
+        <source>New passphrase</source>
+        <translation>נײַע פּאַראָל־פֿראַזע</translation>
+    </message>
+    <message>
+        <source>New passphrase again</source>
+        <translation>נײַע פּאַראָל־פֿראַזע נאָך אַ מאָל</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>אָפּהיטן</translation>
+    </message>
+    <message>
+        <source>Use at least 8 characters.</source>
+        <translation>ניץ כאָטש 8 אותיות.</translation>
+    </message>
+    <message>
+        <source>The two do not match.</source>
+        <translation>די צוויי שטימען נישט.</translation>
     </message>
     <message>
         <source>Remove %1?</source>
@@ -2102,6 +2174,29 @@ To: %4
     </message>
 </context>
 <context>
+    <name>Unlock</name>
+    <message>
+        <source>Enter your passphrase</source>
+        <translation>שרײַב אַרײַן דײַן פּאַראָל־פֿראַזע</translation>
+    </message>
+    <message>
+        <source>Your mail on this device is encrypted with it.</source>
+        <translation>דײַן פּאָסט אויף דעם מכשיר איז מיט איר פֿאַרשלאָסן.</translation>
+    </message>
+    <message>
+        <source>Passphrase</source>
+        <translation>פּאַראָל־פֿראַזע</translation>
+    </message>
+    <message>
+        <source>That passphrase does not open your mail.</source>
+        <translation>די פּאַראָל־פֿראַזע עפֿנט נישט דײַן פּאָסט.</translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation>עפֿענען</translation>
+    </message>
+</context>
+<context>
     <name>VerifyDialog</name>
     <message>
         <source>Verify in person</source>
@@ -2212,6 +2307,10 @@ To: %4
     <message>
         <source>A file asked for is not here.</source>
         <translation>אַ פֿאַרלאַנגטע טעקע איז ניטאָ דאָ.</translation>
+    </message>
+    <message>
+        <source>A file here is damaged; the copy was stopped.</source>
+        <translation>אַ טעקע דאָ איז פֿאַרדאָרבן; דאָס קאָפּירן איז אָפּגעשטעלט.</translation>
     </message>
     <message>
         <source>The copy of the mailbox could not be read.</source>

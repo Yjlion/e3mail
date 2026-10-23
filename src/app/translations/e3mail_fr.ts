@@ -785,6 +785,10 @@ Objet : %3
         </translation>
     </message>
     <message>
+        <source>The current passphrase is not right.</source>
+        <translation>La phrase secrète actuelle n’est pas la bonne.</translation>
+    </message>
+    <message>
         <source>%1 is not an email address, or is in your contacts already.</source>
         <translation>%1 n’est pas une adresse électronique, ou figure déjà dans vos contacts.</translation>
     </message>
@@ -1571,6 +1575,34 @@ Objet : %3
         <translation>la base de données du compte (aucun trousseau système n’était disponible)</translation>
     </message>
     <message>
+        <source>On this device</source>
+        <translation>Sur cet appareil</translation>
+    </message>
+    <message>
+        <source>Your mail here is encrypted, and your passphrase opens it. Without it, nobody can read it, and neither can you.</source>
+        <translation>Votre courrier ici est chiffré, et votre phrase secrète l’ouvre. Sans elle, personne ne peut le lire, pas même vous.</translation>
+    </message>
+    <message>
+        <source>Your mail here is encrypted with a key kept in the system keyring. Anyone who can sign in to this computer as you can read it.</source>
+        <translation>Votre courrier ici est chiffré avec une clé gardée dans le trousseau du système. Quiconque peut ouvrir une session sur cet ordinateur sous votre nom peut le lire.</translation>
+    </message>
+    <message>
+        <source>Your mail here is encrypted, but its key is stored beside it (no system keyring was available). Set a passphrase to protect it.</source>
+        <translation>Votre courrier ici est chiffré, mais sa clé est stockée à côté (aucun trousseau système disponible). Définissez une phrase secrète pour le protéger.</translation>
+    </message>
+    <message>
+        <source>Change passphrase…</source>
+        <translation>Changer la phrase secrète…</translation>
+    </message>
+    <message>
+        <source>Set a passphrase…</source>
+        <translation>Définir une phrase secrète…</translation>
+    </message>
+    <message>
+        <source>Remove passphrase…</source>
+        <translation>Supprimer la phrase secrète…</translation>
+    </message>
+    <message>
         <source>Originals</source>
         <translation>Originaux</translation>
     </message>
@@ -1729,6 +1761,46 @@ Objet : %3
     <message>
         <source>e3mail %1 · unaudited development software</source>
         <translation>e3mail %1 · logiciel en développement, non audité</translation>
+    </message>
+    <message>
+        <source>Passphrase</source>
+        <translation>Phrase secrète</translation>
+    </message>
+    <message>
+        <source>Remove passphrase</source>
+        <translation>Supprimer la phrase secrète</translation>
+    </message>
+    <message>
+        <source>e3mail will ask for it each time it starts. If you forget it, the mail on this device cannot be recovered; a backup or another device can restore it.</source>
+        <translation>e3mail la demandera à chaque démarrage. Si vous l’oubliez, le courrier de cet appareil ne pourra pas être récupéré ; une sauvegarde ou un autre appareil peut le restaurer.</translation>
+    </message>
+    <message>
+        <source>Your mail stays encrypted; its key goes back to the system keyring, or beside the mail if there is none.</source>
+        <translation>Votre courrier reste chiffré ; sa clé retourne dans le trousseau du système, ou à côté du courrier s’il n’y en a pas.</translation>
+    </message>
+    <message>
+        <source>Current passphrase</source>
+        <translation>Phrase secrète actuelle</translation>
+    </message>
+    <message>
+        <source>New passphrase</source>
+        <translation>Nouvelle phrase secrète</translation>
+    </message>
+    <message>
+        <source>New passphrase again</source>
+        <translation>Nouvelle phrase secrète, à nouveau</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>Enregistrer</translation>
+    </message>
+    <message>
+        <source>Use at least 8 characters.</source>
+        <translation>Utilisez au moins 8 caractères.</translation>
+    </message>
+    <message>
+        <source>The two do not match.</source>
+        <translation>Les deux ne correspondent pas.</translation>
     </message>
     <message>
         <source>Remove %1?</source>
@@ -2102,6 +2174,29 @@ Objet : %3
     </message>
 </context>
 <context>
+    <name>Unlock</name>
+    <message>
+        <source>Enter your passphrase</source>
+        <translation>Saisissez votre phrase secrète</translation>
+    </message>
+    <message>
+        <source>Your mail on this device is encrypted with it.</source>
+        <translation>Votre courrier sur cet appareil est chiffré avec elle.</translation>
+    </message>
+    <message>
+        <source>Passphrase</source>
+        <translation>Phrase secrète</translation>
+    </message>
+    <message>
+        <source>That passphrase does not open your mail.</source>
+        <translation>Cette phrase secrète n’ouvre pas votre courrier.</translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation>Ouvrir</translation>
+    </message>
+</context>
+<context>
     <name>VerifyDialog</name>
     <message>
         <source>Verify in person</source>
@@ -2212,6 +2307,10 @@ Objet : %3
     <message>
         <source>A file asked for is not here.</source>
         <translation>Un fichier demandé n&apos;est pas ici.</translation>
+    </message>
+    <message>
+        <source>A file here is damaged; the copy was stopped.</source>
+        <translation>Un fichier ici est endommagé ; la copie a été arrêtée.</translation>
     </message>
     <message>
         <source>The copy of the mailbox could not be read.</source>

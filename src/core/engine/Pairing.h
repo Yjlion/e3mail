@@ -94,6 +94,7 @@ private:
     QString m_peer, m_requester, m_device;
     std::unique_ptr<QTemporaryDir> m_tmp;
     QString m_dbPath;
+    QByteArray m_snapshotKey;
     qint64 m_total = 0, m_served = 0;
     QString m_cachedBlob;
     QByteArray m_cachedData;
@@ -139,6 +140,7 @@ private:
     quint64 m_conn = 0;
     QJsonObject m_manifest;
     QString m_stage;
+    QByteArray m_stageKey;
     QFile m_db;
     // What is still to ask for, in order: the database in pieces, then each
     // blob in pieces. Answers come back in the same order.

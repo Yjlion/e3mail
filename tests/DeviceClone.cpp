@@ -28,7 +28,9 @@ bool cloneDevice(Account *src, const QString &root)
             return false;
     }
     {
-        Database db(dst + QStringLiteral("/mail.db"));
+        // A copy carries the account's key file; with no keyring in tests it
+        // holds the key itself (ADR 0023).
+        Database db(dst + QStringLiteral("/mail.db"), src->dbKey());
         db.run("UPDATE config SET value=? WHERE key='device_id'", QUuid::createUuid().toString(QUuid::WithoutBraces));
         db.run("DELETE FROM config WHERE key='p2p_secret'");
         // Backups are set up per device (ADR 0020), as pairing's copy leaves them.

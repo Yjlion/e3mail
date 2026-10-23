@@ -124,7 +124,7 @@ void AccountManager::remove(int id)
     delete a;
     SecretStore::remove(QStringLiteral("account-%1-in").arg(id));
     SecretStore::remove(QStringLiteral("account-%1-smtp").arg(id));
-    for (const char *which : {"oauth", "backup", "backup-dest"})
+    for (const char *which : {"oauth", "backup", "backup-dest", "dbkey"})
         SecretStore::remove(QStringLiteral("account-%1-%2").arg(id).arg(QLatin1String(which)));
     QDir(dir).removeRecursively();
     if (m_selected == id)

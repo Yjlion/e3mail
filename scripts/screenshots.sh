@@ -27,6 +27,7 @@ shot reply-html --open inbox:0 --page reply
 shot contacts --page contacts
 shot verify --page verify
 shot contact --page contact
+shot unlock --page unlock
 shot disappearing --open inbox:2
 shot source --open inbox:0 --page source
 shot settings --page settings
@@ -55,6 +56,7 @@ rm -rf "$REPO"
 shot pair-ar --page pair --lang ar
 shot verify-ar --page verify --lang ar
 shot contact-ar --page contact --lang ar
+shot unlock-ar --page unlock --lang ar
 # Removed on another device while away.
 "$BUILD/src/cli/e3mail-cli" --data-dir "$DATA" config p2p_removed_by Desktop >/dev/null
 shot devices-removed --page devices

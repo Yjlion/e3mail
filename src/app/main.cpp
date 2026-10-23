@@ -3,6 +3,7 @@
 #include "controllers/Languages.h"
 #include "controllers/MailApp.h"
 #include "engine/AccountManager.h"
+#include "engine/AtRest.h"
 #include "util/Paths.h"
 
 #include <QCommandLineParser>
@@ -15,6 +16,7 @@
 
 #include "InlineImages.h"
 #include "QrImageProvider.h"
+#include "UnlockGate.h"
 #include <QWindow>
 #include <QQuickStyle>
 #include <QQuickWindow>
@@ -60,6 +62,16 @@ int main(int argc, char *argv[])
     Languages::install(p.isSet(lang) ? p.value(lang) : Languages::saved());
 
     QQuickStyle::setStyle(QStringLiteral("Basic"));
+
+    // A passphrase guards the accounts (ADR 0023): ask for it before any is
+    // opened. E3MAIL_PASSPHRASE answers for scripts and tests.
+    if (p.value(page) == QLatin1String("unlock")) { // for screenshots
+        UnlockGate::run(e3::Paths::dataDir() + QStringLiteral("/accounts"), {}, p.value(grab));
+        return 0;
+    }
+    if (e3::AtRest::passphraseRequired(e3::Paths::dataDir() + QStringLiteral("/accounts"))
+        && !UnlockGate::run(e3::Paths::dataDir() + QStringLiteral("/accounts"), qEnvironmentVariable("E3MAIL_PASSPHRASE")))
+        return 0;
 
     e3::AccountManager accounts(e3::Paths::dataDir());
     MailApp mailApp(&accounts);

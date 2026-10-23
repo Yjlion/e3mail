@@ -1,14 +1,16 @@
 // SPDX-License-Identifier: MPL-2.0
 #include "Pairing.h"
-#include "store/Snapshot.h"
 
 #include "Account.h"
 #include "AccountManager.h"
+#include "AtRest.h"
+#include "backup/Crypto.h"
 #include "store/BlobStore.h"
 #include "store/Config.h"
 #include "store/Database.h"
 #include "store/OpLog.h"
 #include "store/Schema.h"
+#include "store/Snapshot.h"
 #include "sync/IrohTransport.h"
 #include "util/Log.h"
 
@@ -223,7 +225,9 @@ void PairingOffer::allow()
     m_tmp = std::make_unique<QTemporaryDir>(m_account->dir() + QStringLiteral("/.pairing-XXXXXX"));
     m_dbPath = m_tmp->filePath(QStringLiteral("snapshot.db"));
     try {
-        snapshotDatabase(ctx.db, m_dbPath);
+        // Under a key of its own, which travels in the manifest (ADR 0023).
+        m_snapshotKey = backup::crypto::random(32);
+        snapshotDatabase(ctx.db, m_dbPath, m_account->dbKey(), m_snapshotKey);
     } catch (const std::exception &e) {
         fail(QString::fromUtf8(e.what()));
         return;
@@ -231,12 +235,12 @@ void PairingOffer::allow()
     QFile db(m_dbPath);
     QJsonArray blobs;
     m_total = db.size();
-    const QDir dir(ctx.blobs.dir());
-    for (const QFileInfo &f : dir.entryInfoList(QDir::Files)) {
-        if (f.fileName().size() != 64)
+    for (const QString &name : BlobStore::referenced(ctx.db)) {
+        const qint64 size = ctx.blobs.size(name);
+        if (size < 0)
             continue;
-        blobs.append(QJsonArray{f.fileName(), f.size()});
-        m_total += f.size();
+        blobs.append(QJsonArray{name, size});
+        m_total += size;
     }
     const Account::Settings s = m_account->settings();
     const QJsonObject manifest{
@@ -249,7 +253,9 @@ void PairingOffer::allow()
         {QStringLiteral("db"), QJsonObject{{QStringLiteral("size"), db.size()},
                                            {QStringLiteral("sha256"), QString::fromLatin1(sha256File(m_dbPath))}}},
         {QStringLiteral("blobs"), blobs},
-        // The passwords travel only here, inside the authenticated channel.
+        // The passwords and the copy's key travel only here, inside the
+        // authenticated channel.
+        {QStringLiteral("dbkey"), QString::fromLatin1(m_snapshotKey.toBase64())},
         {QStringLiteral("in"), s.inPassword},
         {QStringLiteral("smtp"), s.smtpPassword},
         {QStringLiteral("oauth"), s.oauthRefresh}};
@@ -270,6 +276,9 @@ void PairingOffer::serve(const QJsonObject &get)
         if (name != m_cachedBlob) {
             m_cachedData = m_account->ctx().blobs.get(name);
             m_cachedBlob = name;
+            // Sealed files that do not open are damaged: never send less.
+            if (m_cachedData.isEmpty() && m_account->ctx().blobs.size(name) > 0)
+                return fail(tr("A file here is damaged; the copy was stopped."));
         }
         piece = m_cachedData.mid(offset, kPiece);
     } else {
@@ -376,6 +385,7 @@ void PairingJoin::onManifest(const QByteArray &data)
         return fail(tr("The other device offered a different account."));
     m_stage = m_work->filePath(QStringLiteral("account"));
     QDir().mkpath(m_stage + QStringLiteral("/blobs"));
+    m_stageKey = AtRest::stage(m_stage);
     m_db.setFileName(m_stage + QStringLiteral("/mail.db"));
     if (!m_db.open(QIODevice::WriteOnly))
         return fail(tr("Cannot write here."));
@@ -429,11 +439,13 @@ void PairingJoin::onChunk(const QByteArray &data)
     } else {
         if (offset == 0)
             m_blobData.clear();
+        if (bytes.isEmpty() && p.size > 0)
+            return fail(tr("A file arrived damaged."));
         m_blobData += bytes;
         if (m_blobData.size() >= p.size) {
             // Content-addressed: a blob whose bytes do not hash to its name
             // was changed on the way, or is not what it claims to be.
-            BlobStore store(m_stage + QStringLiteral("/blobs"));
+            BlobStore store(m_stage + QStringLiteral("/blobs"), m_stageKey);
             if (store.put(m_blobData) != p.name)
                 return fail(tr("A file arrived damaged."));
             m_blobData.clear();
@@ -455,7 +467,11 @@ void PairingJoin::complete()
     try {
         // This device: an id and an endpoint of its own, and the device it
         // came from as its first peer.
-        Database db(m_db.fileName());
+        // The copy came under its own key (none from an older device); it
+        // takes this device's from here on.
+        Database db(m_db.fileName(),
+                    QByteArray::fromBase64(m_manifest.value(QLatin1String("dbkey")).toString().toLatin1()));
+        db.rekey(m_stageKey);
         Schema::migrate(db);
         Config c(db);
         c.set(cfg::DeviceId, m_device);

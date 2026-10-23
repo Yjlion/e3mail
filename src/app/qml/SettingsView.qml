@@ -276,6 +276,19 @@ Rectangle {
                       .arg(view.s.secretLocation === "keyring" ? qsTr("system keyring") : qsTr("account database (no system keyring was available)"))
             }
 
+            Heading { text: qsTr("On this device") }
+            Note {
+                text: view.s.atRest === "passphrase" ? qsTr("Your mail here is encrypted, and your passphrase opens it. Without it, nobody can read it, and neither can you.")
+                    : view.s.atRest === "keyring" ? qsTr("Your mail here is encrypted with a key kept in the system keyring. Anyone who can sign in to this computer as you can read it.")
+                    : qsTr("Your mail here is encrypted, but its key is stored beside it (no system keyring was available). Set a passphrase to protect it.")
+            }
+            Flow {
+                Layout.fillWidth: true
+                spacing: 6
+                Button { text: (view.s.atRest === "passphrase") ? qsTr("Change passphrase…") : qsTr("Set a passphrase…"); onClicked: passphraseDialog.openFor(true) }
+                Button { visible: (view.s.atRest === "passphrase"); flat: true; text: qsTr("Remove passphrase…"); onClicked: passphraseDialog.openFor(false) }
+            }
+
             Heading { text: qsTr("Originals") }
             RowLayout {
                 RowText { text: qsTr("Keep each message's original for"); color: Theme.text }
@@ -436,6 +449,50 @@ Rectangle {
 
     SignatureDialog { id: signatureDialog }
     PairDialog { id: pairDialog }
+
+    // Setting, changing or removing the passphrase (ADR 0023).
+    Dialog {
+        id: passphraseDialog
+        property bool setting: true
+        function openFor(set) {
+            setting = set
+            currentPass.text = ""; newPass.text = ""; repeatPass.text = ""; passError.text = ""
+            open()
+        }
+        parent: Overlay.overlay
+        anchors.centerIn: parent
+        modal: true
+        width: Math.min(440, parent.width - (Theme.narrow ? 16 : 96))
+        title: setting ? qsTr("Passphrase") : qsTr("Remove passphrase")
+        standardButtons: Dialog.Cancel
+        ColumnLayout {
+            anchors.fill: parent
+            spacing: 8
+            Label {
+                Layout.fillWidth: true
+                wrapMode: Text.Wrap
+                text: passphraseDialog.setting
+                      ? qsTr("e3mail will ask for it each time it starts. If you forget it, the mail on this device cannot be recovered; a backup or another device can restore it.")
+                      : qsTr("Your mail stays encrypted; its key goes back to the system keyring, or beside the mail if there is none.")
+            }
+            Field { id: currentPass; visible: (view.s.atRest === "passphrase"); Layout.fillWidth: true; echoMode: TextInput.Password; placeholderText: qsTr("Current passphrase") }
+            Field { id: newPass; visible: passphraseDialog.setting; Layout.fillWidth: true; echoMode: TextInput.Password; placeholderText: qsTr("New passphrase") }
+            Field { id: repeatPass; visible: passphraseDialog.setting; Layout.fillWidth: true; echoMode: TextInput.Password; placeholderText: qsTr("New passphrase again") }
+            Label { id: passError; Layout.fillWidth: true; wrapMode: Text.Wrap; color: Theme.bad; visible: text.length > 0 }
+            PrimaryButton {
+                Layout.alignment: Qt.AlignRight
+                text: passphraseDialog.setting ? qsTr("Save") : qsTr("Remove")
+                onClicked: {
+                    if (passphraseDialog.setting && newPass.text.length < 8) { passError.text = qsTr("Use at least 8 characters."); return }
+                    if (passphraseDialog.setting && newPass.text !== repeatPass.text) { passError.text = qsTr("The two do not match."); return }
+                    const err = MailApp.setPassphrase(currentPass.text, passphraseDialog.setting ? newPass.text : "")
+                    if (err.length) { passError.text = err; return }
+                    passphraseDialog.close()
+                    view.reload()
+                }
+            }
+        }
+    }
     function pairDevice() { pairDialog.begin() }
     // After layout, which has not happened when the page has just opened.
     function showDevices() { scrollToDevices.start() }

@@ -33,7 +33,7 @@ proves the QML loads. Changes to transports or TLS: run `scripts/e2e.py`
 against `server/compose`.
 
 Dependencies on Arch: `qt6-base qt6-declarative qt6-svg qt6-tools qt6-multimedia qt6-networkauth icu botan libssh
-json-c sqlite`, plus RNP from `scripts/build-rnp.sh /usr/local` (it is not
+json-c`, plus RNP from `scripts/build-rnp.sh /usr/local` (it is not
 packaged), and Rust from rustup for device sync (`src/p2p`, built by cargo
 through Corrosion; keep `~/.cargo/bin` on `PATH`, or configure with
 `-DE3MAIL_P2P=OFF`). The first build compiles iroh, about ten minutes.

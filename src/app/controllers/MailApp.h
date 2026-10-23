@@ -192,6 +192,10 @@ public:
     Q_INVOKABLE QString lifetime(int seconds) const;
     // Trust set by hand (ADR 0022): "on", "off" or "auto".
     Q_INVOKABLE void setContactTrust(qint64 id, const QString &trust);
+    // The passphrase that guards every account's key (ADR 0023): set,
+    // changed, or removed with an empty `next`. Returns an error to show.
+    Q_INVOKABLE QString setPassphrase(const QString &current, const QString &next);
+    Q_INVOKABLE bool hasPassphrase() const;
     Q_INVOKABLE QStringList completeAddress(const QString &prefix) const;
 
     Q_INVOKABLE QVariantMap settings() const;

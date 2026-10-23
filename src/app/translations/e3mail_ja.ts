@@ -780,6 +780,10 @@ To: %4
         </translation>
     </message>
     <message>
+        <source>The current passphrase is not right.</source>
+        <translation>現在のパスフレーズが正しくありません。</translation>
+    </message>
+    <message>
         <source>%1 is not an email address, or is in your contacts already.</source>
         <translation>%1 はメールアドレスではないか、すでに連絡先にあります。</translation>
     </message>
@@ -1557,6 +1561,34 @@ To: %4
         <translation>アカウントのデータベース (システムのキーリングを使用できませんでした)</translation>
     </message>
     <message>
+        <source>On this device</source>
+        <translation>この端末</translation>
+    </message>
+    <message>
+        <source>Your mail here is encrypted, and your passphrase opens it. Without it, nobody can read it, and neither can you.</source>
+        <translation>この端末のメールは暗号化されており、パスフレーズで開きます。パスフレーズがなければ誰も、あなた自身も読めません。</translation>
+    </message>
+    <message>
+        <source>Your mail here is encrypted with a key kept in the system keyring. Anyone who can sign in to this computer as you can read it.</source>
+        <translation>この端末のメールは、システムのキーリングにある鍵で暗号化されています。このコンピュータにあなたとしてサインインできる人は読めます。</translation>
+    </message>
+    <message>
+        <source>Your mail here is encrypted, but its key is stored beside it (no system keyring was available). Set a passphrase to protect it.</source>
+        <translation>この端末のメールは暗号化されていますが、鍵がその隣に保存されています（システムのキーリングがありません）。保護するにはパスフレーズを設定してください。</translation>
+    </message>
+    <message>
+        <source>Change passphrase…</source>
+        <translation>パスフレーズを変更…</translation>
+    </message>
+    <message>
+        <source>Set a passphrase…</source>
+        <translation>パスフレーズを設定…</translation>
+    </message>
+    <message>
+        <source>Remove passphrase…</source>
+        <translation>パスフレーズを削除…</translation>
+    </message>
+    <message>
         <source>Originals</source>
         <translation>原本</translation>
     </message>
@@ -1715,6 +1747,46 @@ To: %4
     <message>
         <source>e3mail %1 · unaudited development software</source>
         <translation>e3mail %1 · 監査を受けていない開発中のソフトウェア</translation>
+    </message>
+    <message>
+        <source>Passphrase</source>
+        <translation>パスフレーズ</translation>
+    </message>
+    <message>
+        <source>Remove passphrase</source>
+        <translation>パスフレーズを削除</translation>
+    </message>
+    <message>
+        <source>e3mail will ask for it each time it starts. If you forget it, the mail on this device cannot be recovered; a backup or another device can restore it.</source>
+        <translation>e3mail は起動のたびにこれを尋ねます。忘れるとこの端末のメールは復元できません。バックアップや別の端末から復元できます。</translation>
+    </message>
+    <message>
+        <source>Your mail stays encrypted; its key goes back to the system keyring, or beside the mail if there is none.</source>
+        <translation>メールは暗号化されたままです。鍵はシステムのキーリングに戻ります（なければメールの隣に置かれます）。</translation>
+    </message>
+    <message>
+        <source>Current passphrase</source>
+        <translation>現在のパスフレーズ</translation>
+    </message>
+    <message>
+        <source>New passphrase</source>
+        <translation>新しいパスフレーズ</translation>
+    </message>
+    <message>
+        <source>New passphrase again</source>
+        <translation>新しいパスフレーズ（確認）</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>保存</translation>
+    </message>
+    <message>
+        <source>Use at least 8 characters.</source>
+        <translation>8 文字以上にしてください。</translation>
+    </message>
+    <message>
+        <source>The two do not match.</source>
+        <translation>一致しません。</translation>
     </message>
     <message>
         <source>Remove %1?</source>
@@ -2087,6 +2159,29 @@ To: %4
     </message>
 </context>
 <context>
+    <name>Unlock</name>
+    <message>
+        <source>Enter your passphrase</source>
+        <translation>パスフレーズを入力</translation>
+    </message>
+    <message>
+        <source>Your mail on this device is encrypted with it.</source>
+        <translation>この端末のメールはこれで暗号化されています。</translation>
+    </message>
+    <message>
+        <source>Passphrase</source>
+        <translation>パスフレーズ</translation>
+    </message>
+    <message>
+        <source>That passphrase does not open your mail.</source>
+        <translation>そのパスフレーズではメールを開けません。</translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation>開く</translation>
+    </message>
+</context>
+<context>
     <name>VerifyDialog</name>
     <message>
         <source>Verify in person</source>
@@ -2197,6 +2292,10 @@ To: %4
     <message>
         <source>A file asked for is not here.</source>
         <translation>要求されたファイルがここにありません。</translation>
+    </message>
+    <message>
+        <source>A file here is damaged; the copy was stopped.</source>
+        <translation>ここにあるファイルが壊れています。コピーを中止しました。</translation>
     </message>
     <message>
         <source>The copy of the mailbox could not be read.</source>

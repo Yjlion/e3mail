@@ -87,7 +87,8 @@ over TLS in [`scripts/e2e.py`](scripts/e2e.py).
 | Encrypted backups to a folder, WebDAV, S3, SFTP, Google Drive or OneDrive | ✅ |
 | Sign-in with OAuth 2 for Gmail and Outlook | ⏳ built, not yet tried against Google or Microsoft |
 | Read receipts (to trusted senders) and disappearing mail | ✅ |
-| At-rest encryption, structured email | ⏳ later phases |
+| Encryption at rest: database and attachments, keyring or passphrase | ✅ |
+| Structured email | ⏳ later phase |
 | Interop with Delta Chat ([`scripts/interop-pass.py`](scripts/interop-pass.py)) | ✅ verification and encrypted mail, both ways |
 | Interop with Thunderbird or a mainstream provider | ❌ |
 | Code signing | ❌ |
@@ -98,8 +99,9 @@ what is not.
 ## Build
 
 You need Qt 6.10 or newer (with Qt Linguist's tools), CMake 3.21+, a C++20
-compiler, SQLite with FTS5, ICU, and RNP with Botan. On Arch, `pacman -S
-qt6-base qt6-declarative qt6-svg qt6-tools icu botan json-c sqlite`, then
+compiler, ICU, and RNP with Botan (SQLite, with encryption, is fetched and built
+by CMake). On Arch, `pacman -S
+qt6-base qt6-declarative qt6-svg qt6-tools icu botan json-c`, then
 [`scripts/build-rnp.sh`](scripts/build-rnp.sh) for RNP. On Debian or Ubuntu
 add `libicu-dev` and use `librnp-dev`; on macOS, `brew install rnp icu4c` and
 set `ICU_ROOT=$(brew --prefix icu4c)`.

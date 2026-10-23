@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MPL-2.0
 #include "Account.h"
 
+#include "AtRest.h"
 #include "SecretStore.h"
 #include "crypto/Pgp.h"
 #include "mail/Keyring.h"
@@ -36,9 +37,12 @@ QString secretKey(int id, const char *which)
 Account::Account(int id, const QString &dir, QObject *parent) : QObject(parent), m_id(id), m_dir(dir)
 {
     QDir().mkpath(dir);
-    m_db = std::make_unique<Database>(dir + QStringLiteral("/mail.db"));
+    // Encrypted at rest (ADR 0023): the key first; it may encrypt what an
+    // older version left in the clear.
+    m_dbKey = AtRest::open(dir, id);
+    m_db = std::make_unique<Database>(dir + QStringLiteral("/mail.db"), m_dbKey);
     Schema::migrate(*m_db);
-    m_blobs = std::make_unique<BlobStore>(dir + QStringLiteral("/blobs"));
+    m_blobs = std::make_unique<BlobStore>(dir + QStringLiteral("/blobs"), m_dbKey);
     m_pgp = std::make_unique<crypto::Pgp>();
     m_config = std::make_unique<Config>(*m_db);
     m_ops = std::make_unique<OpLog>(*m_db);
@@ -383,6 +387,7 @@ static MailWorker::Credentials credentialsFrom(const Account::Settings &s)
 MailWorker::Credentials Account::credentials() const
 {
     MailWorker::Credentials c = credentialsFrom(settings());
+    c.dbKey = m_dbKey;
     if (c.oauth) {
         // Microsoft rotates refresh tokens; the worker's thread hands the
         // new one here to be stored.

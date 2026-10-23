@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Builds the native dependencies for one Android ABI under a prefix:
-#   - vcpkg's botan, json-c, zlib, bzip2, icu and sqlite3 (static, release
+#   - vcpkg's botan, json-c, zlib, bzip2 and icu (static, release
 #     only, from vcpkg.json) in <prefix>/vcpkg_installed/<triplet>;
 #   - RNP, static, in <prefix>;
 #   - QtKeychain (the Android Keystore), in <prefix>;

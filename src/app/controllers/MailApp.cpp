@@ -12,6 +12,7 @@
 
 #include "crypto/Pgp.h"
 #include "engine/AccountManager.h"
+#include "engine/AtRest.h"
 #include "mail/Compose.h"
 #include "mail/Contacts.h"
 #ifdef E3MAIL_HAVE_P2P
@@ -1168,6 +1169,22 @@ QString MailApp::lifetime(int seconds) const
     return tr("%n minute(s)", nullptr, qMax(1, seconds / 60));
 }
 
+QString MailApp::setPassphrase(const QString &current, const QString &next)
+{
+    if (AtRest::hasPassphrase() && !AtRest::checkPassphrase(m_mgr->root(), current))
+        return tr("The current passphrase is not right.");
+    AtRest::setPassphrase(next);
+    for (Account *a : m_mgr->accounts())
+        AtRest::reguard(a->dir(), a->id(), a->dbKey());
+    Q_EMIT accountChanged();
+    return {};
+}
+
+bool MailApp::hasPassphrase() const
+{
+    return AtRest::hasPassphrase();
+}
+
 void MailApp::setContactTrust(qint64 id, const QString &trust)
 {
     if (!account())
@@ -1323,6 +1340,14 @@ QVariantMap MailApp::settings() const
             {QStringLiteral("smtpPort"), s.smtpPort},
             {QStringLiteral("smtpSecurity"), s.smtpSecurity},
             {QStringLiteral("secretLocation"), account()->secretLocation()},
+            {QStringLiteral("atRest"), [this] {
+                 switch (AtRest::guard(account()->dir())) {
+                 case AtRest::Guard::Keyring: return QStringLiteral("keyring");
+                 case AtRest::Guard::Passphrase: return QStringLiteral("passphrase");
+                 case AtRest::Guard::None: break;
+                 }
+                 return QStringLiteral("none");
+             }()},
             {QStringLiteral("inCert"), net::formatFingerprint(c.get(cfg::InCertSha256).toLatin1())},
             {QStringLiteral("smtpCert"), net::formatFingerprint(c.get(cfg::SmtpCertSha256).toLatin1())},
             {QStringLiteral("encryptionMode"), c.getInt(cfg::EncryptionMode)},
