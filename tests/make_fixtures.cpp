@@ -183,6 +183,21 @@ int main(int argc, char **argv)
                "WHERE from_addr='tomas@example.net'",
                now + 20LL * 3600 * 1000);
 
+    // Structured data (P13; the outcome, recorded): a flight on Tomas's
+    // signed reply, which is trusted and so has buttons, and a parcel on the
+    // stranger's offer, shown inert.
+    ctx.db.run("UPDATE messages SET structured=? WHERE from_addr='tomas@example.net'",
+               QStringLiteral(R"({"@type":"FlightReservation","reservationNumber":"RXJ34P",)"
+                              R"("underName":{"name":"Ada Lovelace"},"reservedTicket":{"ticketedSeat":{"seatNumber":"14C"}},)"
+                              R"("reservationFor":{"@type":"Flight","flightNumber":"110","airline":{"name":"Example Air","iataCode":"EX"},)"
+                              R"("departureAirport":{"name":"London Heathrow","iataCode":"LHR"},"departureTime":"2026-11-03T08:40:00Z",)"
+                              R"("arrivalAirport":{"name":"Lisbon","iataCode":"LIS"},"arrivalTime":"2026-11-03T11:15:00Z"},)"
+                              R"("potentialAction":{"@type":"ViewAction","target":"https://air.example/trips/RXJ34P"}})"));
+    ctx.db.run("UPDATE messages SET structured=? WHERE from_addr='offers@deals.example'",
+               QStringLiteral(R"({"@type":"ParcelDelivery","carrier":{"name":"Swift Post"},"trackingNumber":"SP123",)"
+                              R"("itemShipped":{"name":"Your prize"},"expectedArrivalUntil":"2026-11-05",)"
+                              R"("trackingUrl":"https://deals.example/claim"})"));
+
     Draft draft;
     draft.to = {{QStringLiteral("Mira Dorn"), QStringLiteral("mira@example.org")}};
     draft.subject = QStringLiteral("Offsite agenda");

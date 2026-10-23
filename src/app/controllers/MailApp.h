@@ -150,6 +150,8 @@ public:
     Q_INVOKABLE void deleteLabel(qint64 labelId);
 
     Q_INVOKABLE bool saveAttachment(qint64 msgId, int index, const QUrl &dest);
+    // A structured card's item as an iCalendar file (ADR 0024).
+    Q_INVOKABLE bool saveCalendarEvent(qint64 msgId, int item, const QUrl &dest);
     // A message's source for the source dialog: retained, encrypted,
     // original, decrypted, decryptError, subject, and outline/innerOutline
     // ([{depth, type, encoding, filename, size}]).

@@ -28,3 +28,4 @@ that supersedes it, or a dated amendment block inside it, and add a row here.
 | [0021](0021-securejoin.md) | SecureJoin: verifying a contact by scanning their code, as Delta Chat does | Accepted |
 | [0022](0022-read-receipts-disappearing-mail-and-trust.md) | Read receipts to trusted senders, disappearing mail into Trash, trust set by hand | Accepted |
 | [0023](0023-encryption-at-rest.md) | Encryption at rest: the database and blobs, under a per-account key | Accepted |
+| [0024](0024-structured-email.md) | Structured email: shown as text, with buttons only for the trusted and signed | Accepted |

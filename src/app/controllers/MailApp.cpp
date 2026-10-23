@@ -28,6 +28,7 @@
 #include "mail/Search.h"
 #include "mail/SecureJoin.h"
 #include "mail/Signatures.h"
+#include "mail/Structured.h"
 #include "mail/VCard.h"
 #include "mime/Html.h"
 #include "mime/Part.h"
@@ -827,6 +828,33 @@ QVariantMap MailApp::messageMap(qint64 id) const
              }
              return names.join(QStringLiteral(", "));
          }()},
+        {QStringLiteral("structuredActive"), mail::Structured::actionable(account()->ctx(), *d)},
+        {QStringLiteral("structured"), [&] {
+             QVariantList out;
+             const QLocale locale;
+             const auto when = [&locale](const QDateTime &t, bool allDay) {
+                 return allDay ? locale.toString(t.date(), QLocale::LongFormat)
+                               : locale.toString(t.toLocalTime(), QLocale::ShortFormat);
+             };
+             for (const auto &it : mail::Structured::parse(d->structured)) {
+                 QVariantList fields;
+                 if (it.start.isValid()) {
+                     QString w = when(it.start, it.allDay);
+                     if (it.end.isValid())
+                         w += QStringLiteral(" – ") + when(it.end, it.allDay);
+                     fields.append(QVariantMap{{QStringLiteral("label"), tr("When")}, {QStringLiteral("value"), w}});
+                 }
+                 if (!it.place.isEmpty())
+                     fields.append(QVariantMap{{QStringLiteral("label"), tr("Where")}, {QStringLiteral("value"), it.place}});
+                 for (const auto &f : it.fields)
+                     fields.append(QVariantMap{{QStringLiteral("label"), f.label}, {QStringLiteral("value"), f.value}});
+                 out.append(QVariantMap{{QStringLiteral("title"), it.title},
+                                        {QStringLiteral("fields"), fields},
+                                        {QStringLiteral("calendar"), it.start.isValid()},
+                                        {QStringLiteral("link"), it.link}});
+             }
+             return out;
+         }()},
         {QStringLiteral("disappear"), [&] {
              // Rounded up, in the largest whole unit: "in 3 hours", not "in 2 h 59".
              if (d->trashed || d->ephemeralSeconds <= 0)
@@ -967,6 +995,23 @@ bool MailApp::saveAttachment(qint64 msgId, int index, const QUrl &dest)
         return false;
     const bool ok = FileIo::write(dest, account()->ctx().blobs.get(d->attachments[index].blob));
     Q_EMIT notify(ok ? tr("Saved %1.").arg(d->attachments[index].filename) : tr("Could not save the attachment."));
+    return ok;
+}
+
+bool MailApp::saveCalendarEvent(qint64 msgId, int item, const QUrl &dest)
+{
+    if (!account())
+        return false;
+    const auto d = mail::Search::detail(account()->ctx(), msgId);
+    // Only from a card that offers it: the same rule as the button.
+    if (!d || !mail::Structured::actionable(account()->ctx(), *d))
+        return false;
+    const auto items = mail::Structured::parse(d->structured);
+    if (item < 0 || item >= items.size())
+        return false;
+    const QByteArray ics = mail::Structured::toIcs(items[item], d->messageId + u'-' + QString::number(item));
+    const bool ok = !ics.isEmpty() && FileIo::write(dest, ics);
+    Q_EMIT notify(ok ? tr("Saved %1.").arg(FileIo::displayName(dest)) : tr("Could not save the event."));
     return ok;
 }
 

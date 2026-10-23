@@ -702,6 +702,14 @@ To: %4
         <translation>(件名なし)</translation>
     </message>
     <message>
+        <source>When</source>
+        <translation>日時</translation>
+    </message>
+    <message>
+        <source>Where</source>
+        <translation>場所</translation>
+    </message>
+    <message>
         <source>disappears %1 after reading</source>
         <translation>読後 %1 で消えます</translation>
     </message>
@@ -742,6 +750,10 @@ To: %4
     <message>
         <source>Could not save the attachment.</source>
         <translation>添付ファイルを保存できませんでした。</translation>
+    </message>
+    <message>
+        <source>Could not save the event.</source>
+        <translation>予定を保存できませんでした。</translation>
     </message>
     <message>
         <source>This message cannot be decrypted, or its original is no longer kept.</source>
@@ -2145,6 +2157,124 @@ To: %4
     <message>
         <source>This message cannot be decrypted: %1</source>
         <translation>このメッセージは復号できません: %1</translation>
+    </message>
+</context>
+<context>
+    <name>Structured</name>
+    <message>
+        <source>Flight %1</source>
+        <translation>フライト %1</translation>
+    </message>
+    <message>
+        <source>Airline</source>
+        <translation>航空会社</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>出発</translation>
+    </message>
+    <message>
+        <source>To</source>
+        <translation>到着</translation>
+    </message>
+    <message>
+        <source>Booking</source>
+        <translation>予約番号</translation>
+    </message>
+    <message>
+        <source>Seat</source>
+        <translation>座席</translation>
+    </message>
+    <message>
+        <source>Passenger</source>
+        <translation>搭乗者</translation>
+    </message>
+    <message>
+        <source>Train</source>
+        <translation>列車</translation>
+    </message>
+    <message>
+        <source>Stay</source>
+        <translation>宿泊</translation>
+    </message>
+    <message>
+        <source>Guest</source>
+        <translation>宿泊者</translation>
+    </message>
+    <message>
+        <source>Event</source>
+        <translation>イベント</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>名前</translation>
+    </message>
+    <message>
+        <source>Parcel</source>
+        <translation>荷物</translation>
+    </message>
+    <message>
+        <source>Carrier</source>
+        <translation>配送業者</translation>
+    </message>
+    <message>
+        <source>Tracking number</source>
+        <translation>追跡番号</translation>
+    </message>
+    <message>
+        <source>Order</source>
+        <translation>注文</translation>
+    </message>
+    <message>
+        <source>Order from %1</source>
+        <translation>%1 での注文</translation>
+    </message>
+    <message>
+        <source>Order number</source>
+        <translation>注文番号</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation>状況</translation>
+    </message>
+    <message>
+        <source>Total</source>
+        <translation>合計</translation>
+    </message>
+    <message>
+        <source>Invoice</source>
+        <translation>請求書</translation>
+    </message>
+    <message>
+        <source>Invoice from %1</source>
+        <translation>%1 からの請求書</translation>
+    </message>
+    <message>
+        <source>Amount due</source>
+        <translation>支払額</translation>
+    </message>
+    <message>
+        <source>Reference</source>
+        <translation>参照番号</translation>
+    </message>
+</context>
+<context>
+    <name>StructuredCard</name>
+    <message>
+        <source>Add to calendar…</source>
+        <translation>カレンダーに追加…</translation>
+    </message>
+    <message>
+        <source>Open…</source>
+        <translation>開く…</translation>
+    </message>
+    <message>
+        <source>Shown as text only. Buttons appear for senders you trust whose mail is signed by their key; check these details against the message.</source>
+        <translation>テキストとしてのみ表示しています。ボタンは、信頼済みで鍵による署名があるメールにのみ表示されます。内容はメッセージ本文と照らし合わせてください。</translation>
+    </message>
+    <message>
+        <source>Calendar files (*.ics)</source>
+        <translation>カレンダーファイル (*.ics)</translation>
     </message>
 </context>
 <context>

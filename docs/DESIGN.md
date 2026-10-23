@@ -152,7 +152,7 @@ amendments, [ADR 0013](adr/0013-op-merge-rules.md)), and tried live against
 | P10 | Address book: details, phones, vCard import and export, CSV export | ✅ (categories not built) |
 | P11 | At rest: encrypted database, blob encryption, encrypted backup | ✅ encrypted backup ([ADR 0020](adr/0020-encrypted-backups.md)); database and blobs under a per-account key, keyring or passphrase ([ADR 0023](adr/0023-encryption-at-rest.md)) |
 | P12 | Read receipts (MDN) and disappearing messages into Trash | ✅ plus trust set by hand ([ADR 0022](adr/0022-read-receipts-disappearing-mail-and-trust.md)) |
-| P13 | Structured email (SML), trusted vs inert | |
+| P13 | Structured email (SML), trusted vs inert | ✅ received and shown, actions for trusted signed senders ([ADR 0024](adr/0024-structured-email.md)) |
 | P14 | Android: the same app, adaptive layout, foreground sync ([ADR 0016](adr/0016-android.md)) | APK builds and boots in an emulator; background sync if asked ([ADR 0018](adr/0018-background-sync-on-android.md)) |
 
 ## Verification

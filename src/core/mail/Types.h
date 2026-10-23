@@ -138,6 +138,8 @@ struct MessageDetail : MessageSummary
     // Disappearing mail: lifetime once read, and when it goes, once known.
     int ephemeralSeconds = 0;
     QDateTime expiresAt;
+    // Structured data the message carried (JSON-LD, ADR 0024), or empty.
+    QString structured;
 };
 
 struct SearchQuery

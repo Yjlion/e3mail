@@ -702,6 +702,14 @@ To: %4
         <translation>(ללא נושא)</translation>
     </message>
     <message>
+        <source>When</source>
+        <translation>מתי</translation>
+    </message>
+    <message>
+        <source>Where</source>
+        <translation>איפה</translation>
+    </message>
+    <message>
         <source>disappears %1 after reading</source>
         <translation>תיעלם %1 אחרי הקריאה</translation>
     </message>
@@ -743,6 +751,10 @@ To: %4
     <message>
         <source>Could not save the attachment.</source>
         <translation>לא ניתן היה לשמור את הקובץ המצורף.</translation>
+    </message>
+    <message>
+        <source>Could not save the event.</source>
+        <translation>לא ניתן היה לשמור את האירוע.</translation>
     </message>
     <message>
         <source>This message cannot be decrypted, or its original is no longer kept.</source>
@@ -2160,6 +2172,124 @@ To: %4
     <message>
         <source>This message cannot be decrypted: %1</source>
         <translation>לא ניתן לפענח הודעה זו: %1</translation>
+    </message>
+</context>
+<context>
+    <name>Structured</name>
+    <message>
+        <source>Flight %1</source>
+        <translation>טיסה %1</translation>
+    </message>
+    <message>
+        <source>Airline</source>
+        <translation>חברת תעופה</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>מ־</translation>
+    </message>
+    <message>
+        <source>To</source>
+        <translation>אל</translation>
+    </message>
+    <message>
+        <source>Booking</source>
+        <translation>הזמנה</translation>
+    </message>
+    <message>
+        <source>Seat</source>
+        <translation>מושב</translation>
+    </message>
+    <message>
+        <source>Passenger</source>
+        <translation>נוסע</translation>
+    </message>
+    <message>
+        <source>Train</source>
+        <translation>רכבת</translation>
+    </message>
+    <message>
+        <source>Stay</source>
+        <translation>שהייה</translation>
+    </message>
+    <message>
+        <source>Guest</source>
+        <translation>אורח</translation>
+    </message>
+    <message>
+        <source>Event</source>
+        <translation>אירוע</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>שם</translation>
+    </message>
+    <message>
+        <source>Parcel</source>
+        <translation>חבילה</translation>
+    </message>
+    <message>
+        <source>Carrier</source>
+        <translation>חברת משלוחים</translation>
+    </message>
+    <message>
+        <source>Tracking number</source>
+        <translation>מספר מעקב</translation>
+    </message>
+    <message>
+        <source>Order</source>
+        <translation>הזמנה</translation>
+    </message>
+    <message>
+        <source>Order from %1</source>
+        <translation>הזמנה מ־%1</translation>
+    </message>
+    <message>
+        <source>Order number</source>
+        <translation>מספר הזמנה</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation>מצב</translation>
+    </message>
+    <message>
+        <source>Total</source>
+        <translation>סה״כ</translation>
+    </message>
+    <message>
+        <source>Invoice</source>
+        <translation>חשבונית</translation>
+    </message>
+    <message>
+        <source>Invoice from %1</source>
+        <translation>חשבונית מ־%1</translation>
+    </message>
+    <message>
+        <source>Amount due</source>
+        <translation>סכום לתשלום</translation>
+    </message>
+    <message>
+        <source>Reference</source>
+        <translation>אסמכתה</translation>
+    </message>
+</context>
+<context>
+    <name>StructuredCard</name>
+    <message>
+        <source>Add to calendar…</source>
+        <translation>הוספה ליומן…</translation>
+    </message>
+    <message>
+        <source>Open…</source>
+        <translation>פתיחה…</translation>
+    </message>
+    <message>
+        <source>Shown as text only. Buttons appear for senders you trust whose mail is signed by their key; check these details against the message.</source>
+        <translation>מוצג כטקסט בלבד. כפתורים מופיעים לשולחים מהימנים שהדואר שלהם חתום במפתח שלהם; יש לבדוק את הפרטים מול ההודעה.</translation>
+    </message>
+    <message>
+        <source>Calendar files (*.ics)</source>
+        <translation>קובצי יומן (*.ics)</translation>
     </message>
 </context>
 <context>

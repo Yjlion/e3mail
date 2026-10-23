@@ -702,6 +702,14 @@ To: %4
         <translation>(אָן טעמע)</translation>
     </message>
     <message>
+        <source>When</source>
+        <translation>ווען</translation>
+    </message>
+    <message>
+        <source>Where</source>
+        <translation>וווּ</translation>
+    </message>
+    <message>
         <source>disappears %1 after reading</source>
         <translation>פֿאַרשווינדט %1 נאָכן לייענען</translation>
     </message>
@@ -743,6 +751,10 @@ To: %4
     <message>
         <source>Could not save the attachment.</source>
         <translation>מע האָט ניט געקענט אָפּהיטן די בײַלאַגע.</translation>
+    </message>
+    <message>
+        <source>Could not save the event.</source>
+        <translation>מע האָט נישט געקענט אָפּהיטן די געשעעניש.</translation>
     </message>
     <message>
         <source>This message cannot be decrypted, or its original is no longer kept.</source>
@@ -2160,6 +2172,124 @@ To: %4
     <message>
         <source>This message cannot be decrypted: %1</source>
         <translation>מע קען נישט אויפֿשליסלען דעם בריוו: %1</translation>
+    </message>
+</context>
+<context>
+    <name>Structured</name>
+    <message>
+        <source>Flight %1</source>
+        <translation>פֿלי %1</translation>
+    </message>
+    <message>
+        <source>Airline</source>
+        <translation>לופֿטליניע</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>פֿון</translation>
+    </message>
+    <message>
+        <source>To</source>
+        <translation>קיין</translation>
+    </message>
+    <message>
+        <source>Booking</source>
+        <translation>רעזערוואַציע</translation>
+    </message>
+    <message>
+        <source>Seat</source>
+        <translation>זיץ</translation>
+    </message>
+    <message>
+        <source>Passenger</source>
+        <translation>פּאַסאַזשיר</translation>
+    </message>
+    <message>
+        <source>Train</source>
+        <translation>באַן</translation>
+    </message>
+    <message>
+        <source>Stay</source>
+        <translation>אויפֿנטהאַלט</translation>
+    </message>
+    <message>
+        <source>Guest</source>
+        <translation>גאַסט</translation>
+    </message>
+    <message>
+        <source>Event</source>
+        <translation>געשעעניש</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>נאָמען</translation>
+    </message>
+    <message>
+        <source>Parcel</source>
+        <translation>פּעקל</translation>
+    </message>
+    <message>
+        <source>Carrier</source>
+        <translation>טראַנספּאָרטירער</translation>
+    </message>
+    <message>
+        <source>Tracking number</source>
+        <translation>נאָכשפּור־נומער</translation>
+    </message>
+    <message>
+        <source>Order</source>
+        <translation>באַשטעלונג</translation>
+    </message>
+    <message>
+        <source>Order from %1</source>
+        <translation>באַשטעלונג פֿון %1</translation>
+    </message>
+    <message>
+        <source>Order number</source>
+        <translation>באַשטעלונג־נומער</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation>סטאַטוס</translation>
+    </message>
+    <message>
+        <source>Total</source>
+        <translation>סך־הכּל</translation>
+    </message>
+    <message>
+        <source>Invoice</source>
+        <translation>חשבון</translation>
+    </message>
+    <message>
+        <source>Invoice from %1</source>
+        <translation>חשבון פֿון %1</translation>
+    </message>
+    <message>
+        <source>Amount due</source>
+        <translation>צו באַצאָלן</translation>
+    </message>
+    <message>
+        <source>Reference</source>
+        <translation>רעפֿערענץ</translation>
+    </message>
+</context>
+<context>
+    <name>StructuredCard</name>
+    <message>
+        <source>Add to calendar…</source>
+        <translation>צולייגן צום קאַלענדאַר…</translation>
+    </message>
+    <message>
+        <source>Open…</source>
+        <translation>עפֿענען…</translation>
+    </message>
+    <message>
+        <source>Shown as text only. Buttons appear for senders you trust whose mail is signed by their key; check these details against the message.</source>
+        <translation>בלויז ווי טעקסט געוויזן. קנעפּלעך באַווײַזן זיך פֿאַר געטרויטע שיקער וועמענס פּאָסט איז אונטערגעשריבן מיט זייער שליסל; קאָנטראָלירט די פּרטים לויטן בריוו.</translation>
+    </message>
+    <message>
+        <source>Calendar files (*.ics)</source>
+        <translation>קאַלענדאַר־טעקעס (*.ics)</translation>
     </message>
 </context>
 <context>
