@@ -3,6 +3,7 @@
 #include "FakeMailServer.h"
 #include "LoopbackTransport.h"
 #include "engine/AccountManager.h"
+#include "mail/Calendar.h"
 #include "mail/Compose.h"
 #include "mail/Contacts.h"
 #include "mail/Organize.h"
@@ -592,6 +593,117 @@ private Q_SLOTS:
         QVERIFY(onB);
         QCOMPARE(int(onB->origin), int(ContactOrigin::Manual));
         QVERIFY(mail::Contacts::isTrusted(m_b->ctx(), QStringLiteral("ann@z.test")));
+    }
+
+    // The calendar (ADR 0025): events travel as whole records, a removal
+    // competes with edits, and an attendee's answer is never downgraded by a
+    // device that had not heard it yet.
+    void calendarTravels()
+    {
+        auto &a = m_a->ctx();
+        auto &b = m_b->ctx();
+        mail::Calendar::Event e;
+        e.summary = QStringLiteral("Design review");
+        e.start = QDateTime(QDate(2026, 11, 10), QTime(9, 0), QTimeZone::UTC);
+        e.end = e.start.addSecs(3600);
+        e.tzid = QStringLiteral("Europe/Berlin");
+        e.rrule = QStringLiteral("FREQ=WEEKLY;BYDAY=TU;COUNT=3");
+        e.organizer.addr = alice();
+        e.attendees = {{bob(), QStringLiteral("Bob"), mail::ICal::PartStat::NeedsAction, true}};
+        e.reminderMinutes = 15;
+        const QString uid = mail::Calendar::saveLocal(a, e);
+        QVERIFY(!uid.isEmpty());
+        QCOMPARE(opCount(m_a, op::CalendarEvent), 1);
+        connectDevices();
+        auto onB = mail::Calendar::get(b, uid);
+        QVERIFY(onB);
+        QCOMPARE(onB->summary, QStringLiteral("Design review"));
+        QCOMPARE(onB->start, e.start);
+        QCOMPARE(onB->tzid, e.tzid);
+        QCOMPARE(onB->rrule, e.rrule);
+        QCOMPARE(onB->attendees.size(), 1);
+        QCOMPARE(onB->reminderMinutes, std::optional<int>(15));
+        QVERIFY(mail::Calendar::organizedByUs(b, *onB));
+        // Three Tuesdays on B, with the zone applied.
+        QCOMPARE(mail::Calendar::list(b, e.start.addDays(-1), e.start.addDays(60)).size(), 3);
+
+        // B edits after A did: B's record wins on both.
+        QTest::qWait(5);
+        onB->location = QStringLiteral("Room 2");
+        mail::Calendar::saveLocal(b, *onB);
+        m_syncB->push();
+        m_net->settle();
+        for (auto *x : {&a, &b})
+            QCOMPARE(mail::Calendar::get(*x, uid)->location, QStringLiteral("Room 2"));
+
+        // Bob's answer is derived on B from his REPLY (here: a stored reply
+        // message); A's later edit, made without having heard it, keeps it.
+        b.db.run("INSERT INTO messages(message_id, direction, state, subject, from_addr, from_name, date, received_at, "
+                 "body_text, preview, hidden, unread, calendar, cal_uid, cal_method) "
+                 "VALUES('r1@z.test', 0, 0, 'Accepted', ?, 'Bob', ?, ?, '', '', 0, 0, ?, ?, 'REPLY')",
+                 bob(), e.start.toMSecsSinceEpoch(), e.start.toMSecsSinceEpoch(),
+                 QString::fromUtf8(mail::ICal::write({mail::ICal::Method::Reply, {[&] {
+                     mail::ICal::Event r;
+                     r.uid = uid;
+                     r.start = e.start;
+                     r.stamp = QDateTime::currentDateTimeUtc();
+                     r.attendees = {{bob(), QStringLiteral("Bob"), mail::ICal::PartStat::Accepted, false}};
+                     return r;
+                 }()}})),
+                 uid);
+        mail::Calendar::rederive(b, uid);
+        QCOMPARE(mail::Calendar::get(b, uid)->attendees[0].partstat, mail::ICal::PartStat::Accepted);
+        QTest::qWait(5);
+        auto onA = *mail::Calendar::get(a, uid);
+        onA.summary = QStringLiteral("Design review, moved");
+        mail::Calendar::saveLocal(a, onA);
+        m_syncA->push();
+        m_net->settle();
+        QCOMPARE(mail::Calendar::get(b, uid)->summary, QStringLiteral("Design review, moved"));
+        QCOMPARE(mail::Calendar::get(b, uid)->attendees[0].partstat, mail::ICal::PartStat::Accepted);
+        QCOMPARE(mail::Calendar::get(a, uid)->attendees[0].partstat, mail::ICal::PartStat::NeedsAction);
+
+        // A newer sequence that reached B by mail is not undone by an older op.
+        QTest::qWait(5);
+        auto newer = *mail::Calendar::get(b, uid);
+        newer.sequence = 5;
+        newer.summary = QStringLiteral("Sequence five");
+        b.db.run("UPDATE events SET sequence=5, summary='Sequence five' WHERE uid=?", uid);
+        auto older = *mail::Calendar::get(a, uid);
+        older.summary = QStringLiteral("Stale");
+        mail::Calendar::saveLocal(a, older);
+        m_syncA->push();
+        m_net->settle();
+        QCOMPARE(mail::Calendar::get(b, uid)->summary, QStringLiteral("Sequence five"));
+
+        // A removes, B edits later: the edit keeps it on both; then B removes
+        // last and it is gone on both.
+        QTest::qWait(5);
+        mail::Calendar::removeLocal(a, uid);
+        QCOMPARE(opCount(m_a, op::CalendarRemove), 1);
+        QTest::qWait(5);
+        auto again = *mail::Calendar::get(b, uid);
+        again.summary = QStringLiteral("Kept");
+        mail::Calendar::saveLocal(b, again);
+        m_syncA->push();
+        m_syncB->push();
+        m_net->settle();
+        for (auto *x : {&a, &b}) {
+            const auto c = mail::Calendar::get(*x, uid);
+            QVERIFY(c);
+            QCOMPARE(c->summary, QStringLiteral("Kept"));
+        }
+        QTest::qWait(5);
+        mail::Calendar::removeLocal(b, uid);
+        m_syncB->push();
+        m_net->settle();
+        for (auto *x : {&a, &b})
+            QVERIFY(!mail::Calendar::get(*x, uid));
+        // The setting travels too.
+        mail::Preferences::set(a, cfg::CalendarReminder, QStringLiteral("30"));
+        m_syncA->push();
+        m_net->settle();
+        QCOMPARE(b.config.getInt(cfg::CalendarReminder), 30);
     }
 
     void everyChangeIsRecorded()

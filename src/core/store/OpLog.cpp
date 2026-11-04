@@ -69,6 +69,10 @@ QString OpLog::mergeKey(const QString &kind, const QJsonObject &p)
         return QStringLiteral("sjinvite:") + s("i");
     if (kind == op::SecureJoinJoin)
         return QStringLiteral("sjjoin:") + s("addr");
+    if (kind == op::CalendarEvent)
+        return QStringLiteral("cal:") + s("uid");
+    if (kind == op::CalendarRemove)
+        return QStringLiteral("calremove:") + s("uid");
     return {};
 }
 

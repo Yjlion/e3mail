@@ -82,6 +82,9 @@ inline const QString SecureJoinJoin = QStringLiteral("sj.join");
 // Trust set by hand, and a read receipt sent once for all devices (ADR 0022).
 inline const QString ContactTrust = QStringLiteral("contact.trust");
 inline const QString ReceiptSent = QStringLiteral("mdn.sent");
+// The calendar (ADR 0025): an event as a whole, and taking one out.
+inline const QString CalendarEvent = QStringLiteral("cal.event");
+inline const QString CalendarRemove = QStringLiteral("cal.remove");
 } // namespace op
 
 } // namespace e3
