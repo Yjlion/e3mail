@@ -22,6 +22,18 @@ Built (ADR 0020, `docs/handoff.md`). **Open:**
   exist (ADR 0019).
 - At-rest encryption of the local database (SQLCipher), the rest of P11.
 
+## Calendar: what is left
+
+Built (ADR 0025, `docs/handoff.md`). **Open:**
+- Interop: send an invitation to Gmail, Outlook, Apple Mail and
+  Thunderbird and answer one from each, through `server/compose` or a
+  real account; look at how each treats our VTIMEZONE.
+- Recurrence beyond the subset: BYMONTHDAY, BYSETPOS, RDATE, edits of one
+  occurrence (RECURRENCE-ID), which are kept as received today.
+- A week view, and dragging an event to move it.
+- Counter-proposals (iTIP COUNTER) and delegation.
+- Reminders while e3mail is not running (Android's alarm manager).
+
 ## Optional local AI through llama.cpp
 
 Summaries, reply drafts, smarter search and triage, all on the device.
