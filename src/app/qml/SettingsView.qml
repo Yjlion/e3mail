@@ -186,6 +186,21 @@ Rectangle {
             }
             Note { text: qsTr("A receipt goes once, when you first open the message, on whichever device. Strangers and anyone you do not trust never get one.") }
 
+            Heading { text: qsTr("Calendar") }
+            RowLayout {
+                RowText { text: qsTr("Remind me before an event"); color: Theme.text }
+                ChoiceBox {
+                    Layout.preferredWidth: 200
+                    model: [{ v: -1, t: qsTr("Never") }, { v: 0, t: qsTr("At the start") }, { v: 5, t: qsTr("5 minutes before") },
+                            { v: 10, t: qsTr("10 minutes before") }, { v: 15, t: qsTr("15 minutes before") },
+                            { v: 30, t: qsTr("30 minutes before") }, { v: 60, t: qsTr("1 hour before") }, { v: 1440, t: qsTr("1 day before") }]
+                    textRole: "t"; valueRole: "v"
+                    selected: Math.max(0, [-1, 0, 5, 10, 15, 30, 60, 1440].indexOf(view.s.calendarReminder === undefined ? 15 : view.s.calendarReminder))
+                    onActivated: MailApp.setSetting("calendarReminder", currentValue)
+                }
+            }
+            Note { text: qsTr("For events you add and invitations you accept; each event can differ. Reminders show only while e3mail runs. The calendar lives on your devices and is arranged by email; nothing is shared with a calendar server.") }
+
             Heading { text: qsTr("Trash") }
             RowLayout {
                 RowText { text: qsTr("Destroy messages in Trash after"); color: Theme.text }

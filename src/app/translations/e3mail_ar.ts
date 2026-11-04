@@ -19,7 +19,7 @@
         <translation>يُبقي e3mail المزامنة جارية</translation>
     </message>
     <message>
-        <source>New mail and other devices&apos; changes arrive while e3mail is in the background.</source>
+        <source>New mail and other devices' changes arrive while e3mail is in the background.</source>
         <translation>يصل البريد الجديد وتغييرات الأجهزة الأخرى بينما e3mail في الخلفية.</translation>
     </message>
     <message>
@@ -165,20 +165,260 @@
         <translation>يُنشأ جهاز جديد للحساب من أحدث نسخة احتياطية هناك. ولا يتزامن مع أجهزتك الأخرى حتى تقرنه.</translation>
     </message>
     <message>
-        <source>The server&apos;s SSH host key has changed. Trust the new one only if the server&apos;s administrator says it changed:</source>
+        <source>The server's SSH host key has changed. Trust the new one only if the server's administrator says it changed:</source>
         <translation>تغيّر مفتاح المضيف SSH للخادم. لا تثق بالجديد إلا إذا قال مسؤول الخادم إنه تغيّر:</translation>
     </message>
     <message>
-        <source>The server&apos;s SSH host key is not known yet. Trust it only if it matches what the server&apos;s administrator gives you:</source>
+        <source>The server's SSH host key is not known yet. Trust it only if it matches what the server's administrator gives you:</source>
         <translation>مفتاح المضيف SSH للخادم غير معروف بعد. لا تثق به إلا إذا طابق ما يعطيك إياه مسؤول الخادم:</translation>
     </message>
     <message>
-        <source>The server&apos;s certificate is not trusted. Trust it only if its fingerprint matches what the server&apos;s administrator gives you:</source>
+        <source>The server's certificate is not trusted. Trust it only if its fingerprint matches what the server's administrator gives you:</source>
         <translation>شهادة الخادم غير موثوقة. لا تثق بها إلا إذا طابقت بصمتها ما يعطيك إياه مسؤول الخادم:</translation>
     </message>
     <message>
         <source>Trust it</source>
         <translation>ثق به</translation>
+    </message>
+</context>
+<context>
+    <name>Calendar</name>
+    <message>
+        <source>Repeats (rule not understood: %1)</source>
+        <translation>يتكرر (قاعدة غير مفهومة: %1)</translation>
+    </message>
+    <message>
+        <source>Every day</source>
+        <translation>كل يوم</translation>
+    </message>
+    <message numerus="yes">
+        <source>Every %n days</source>
+        <translation>
+            <numerusform>كل يوم</numerusform>
+            <numerusform>كل يوم</numerusform>
+            <numerusform>كل يومين</numerusform>
+            <numerusform>كل %n أيام</numerusform>
+            <numerusform>كل %n يومًا</numerusform>
+            <numerusform>كل %n يوم</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Every week</source>
+        <translation>كل أسبوع</translation>
+    </message>
+    <message numerus="yes">
+        <source>Every %n weeks</source>
+        <translation>
+            <numerusform>كل أسبوع</numerusform>
+            <numerusform>كل أسبوع</numerusform>
+            <numerusform>كل أسبوعين</numerusform>
+            <numerusform>كل %n أسابيع</numerusform>
+            <numerusform>كل %n أسبوعًا</numerusform>
+            <numerusform>كل %n أسبوع</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>%1 on %2</source>
+        <translation>%1 يوم %2</translation>
+    </message>
+    <message>
+        <source>Every month</source>
+        <translation>كل شهر</translation>
+    </message>
+    <message numerus="yes">
+        <source>Every %n months</source>
+        <translation>
+            <numerusform>كل شهر</numerusform>
+            <numerusform>كل شهر</numerusform>
+            <numerusform>كل شهرين</numerusform>
+            <numerusform>كل %n أشهر</numerusform>
+            <numerusform>كل %n شهرًا</numerusform>
+            <numerusform>كل %n شهر</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Every year</source>
+        <translation>كل سنة</translation>
+    </message>
+    <message numerus="yes">
+        <source>Every %n years</source>
+        <translation>
+            <numerusform>كل سنة</numerusform>
+            <numerusform>كل سنة</numerusform>
+            <numerusform>كل سنتين</numerusform>
+            <numerusform>كل %n سنوات</numerusform>
+            <numerusform>كل %n سنة</numerusform>
+            <numerusform>كل %n سنة</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%1, %n time(s)</source>
+        <translation>
+            <numerusform>%1، %n مرة</numerusform>
+            <numerusform>%1، مرة واحدة</numerusform>
+            <numerusform>%1، مرتان</numerusform>
+            <numerusform>%1، %n مرات</numerusform>
+            <numerusform>%1، %n مرة</numerusform>
+            <numerusform>%1، %n مرة</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>%1, until %2</source>
+        <translation>%1، حتى %2</translation>
+    </message>
+    <message>
+        <source>%1 – %2</source>
+        <translation>%1 – %2</translation>
+    </message>
+    <message>
+        <source>%1, %2</source>
+        <translation>%1، %2</translation>
+    </message>
+    <message>
+        <source>%1, %2 – %3</source>
+        <translation>%1، %2 – %3</translation>
+    </message>
+    <message>
+        <source>%1 has accepted the invitation to “%2”.</source>
+        <translation>قبل %1 الدعوة إلى «%2».</translation>
+    </message>
+    <message>
+        <source>%1 has tentatively accepted the invitation to “%2”.</source>
+        <translation>قبل %1 الدعوة إلى «%2» مبدئيًا.</translation>
+    </message>
+    <message>
+        <source>%1 has declined the invitation to “%2”.</source>
+        <translation>رفض %1 الدعوة إلى «%2».</translation>
+    </message>
+    <message>
+        <source>%1 has not answered the invitation to “%2”.</source>
+        <translation>لم يرد %1 على الدعوة إلى «%2».</translation>
+    </message>
+    <message>
+        <source>Accepted: %1</source>
+        <translation>مقبول: %1</translation>
+    </message>
+    <message>
+        <source>Tentative: %1</source>
+        <translation>مبدئي: %1</translation>
+    </message>
+    <message>
+        <source>Declined: %1</source>
+        <translation>مرفوض: %1</translation>
+    </message>
+    <message>
+        <source>Cancelled: %1</source>
+        <translation>أُلغي: %1</translation>
+    </message>
+    <message>
+        <source>%1 has cancelled “%2”.</source>
+        <translation>ألغى %1 «%2».</translation>
+    </message>
+    <message>
+        <source>Updated invitation: %1</source>
+        <translation>دعوة محدّثة: %1</translation>
+    </message>
+    <message>
+        <source>%1 has changed “%2”. Here are the new details.</source>
+        <translation>غيّر %1 «%2». هذه التفاصيل الجديدة.</translation>
+    </message>
+    <message>
+        <source>Invitation: %1</source>
+        <translation>دعوة: %1</translation>
+    </message>
+    <message>
+        <source>%1 invites you to “%2”.</source>
+        <translation>يدعوك %1 إلى «%2».</translation>
+    </message>
+    <message>
+        <source>When: %1</source>
+        <translation>متى: %1</translation>
+    </message>
+    <message>
+        <source>Repeats: %1</source>
+        <translation>التكرار: %1</translation>
+    </message>
+    <message>
+        <source>Where: %1</source>
+        <translation>أين: %1</translation>
+    </message>
+    <message>
+        <source>Link: %1</source>
+        <translation>رابط: %1</translation>
+    </message>
+    <message>
+        <source>Who: %1</source>
+        <translation>من: %1</translation>
+    </message>
+    <message>
+        <source>This invitation cannot be answered.</source>
+        <translation>لا يمكن الرد على هذه الدعوة.</translation>
+    </message>
+    <message>
+        <source>A newer version of this invitation is in your calendar.</source>
+        <translation>في تقويمك نسخة أحدث من هذه الدعوة.</translation>
+    </message>
+    <message>
+        <source>This invitation cannot be added.</source>
+        <translation>لا يمكن إضافة هذه الدعوة.</translation>
+    </message>
+</context>
+<context>
+    <name>CalendarView</name>
+    <message>
+        <source>Previous month</source>
+        <translation>الشهر السابق</translation>
+    </message>
+    <message>
+        <source>Next month</source>
+        <translation>الشهر التالي</translation>
+    </message>
+    <message>
+        <source>Today</source>
+        <translation>اليوم</translation>
+    </message>
+    <message>
+        <source>New event</source>
+        <translation>حدث جديد</translation>
+    </message>
+    <message numerus="yes">
+        <source>+%n more</source>
+        <translation>
+            <numerusform>+%n أخرى</numerusform>
+            <numerusform>+%n آخر</numerusform>
+            <numerusform>+%n آخران</numerusform>
+            <numerusform>+%n أخرى</numerusform>
+            <numerusform>+%n أخرى</numerusform>
+            <numerusform>+%n أخرى</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Coming up</source>
+        <translation>القادم</translation>
+    </message>
+    <message>
+        <source>Show what is coming</source>
+        <translation>إظهار القادم</translation>
+    </message>
+    <message>
+        <source>Tentative</source>
+        <translation>مبدئي</translation>
+    </message>
+    <message>
+        <source>Not answered</source>
+        <translation>بلا رد</translation>
+    </message>
+    <message>
+        <source>Repeats</source>
+        <translation>التكرار</translation>
+    </message>
+    <message>
+        <source>Nothing on this day.</source>
+        <translation>لا شيء في هذا اليوم.</translation>
+    </message>
+    <message>
+        <source>Nothing coming up. Invitations you accept and events you add appear here.</source>
+        <translation>لا شيء قادم. تظهر هنا الدعوات التي تقبلها والأحداث التي تضيفها.</translation>
     </message>
 </context>
 <context>
@@ -566,6 +806,260 @@ To: %4
     </message>
 </context>
 <context>
+    <name>DateField</name>
+    <message>
+        <source>Pick a date</source>
+        <translation>اختر تاريخًا</translation>
+    </message>
+    <message>
+        <source>Previous month</source>
+        <translation>الشهر السابق</translation>
+    </message>
+    <message>
+        <source>Next month</source>
+        <translation>الشهر التالي</translation>
+    </message>
+</context>
+<context>
+    <name>EventDialog</name>
+    <message>
+        <source>Edit event</source>
+        <translation>تعديل الحدث</translation>
+    </message>
+    <message>
+        <source>New event</source>
+        <translation>حدث جديد</translation>
+    </message>
+    <message>
+        <source>Title</source>
+        <translation>العنوان</translation>
+    </message>
+    <message>
+        <source>All day</source>
+        <translation>طوال اليوم</translation>
+    </message>
+    <message>
+        <source>Starts</source>
+        <translation>يبدأ</translation>
+    </message>
+    <message>
+        <source>Ends</source>
+        <translation>ينتهي</translation>
+    </message>
+    <message>
+        <source>Times are in this device's time zone.</source>
+        <translation>الأوقات بالمنطقة الزمنية لهذا الجهاز.</translation>
+    </message>
+    <message>
+        <source>Repeats</source>
+        <translation>التكرار</translation>
+    </message>
+    <message>
+        <source>Never</source>
+        <translation>أبدًا</translation>
+    </message>
+    <message>
+        <source>Every day</source>
+        <translation>كل يوم</translation>
+    </message>
+    <message>
+        <source>Every week</source>
+        <translation>كل أسبوع</translation>
+    </message>
+    <message>
+        <source>Every month</source>
+        <translation>كل شهر</translation>
+    </message>
+    <message>
+        <source>Every year</source>
+        <translation>كل سنة</translation>
+    </message>
+    <message>
+        <source>As received</source>
+        <translation>كما وصل</translation>
+    </message>
+    <message>
+        <source>every</source>
+        <translation>كل</translation>
+    </message>
+    <message>
+        <source>day(s)</source>
+        <translation>يوم</translation>
+    </message>
+    <message>
+        <source>week(s)</source>
+        <translation>أسبوع</translation>
+    </message>
+    <message>
+        <source>month(s)</source>
+        <translation>شهر</translation>
+    </message>
+    <message>
+        <source>year(s)</source>
+        <translation>سنة</translation>
+    </message>
+    <message>
+        <source>This rule came with the invitation and is kept as it is: %1</source>
+        <translation>جاءت هذه القاعدة مع الدعوة وتُحفظ كما هي: %1</translation>
+    </message>
+    <message>
+        <source>After</source>
+        <translation>بعد</translation>
+    </message>
+    <message>
+        <source>On</source>
+        <translation>في</translation>
+    </message>
+    <message>
+        <source>time(s)</source>
+        <translation>مرة</translation>
+    </message>
+    <message>
+        <source>Where</source>
+        <translation>أين</translation>
+    </message>
+    <message>
+        <source>Link</source>
+        <translation>رابط</translation>
+    </message>
+    <message>
+        <source>Attendees</source>
+        <translation>المدعوون</translation>
+    </message>
+    <message>
+        <source>Names or addresses, separated by commas</source>
+        <translation>أسماء أو عناوين مفصولة بفواصل</translation>
+    </message>
+    <message>
+        <source>Attendees get an invitation by email, and an update when the meeting changes.</source>
+        <translation>يتلقى المدعوون دعوة بالبريد، وتحديثًا عند تغيّر الاجتماع.</translation>
+    </message>
+    <message>
+        <source>The invitation will be encrypted: every attendee has a key.</source>
+        <translation>ستُشفَّر الدعوة: لدى كل المدعوين مفتاح.</translation>
+    </message>
+    <message>
+        <source>The invitation goes unencrypted: no key yet for %1.</source>
+        <translation>ستُرسل الدعوة دون تشفير: لا مفتاح بعد لـ %1.</translation>
+    </message>
+    <message>
+        <source>The invitation goes unencrypted.</source>
+        <translation>ستُرسل الدعوة دون تشفير.</translation>
+    </message>
+    <message>
+        <source>Reminder</source>
+        <translation>تذكير</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>لا شيء</translation>
+    </message>
+    <message>
+        <source>At the start</source>
+        <translation>عند البداية</translation>
+    </message>
+    <message>
+        <source>5 minutes before</source>
+        <translation>قبل 5 دقائق</translation>
+    </message>
+    <message>
+        <source>10 minutes before</source>
+        <translation>قبل 10 دقائق</translation>
+    </message>
+    <message>
+        <source>15 minutes before</source>
+        <translation>قبل 15 دقيقة</translation>
+    </message>
+    <message>
+        <source>30 minutes before</source>
+        <translation>قبل 30 دقيقة</translation>
+    </message>
+    <message>
+        <source>1 hour before</source>
+        <translation>قبل ساعة</translation>
+    </message>
+    <message>
+        <source>2 hours before</source>
+        <translation>قبل ساعتين</translation>
+    </message>
+    <message>
+        <source>1 day before</source>
+        <translation>قبل يوم</translation>
+    </message>
+    <message>
+        <source>Details</source>
+        <translation>التفاصيل</translation>
+    </message>
+    <message>
+        <source>%1 organizes this meeting; only the reminder is yours to change here. Answer from the invitation in your mail.</source>
+        <translation>ينظّم %1 هذا الاجتماع؛ لا يمكنك هنا تغيير سوى التذكير. أجب من الدعوة في بريدك.</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>حفظ</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>إلغاء</translation>
+    </message>
+    <message>
+        <source>Cancel meeting…</source>
+        <translation>إلغاء الاجتماع…</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>إزالة</translation>
+    </message>
+    <message>
+        <source>Export…</source>
+        <translation>تصدير…</translation>
+    </message>
+    <message>
+        <source>Send the update?</source>
+        <translation>إرسال التحديث؟</translation>
+    </message>
+    <message>
+        <source>Send the invitation?</source>
+        <translation>إرسال الدعوة؟</translation>
+    </message>
+    <message>
+        <source>The attendees get an updated invitation by email and are asked to answer again.</source>
+        <translation>يتلقى المدعوون دعوة محدّثة بالبريد ويُطلب منهم الرد مجددًا.</translation>
+    </message>
+    <message>
+        <source>The attendees get an invitation by email.</source>
+        <translation>يتلقى المدعوون دعوة بالبريد.</translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation>إرسال</translation>
+    </message>
+    <message>
+        <source>Save only</source>
+        <translation>حفظ فقط</translation>
+    </message>
+    <message>
+        <source>Back</source>
+        <translation>رجوع</translation>
+    </message>
+    <message>
+        <source>Cancel the meeting?</source>
+        <translation>إلغاء الاجتماع؟</translation>
+    </message>
+    <message>
+        <source>The attendees are told by email that it is cancelled.</source>
+        <translation>يُبلَّغ المدعوون بالبريد بأنه أُلغي.</translation>
+    </message>
+    <message>
+        <source>Cancel meeting</source>
+        <translation>إلغاء الاجتماع</translation>
+    </message>
+    <message>
+        <source>Calendar files (*.ics)</source>
+        <translation>ملفات التقويم (*.ics)</translation>
+    </message>
+</context>
+<context>
     <name>FirstRunDialog</name>
     <message>
         <source>Before you start</source>
@@ -608,6 +1102,125 @@ To: %4
         <translation>هذه الرسالة مشفّرة وتعذّر فك تشفيرها على هذا الجهاز.
 
 %1</translation>
+    </message>
+</context>
+<context>
+    <name>InvitationCard</name>
+    <message>
+        <source>Accepted</source>
+        <translation>مقبول</translation>
+    </message>
+    <message>
+        <source>Tentative</source>
+        <translation>مبدئي</translation>
+    </message>
+    <message>
+        <source>Declined</source>
+        <translation>مرفوض</translation>
+    </message>
+    <message>
+        <source>Not answered</source>
+        <translation>بلا رد</translation>
+    </message>
+    <message>
+        <source>Cancelled: %1</source>
+        <translation>أُلغي: %1</translation>
+    </message>
+    <message>
+        <source>%1 accepted.</source>
+        <translation>قبل %1.</translation>
+    </message>
+    <message>
+        <source>%1 declined.</source>
+        <translation>رفض %1.</translation>
+    </message>
+    <message>
+        <source>%1 might come.</source>
+        <translation>قد يحضر %1.</translation>
+    </message>
+    <message>
+        <source>%1 answered.</source>
+        <translation>ردّ %1.</translation>
+    </message>
+    <message>
+        <source>This meeting was cancelled; your calendar is updated.</source>
+        <translation>أُلغي هذا الاجتماع؛ تقويمك محدّث.</translation>
+    </message>
+    <message>
+        <source>This meeting was cancelled.</source>
+        <translation>أُلغي هذا الاجتماع.</translation>
+    </message>
+    <message>
+        <source>Your invitation.</source>
+        <translation>دعوتك.</translation>
+    </message>
+    <message>
+        <source>A newer version of this invitation is in your calendar.</source>
+        <translation>في تقويمك نسخة أحدث من هذه الدعوة.</translation>
+    </message>
+    <message>
+        <source>This meeting has since been cancelled.</source>
+        <translation>أُلغي هذا الاجتماع منذ ذلك الحين.</translation>
+    </message>
+    <message>
+        <source>In your calendar: %1.</source>
+        <translation>في تقويمك: %1.</translation>
+    </message>
+    <message>
+        <source>%1 invites you.</source>
+        <translation>يدعوك %1.</translation>
+    </message>
+    <message>
+        <source>When</source>
+        <translation>متى</translation>
+    </message>
+    <message>
+        <source>Repeats</source>
+        <translation>التكرار</translation>
+    </message>
+    <message>
+        <source>Where</source>
+        <translation>أين</translation>
+    </message>
+    <message>
+        <source>Organizer</source>
+        <translation>المنظّم</translation>
+    </message>
+    <message>
+        <source>Who</source>
+        <translation>من</translation>
+    </message>
+    <message>
+        <source>Details</source>
+        <translation>التفاصيل</translation>
+    </message>
+    <message>
+        <source>Accept</source>
+        <translation>قبول</translation>
+    </message>
+    <message>
+        <source>Decline</source>
+        <translation>رفض</translation>
+    </message>
+    <message>
+        <source>Add to calendar</source>
+        <translation>إضافة إلى التقويم</translation>
+    </message>
+    <message>
+        <source>Show in calendar</source>
+        <translation>إظهار في التقويم</translation>
+    </message>
+    <message>
+        <source>Open link…</source>
+        <translation>فتح الرابط…</translation>
+    </message>
+    <message>
+        <source>Answers can be sent to senders you trust; accept this sender first. Check these details against the message.</source>
+        <translation>تُرسل الردود إلى المرسلين الموثوقين فقط؛ اقبل هذا المرسل أولًا. تحقق من هذه التفاصيل بمقارنتها بالرسالة.</translation>
+    </message>
+    <message>
+        <source>This message was not sent by the meeting's organizer, so it cannot be answered from here. Check these details against the message.</source>
+        <translation>لم يرسل هذه الرسالة منظّم الاجتماع، لذا لا يمكن الرد عليها من هنا. تحقق من هذه التفاصيل بمقارنتها بالرسالة.</translation>
     </message>
 </context>
 <context>
@@ -690,6 +1303,18 @@ To: %4
 <context>
     <name>MailApp</name>
     <message>
+        <source>Today</source>
+        <translation>اليوم</translation>
+    </message>
+    <message>
+        <source>Event</source>
+        <translation>حدث</translation>
+    </message>
+    <message>
+        <source>%1 · %2</source>
+        <translation>%1 · %2</translation>
+    </message>
+    <message>
         <source>Unnamed device</source>
         <translation>جهاز بلا اسم</translation>
     </message>
@@ -757,8 +1382,56 @@ To: %4
         <translation>تعذّر حفظ المرفق.</translation>
     </message>
     <message>
+        <source>Could not add the event.</source>
+        <translation>تعذّرت إضافة الحدث.</translation>
+    </message>
+    <message>
+        <source>Added to the calendar.</source>
+        <translation>أُضيف إلى التقويم.</translation>
+    </message>
+    <message>
+        <source>(No title)</source>
+        <translation>(بلا عنوان)</translation>
+    </message>
+    <message>
+        <source>All day</source>
+        <translation>طوال اليوم</translation>
+    </message>
+    <message>
+        <source>Give the event a title.</source>
+        <translation>أعطِ الحدث عنوانًا.</translation>
+    </message>
+    <message>
+        <source>The start is not a date and time.</source>
+        <translation>البداية ليست تاريخًا ووقتًا.</translation>
+    </message>
+    <message>
+        <source>Saved, but the invitation was not sent: %1</source>
+        <translation>حُفظ، لكن الدعوة لم تُرسل: %1</translation>
+    </message>
+    <message>
+        <source>Invitation sent.</source>
+        <translation>أُرسلت الدعوة.</translation>
+    </message>
+    <message>
+        <source>Cancelled, but the attendees were not told: %1</source>
+        <translation>أُلغي، لكن المدعوين لم يُبلَّغوا: %1</translation>
+    </message>
+    <message>
+        <source>Saved in your calendar, but the answer was not sent: %1</source>
+        <translation>حُفظ في تقويمك، لكن الرد لم يُرسل: %1</translation>
+    </message>
+    <message>
+        <source>Answer sent.</source>
+        <translation>أُرسل الرد.</translation>
+    </message>
+    <message>
         <source>Could not save the event.</source>
         <translation>تعذّر حفظ الحدث.</translation>
+    </message>
+    <message>
+        <source>event</source>
+        <translation>حدث</translation>
     </message>
     <message>
         <source>This message cannot be decrypted, or its original is no longer kept.</source>
@@ -769,7 +1442,7 @@ To: %4
         <translation>لم يعد أصل هذه الرسالة محفوظًا.</translation>
     </message>
     <message>
-        <source>This is not a contact&apos;s code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
+        <source>This is not a contact's code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
         <translation>هذا ليس رمز جهة اتصال. يبدأ رمز التوثيق بـ OPENPGP4FPR: أو https://i.delta.chat/.</translation>
     </message>
     <message numerus="yes">
@@ -1375,32 +2048,9 @@ To: %4
     </message>
 </context>
 <context>
-    <name>ScanView</name>
-    <message>
-        <source>This device has no camera. Type the code instead.</source>
-        <translation>لا توجد كاميرا في هذا الجهاز. اكتب الرمز بدلًا من ذلك.</translation>
-    </message>
-    <message>
-        <source>e3mail may not use the camera. Allow it in the system settings, or type the code instead.</source>
-        <translation>لا يُسمح لـ e3mail باستخدام الكاميرا. اسمح بذلك في إعدادات النظام، أو اكتب الرمز بدلًا من ذلك.</translation>
-    </message>
-    <message>
-        <source>Asking for the camera…</source>
-        <translation>جارٍ طلب الإذن باستخدام الكاميرا…</translation>
-    </message>
-    <message>
-        <source>Point the camera at the QR code on the other device.</source>
-        <translation>وجّه الكاميرا نحو رمز QR على الجهاز الآخر.</translation>
-    </message>
-    <message>
-        <source>Type the code instead</source>
-        <translation>اكتب الرمز بدلًا من ذلك</translation>
-    </message>
-</context>
-<context>
     <name>SecureJoin</name>
     <message>
-        <source>This is your own code. Scan the other person&apos;s code instead.</source>
+        <source>This is your own code. Scan the other person's code instead.</source>
         <translation>هذا رمزك أنت. امسح رمز الشخص الآخر بدلًا منه.</translation>
     </message>
     <message>
@@ -1443,7 +2093,7 @@ To: %4
         <translation>إظهار المُرسِل والموضوع</translation>
     </message>
     <message>
-        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system&apos;s notification history, outside e3mail&apos;s encryption.</source>
+        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system's notification history, outside e3mail's encryption.</source>
         <translation>لهذا الجهاز، حين يكون e3mail مفتوحًا وليس في المقدمة. الموضوع المعروض هنا يُحفظ في سجل إشعارات النظام، خارج تشفير e3mail.</translation>
     </message>
     <message>
@@ -1455,7 +2105,7 @@ To: %4
         <translation>متابعة المزامنة في الخلفية</translation>
     </message>
     <message>
-        <source>Mail and your other devices&apos; changes keep arriving while e3mail is not in front. Android shows a notification for as long as this is on, and it uses more battery. Swiping e3mail away from the recent apps ends it.</source>
+        <source>Mail and your other devices' changes keep arriving while e3mail is not in front. Android shows a notification for as long as this is on, and it uses more battery. Swiping e3mail away from the recent apps ends it.</source>
         <translation>يستمر وصول البريد وتغييرات أجهزتك الأخرى حين لا يكون e3mail في الواجهة. يعرض Android إشعارًا طوال مدة تفعيل هذا، ويستهلك مزيدًا من البطارية. يُنهيه سحب e3mail من التطبيقات الحديثة.</translation>
     </message>
     <message>
@@ -1495,7 +2145,7 @@ To: %4
         <translation>إضافة توقيع…</translation>
     </message>
     <message>
-        <source>The chosen one goes into new mail. The composer&apos;s signature button swaps it for another.</source>
+        <source>The chosen one goes into new mail. The composer's signature button swaps it for another.</source>
         <translation>يُضاف التوقيع المختار إلى الرسائل الجديدة. يستبدله زر التوقيع في نافذة الكتابة بتوقيع آخر.</translation>
     </message>
     <message>
@@ -1551,6 +2201,50 @@ To: %4
         <translation>يُرسَل الإشعار مرة واحدة، عند فتح الرسالة أول مرة، على أي جهاز. الغرباء ومن لا تثق بهم لا يتلقونه أبدًا.</translation>
     </message>
     <message>
+        <source>Calendar</source>
+        <translation>التقويم</translation>
+    </message>
+    <message>
+        <source>Remind me before an event</source>
+        <translation>ذكّرني قبل الحدث</translation>
+    </message>
+    <message>
+        <source>Never</source>
+        <translation>أبدًا</translation>
+    </message>
+    <message>
+        <source>At the start</source>
+        <translation>عند البداية</translation>
+    </message>
+    <message>
+        <source>5 minutes before</source>
+        <translation>قبل 5 دقائق</translation>
+    </message>
+    <message>
+        <source>10 minutes before</source>
+        <translation>قبل 10 دقائق</translation>
+    </message>
+    <message>
+        <source>15 minutes before</source>
+        <translation>قبل 15 دقيقة</translation>
+    </message>
+    <message>
+        <source>30 minutes before</source>
+        <translation>قبل 30 دقيقة</translation>
+    </message>
+    <message>
+        <source>1 hour before</source>
+        <translation>قبل ساعة</translation>
+    </message>
+    <message>
+        <source>1 day before</source>
+        <translation>قبل يوم</translation>
+    </message>
+    <message>
+        <source>For events you add and invitations you accept; each event can differ. Reminders show only while e3mail runs. The calendar lives on your devices and is arranged by email; nothing is shared with a calendar server.</source>
+        <translation>للأحداث التي تضيفها والدعوات التي تقبلها؛ ويمكن أن يختلف كل حدث. تظهر التذكيرات فقط أثناء عمل e3mail. يعيش التقويم على أجهزتك ويُرتَّب بالبريد؛ لا يُشارَك شيء مع خادم تقويم.</translation>
+    </message>
+    <message>
         <source>Trash</source>
         <translation>سلة المهملات</translation>
     </message>
@@ -1591,7 +2285,7 @@ To: %4
         <translation>يوم</translation>
     </message>
     <message>
-        <source>Mail that was on the server before e3mail first connected is never removed. &quot;Never&quot; lets another mail program keep using this mailbox.</source>
+        <source>Mail that was on the server before e3mail first connected is never removed. "Never" lets another mail program keep using this mailbox.</source>
         <translation>البريد الذي كان على الخادم قبل أول اتصال لـ e3mail لا يُحذف أبدًا. خيار «أبدًا» يتيح لبرنامج بريد آخر مواصلة استخدام هذا الصندوق.</translation>
     </message>
     <message>
@@ -1603,15 +2297,15 @@ To: %4
         <translation>ثانية</translation>
     </message>
     <message>
-        <source>The sending server&apos;s certificate is not trusted, or is not the one trusted before.</source>
+        <source>The sending server's certificate is not trusted, or is not the one trusted before.</source>
         <translation>شهادة خادم الإرسال غير موثوقة، أو ليست الشهادة التي وثقتَ بها من قبل.</translation>
     </message>
     <message>
-        <source>The incoming server&apos;s certificate is not trusted, or is not the one trusted before.</source>
+        <source>The incoming server's certificate is not trusted, or is not the one trusted before.</source>
         <translation>شهادة خادم الوارد غير موثوقة، أو ليست الشهادة التي وثقتَ بها من قبل.</translation>
     </message>
     <message>
-        <source>Trust it only if this SHA-256 fingerprint matches the one your server&apos;s administrator gave you.</source>
+        <source>Trust it only if this SHA-256 fingerprint matches the one your server's administrator gave you.</source>
         <translation>لا تثق بها إلا إذا طابقت بصمة SHA-256 هذه البصمةَ التي أعطاك إياها مدير خادمك.</translation>
     </message>
     <message>
@@ -1675,7 +2369,7 @@ To: %4
         <translation>الأصول</translation>
     </message>
     <message>
-        <source>Keep each message&apos;s original for</source>
+        <source>Keep each message's original for</source>
         <translation>حفظ أصل كل رسالة لمدة</translation>
     </message>
     <message>
@@ -1743,7 +2437,7 @@ To: %4
         <translation>المُرحِّل</translation>
     </message>
     <message>
-        <source>n0&apos;s public relays</source>
+        <source>n0's public relays</source>
         <translation>مرحِّلات n0 العامة</translation>
     </message>
     <message>
@@ -1875,7 +2569,7 @@ To: %4
         <translation>إزالة %1؟</translation>
     </message>
     <message>
-        <source>It stops syncing with this account&apos;s other devices. What is already on it stays there.</source>
+        <source>It stops syncing with this account's other devices. What is already on it stays there.</source>
         <translation>سيتوقف عن المزامنة مع أجهزة هذا الحساب الأخرى. ما عليه بالفعل يبقى هناك.</translation>
     </message>
     <message>
@@ -1890,15 +2584,15 @@ To: %4
         <translation>إعدادات الخادم من مزوّد خدمتك.</translation>
     </message>
     <message>
-        <source>Server settings from Thunderbird&apos;s provider database.</source>
+        <source>Server settings from Thunderbird's provider database.</source>
         <translation>إعدادات الخادم من قاعدة بيانات المزوّدين في Thunderbird.</translation>
     </message>
     <message>
-        <source>Server settings of the service that receives your domain&apos;s mail. Check them before connecting.</source>
+        <source>Server settings of the service that receives your domain's mail. Check them before connecting.</source>
         <translation>إعدادات الخادم للخدمة التي تستقبل بريد نطاقك. راجعها قبل الاتصال.</translation>
     </message>
     <message>
-        <source>Server settings from your provider&apos;s Autodiscover service.</source>
+        <source>Server settings from your provider's Autodiscover service.</source>
         <translation>إعدادات الخادم من خدمة Autodiscover لدى مزوّدك.</translation>
     </message>
     <message>
@@ -2009,7 +2703,7 @@ To: %4
         <translation>صادرة لـ %1 من %2، صالحة حتى %3.</translation>
     </message>
     <message>
-        <source>Trust it only if this fingerprint matches the one your server&apos;s administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
+        <source>Trust it only if this fingerprint matches the one your server's administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
         <translation>لا تثق بها إلا إذا طابقت هذه البصمةُ البصمةَ التي أعطاك إياها مدير خادمك. عندها يقبل e3mail هذه الشهادة من هذا الخادم، ولا شهادة غيرها.</translation>
     </message>
     <message>
@@ -2058,6 +2752,10 @@ To: %4
     <message>
         <source>Inbox</source>
         <translation>الوارد</translation>
+    </message>
+    <message>
+        <source>Calendar</source>
+        <translation>التقويم</translation>
     </message>
     <message>
         <source>Unverified</source>
@@ -2146,7 +2844,7 @@ To: %4
         <translation>استغرق تسجيل الدخول وقتًا طويلًا. حاول مجددًا.</translation>
     </message>
     <message>
-        <source>Cannot listen for the browser&apos;s answer on this device.</source>
+        <source>Cannot listen for the browser's answer on this device.</source>
         <translation>لا يمكن تلقّي ردّ المتصفح على هذا الجهاز.</translation>
     </message>
     <message>
@@ -2336,8 +3034,8 @@ To: %4
 <context>
     <name>StructuredCard</name>
     <message>
-        <source>Add to calendar…</source>
-        <translation>أضف إلى التقويم…</translation>
+        <source>Add to calendar</source>
+        <translation>إضافة إلى التقويم</translation>
     </message>
     <message>
         <source>Open…</source>
@@ -2346,10 +3044,6 @@ To: %4
     <message>
         <source>Shown as text only. Buttons appear for senders you trust whose mail is signed by their key; check these details against the message.</source>
         <translation>معروض كنص فقط. تظهر الأزرار للمرسلين الموثوقين الذين يوقّعون بريدهم بمفتاحهم؛ تحقّق من هذه التفاصيل في الرسالة.</translation>
-    </message>
-    <message>
-        <source>Calendar files (*.ics)</source>
-        <translation>ملفات التقويم (*.ics)</translation>
     </message>
 </context>
 <context>

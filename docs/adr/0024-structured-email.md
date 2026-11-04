@@ -1,6 +1,6 @@
 # 0024 — Structured email: shown as text, with buttons only for the trusted and signed
 
-**Status:** Accepted — 2026-10-21
+**Status:** Accepted — 2026-10-21; amended 2026-11-04 (sent too; add to calendar)
 
 ## Context
 Some senders describe their message in JSON-LD: airlines, hotels, shops,
@@ -66,3 +66,19 @@ holds mail from strangers in Unverified (ADR 0008).
   on arrival and no Sieve rule.
 - The SML drafts are drafts. When they settle, the part rules may change;
   the item list stays e3mail's own.
+
+## Amendment — 2026-11-04: structured data is sent too, and the card feeds the calendar
+
+- **e3mail now sends structured data**, in one case: a meeting invitation
+  (ADR 0025) carries a schema.org `Event` as `application/ld+json` with
+  `Content-Purpose: Machine-readable`, first in the `multipart/alternative`
+  beside the text, the HTML and the `text/calendar` part. "Receive only"
+  no longer holds; nothing else is sent, and nothing is fetched.
+- **"Add to calendar" creates a local event** (ADR 0025) from the item's
+  facts instead of saving an `.ics` file. The file export lives in the
+  event's editor. The rule for the button is unchanged: a trusted sender
+  whose message is signed by their key.
+- A message that carries a `text/calendar` part shows the invitation card,
+  not a second card for the JSON-LD twin it sent.
+- "Nothing is processed automatically" stands: an invitation enters the
+  calendar only when the person acts on it.

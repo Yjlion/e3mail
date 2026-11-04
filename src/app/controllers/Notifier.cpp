@@ -7,6 +7,10 @@ Notifier::Notifier(std::unique_ptr<Backend> backend, QObject *parent) : QObject(
 {
     if (m_backend) {
         connect(m_backend.get(), &Backend::clicked, this, [this](quint64 token) {
+            if (const auto r = m_reminders.constFind(token); r != m_reminders.cend()) {
+                Q_EMIT reminderActivated(r->first, r->second);
+                return;
+            }
             // Not one of ours (the tray icon itself): just bring the window up.
             const auto it = m_targets.constFind(token);
             Q_EMIT activated(it != m_targets.cend() ? it->first : -1, it != m_targets.cend() ? it->second : 0);
@@ -58,6 +62,16 @@ void Notifier::arrived(int accountId, const QString &accountAddr, qint64 msgId, 
     }
     if (!p.timer->isActive())
         p.timer->start(m_gatherMs);
+}
+
+void Notifier::remind(int accountId, const QString &uid, const QString &title, const QString &body)
+{
+    if (m_mode == Mode::Off || !available())
+        return;
+    const quint64 token = m_nextToken++;
+    m_reminders.insert(token, {accountId, uid});
+    m_reminders.remove(token - 100);
+    m_backend->show(title, body, token);
 }
 
 void Notifier::flush(int accountId)

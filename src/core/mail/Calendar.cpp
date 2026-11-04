@@ -498,7 +498,7 @@ QString Calendar::describeRule(const QString &rrule)
             QStringList days;
             for (const Qt::DayOfWeek d : r->byDay)
                 days.append(QLocale().dayName(int(d), QLocale::LongFormat));
-            out = QCoreApplication::translate("Calendar", "%1 on %2").arg(out, days.join(QCoreApplication::translate("Calendar", ", ")));
+            out = QCoreApplication::translate("Calendar", "%1 on %2").arg(out, QLocale().createSeparatedList(days));
         }
         break;
     }
@@ -544,11 +544,6 @@ QString Calendar::describeWhen(const ICal::Event &e, const QLocale &locale)
 
 namespace {
 
-QString tr(const char *text)
-{
-    return QCoreApplication::translate("Calendar", text);
-}
-
 QString displayName(MailContext &ctx)
 {
     const QString n = ctx.config.get(cfg::DisplayName).trimmed();
@@ -592,12 +587,12 @@ Draft draftFor(const Calendar::InviteMail &m, const QList<mime::Address> &to)
 QString partStatSentence(ICal::PartStat p, const QString &who, const QString &summary)
 {
     switch (p) {
-    case ICal::PartStat::Accepted: return tr("%1 has accepted the invitation to “%2”.").arg(who, summary);
-    case ICal::PartStat::Tentative: return tr("%1 has tentatively accepted the invitation to “%2”.").arg(who, summary);
-    case ICal::PartStat::Declined: return tr("%1 has declined the invitation to “%2”.").arg(who, summary);
+    case ICal::PartStat::Accepted: return QCoreApplication::translate("Calendar", "%1 has accepted the invitation to “%2”.").arg(who, summary);
+    case ICal::PartStat::Tentative: return QCoreApplication::translate("Calendar", "%1 has tentatively accepted the invitation to “%2”.").arg(who, summary);
+    case ICal::PartStat::Declined: return QCoreApplication::translate("Calendar", "%1 has declined the invitation to “%2”.").arg(who, summary);
     case ICal::PartStat::NeedsAction: break;
     }
-    return tr("%1 has not answered the invitation to “%2”.").arg(who, summary);
+    return QCoreApplication::translate("Calendar", "%1 has not answered the invitation to “%2”.").arg(who, summary);
 }
 
 } // namespace
@@ -614,9 +609,9 @@ Calendar::InviteMail Calendar::inviteMail(MailContext &ctx, const Event &e, ICal
     QStringList html;
     if (method == ICal::Method::Reply && answer) {
         const QString who = displayName(ctx);
-        m.subject = (*answer == ICal::PartStat::Accepted ? tr("Accepted: %1")
-                     : *answer == ICal::PartStat::Tentative ? tr("Tentative: %1")
-                                                            : tr("Declined: %1"))
+        m.subject = (*answer == ICal::PartStat::Accepted ? QCoreApplication::translate("Calendar", "Accepted: %1")
+                     : *answer == ICal::PartStat::Tentative ? QCoreApplication::translate("Calendar", "Tentative: %1")
+                                                            : QCoreApplication::translate("Calendar", "Declined: %1"))
                         .arg(e.summary);
         lines.append(partStatSentence(*answer, who, e.summary));
         html.append(QStringLiteral("<p>") + escapeHtml(lines.last()) + QStringLiteral("</p>"));
@@ -636,30 +631,30 @@ Calendar::InviteMail Calendar::inviteMail(MailContext &ctx, const Event &e, ICal
     } else {
         const QString organizer = e.organizer.name.isEmpty() ? e.organizer.addr : e.organizer.name;
         if (method == ICal::Method::Cancel) {
-            m.subject = tr("Cancelled: %1").arg(e.summary);
-            lines.append(tr("%1 has cancelled “%2”.").arg(organizer, e.summary));
+            m.subject = QCoreApplication::translate("Calendar", "Cancelled: %1").arg(e.summary);
+            lines.append(QCoreApplication::translate("Calendar", "%1 has cancelled “%2”.").arg(organizer, e.summary));
         } else if (e.sequence > 0) {
-            m.subject = tr("Updated invitation: %1").arg(e.summary);
-            lines.append(tr("%1 has changed “%2”. Here are the new details.").arg(organizer, e.summary));
+            m.subject = QCoreApplication::translate("Calendar", "Updated invitation: %1").arg(e.summary);
+            lines.append(QCoreApplication::translate("Calendar", "%1 has changed “%2”. Here are the new details.").arg(organizer, e.summary));
         } else {
-            m.subject = tr("Invitation: %1").arg(e.summary);
-            lines.append(tr("%1 invites you to “%2”.").arg(organizer, e.summary));
+            m.subject = QCoreApplication::translate("Calendar", "Invitation: %1").arg(e.summary);
+            lines.append(QCoreApplication::translate("Calendar", "%1 invites you to “%2”.").arg(organizer, e.summary));
         }
         html.append(QStringLiteral("<p>") + escapeHtml(lines.last()) + QStringLiteral("</p>"));
         lines.append(QString());
         QStringList facts;
-        facts.append(tr("When: %1").arg(when));
+        facts.append(QCoreApplication::translate("Calendar", "When: %1").arg(when));
         if (!repeats.isEmpty())
-            facts.append(tr("Repeats: %1").arg(repeats));
+            facts.append(QCoreApplication::translate("Calendar", "Repeats: %1").arg(repeats));
         if (!e.location.isEmpty())
-            facts.append(tr("Where: %1").arg(e.location));
+            facts.append(QCoreApplication::translate("Calendar", "Where: %1").arg(e.location));
         if (!e.url.isEmpty())
-            facts.append(tr("Link: %1").arg(e.url));
+            facts.append(QCoreApplication::translate("Calendar", "Link: %1").arg(e.url));
         QStringList guests;
         for (const ICal::Attendee &a : e.attendees)
             guests.append(addrDisplay(a));
         if (!guests.isEmpty())
-            facts.append(tr("Who: %1").arg(guests.join(QStringLiteral(", "))));
+            facts.append(QCoreApplication::translate("Calendar", "Who: %1").arg(guests.join(QStringLiteral(", "))));
         lines += facts;
         QStringList factHtml;
         for (const QString &f : facts)
@@ -725,7 +720,8 @@ std::optional<Calendar::Invitation> Calendar::invitation(MailContext &ctx, const
         inv.cancelled = stored->status == ICal::Status::Cancelled;
         inv.outdated = stored->sequence > inv.event.sequence;
         inv.ourStatus = ourStatus(ctx, *stored);
-        inv.attendees = organizedByUs(ctx, *stored) ? stored->attendees : inv.event.attendees;
+        // What the calendar knows: the answers we heard as organizer, or our own.
+        inv.attendees = stored->attendees;
     } else {
         inv.attendees = inv.event.attendees;
     }
@@ -884,12 +880,12 @@ Calendar::SendResult Calendar::rsvp(MailContext &ctx, qint64 msgId, ICal::PartSt
     SendResult r;
     const auto d = Search::detail(ctx, msgId);
     if (!d || !actionable(ctx, *d)) {
-        r.error = tr("This invitation cannot be answered.");
+        r.error = QCoreApplication::translate("Calendar", "This invitation cannot be answered.");
         return r;
     }
     const auto inv = invitation(ctx, *d);
     if (inv->outdated) {
-        r.error = tr("A newer version of this invitation is in your calendar.");
+        r.error = QCoreApplication::translate("Calendar", "A newer version of this invitation is in your calendar.");
         return r;
     }
     const QString self = selfAddr(ctx);
@@ -925,12 +921,12 @@ Calendar::SendResult Calendar::addFromMessage(MailContext &ctx, qint64 msgId)
     SendResult r;
     const auto d = Search::detail(ctx, msgId);
     if (!d || d->direction != Direction::Incoming || d->held || d->trashed) {
-        r.error = tr("This invitation cannot be added.");
+        r.error = QCoreApplication::translate("Calendar", "This invitation cannot be added.");
         return r;
     }
     const auto inv = invitation(ctx, *d);
     if (!inv || inv->method == ICal::Method::Reply || inv->outdated) {
-        r.error = tr("This invitation cannot be added.");
+        r.error = QCoreApplication::translate("Calendar", "This invitation cannot be added.");
         return r;
     }
     Event e = adopt(ctx, *inv, d->messageId, get(ctx, inv->event.uid));

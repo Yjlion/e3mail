@@ -3,6 +3,8 @@
 
 #include "models/MessageListModel.h"
 
+#include "mail/Calendar.h"
+
 #include <QObject>
 #include <QPointer>
 #include <QQuickTextDocument>
@@ -150,8 +152,35 @@ public:
     Q_INVOKABLE void deleteLabel(qint64 labelId);
 
     Q_INVOKABLE bool saveAttachment(qint64 msgId, int index, const QUrl &dest);
-    // A structured card's item as an iCalendar file (ADR 0024).
-    Q_INVOKABLE bool saveCalendarEvent(qint64 msgId, int item, const QUrl &dest);
+    // A structured card's item into the calendar (ADR 0024 amendment).
+    Q_INVOKABLE QString addStructuredToCalendar(qint64 msgId, int item);
+
+    // The calendar (ADR 0025). Occurrences in [from, to): [{uid, title,
+    // start, end, allDay, location, description, url, organizer, organizerName,
+    // mine, status, myStatus, recurring, recurrence, attendees:[{addr, name,
+    // status}], reminder, when, day}].
+    Q_INVOKABLE QVariantList calendarEvents(const QDateTime &from, const QDateTime &to) const;
+    // One event as the editor holds it: {uid, title, allDay, startDate, startTime,
+    // endDate, endTime, location, description, url, attendees (a line), freq,
+    // interval, byDay:[1..7], ends (never|count|until), count, untilDate,
+    // reminder, mine, sent, status}.
+    Q_INVOKABLE QVariantMap calendarEvent(const QString &uid) const;
+    // Saves what the editor holds; returns the uid, or empty after a toast.
+    Q_INVOKABLE QString saveEvent(const QVariantMap &fields, bool sendUpdate);
+    Q_INVOKABLE void cancelEvent(const QString &uid, bool sendCancel);
+    Q_INVOKABLE void removeEvent(const QString &uid);
+    // accept | tentative | decline
+    Q_INVOKABLE void replyToInvitation(qint64 msgId, const QString &answer);
+    Q_INVOKABLE void addInvitationToCalendar(qint64 msgId);
+    Q_INVOKABLE bool exportEvent(const QString &uid, const QUrl &dest);
+    Q_INVOKABLE QString suggestedEventFileName(const QString &uid) const;
+    Q_INVOKABLE QString describeRecurrence(const QString &rrule) const;
+    // Whether mail to these attendees would be encrypted, and who lacks a key:
+    // {encrypt, missing:[addr]}.
+    Q_INVOKABLE QVariantMap attendeePolicy(const QString &attendees) const;
+    Q_INVOKABLE int calendarReminderDefault() const;
+    // An ISO date as the locale writes it in full.
+    Q_INVOKABLE QString formatDay(const QString &isoDate) const;
     // A message's source for the source dialog: retained, encrypted,
     // original, decrypted, decryptError, subject, and outline/innerOutline
     // ([{depth, type, encoding, filename, size}]).
@@ -253,6 +282,10 @@ public:
 
 Q_SIGNALS:
     void firstRunChanged();
+    // The calendar changed (an event, an answer, another device).
+    void calendarChanged();
+    // A reminder was clicked, or a card asked: show this event.
+    void showEventRequested(const QString &uid);
     void accountsChanged();
     void accountChanged();
     void statusChanged();
@@ -308,5 +341,9 @@ private:
     // Wakes when the next disappearing message is due (ADR 0022).
     QTimer m_expiry;
     void armExpiry();
+    // Wakes for the next calendar reminder (ADR 0025).
+    QTimer m_reminder;
+    void armReminder();
+    QVariantMap eventMap(const e3::mail::Calendar::Event &e, const QDateTime &start, const QDateTime &end) const;
     Notifier *m_notifier;
 };

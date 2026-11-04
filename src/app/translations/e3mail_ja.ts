@@ -19,7 +19,7 @@
         <translation>e3mail は同期を続けています</translation>
     </message>
     <message>
-        <source>New mail and other devices&apos; changes arrive while e3mail is in the background.</source>
+        <source>New mail and other devices' changes arrive while e3mail is in the background.</source>
         <translation>e3mail がバックグラウンドにある間も、新着メールと他のデバイスの変更が届きます。</translation>
     </message>
     <message>
@@ -165,20 +165,230 @@
         <translation>そこにある最新のバックアップから、このアカウントの新しいデバイスが作られます。ペアリングするまで他のデバイスとは同期しません。</translation>
     </message>
     <message>
-        <source>The server&apos;s SSH host key has changed. Trust the new one only if the server&apos;s administrator says it changed:</source>
+        <source>The server's SSH host key has changed. Trust the new one only if the server's administrator says it changed:</source>
         <translation>サーバーの SSH ホスト鍵が変わりました。サーバー管理者が変更したと言う場合にのみ新しい鍵を信頼してください:</translation>
     </message>
     <message>
-        <source>The server&apos;s SSH host key is not known yet. Trust it only if it matches what the server&apos;s administrator gives you:</source>
+        <source>The server's SSH host key is not known yet. Trust it only if it matches what the server's administrator gives you:</source>
         <translation>サーバーの SSH ホスト鍵はまだ不明です。サーバー管理者から伝えられたものと一致する場合にのみ信頼してください:</translation>
     </message>
     <message>
-        <source>The server&apos;s certificate is not trusted. Trust it only if its fingerprint matches what the server&apos;s administrator gives you:</source>
+        <source>The server's certificate is not trusted. Trust it only if its fingerprint matches what the server's administrator gives you:</source>
         <translation>サーバーの証明書は信頼されていません。フィンガープリントがサーバー管理者から伝えられたものと一致する場合にのみ信頼してください:</translation>
     </message>
     <message>
         <source>Trust it</source>
         <translation>信頼する</translation>
+    </message>
+</context>
+<context>
+    <name>Calendar</name>
+    <message>
+        <source>Repeats (rule not understood: %1)</source>
+        <translation>繰り返し（解釈できない規則：%1）</translation>
+    </message>
+    <message>
+        <source>Every day</source>
+        <translation>毎日</translation>
+    </message>
+    <message numerus="yes">
+        <source>Every %n days</source>
+        <translation>
+            <numerusform>%n 日ごと</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Every week</source>
+        <translation>毎週</translation>
+    </message>
+    <message numerus="yes">
+        <source>Every %n weeks</source>
+        <translation>
+            <numerusform>%n 週ごと</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>%1 on %2</source>
+        <translation>%1、%2</translation>
+    </message>
+    <message>
+        <source>Every month</source>
+        <translation>毎月</translation>
+    </message>
+    <message numerus="yes">
+        <source>Every %n months</source>
+        <translation>
+            <numerusform>%n か月ごと</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Every year</source>
+        <translation>毎年</translation>
+    </message>
+    <message numerus="yes">
+        <source>Every %n years</source>
+        <translation>
+            <numerusform>%n 年ごと</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%1, %n time(s)</source>
+        <translation>
+            <numerusform>%1、%n 回</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>%1, until %2</source>
+        <translation>%1、%2 まで</translation>
+    </message>
+    <message>
+        <source>%1 – %2</source>
+        <translation>%1 – %2</translation>
+    </message>
+    <message>
+        <source>%1, %2</source>
+        <translation>%1、%2</translation>
+    </message>
+    <message>
+        <source>%1, %2 – %3</source>
+        <translation>%1、%2 – %3</translation>
+    </message>
+    <message>
+        <source>%1 has accepted the invitation to “%2”.</source>
+        <translation>%1 さんが「%2」への招待を承諾しました。</translation>
+    </message>
+    <message>
+        <source>%1 has tentatively accepted the invitation to “%2”.</source>
+        <translation>%1 さんが「%2」への招待を仮承諾しました。</translation>
+    </message>
+    <message>
+        <source>%1 has declined the invitation to “%2”.</source>
+        <translation>%1 さんが「%2」への招待を辞退しました。</translation>
+    </message>
+    <message>
+        <source>%1 has not answered the invitation to “%2”.</source>
+        <translation>%1 さんは「%2」への招待にまだ返答していません。</translation>
+    </message>
+    <message>
+        <source>Accepted: %1</source>
+        <translation>承諾：%1</translation>
+    </message>
+    <message>
+        <source>Tentative: %1</source>
+        <translation>仮承諾：%1</translation>
+    </message>
+    <message>
+        <source>Declined: %1</source>
+        <translation>辞退：%1</translation>
+    </message>
+    <message>
+        <source>Cancelled: %1</source>
+        <translation>中止：%1</translation>
+    </message>
+    <message>
+        <source>%1 has cancelled “%2”.</source>
+        <translation>%1 さんが「%2」を中止しました。</translation>
+    </message>
+    <message>
+        <source>Updated invitation: %1</source>
+        <translation>更新された招待：%1</translation>
+    </message>
+    <message>
+        <source>%1 has changed “%2”. Here are the new details.</source>
+        <translation>%1 さんが「%2」を変更しました。新しい内容は次のとおりです。</translation>
+    </message>
+    <message>
+        <source>Invitation: %1</source>
+        <translation>招待：%1</translation>
+    </message>
+    <message>
+        <source>%1 invites you to “%2”.</source>
+        <translation>%1 さんが「%2」にあなたを招待しています。</translation>
+    </message>
+    <message>
+        <source>When: %1</source>
+        <translation>日時：%1</translation>
+    </message>
+    <message>
+        <source>Repeats: %1</source>
+        <translation>繰り返し：%1</translation>
+    </message>
+    <message>
+        <source>Where: %1</source>
+        <translation>場所：%1</translation>
+    </message>
+    <message>
+        <source>Link: %1</source>
+        <translation>リンク：%1</translation>
+    </message>
+    <message>
+        <source>Who: %1</source>
+        <translation>参加者：%1</translation>
+    </message>
+    <message>
+        <source>This invitation cannot be answered.</source>
+        <translation>この招待には返答できません。</translation>
+    </message>
+    <message>
+        <source>A newer version of this invitation is in your calendar.</source>
+        <translation>この招待の新しい版がカレンダーにあります。</translation>
+    </message>
+    <message>
+        <source>This invitation cannot be added.</source>
+        <translation>この招待は追加できません。</translation>
+    </message>
+</context>
+<context>
+    <name>CalendarView</name>
+    <message>
+        <source>Previous month</source>
+        <translation>前の月</translation>
+    </message>
+    <message>
+        <source>Next month</source>
+        <translation>次の月</translation>
+    </message>
+    <message>
+        <source>Today</source>
+        <translation>今日</translation>
+    </message>
+    <message>
+        <source>New event</source>
+        <translation>新しい予定</translation>
+    </message>
+    <message numerus="yes">
+        <source>+%n more</source>
+        <translation>
+            <numerusform>ほか %n 件</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Coming up</source>
+        <translation>今後の予定</translation>
+    </message>
+    <message>
+        <source>Show what is coming</source>
+        <translation>今後の予定を表示</translation>
+    </message>
+    <message>
+        <source>Tentative</source>
+        <translation>仮承諾</translation>
+    </message>
+    <message>
+        <source>Not answered</source>
+        <translation>未回答</translation>
+    </message>
+    <message>
+        <source>Repeats</source>
+        <translation>繰り返し</translation>
+    </message>
+    <message>
+        <source>Nothing on this day.</source>
+        <translation>この日の予定はありません。</translation>
+    </message>
+    <message>
+        <source>Nothing coming up. Invitations you accept and events you add appear here.</source>
+        <translation>今後の予定はありません。承諾した招待と追加した予定がここに表示されます。</translation>
     </message>
 </context>
 <context>
@@ -566,6 +776,260 @@ To: %4
     </message>
 </context>
 <context>
+    <name>DateField</name>
+    <message>
+        <source>Pick a date</source>
+        <translation>日付を選択</translation>
+    </message>
+    <message>
+        <source>Previous month</source>
+        <translation>前の月</translation>
+    </message>
+    <message>
+        <source>Next month</source>
+        <translation>次の月</translation>
+    </message>
+</context>
+<context>
+    <name>EventDialog</name>
+    <message>
+        <source>Edit event</source>
+        <translation>予定を編集</translation>
+    </message>
+    <message>
+        <source>New event</source>
+        <translation>新しい予定</translation>
+    </message>
+    <message>
+        <source>Title</source>
+        <translation>件名</translation>
+    </message>
+    <message>
+        <source>All day</source>
+        <translation>終日</translation>
+    </message>
+    <message>
+        <source>Starts</source>
+        <translation>開始</translation>
+    </message>
+    <message>
+        <source>Ends</source>
+        <translation>終了</translation>
+    </message>
+    <message>
+        <source>Times are in this device's time zone.</source>
+        <translation>時刻はこの端末のタイムゾーンです。</translation>
+    </message>
+    <message>
+        <source>Repeats</source>
+        <translation>繰り返し</translation>
+    </message>
+    <message>
+        <source>Never</source>
+        <translation>なし</translation>
+    </message>
+    <message>
+        <source>Every day</source>
+        <translation>毎日</translation>
+    </message>
+    <message>
+        <source>Every week</source>
+        <translation>毎週</translation>
+    </message>
+    <message>
+        <source>Every month</source>
+        <translation>毎月</translation>
+    </message>
+    <message>
+        <source>Every year</source>
+        <translation>毎年</translation>
+    </message>
+    <message>
+        <source>As received</source>
+        <translation>受信したまま</translation>
+    </message>
+    <message>
+        <source>every</source>
+        <translation>間隔</translation>
+    </message>
+    <message>
+        <source>day(s)</source>
+        <translation>日</translation>
+    </message>
+    <message>
+        <source>week(s)</source>
+        <translation>週</translation>
+    </message>
+    <message>
+        <source>month(s)</source>
+        <translation>か月</translation>
+    </message>
+    <message>
+        <source>year(s)</source>
+        <translation>年</translation>
+    </message>
+    <message>
+        <source>This rule came with the invitation and is kept as it is: %1</source>
+        <translation>この規則は招待に含まれていたもので、そのまま保持されます：%1</translation>
+    </message>
+    <message>
+        <source>After</source>
+        <translation>回数で終了</translation>
+    </message>
+    <message>
+        <source>On</source>
+        <translation>日付で終了</translation>
+    </message>
+    <message>
+        <source>time(s)</source>
+        <translation>回</translation>
+    </message>
+    <message>
+        <source>Where</source>
+        <translation>場所</translation>
+    </message>
+    <message>
+        <source>Link</source>
+        <translation>リンク</translation>
+    </message>
+    <message>
+        <source>Attendees</source>
+        <translation>参加者</translation>
+    </message>
+    <message>
+        <source>Names or addresses, separated by commas</source>
+        <translation>名前またはアドレスをコンマで区切って</translation>
+    </message>
+    <message>
+        <source>Attendees get an invitation by email, and an update when the meeting changes.</source>
+        <translation>参加者にはメールで招待が届き、会議が変更されると更新も届きます。</translation>
+    </message>
+    <message>
+        <source>The invitation will be encrypted: every attendee has a key.</source>
+        <translation>招待は暗号化されます：参加者全員が鍵を持っています。</translation>
+    </message>
+    <message>
+        <source>The invitation goes unencrypted: no key yet for %1.</source>
+        <translation>招待は暗号化されずに送られます：%1 の鍵がまだありません。</translation>
+    </message>
+    <message>
+        <source>The invitation goes unencrypted.</source>
+        <translation>招待は暗号化されずに送られます。</translation>
+    </message>
+    <message>
+        <source>Reminder</source>
+        <translation>リマインダー</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>なし</translation>
+    </message>
+    <message>
+        <source>At the start</source>
+        <translation>開始時</translation>
+    </message>
+    <message>
+        <source>5 minutes before</source>
+        <translation>5 分前</translation>
+    </message>
+    <message>
+        <source>10 minutes before</source>
+        <translation>10 分前</translation>
+    </message>
+    <message>
+        <source>15 minutes before</source>
+        <translation>15 分前</translation>
+    </message>
+    <message>
+        <source>30 minutes before</source>
+        <translation>30 分前</translation>
+    </message>
+    <message>
+        <source>1 hour before</source>
+        <translation>1 時間前</translation>
+    </message>
+    <message>
+        <source>2 hours before</source>
+        <translation>2 時間前</translation>
+    </message>
+    <message>
+        <source>1 day before</source>
+        <translation>1 日前</translation>
+    </message>
+    <message>
+        <source>Details</source>
+        <translation>詳細</translation>
+    </message>
+    <message>
+        <source>%1 organizes this meeting; only the reminder is yours to change here. Answer from the invitation in your mail.</source>
+        <translation>この会議の主催者は %1 です。ここで変更できるのはリマインダーだけです。メールの招待から返答してください。</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>保存</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>キャンセル</translation>
+    </message>
+    <message>
+        <source>Cancel meeting…</source>
+        <translation>会議を中止…</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>削除</translation>
+    </message>
+    <message>
+        <source>Export…</source>
+        <translation>エクスポート…</translation>
+    </message>
+    <message>
+        <source>Send the update?</source>
+        <translation>更新を送信しますか？</translation>
+    </message>
+    <message>
+        <source>Send the invitation?</source>
+        <translation>招待を送信しますか？</translation>
+    </message>
+    <message>
+        <source>The attendees get an updated invitation by email and are asked to answer again.</source>
+        <translation>参加者には更新された招待がメールで届き、再度の返答が求められます。</translation>
+    </message>
+    <message>
+        <source>The attendees get an invitation by email.</source>
+        <translation>参加者にはメールで招待が届きます。</translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation>送信</translation>
+    </message>
+    <message>
+        <source>Save only</source>
+        <translation>保存のみ</translation>
+    </message>
+    <message>
+        <source>Back</source>
+        <translation>戻る</translation>
+    </message>
+    <message>
+        <source>Cancel the meeting?</source>
+        <translation>会議を中止しますか？</translation>
+    </message>
+    <message>
+        <source>The attendees are told by email that it is cancelled.</source>
+        <translation>参加者には中止がメールで伝えられます。</translation>
+    </message>
+    <message>
+        <source>Cancel meeting</source>
+        <translation>会議を中止</translation>
+    </message>
+    <message>
+        <source>Calendar files (*.ics)</source>
+        <translation>カレンダーファイル (*.ics)</translation>
+    </message>
+</context>
+<context>
     <name>FirstRunDialog</name>
     <message>
         <source>Before you start</source>
@@ -608,6 +1072,125 @@ To: %4
         <translation>このメッセージは暗号化されており、このデバイスでは復号できませんでした。
 
 %1</translation>
+    </message>
+</context>
+<context>
+    <name>InvitationCard</name>
+    <message>
+        <source>Accepted</source>
+        <translation>承諾</translation>
+    </message>
+    <message>
+        <source>Tentative</source>
+        <translation>仮承諾</translation>
+    </message>
+    <message>
+        <source>Declined</source>
+        <translation>辞退</translation>
+    </message>
+    <message>
+        <source>Not answered</source>
+        <translation>未回答</translation>
+    </message>
+    <message>
+        <source>Cancelled: %1</source>
+        <translation>中止：%1</translation>
+    </message>
+    <message>
+        <source>%1 accepted.</source>
+        <translation>%1 さんが承諾しました。</translation>
+    </message>
+    <message>
+        <source>%1 declined.</source>
+        <translation>%1 さんが辞退しました。</translation>
+    </message>
+    <message>
+        <source>%1 might come.</source>
+        <translation>%1 さんは仮承諾しました。</translation>
+    </message>
+    <message>
+        <source>%1 answered.</source>
+        <translation>%1 さんが返答しました。</translation>
+    </message>
+    <message>
+        <source>This meeting was cancelled; your calendar is updated.</source>
+        <translation>この会議は中止されました。カレンダーは更新済みです。</translation>
+    </message>
+    <message>
+        <source>This meeting was cancelled.</source>
+        <translation>この会議は中止されました。</translation>
+    </message>
+    <message>
+        <source>Your invitation.</source>
+        <translation>あなたの招待です。</translation>
+    </message>
+    <message>
+        <source>A newer version of this invitation is in your calendar.</source>
+        <translation>この招待の新しい版がカレンダーにあります。</translation>
+    </message>
+    <message>
+        <source>This meeting has since been cancelled.</source>
+        <translation>この会議はその後中止されました。</translation>
+    </message>
+    <message>
+        <source>In your calendar: %1.</source>
+        <translation>カレンダーに登録済み：%1。</translation>
+    </message>
+    <message>
+        <source>%1 invites you.</source>
+        <translation>%1 さんからの招待です。</translation>
+    </message>
+    <message>
+        <source>When</source>
+        <translation>日時</translation>
+    </message>
+    <message>
+        <source>Repeats</source>
+        <translation>繰り返し</translation>
+    </message>
+    <message>
+        <source>Where</source>
+        <translation>場所</translation>
+    </message>
+    <message>
+        <source>Organizer</source>
+        <translation>主催者</translation>
+    </message>
+    <message>
+        <source>Who</source>
+        <translation>参加者</translation>
+    </message>
+    <message>
+        <source>Details</source>
+        <translation>詳細</translation>
+    </message>
+    <message>
+        <source>Accept</source>
+        <translation>承諾</translation>
+    </message>
+    <message>
+        <source>Decline</source>
+        <translation>辞退</translation>
+    </message>
+    <message>
+        <source>Add to calendar</source>
+        <translation>カレンダーに追加</translation>
+    </message>
+    <message>
+        <source>Show in calendar</source>
+        <translation>カレンダーで表示</translation>
+    </message>
+    <message>
+        <source>Open link…</source>
+        <translation>リンクを開く…</translation>
+    </message>
+    <message>
+        <source>Answers can be sent to senders you trust; accept this sender first. Check these details against the message.</source>
+        <translation>返答は信頼する送信者にのみ送れます。まずこの送信者を承認してください。内容はメッセージ本文と照らし合わせてください。</translation>
+    </message>
+    <message>
+        <source>This message was not sent by the meeting's organizer, so it cannot be answered from here. Check these details against the message.</source>
+        <translation>このメッセージは会議の主催者から送られたものではないため、ここから返答できません。内容はメッセージ本文と照らし合わせてください。</translation>
     </message>
 </context>
 <context>
@@ -690,6 +1273,18 @@ To: %4
 <context>
     <name>MailApp</name>
     <message>
+        <source>Today</source>
+        <translation>今日</translation>
+    </message>
+    <message>
+        <source>Event</source>
+        <translation>予定</translation>
+    </message>
+    <message>
+        <source>%1 · %2</source>
+        <translation>%1 · %2</translation>
+    </message>
+    <message>
         <source>Unnamed device</source>
         <translation>名前のないデバイス</translation>
     </message>
@@ -752,8 +1347,56 @@ To: %4
         <translation>添付ファイルを保存できませんでした。</translation>
     </message>
     <message>
+        <source>Could not add the event.</source>
+        <translation>予定を追加できませんでした。</translation>
+    </message>
+    <message>
+        <source>Added to the calendar.</source>
+        <translation>カレンダーに追加しました。</translation>
+    </message>
+    <message>
+        <source>(No title)</source>
+        <translation>（件名なし）</translation>
+    </message>
+    <message>
+        <source>All day</source>
+        <translation>終日</translation>
+    </message>
+    <message>
+        <source>Give the event a title.</source>
+        <translation>予定に件名を付けてください。</translation>
+    </message>
+    <message>
+        <source>The start is not a date and time.</source>
+        <translation>開始が日付と時刻になっていません。</translation>
+    </message>
+    <message>
+        <source>Saved, but the invitation was not sent: %1</source>
+        <translation>保存しましたが、招待は送信されませんでした：%1</translation>
+    </message>
+    <message>
+        <source>Invitation sent.</source>
+        <translation>招待を送信しました。</translation>
+    </message>
+    <message>
+        <source>Cancelled, but the attendees were not told: %1</source>
+        <translation>中止しましたが、参加者には伝えられませんでした：%1</translation>
+    </message>
+    <message>
+        <source>Saved in your calendar, but the answer was not sent: %1</source>
+        <translation>カレンダーに保存しましたが、返答は送信されませんでした：%1</translation>
+    </message>
+    <message>
+        <source>Answer sent.</source>
+        <translation>返答を送信しました。</translation>
+    </message>
+    <message>
         <source>Could not save the event.</source>
         <translation>予定を保存できませんでした。</translation>
+    </message>
+    <message>
+        <source>event</source>
+        <translation>予定</translation>
     </message>
     <message>
         <source>This message cannot be decrypted, or its original is no longer kept.</source>
@@ -764,7 +1407,7 @@ To: %4
         <translation>このメッセージの原本は保存されていません。</translation>
     </message>
     <message>
-        <source>This is not a contact&apos;s code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
+        <source>This is not a contact's code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
         <translation>連絡先のコードではありません。確認用のコードは OPENPGP4FPR: または https://i.delta.chat/ で始まります。</translation>
     </message>
     <message numerus="yes">
@@ -1305,32 +1948,9 @@ To: %4
     </message>
 </context>
 <context>
-    <name>ScanView</name>
-    <message>
-        <source>This device has no camera. Type the code instead.</source>
-        <translation>このデバイスにはカメラがありません。代わりにコードを入力してください。</translation>
-    </message>
-    <message>
-        <source>e3mail may not use the camera. Allow it in the system settings, or type the code instead.</source>
-        <translation>e3mail はカメラを使用できません。システム設定で許可するか、代わりにコードを入力してください。</translation>
-    </message>
-    <message>
-        <source>Asking for the camera…</source>
-        <translation>カメラの使用を確認しています…</translation>
-    </message>
-    <message>
-        <source>Point the camera at the QR code on the other device.</source>
-        <translation>もう一方のデバイスの QR コードにカメラを向けてください。</translation>
-    </message>
-    <message>
-        <source>Type the code instead</source>
-        <translation>コードを入力する</translation>
-    </message>
-</context>
-<context>
     <name>SecureJoin</name>
     <message>
-        <source>This is your own code. Scan the other person&apos;s code instead.</source>
+        <source>This is your own code. Scan the other person's code instead.</source>
         <translation>これはあなた自身のコードです。相手のコードをスキャンしてください。</translation>
     </message>
     <message>
@@ -1373,7 +1993,7 @@ To: %4
         <translation>差出人と件名を表示</translation>
     </message>
     <message>
-        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system&apos;s notification history, outside e3mail&apos;s encryption.</source>
+        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system's notification history, outside e3mail's encryption.</source>
         <translation>このデバイスで、e3mail が開いていて前面にないときに通知します。ここに表示された件名は、e3mail の暗号化の外にあるシステムの通知履歴に残ります。</translation>
     </message>
     <message>
@@ -1385,7 +2005,7 @@ To: %4
         <translation>バックグラウンドで同期を続ける</translation>
     </message>
     <message>
-        <source>Mail and your other devices&apos; changes keep arriving while e3mail is not in front. Android shows a notification for as long as this is on, and it uses more battery. Swiping e3mail away from the recent apps ends it.</source>
+        <source>Mail and your other devices' changes keep arriving while e3mail is not in front. Android shows a notification for as long as this is on, and it uses more battery. Swiping e3mail away from the recent apps ends it.</source>
         <translation>e3mail が前面にないときも、メールと他のデバイスの変更が届き続けます。オンの間は Android が通知を表示し続け、バッテリーの消費が増えます。最近使ったアプリから e3mail をスワイプして閉じると終了します。</translation>
     </message>
     <message>
@@ -1425,7 +2045,7 @@ To: %4
         <translation>署名を追加…</translation>
     </message>
     <message>
-        <source>The chosen one goes into new mail. The composer&apos;s signature button swaps it for another.</source>
+        <source>The chosen one goes into new mail. The composer's signature button swaps it for another.</source>
         <translation>選んだ署名が新しいメールに入ります。作成画面の署名ボタンで別の署名に替えられます。</translation>
     </message>
     <message>
@@ -1481,6 +2101,50 @@ To: %4
         <translation>開封確認は、どの端末であれ最初にメッセージを開いたときに一度だけ送られます。知らない人や信頼していない相手には送られません。</translation>
     </message>
     <message>
+        <source>Calendar</source>
+        <translation>カレンダー</translation>
+    </message>
+    <message>
+        <source>Remind me before an event</source>
+        <translation>予定の前に通知</translation>
+    </message>
+    <message>
+        <source>Never</source>
+        <translation>なし</translation>
+    </message>
+    <message>
+        <source>At the start</source>
+        <translation>開始時</translation>
+    </message>
+    <message>
+        <source>5 minutes before</source>
+        <translation>5 分前</translation>
+    </message>
+    <message>
+        <source>10 minutes before</source>
+        <translation>10 分前</translation>
+    </message>
+    <message>
+        <source>15 minutes before</source>
+        <translation>15 分前</translation>
+    </message>
+    <message>
+        <source>30 minutes before</source>
+        <translation>30 分前</translation>
+    </message>
+    <message>
+        <source>1 hour before</source>
+        <translation>1 時間前</translation>
+    </message>
+    <message>
+        <source>1 day before</source>
+        <translation>1 日前</translation>
+    </message>
+    <message>
+        <source>For events you add and invitations you accept; each event can differ. Reminders show only while e3mail runs. The calendar lives on your devices and is arranged by email; nothing is shared with a calendar server.</source>
+        <translation>追加した予定と承諾した招待に適用されます。予定ごとに変えられます。リマインダーは e3mail の実行中にのみ表示されます。カレンダーはあなたの端末上にあり、メールでやり取りされます。カレンダーサーバーには何も共有されません。</translation>
+    </message>
+    <message>
         <source>Trash</source>
         <translation>ゴミ箱</translation>
     </message>
@@ -1521,7 +2185,7 @@ To: %4
         <translation>日</translation>
     </message>
     <message>
-        <source>Mail that was on the server before e3mail first connected is never removed. &quot;Never&quot; lets another mail program keep using this mailbox.</source>
+        <source>Mail that was on the server before e3mail first connected is never removed. "Never" lets another mail program keep using this mailbox.</source>
         <translation>e3mail が最初に接続する前からサーバーにあったメールは削除されません。「削除しない」を選ぶと、ほかのメールソフトでもこのメールボックスを使い続けられます。</translation>
     </message>
     <message>
@@ -1533,15 +2197,15 @@ To: %4
         <translation>秒</translation>
     </message>
     <message>
-        <source>The sending server&apos;s certificate is not trusted, or is not the one trusted before.</source>
+        <source>The sending server's certificate is not trusted, or is not the one trusted before.</source>
         <translation>送信サーバーの証明書は信頼されていないか、以前に信頼したものではありません。</translation>
     </message>
     <message>
-        <source>The incoming server&apos;s certificate is not trusted, or is not the one trusted before.</source>
+        <source>The incoming server's certificate is not trusted, or is not the one trusted before.</source>
         <translation>受信サーバーの証明書は信頼されていないか、以前に信頼したものではありません。</translation>
     </message>
     <message>
-        <source>Trust it only if this SHA-256 fingerprint matches the one your server&apos;s administrator gave you.</source>
+        <source>Trust it only if this SHA-256 fingerprint matches the one your server's administrator gave you.</source>
         <translation>この SHA-256 フィンガープリントがサーバー管理者から受け取ったものと一致する場合にのみ信頼してください。</translation>
     </message>
     <message>
@@ -1605,7 +2269,7 @@ To: %4
         <translation>原本</translation>
     </message>
     <message>
-        <source>Keep each message&apos;s original for</source>
+        <source>Keep each message's original for</source>
         <translation>各メッセージの原本を保存する日数</translation>
     </message>
     <message>
@@ -1673,7 +2337,7 @@ To: %4
         <translation>リレー</translation>
     </message>
     <message>
-        <source>n0&apos;s public relays</source>
+        <source>n0's public relays</source>
         <translation>n0 の公開リレー</translation>
     </message>
     <message>
@@ -1805,7 +2469,7 @@ To: %4
         <translation>%1 を削除しますか?</translation>
     </message>
     <message>
-        <source>It stops syncing with this account&apos;s other devices. What is already on it stays there.</source>
+        <source>It stops syncing with this account's other devices. What is already on it stays there.</source>
         <translation>このアカウントの他のデバイスとの同期を止めます。すでにあるものはそのまま残ります。</translation>
     </message>
     <message>
@@ -1820,15 +2484,15 @@ To: %4
         <translation>プロバイダーから取得したサーバー設定です。</translation>
     </message>
     <message>
-        <source>Server settings from Thunderbird&apos;s provider database.</source>
+        <source>Server settings from Thunderbird's provider database.</source>
         <translation>Thunderbird のプロバイダーデータベースから取得したサーバー設定です。</translation>
     </message>
     <message>
-        <source>Server settings of the service that receives your domain&apos;s mail. Check them before connecting.</source>
+        <source>Server settings of the service that receives your domain's mail. Check them before connecting.</source>
         <translation>ドメインのメールを受信しているサービスのサーバー設定です。接続する前に確認してください。</translation>
     </message>
     <message>
-        <source>Server settings from your provider&apos;s Autodiscover service.</source>
+        <source>Server settings from your provider's Autodiscover service.</source>
         <translation>プロバイダーの Autodiscover サービスから取得したサーバー設定です。</translation>
     </message>
     <message>
@@ -1939,7 +2603,7 @@ To: %4
         <translation>%2 が %1 に発行、有効期限 %3。</translation>
     </message>
     <message>
-        <source>Trust it only if this fingerprint matches the one your server&apos;s administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
+        <source>Trust it only if this fingerprint matches the one your server's administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
         <translation>このフィンガープリントがサーバー管理者から受け取ったものと一致する場合にのみ信頼してください。以後 e3mail はこのサーバーからはこの証明書だけを受け入れます。</translation>
     </message>
     <message>
@@ -1988,6 +2652,10 @@ To: %4
     <message>
         <source>Inbox</source>
         <translation>受信トレイ</translation>
+    </message>
+    <message>
+        <source>Calendar</source>
+        <translation>カレンダー</translation>
     </message>
     <message>
         <source>Unverified</source>
@@ -2071,7 +2739,7 @@ To: %4
         <translation>サインインに時間がかかりすぎました。もう一度お試しください。</translation>
     </message>
     <message>
-        <source>Cannot listen for the browser&apos;s answer on this device.</source>
+        <source>Cannot listen for the browser's answer on this device.</source>
         <translation>このデバイスではブラウザーからの応答を受け取れません。</translation>
     </message>
     <message>
@@ -2261,8 +2929,8 @@ To: %4
 <context>
     <name>StructuredCard</name>
     <message>
-        <source>Add to calendar…</source>
-        <translation>カレンダーに追加…</translation>
+        <source>Add to calendar</source>
+        <translation>カレンダーに追加</translation>
     </message>
     <message>
         <source>Open…</source>
@@ -2271,10 +2939,6 @@ To: %4
     <message>
         <source>Shown as text only. Buttons appear for senders you trust whose mail is signed by their key; check these details against the message.</source>
         <translation>テキストとしてのみ表示しています。ボタンは、信頼済みで鍵による署名があるメールにのみ表示されます。内容はメッセージ本文と照らし合わせてください。</translation>
-    </message>
-    <message>
-        <source>Calendar files (*.ics)</source>
-        <translation>カレンダーファイル (*.ics)</translation>
     </message>
 </context>
 <context>

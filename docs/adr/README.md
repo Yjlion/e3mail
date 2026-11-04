@@ -17,7 +17,7 @@ that supersedes it, or a dated amendment block inside it, and add a row here.
 | [0010](0010-multi-client-over-iroh.md) | Devices sync with each other over Iroh | Accepted, Phase 8; amended 2026-10-11 (the transport, pairing, the mailbox fallback), 2026-10-16 (scanning the code; removed while away, relay-only) |
 | [0011](0011-linear-protocol-code-over-an-event-loop.md) | Linear protocol code over a local event loop | Accepted |
 | [0012](0012-passwords-in-the-os-keyring.md) | Passwords in the OS keyring, with an honest fallback | Accepted; amended 2026-10-21 (the database is encrypted) |
-| [0013](0013-op-merge-rules.md) | How devices merge the op-log | Accepted, Phase 8; amended 2026-10-07 (address book), 2026-10-10 (signatures), 2026-10-11 (devices), 2026-10-21 (SecureJoin; trust, receipts, disappearing mail) |
+| [0013](0013-op-merge-rules.md) | How devices merge the op-log | Accepted, Phase 8; amended 2026-10-07 (address book), 2026-10-10 (signatures), 2026-10-11 (devices), 2026-10-21 (SecureJoin; trust, receipts, disappearing mail), 2026-11-04 (the calendar) |
 | [0014](0014-languages-icu-and-qt-linguist.md) | Languages: ICU for charsets and dates, Qt Linguist for the interface | Accepted |
 | [0015](0015-finding-server-settings.md) | Finding server settings: provider, ISPDB, Autodiscover, DNS, guess | Accepted |
 | [0016](0016-android.md) | Android: the same app, one pane at a time, only while it runs | Accepted; amended 2026-10-08 (release signing), 2026-10-12 (Google Play, with a correction), 2026-10-14 (the tag is the version), 2026-10-16 (the camera), 2026-10-17 (backups); sync while not in front superseded by 0018 |
@@ -28,4 +28,5 @@ that supersedes it, or a dated amendment block inside it, and add a row here.
 | [0021](0021-securejoin.md) | SecureJoin: verifying a contact by scanning their code, as Delta Chat does | Accepted |
 | [0022](0022-read-receipts-disappearing-mail-and-trust.md) | Read receipts to trusted senders, disappearing mail into Trash, trust set by hand | Accepted |
 | [0023](0023-encryption-at-rest.md) | Encryption at rest: the database and blobs, under a per-account key | Accepted |
-| [0024](0024-structured-email.md) | Structured email: shown as text, with buttons only for the trusted and signed | Accepted |
+| [0024](0024-structured-email.md) | Structured email: shown as text, with buttons only for the trusted and signed | Accepted; amended 2026-11-04 (sent with invitations; add to calendar) |
+| [0025](0025-local-calendar-and-invitations-by-mail.md) | A local calendar, with meetings arranged by mail | Accepted |

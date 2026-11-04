@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 import QtQuick
 import QtQuick.Controls
-import QtQuick.Dialogs
 import QtQuick.Layouts
 import E3mail
 
@@ -71,12 +70,8 @@ ColumnLayout {
                     visible: sc.m.structuredActive && (item.modelData.calendar || item.modelData.link.length > 0)
                     Button {
                         visible: item.modelData.calendar
-                        text: qsTr("Add to calendar…")
-                        onClicked: {
-                            icsDialog.index = item.index
-                            icsDialog.selectedFile = "file:///" + item.modelData.title.replace(/[\/\\:*?"<>|]/g, "_") + ".ics"
-                            icsDialog.open()
-                        }
+                        text: qsTr("Add to calendar")
+                        onClicked: MailApp.addStructuredToCalendar(sc.m.id, item.index)
                     }
                     Button {
                         visible: item.modelData.link.length > 0
@@ -94,13 +89,5 @@ ColumnLayout {
         color: Theme.muted
         font.pixelSize: Theme.fontSmall
         text: qsTr("Shown as text only. Buttons appear for senders you trust whose mail is signed by their key; check these details against the message.")
-    }
-
-    FileDialog {
-        id: icsDialog
-        property int index: -1
-        fileMode: FileDialog.SaveFile
-        nameFilters: [qsTr("Calendar files (*.ics)")]
-        onAccepted: MailApp.saveCalendarEvent(sc.m.id, index, selectedFile)
     }
 }

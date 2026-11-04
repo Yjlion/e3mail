@@ -54,11 +54,16 @@ public:
     void setGatherMs(int ms) { m_gatherMs = ms; }
 
     void arrived(int accountId, const QString &accountAddr, qint64 msgId, const QString &from, const QString &subject);
+    // A calendar reminder (ADR 0025): shown at once, window in front or not,
+    // unless notifications are off.
+    void remind(int accountId, const QString &uid, const QString &title, const QString &body);
 
 Q_SIGNALS:
     // The person clicked: open this message, or the account's Inbox (msgId 0).
     // accountId is -1 for the tray icon itself: just bring the window up.
     void activated(int accountId, qint64 msgId);
+    // The person clicked a reminder: show this event.
+    void reminderActivated(int accountId, const QString &uid);
 
 private:
     struct Arrival
@@ -82,4 +87,5 @@ private:
     QHash<int, Pending> m_pending;
     quint64 m_nextToken = 1;
     QHash<quint64, QPair<int, qint64>> m_targets; // token -> account, message
+    QHash<quint64, QPair<int, QString>> m_reminders; // token -> account, event
 };

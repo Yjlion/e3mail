@@ -13,6 +13,7 @@ Rectangle {
     signal editDraft(int id)
     signal showSource(int id)
     signal askOpenLink(string url)
+    signal showEvent(string uid)
 
     readonly property var m: modelData
 
@@ -202,10 +203,18 @@ Rectangle {
 
         Rectangle { Layout.fillWidth: true; height: 1; color: Theme.border; visible: card.expanded }
 
+        // An invitation (ADR 0025); its JSON-LD twin is not shown again.
+        InvitationCard {
+            Layout.fillWidth: true
+            m: card.m
+            visible: card.expanded && !!(card.m.invitation || {}).uid
+            onShowEvent: (uid) => card.showEvent(uid)
+            onAskOpenLink: (link) => card.askOpenLink(link)
+        }
         StructuredCard {
             Layout.fillWidth: true
             m: card.m
-            visible: card.expanded && (card.m.structured || []).length > 0
+            visible: card.expanded && (card.m.structured || []).length > 0 && !(card.m.invitation || {}).uid
             onAskOpenLink: (link) => card.askOpenLink(link)
         }
 

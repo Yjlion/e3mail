@@ -19,7 +19,7 @@
         <translation>e3mail reste synchronisé</translation>
     </message>
     <message>
-        <source>New mail and other devices&apos; changes arrive while e3mail is in the background.</source>
+        <source>New mail and other devices' changes arrive while e3mail is in the background.</source>
         <translation>Le nouveau courrier et les modifications de vos autres appareils arrivent pendant que e3mail est en arrière-plan.</translation>
     </message>
     <message>
@@ -31,7 +31,7 @@
     <name>BackupController</name>
     <message>
         <source>The passphrase does not open the backups there.</source>
-        <translation>La phrase de passe n&apos;ouvre pas les sauvegardes qui s&apos;y trouvent.</translation>
+        <translation>La phrase de passe n'ouvre pas les sauvegardes qui s'y trouvent.</translation>
     </message>
     <message>
         <source>Google Drive, folder “%1”</source>
@@ -43,7 +43,7 @@
     </message>
     <message>
         <source>Use a passphrase of at least 12 characters, or a recovery code.</source>
-        <translation>Utilisez une phrase de passe d&apos;au moins 12 caractères, ou un code de récupération.</translation>
+        <translation>Utilisez une phrase de passe d'au moins 12 caractères, ou un code de récupération.</translation>
     </message>
 </context>
 <context>
@@ -54,7 +54,7 @@
     </message>
     <message>
         <source>A folder (a drive, or one another program syncs)</source>
-        <translation>Un dossier (un disque, ou un dossier qu&apos;un autre programme synchronise)</translation>
+        <translation>Un dossier (un disque, ou un dossier qu'un autre programme synchronise)</translation>
     </message>
     <message>
         <source>WebDAV (Nextcloud and others)</source>
@@ -110,11 +110,11 @@
     </message>
     <message>
         <source>Access key</source>
-        <translation>Clé d&apos;accès</translation>
+        <translation>Clé d'accès</translation>
     </message>
     <message>
         <source>User name</source>
-        <translation>Nom d&apos;utilisateur</translation>
+        <translation>Nom d'utilisateur</translation>
     </message>
     <message>
         <source>Secret key</source>
@@ -158,27 +158,243 @@
     </message>
     <message>
         <source>Everything is encrypted on this device with it before it leaves. Without it the backups cannot be opened, by anyone: write it down and keep it apart from this device.</source>
-        <translation>Tout est chiffré avec elle sur cet appareil avant de le quitter. Sans elle, personne ne peut ouvrir les sauvegardes : notez-la et gardez-la à l&apos;écart de cet appareil.</translation>
+        <translation>Tout est chiffré avec elle sur cet appareil avant de le quitter. Sans elle, personne ne peut ouvrir les sauvegardes : notez-la et gardez-la à l'écart de cet appareil.</translation>
     </message>
     <message>
         <source>A new device of the account is made from the newest backup there. It does not sync with your other devices until you pair it.</source>
-        <translation>Un nouvel appareil du compte est créé à partir de la sauvegarde la plus récente. Il ne se synchronise pas avec vos autres appareils tant que vous ne l&apos;associez pas.</translation>
+        <translation>Un nouvel appareil du compte est créé à partir de la sauvegarde la plus récente. Il ne se synchronise pas avec vos autres appareils tant que vous ne l'associez pas.</translation>
     </message>
     <message>
-        <source>The server&apos;s SSH host key has changed. Trust the new one only if the server&apos;s administrator says it changed:</source>
-        <translation>La clé d&apos;hôte SSH du serveur a changé. Ne faites confiance à la nouvelle que si l&apos;administrateur du serveur confirme ce changement :</translation>
+        <source>The server's SSH host key has changed. Trust the new one only if the server's administrator says it changed:</source>
+        <translation>La clé d'hôte SSH du serveur a changé. Ne faites confiance à la nouvelle que si l'administrateur du serveur confirme ce changement :</translation>
     </message>
     <message>
-        <source>The server&apos;s SSH host key is not known yet. Trust it only if it matches what the server&apos;s administrator gives you:</source>
-        <translation>La clé d&apos;hôte SSH du serveur n&apos;est pas encore connue. Ne lui faites confiance que si elle correspond à ce que vous donne l&apos;administrateur du serveur :</translation>
+        <source>The server's SSH host key is not known yet. Trust it only if it matches what the server's administrator gives you:</source>
+        <translation>La clé d'hôte SSH du serveur n'est pas encore connue. Ne lui faites confiance que si elle correspond à ce que vous donne l'administrateur du serveur :</translation>
     </message>
     <message>
-        <source>The server&apos;s certificate is not trusted. Trust it only if its fingerprint matches what the server&apos;s administrator gives you:</source>
-        <translation>Le certificat du serveur n&apos;est pas approuvé. Ne lui faites confiance que si son empreinte correspond à ce que vous donne l&apos;administrateur du serveur :</translation>
+        <source>The server's certificate is not trusted. Trust it only if its fingerprint matches what the server's administrator gives you:</source>
+        <translation>Le certificat du serveur n'est pas approuvé. Ne lui faites confiance que si son empreinte correspond à ce que vous donne l'administrateur du serveur :</translation>
     </message>
     <message>
         <source>Trust it</source>
         <translation>Faire confiance</translation>
+    </message>
+</context>
+<context>
+    <name>Calendar</name>
+    <message>
+        <source>Repeats (rule not understood: %1)</source>
+        <translation>Se répète (règle non comprise : %1)</translation>
+    </message>
+    <message>
+        <source>Every day</source>
+        <translation>Tous les jours</translation>
+    </message>
+    <message numerus="yes">
+        <source>Every %n days</source>
+        <translation>
+            <numerusform>Tous les %n jour</numerusform>
+            <numerusform>Tous les %n jours</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Every week</source>
+        <translation>Toutes les semaines</translation>
+    </message>
+    <message numerus="yes">
+        <source>Every %n weeks</source>
+        <translation>
+            <numerusform>Toutes les %n semaine</numerusform>
+            <numerusform>Toutes les %n semaines</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>%1 on %2</source>
+        <translation>%1 le %2</translation>
+    </message>
+    <message>
+        <source>Every month</source>
+        <translation>Tous les mois</translation>
+    </message>
+    <message numerus="yes">
+        <source>Every %n months</source>
+        <translation>
+            <numerusform>Tous les %n mois</numerusform>
+            <numerusform>Tous les %n mois</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Every year</source>
+        <translation>Tous les ans</translation>
+    </message>
+    <message numerus="yes">
+        <source>Every %n years</source>
+        <translation>
+            <numerusform>Tous les %n an</numerusform>
+            <numerusform>Tous les %n ans</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%1, %n time(s)</source>
+        <translation>
+            <numerusform>%1, %n fois</numerusform>
+            <numerusform>%1, %n fois</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>%1, until %2</source>
+        <translation>%1, jusqu’au %2</translation>
+    </message>
+    <message>
+        <source>%1 – %2</source>
+        <translation>%1 – %2</translation>
+    </message>
+    <message>
+        <source>%1, %2</source>
+        <translation>%1, %2</translation>
+    </message>
+    <message>
+        <source>%1, %2 – %3</source>
+        <translation>%1, %2 – %3</translation>
+    </message>
+    <message>
+        <source>%1 has accepted the invitation to “%2”.</source>
+        <translation>%1 a accepté l’invitation à « %2 ».</translation>
+    </message>
+    <message>
+        <source>%1 has tentatively accepted the invitation to “%2”.</source>
+        <translation>%1 a accepté provisoirement l’invitation à « %2 ».</translation>
+    </message>
+    <message>
+        <source>%1 has declined the invitation to “%2”.</source>
+        <translation>%1 a refusé l’invitation à « %2 ».</translation>
+    </message>
+    <message>
+        <source>%1 has not answered the invitation to “%2”.</source>
+        <translation>%1 n’a pas répondu à l’invitation à « %2 ».</translation>
+    </message>
+    <message>
+        <source>Accepted: %1</source>
+        <translation>Accepté : %1</translation>
+    </message>
+    <message>
+        <source>Tentative: %1</source>
+        <translation>Peut-être : %1</translation>
+    </message>
+    <message>
+        <source>Declined: %1</source>
+        <translation>Refusé : %1</translation>
+    </message>
+    <message>
+        <source>Cancelled: %1</source>
+        <translation>Annulé : %1</translation>
+    </message>
+    <message>
+        <source>%1 has cancelled “%2”.</source>
+        <translation>%1 a annulé « %2 ».</translation>
+    </message>
+    <message>
+        <source>Updated invitation: %1</source>
+        <translation>Invitation mise à jour : %1</translation>
+    </message>
+    <message>
+        <source>%1 has changed “%2”. Here are the new details.</source>
+        <translation>%1 a modifié « %2 ». Voici les nouveaux détails.</translation>
+    </message>
+    <message>
+        <source>Invitation: %1</source>
+        <translation>Invitation : %1</translation>
+    </message>
+    <message>
+        <source>%1 invites you to “%2”.</source>
+        <translation>%1 vous invite à « %2 ».</translation>
+    </message>
+    <message>
+        <source>When: %1</source>
+        <translation>Quand : %1</translation>
+    </message>
+    <message>
+        <source>Repeats: %1</source>
+        <translation>Répétition : %1</translation>
+    </message>
+    <message>
+        <source>Where: %1</source>
+        <translation>Où : %1</translation>
+    </message>
+    <message>
+        <source>Link: %1</source>
+        <translation>Lien : %1</translation>
+    </message>
+    <message>
+        <source>Who: %1</source>
+        <translation>Qui : %1</translation>
+    </message>
+    <message>
+        <source>This invitation cannot be answered.</source>
+        <translation>Impossible de répondre à cette invitation.</translation>
+    </message>
+    <message>
+        <source>A newer version of this invitation is in your calendar.</source>
+        <translation>Une version plus récente de cette invitation est dans votre calendrier.</translation>
+    </message>
+    <message>
+        <source>This invitation cannot be added.</source>
+        <translation>Impossible d’ajouter cette invitation.</translation>
+    </message>
+</context>
+<context>
+    <name>CalendarView</name>
+    <message>
+        <source>Previous month</source>
+        <translation>Mois précédent</translation>
+    </message>
+    <message>
+        <source>Next month</source>
+        <translation>Mois suivant</translation>
+    </message>
+    <message>
+        <source>Today</source>
+        <translation>Aujourd’hui</translation>
+    </message>
+    <message>
+        <source>New event</source>
+        <translation>Nouvel événement</translation>
+    </message>
+    <message numerus="yes">
+        <source>+%n more</source>
+        <translation>
+            <numerusform>+%n autre</numerusform>
+            <numerusform>+%n autres</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Coming up</source>
+        <translation>À venir</translation>
+    </message>
+    <message>
+        <source>Show what is coming</source>
+        <translation>Afficher ce qui vient</translation>
+    </message>
+    <message>
+        <source>Tentative</source>
+        <translation>Peut-être</translation>
+    </message>
+    <message>
+        <source>Not answered</source>
+        <translation>Sans réponse</translation>
+    </message>
+    <message>
+        <source>Repeats</source>
+        <translation>Répétition</translation>
+    </message>
+    <message>
+        <source>Nothing on this day.</source>
+        <translation>Rien ce jour-là.</translation>
+    </message>
+    <message>
+        <source>Nothing coming up. Invitations you accept and events you add appear here.</source>
+        <translation>Rien à venir. Les invitations acceptées et les événements ajoutés apparaissent ici.</translation>
     </message>
 </context>
 <context>
@@ -566,6 +782,260 @@ Objet : %3
     </message>
 </context>
 <context>
+    <name>DateField</name>
+    <message>
+        <source>Pick a date</source>
+        <translation>Choisir une date</translation>
+    </message>
+    <message>
+        <source>Previous month</source>
+        <translation>Mois précédent</translation>
+    </message>
+    <message>
+        <source>Next month</source>
+        <translation>Mois suivant</translation>
+    </message>
+</context>
+<context>
+    <name>EventDialog</name>
+    <message>
+        <source>Edit event</source>
+        <translation>Modifier l’événement</translation>
+    </message>
+    <message>
+        <source>New event</source>
+        <translation>Nouvel événement</translation>
+    </message>
+    <message>
+        <source>Title</source>
+        <translation>Titre</translation>
+    </message>
+    <message>
+        <source>All day</source>
+        <translation>Toute la journée</translation>
+    </message>
+    <message>
+        <source>Starts</source>
+        <translation>Début</translation>
+    </message>
+    <message>
+        <source>Ends</source>
+        <translation>Fin</translation>
+    </message>
+    <message>
+        <source>Times are in this device's time zone.</source>
+        <translation>Les heures sont dans le fuseau horaire de cet appareil.</translation>
+    </message>
+    <message>
+        <source>Repeats</source>
+        <translation>Répétition</translation>
+    </message>
+    <message>
+        <source>Never</source>
+        <translation>Jamais</translation>
+    </message>
+    <message>
+        <source>Every day</source>
+        <translation>Tous les jours</translation>
+    </message>
+    <message>
+        <source>Every week</source>
+        <translation>Toutes les semaines</translation>
+    </message>
+    <message>
+        <source>Every month</source>
+        <translation>Tous les mois</translation>
+    </message>
+    <message>
+        <source>Every year</source>
+        <translation>Tous les ans</translation>
+    </message>
+    <message>
+        <source>As received</source>
+        <translation>Tel que reçu</translation>
+    </message>
+    <message>
+        <source>every</source>
+        <translation>tous les</translation>
+    </message>
+    <message>
+        <source>day(s)</source>
+        <translation>jour(s)</translation>
+    </message>
+    <message>
+        <source>week(s)</source>
+        <translation>semaine(s)</translation>
+    </message>
+    <message>
+        <source>month(s)</source>
+        <translation>mois</translation>
+    </message>
+    <message>
+        <source>year(s)</source>
+        <translation>an(s)</translation>
+    </message>
+    <message>
+        <source>This rule came with the invitation and is kept as it is: %1</source>
+        <translation>Cette règle est venue avec l’invitation et reste telle quelle : %1</translation>
+    </message>
+    <message>
+        <source>After</source>
+        <translation>Après</translation>
+    </message>
+    <message>
+        <source>On</source>
+        <translation>Le</translation>
+    </message>
+    <message>
+        <source>time(s)</source>
+        <translation>fois</translation>
+    </message>
+    <message>
+        <source>Where</source>
+        <translation>Où</translation>
+    </message>
+    <message>
+        <source>Link</source>
+        <translation>Lien</translation>
+    </message>
+    <message>
+        <source>Attendees</source>
+        <translation>Participants</translation>
+    </message>
+    <message>
+        <source>Names or addresses, separated by commas</source>
+        <translation>Noms ou adresses, séparés par des virgules</translation>
+    </message>
+    <message>
+        <source>Attendees get an invitation by email, and an update when the meeting changes.</source>
+        <translation>Les participants reçoivent une invitation par e-mail, et une mise à jour quand la réunion change.</translation>
+    </message>
+    <message>
+        <source>The invitation will be encrypted: every attendee has a key.</source>
+        <translation>L’invitation sera chiffrée : chaque participant a une clé.</translation>
+    </message>
+    <message>
+        <source>The invitation goes unencrypted: no key yet for %1.</source>
+        <translation>L’invitation part non chiffrée : pas encore de clé pour %1.</translation>
+    </message>
+    <message>
+        <source>The invitation goes unencrypted.</source>
+        <translation>L’invitation part non chiffrée.</translation>
+    </message>
+    <message>
+        <source>Reminder</source>
+        <translation>Rappel</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Aucun</translation>
+    </message>
+    <message>
+        <source>At the start</source>
+        <translation>Au début</translation>
+    </message>
+    <message>
+        <source>5 minutes before</source>
+        <translation>5 minutes avant</translation>
+    </message>
+    <message>
+        <source>10 minutes before</source>
+        <translation>10 minutes avant</translation>
+    </message>
+    <message>
+        <source>15 minutes before</source>
+        <translation>15 minutes avant</translation>
+    </message>
+    <message>
+        <source>30 minutes before</source>
+        <translation>30 minutes avant</translation>
+    </message>
+    <message>
+        <source>1 hour before</source>
+        <translation>1 heure avant</translation>
+    </message>
+    <message>
+        <source>2 hours before</source>
+        <translation>2 heures avant</translation>
+    </message>
+    <message>
+        <source>1 day before</source>
+        <translation>1 jour avant</translation>
+    </message>
+    <message>
+        <source>Details</source>
+        <translation>Détails</translation>
+    </message>
+    <message>
+        <source>%1 organizes this meeting; only the reminder is yours to change here. Answer from the invitation in your mail.</source>
+        <translation>%1 organise cette réunion ; seul le rappel peut être changé ici. Répondez depuis l’invitation dans votre courrier.</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>Enregistrer</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Annuler</translation>
+    </message>
+    <message>
+        <source>Cancel meeting…</source>
+        <translation>Annuler la réunion…</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Retirer</translation>
+    </message>
+    <message>
+        <source>Export…</source>
+        <translation>Exporter…</translation>
+    </message>
+    <message>
+        <source>Send the update?</source>
+        <translation>Envoyer la mise à jour ?</translation>
+    </message>
+    <message>
+        <source>Send the invitation?</source>
+        <translation>Envoyer l’invitation ?</translation>
+    </message>
+    <message>
+        <source>The attendees get an updated invitation by email and are asked to answer again.</source>
+        <translation>Les participants reçoivent une invitation mise à jour par e-mail et sont invités à répondre de nouveau.</translation>
+    </message>
+    <message>
+        <source>The attendees get an invitation by email.</source>
+        <translation>Les participants reçoivent une invitation par e-mail.</translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation>Envoyer</translation>
+    </message>
+    <message>
+        <source>Save only</source>
+        <translation>Enregistrer seulement</translation>
+    </message>
+    <message>
+        <source>Back</source>
+        <translation>Retour</translation>
+    </message>
+    <message>
+        <source>Cancel the meeting?</source>
+        <translation>Annuler la réunion ?</translation>
+    </message>
+    <message>
+        <source>The attendees are told by email that it is cancelled.</source>
+        <translation>Les participants apprennent par e-mail qu’elle est annulée.</translation>
+    </message>
+    <message>
+        <source>Cancel meeting</source>
+        <translation>Annuler la réunion</translation>
+    </message>
+    <message>
+        <source>Calendar files (*.ics)</source>
+        <translation>Fichiers de calendrier (*.ics)</translation>
+    </message>
+</context>
+<context>
     <name>FirstRunDialog</name>
     <message>
         <source>Before you start</source>
@@ -611,6 +1081,125 @@ Objet : %3
     </message>
 </context>
 <context>
+    <name>InvitationCard</name>
+    <message>
+        <source>Accepted</source>
+        <translation>Accepté</translation>
+    </message>
+    <message>
+        <source>Tentative</source>
+        <translation>Peut-être</translation>
+    </message>
+    <message>
+        <source>Declined</source>
+        <translation>Refusé</translation>
+    </message>
+    <message>
+        <source>Not answered</source>
+        <translation>Sans réponse</translation>
+    </message>
+    <message>
+        <source>Cancelled: %1</source>
+        <translation>Annulé : %1</translation>
+    </message>
+    <message>
+        <source>%1 accepted.</source>
+        <translation>%1 a accepté.</translation>
+    </message>
+    <message>
+        <source>%1 declined.</source>
+        <translation>%1 a refusé.</translation>
+    </message>
+    <message>
+        <source>%1 might come.</source>
+        <translation>%1 viendra peut-être.</translation>
+    </message>
+    <message>
+        <source>%1 answered.</source>
+        <translation>%1 a répondu.</translation>
+    </message>
+    <message>
+        <source>This meeting was cancelled; your calendar is updated.</source>
+        <translation>Cette réunion a été annulée ; votre calendrier est à jour.</translation>
+    </message>
+    <message>
+        <source>This meeting was cancelled.</source>
+        <translation>Cette réunion a été annulée.</translation>
+    </message>
+    <message>
+        <source>Your invitation.</source>
+        <translation>Votre invitation.</translation>
+    </message>
+    <message>
+        <source>A newer version of this invitation is in your calendar.</source>
+        <translation>Une version plus récente de cette invitation est dans votre calendrier.</translation>
+    </message>
+    <message>
+        <source>This meeting has since been cancelled.</source>
+        <translation>Cette réunion a été annulée depuis.</translation>
+    </message>
+    <message>
+        <source>In your calendar: %1.</source>
+        <translation>Dans votre calendrier : %1.</translation>
+    </message>
+    <message>
+        <source>%1 invites you.</source>
+        <translation>%1 vous invite.</translation>
+    </message>
+    <message>
+        <source>When</source>
+        <translation>Quand</translation>
+    </message>
+    <message>
+        <source>Repeats</source>
+        <translation>Répétition</translation>
+    </message>
+    <message>
+        <source>Where</source>
+        <translation>Où</translation>
+    </message>
+    <message>
+        <source>Organizer</source>
+        <translation>Organisateur</translation>
+    </message>
+    <message>
+        <source>Who</source>
+        <translation>Qui</translation>
+    </message>
+    <message>
+        <source>Details</source>
+        <translation>Détails</translation>
+    </message>
+    <message>
+        <source>Accept</source>
+        <translation>Accepter</translation>
+    </message>
+    <message>
+        <source>Decline</source>
+        <translation>Refuser</translation>
+    </message>
+    <message>
+        <source>Add to calendar</source>
+        <translation>Ajouter au calendrier</translation>
+    </message>
+    <message>
+        <source>Show in calendar</source>
+        <translation>Voir dans le calendrier</translation>
+    </message>
+    <message>
+        <source>Open link…</source>
+        <translation>Ouvrir le lien…</translation>
+    </message>
+    <message>
+        <source>Answers can be sent to senders you trust; accept this sender first. Check these details against the message.</source>
+        <translation>Les réponses ne vont qu’aux expéditeurs de confiance ; acceptez d’abord cet expéditeur. Vérifiez ces détails avec le message.</translation>
+    </message>
+    <message>
+        <source>This message was not sent by the meeting's organizer, so it cannot be answered from here. Check these details against the message.</source>
+        <translation>Ce message n’a pas été envoyé par l’organisateur de la réunion ; on ne peut donc pas y répondre d’ici. Vérifiez ces détails avec le message.</translation>
+    </message>
+</context>
+<context>
     <name>JoinDialog</name>
     <message>
         <source>Copy an account from another device</source>
@@ -618,11 +1207,11 @@ Objet : %3
     </message>
     <message>
         <source>On the device that has the account, open Settings, Devices, “Pair a new device”, and scan the QR code it shows, or enter its code here.</source>
-        <translation>Sur l&apos;appareil qui a le compte, ouvrez Réglages, Appareils, « Associer un nouvel appareil », et scannez le code QR affiché, ou saisissez ici son code.</translation>
+        <translation>Sur l'appareil qui a le compte, ouvrez Réglages, Appareils, « Associer un nouvel appareil », et scannez le code QR affiché, ou saisissez ici son code.</translation>
     </message>
     <message>
         <source>On the device that has the account, open Settings, Devices, “Pair a new device”, and enter the code it shows here.</source>
-        <translation>Sur l&apos;appareil qui a le compte, ouvrez Réglages, Appareils, « Associer un nouvel appareil », et saisissez ici le code affiché.</translation>
+        <translation>Sur l'appareil qui a le compte, ouvrez Réglages, Appareils, « Associer un nouvel appareil », et saisissez ici le code affiché.</translation>
     </message>
     <message>
         <source>Code</source>
@@ -638,7 +1227,7 @@ Objet : %3
     </message>
     <message>
         <source>This is not a pairing code.</source>
-        <translation>Ce n&apos;est pas un code d&apos;association.</translation>
+        <translation>Ce n'est pas un code d'association.</translation>
     </message>
     <message>
         <source>This device’s name</source>
@@ -646,7 +1235,7 @@ Objet : %3
     </message>
     <message>
         <source>Waiting for the other device to allow it…</source>
-        <translation>En attente de l&apos;accord de l&apos;autre appareil…</translation>
+        <translation>En attente de l'accord de l'autre appareil…</translation>
     </message>
     <message>
         <source>Copy the account</source>
@@ -689,6 +1278,18 @@ Objet : %3
 </context>
 <context>
     <name>MailApp</name>
+    <message>
+        <source>Today</source>
+        <translation>Aujourd’hui</translation>
+    </message>
+    <message>
+        <source>Event</source>
+        <translation>Événement</translation>
+    </message>
+    <message>
+        <source>%1 · %2</source>
+        <translation>%1 · %2</translation>
+    </message>
     <message>
         <source>Unnamed device</source>
         <translation>Appareil sans nom</translation>
@@ -753,8 +1354,56 @@ Objet : %3
         <translation>Impossible d’enregistrer la pièce jointe.</translation>
     </message>
     <message>
+        <source>Could not add the event.</source>
+        <translation>Impossible d’ajouter l’événement.</translation>
+    </message>
+    <message>
+        <source>Added to the calendar.</source>
+        <translation>Ajouté au calendrier.</translation>
+    </message>
+    <message>
+        <source>(No title)</source>
+        <translation>(Sans titre)</translation>
+    </message>
+    <message>
+        <source>All day</source>
+        <translation>Toute la journée</translation>
+    </message>
+    <message>
+        <source>Give the event a title.</source>
+        <translation>Donnez un titre à l’événement.</translation>
+    </message>
+    <message>
+        <source>The start is not a date and time.</source>
+        <translation>Le début n’est pas une date et une heure.</translation>
+    </message>
+    <message>
+        <source>Saved, but the invitation was not sent: %1</source>
+        <translation>Enregistré, mais l’invitation n’a pas été envoyée : %1</translation>
+    </message>
+    <message>
+        <source>Invitation sent.</source>
+        <translation>Invitation envoyée.</translation>
+    </message>
+    <message>
+        <source>Cancelled, but the attendees were not told: %1</source>
+        <translation>Annulé, mais les participants n’ont pas été prévenus : %1</translation>
+    </message>
+    <message>
+        <source>Saved in your calendar, but the answer was not sent: %1</source>
+        <translation>Enregistré dans votre calendrier, mais la réponse n’a pas été envoyée : %1</translation>
+    </message>
+    <message>
+        <source>Answer sent.</source>
+        <translation>Réponse envoyée.</translation>
+    </message>
+    <message>
         <source>Could not save the event.</source>
         <translation>Impossible d’enregistrer l’événement.</translation>
+    </message>
+    <message>
+        <source>event</source>
+        <translation>événement</translation>
     </message>
     <message>
         <source>This message cannot be decrypted, or its original is no longer kept.</source>
@@ -765,7 +1414,7 @@ Objet : %3
         <translation>L’original de ce message n’est plus conservé.</translation>
     </message>
     <message>
-        <source>This is not a contact&apos;s code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
+        <source>This is not a contact's code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
         <translation>Ce n’est pas le code d’un contact. Un code de vérification commence par OPENPGP4FPR: ou https://i.delta.chat/.</translation>
     </message>
     <message numerus="yes">
@@ -1109,7 +1758,7 @@ Objet : %3
     <name>PairDialog</name>
     <message>
         <source>This device could not start its connection to other devices.</source>
-        <translation>Cet appareil n&apos;a pas pu ouvrir sa connexion aux autres appareils.</translation>
+        <translation>Cet appareil n'a pas pu ouvrir sa connexion aux autres appareils.</translation>
     </message>
     <message>
         <source>Pair a new device</source>
@@ -1121,7 +1770,7 @@ Objet : %3
     </message>
     <message>
         <source>Pairing code as a QR code</source>
-        <translation>Code d&apos;association en QR code</translation>
+        <translation>Code d'association en QR code</translation>
     </message>
     <message>
         <source>Copy</source>
@@ -1133,7 +1782,7 @@ Objet : %3
     </message>
     <message>
         <source>Allow it only if you are setting up that device yourself, now.</source>
-        <translation>N&apos;acceptez que si vous configurez vous-même cet appareil, maintenant.</translation>
+        <translation>N'acceptez que si vous configurez vous-même cet appareil, maintenant.</translation>
     </message>
     <message>
         <source>Allow</source>
@@ -1145,7 +1794,7 @@ Objet : %3
     </message>
     <message>
         <source>Sending a copy to “%1”…</source>
-        <translation>Envoi d&apos;une copie à « %1 »…</translation>
+        <translation>Envoi d'une copie à « %1 »…</translation>
     </message>
     <message>
         <source>“%1” is now a device of this account.</source>
@@ -1319,32 +1968,9 @@ Objet : %3
     </message>
 </context>
 <context>
-    <name>ScanView</name>
-    <message>
-        <source>This device has no camera. Type the code instead.</source>
-        <translation>Cet appareil n&apos;a pas de caméra. Saisissez plutôt le code.</translation>
-    </message>
-    <message>
-        <source>e3mail may not use the camera. Allow it in the system settings, or type the code instead.</source>
-        <translation>e3mail n&apos;a pas le droit d&apos;utiliser la caméra. Autorisez-le dans les réglages du système, ou saisissez plutôt le code.</translation>
-    </message>
-    <message>
-        <source>Asking for the camera…</source>
-        <translation>Demande d&apos;accès à la caméra…</translation>
-    </message>
-    <message>
-        <source>Point the camera at the QR code on the other device.</source>
-        <translation>Dirigez la caméra vers le code QR de l&apos;autre appareil.</translation>
-    </message>
-    <message>
-        <source>Type the code instead</source>
-        <translation>Saisir plutôt le code</translation>
-    </message>
-</context>
-<context>
     <name>SecureJoin</name>
     <message>
-        <source>This is your own code. Scan the other person&apos;s code instead.</source>
+        <source>This is your own code. Scan the other person's code instead.</source>
         <translation>C’est votre propre code. Scannez plutôt celui de l’autre personne.</translation>
     </message>
     <message>
@@ -1387,7 +2013,7 @@ Objet : %3
         <translation>Afficher l’expéditeur et l’objet</translation>
     </message>
     <message>
-        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system&apos;s notification history, outside e3mail&apos;s encryption.</source>
+        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system's notification history, outside e3mail's encryption.</source>
         <translation>Pour cet appareil, quand e3mail est ouvert mais pas au premier plan. Un objet affiché ici reste dans l’historique des notifications du système, hors du chiffrement d’e3mail.</translation>
     </message>
     <message>
@@ -1399,8 +2025,8 @@ Objet : %3
         <translation>Continuer à synchroniser en arrière-plan</translation>
     </message>
     <message>
-        <source>Mail and your other devices&apos; changes keep arriving while e3mail is not in front. Android shows a notification for as long as this is on, and it uses more battery. Swiping e3mail away from the recent apps ends it.</source>
-        <translation>Le courrier et les modifications de vos autres appareils continuent d&apos;arriver quand e3mail n&apos;est pas au premier plan. Android affiche une notification tant que c&apos;est activé, et cela consomme plus de batterie. Balayer e3mail hors des applications récentes y met fin.</translation>
+        <source>Mail and your other devices' changes keep arriving while e3mail is not in front. Android shows a notification for as long as this is on, and it uses more battery. Swiping e3mail away from the recent apps ends it.</source>
+        <translation>Le courrier et les modifications de vos autres appareils continuent d'arriver quand e3mail n'est pas au premier plan. Android affiche une notification tant que c'est activé, et cela consomme plus de batterie. Balayer e3mail hors des applications récentes y met fin.</translation>
     </message>
     <message>
         <source>You</source>
@@ -1439,8 +2065,8 @@ Objet : %3
         <translation>Ajouter une signature…</translation>
     </message>
     <message>
-        <source>The chosen one goes into new mail. The composer&apos;s signature button swaps it for another.</source>
-        <translation>La signature choisie est ajoutée aux nouveaux messages. Le bouton de signature de l&apos;éditeur la remplace par une autre.</translation>
+        <source>The chosen one goes into new mail. The composer's signature button swaps it for another.</source>
+        <translation>La signature choisie est ajoutée aux nouveaux messages. Le bouton de signature de l'éditeur la remplace par une autre.</translation>
     </message>
     <message>
         <source>Encryption</source>
@@ -1495,6 +2121,50 @@ Objet : %3
         <translation>Un accusé part une fois, à la première ouverture du message, sur n’importe quel appareil. Les inconnus et les personnes en qui vous n’avez pas confiance n’en reçoivent jamais.</translation>
     </message>
     <message>
+        <source>Calendar</source>
+        <translation>Calendrier</translation>
+    </message>
+    <message>
+        <source>Remind me before an event</source>
+        <translation>Me rappeler avant un événement</translation>
+    </message>
+    <message>
+        <source>Never</source>
+        <translation>Jamais</translation>
+    </message>
+    <message>
+        <source>At the start</source>
+        <translation>Au début</translation>
+    </message>
+    <message>
+        <source>5 minutes before</source>
+        <translation>5 minutes avant</translation>
+    </message>
+    <message>
+        <source>10 minutes before</source>
+        <translation>10 minutes avant</translation>
+    </message>
+    <message>
+        <source>15 minutes before</source>
+        <translation>15 minutes avant</translation>
+    </message>
+    <message>
+        <source>30 minutes before</source>
+        <translation>30 minutes avant</translation>
+    </message>
+    <message>
+        <source>1 hour before</source>
+        <translation>1 heure avant</translation>
+    </message>
+    <message>
+        <source>1 day before</source>
+        <translation>1 jour avant</translation>
+    </message>
+    <message>
+        <source>For events you add and invitations you accept; each event can differ. Reminders show only while e3mail runs. The calendar lives on your devices and is arranged by email; nothing is shared with a calendar server.</source>
+        <translation>Pour les événements ajoutés et les invitations acceptées ; chaque événement peut différer. Les rappels n’apparaissent que pendant qu’e3mail tourne. Le calendrier vit sur vos appareils et s’organise par e-mail ; rien n’est partagé avec un serveur de calendrier.</translation>
+    </message>
+    <message>
         <source>Trash</source>
         <translation>Corbeille</translation>
     </message>
@@ -1535,7 +2205,7 @@ Objet : %3
         <translation>jours</translation>
     </message>
     <message>
-        <source>Mail that was on the server before e3mail first connected is never removed. &quot;Never&quot; lets another mail program keep using this mailbox.</source>
+        <source>Mail that was on the server before e3mail first connected is never removed. "Never" lets another mail program keep using this mailbox.</source>
         <translation>Le courrier présent sur le serveur avant la première connexion d’e3mail n’est jamais supprimé. « Jamais » permet à un autre logiciel de messagerie de continuer à utiliser cette boîte.</translation>
     </message>
     <message>
@@ -1547,16 +2217,16 @@ Objet : %3
         <translation>secondes</translation>
     </message>
     <message>
-        <source>The sending server&apos;s certificate is not trusted, or is not the one trusted before.</source>
-        <translation>Le certificat du serveur d&apos;envoi n&apos;est pas reconnu, ou n&apos;est pas celui approuvé auparavant.</translation>
+        <source>The sending server's certificate is not trusted, or is not the one trusted before.</source>
+        <translation>Le certificat du serveur d'envoi n'est pas reconnu, ou n'est pas celui approuvé auparavant.</translation>
     </message>
     <message>
-        <source>The incoming server&apos;s certificate is not trusted, or is not the one trusted before.</source>
-        <translation>Le certificat du serveur de réception n&apos;est pas reconnu, ou n&apos;est pas celui approuvé auparavant.</translation>
+        <source>The incoming server's certificate is not trusted, or is not the one trusted before.</source>
+        <translation>Le certificat du serveur de réception n'est pas reconnu, ou n'est pas celui approuvé auparavant.</translation>
     </message>
     <message>
-        <source>Trust it only if this SHA-256 fingerprint matches the one your server&apos;s administrator gave you.</source>
-        <translation>Ne l&apos;approuvez que si cette empreinte SHA-256 correspond à celle fournie par l&apos;administrateur de votre serveur.</translation>
+        <source>Trust it only if this SHA-256 fingerprint matches the one your server's administrator gave you.</source>
+        <translation>Ne l'approuvez que si cette empreinte SHA-256 correspond à celle fournie par l'administrateur de votre serveur.</translation>
     </message>
     <message>
         <source>Trust this certificate</source>
@@ -1564,7 +2234,7 @@ Objet : %3
     </message>
     <message>
         <source>Sending server: trusted certificate %1</source>
-        <translation>Serveur d&apos;envoi : certificat approuvé %1</translation>
+        <translation>Serveur d'envoi : certificat approuvé %1</translation>
     </message>
     <message>
         <source>Incoming server: trusted certificate %1</source>
@@ -1619,7 +2289,7 @@ Objet : %3
         <translation>Originaux</translation>
     </message>
     <message>
-        <source>Keep each message&apos;s original for</source>
+        <source>Keep each message's original for</source>
         <translation>Garder l’original de chaque message pendant</translation>
     </message>
     <message>
@@ -1648,11 +2318,11 @@ Objet : %3
     </message>
     <message>
         <source>This build of e3mail cannot sync with other devices.</source>
-        <translation>Cette version d&apos;e3mail ne peut pas se synchroniser avec d&apos;autres appareils.</translation>
+        <translation>Cette version d'e3mail ne peut pas se synchroniser avec d'autres appareils.</translation>
     </message>
     <message>
         <source>“%1” removed this device from the account, so they no longer sync. Mail still arrives here from the server.</source>
-        <translation>« %1 » a retiré cet appareil du compte : ils ne se synchronisent plus. Le courrier continue d&apos;arriver ici depuis le serveur.</translation>
+        <translation>« %1 » a retiré cet appareil du compte : ils ne se synchronisent plus. Le courrier continue d'arriver ici depuis le serveur.</translation>
     </message>
     <message>
         <source>OK</source>
@@ -1687,7 +2357,7 @@ Objet : %3
         <translation>Relais</translation>
     </message>
     <message>
-        <source>n0&apos;s public relays</source>
+        <source>n0's public relays</source>
         <translation>Relais publics de n0</translation>
     </message>
     <message>
@@ -1708,7 +2378,7 @@ Objet : %3
     </message>
     <message>
         <source>Encrypted, to %1, once a day while e3mail runs.</source>
-        <translation>Chiffrées, vers %1, une fois par jour tant qu&apos;e3mail fonctionne.</translation>
+        <translation>Chiffrées, vers %1, une fois par jour tant qu'e3mail fonctionne.</translation>
     </message>
     <message>
         <source>Backing up…</source>
@@ -1736,7 +2406,7 @@ Objet : %3
     </message>
     <message>
         <source>Back this mailbox up, encrypted, to a place of your choice. The place sees only encrypted data and its size.</source>
-        <translation>Sauvegardez cette boîte, chiffrée, à l&apos;endroit de votre choix. Cet endroit ne voit que des données chiffrées et leur taille.</translation>
+        <translation>Sauvegardez cette boîte, chiffrée, à l'endroit de votre choix. Cet endroit ne voit que des données chiffrées et leur taille.</translation>
     </message>
     <message>
         <source>Setting up…</source>
@@ -1819,8 +2489,8 @@ Objet : %3
         <translation>Retirer %1 ?</translation>
     </message>
     <message>
-        <source>It stops syncing with this account&apos;s other devices. What is already on it stays there.</source>
-        <translation>Il cesse de se synchroniser avec les autres appareils de ce compte. Ce qui s&apos;y trouve déjà y reste.</translation>
+        <source>It stops syncing with this account's other devices. What is already on it stays there.</source>
+        <translation>Il cesse de se synchroniser avec les autres appareils de ce compte. Ce qui s'y trouve déjà y reste.</translation>
     </message>
     <message>
         <source>Every message, contact and key of this mailbox is deleted from this device.</source>
@@ -1834,15 +2504,15 @@ Objet : %3
         <translation>Réglages du serveur fournis par votre fournisseur.</translation>
     </message>
     <message>
-        <source>Server settings from Thunderbird&apos;s provider database.</source>
+        <source>Server settings from Thunderbird's provider database.</source>
         <translation>Réglages du serveur issus de la base de fournisseurs de Thunderbird.</translation>
     </message>
     <message>
-        <source>Server settings of the service that receives your domain&apos;s mail. Check them before connecting.</source>
+        <source>Server settings of the service that receives your domain's mail. Check them before connecting.</source>
         <translation>Réglages du serveur du service qui reçoit le courrier de votre domaine. Vérifiez-les avant de vous connecter.</translation>
     </message>
     <message>
-        <source>Server settings from your provider&apos;s Autodiscover service.</source>
+        <source>Server settings from your provider's Autodiscover service.</source>
         <translation>Réglages du serveur issus du service Autodiscover de votre fournisseur.</translation>
     </message>
     <message>
@@ -1855,7 +2525,7 @@ Objet : %3
     </message>
     <message>
         <source>You signed in as %1, not as %2. Sign in with the account of the address you are adding.</source>
-        <translation>Vous vous êtes connecté en tant que %1, et non %2. Connectez-vous avec le compte de l&apos;adresse que vous ajoutez.</translation>
+        <translation>Vous vous êtes connecté en tant que %1, et non %2. Connectez-vous avec le compte de l'adresse que vous ajoutez.</translation>
     </message>
     <message>
         <source>Enter your email address and password.</source>
@@ -1886,7 +2556,7 @@ Objet : %3
     </message>
     <message>
         <source>Opens %1 in your browser. e3mail never sees your password there. Or use an app password below.</source>
-        <translation>Ouvre %1 dans votre navigateur. e3mail n&apos;y voit jamais votre mot de passe. Ou utilisez un mot de passe d&apos;application ci-dessous.</translation>
+        <translation>Ouvre %1 dans votre navigateur. e3mail n'y voit jamais votre mot de passe. Ou utilisez un mot de passe d'application ci-dessous.</translation>
     </message>
     <message>
         <source>Password</source>
@@ -1894,7 +2564,7 @@ Objet : %3
     </message>
     <message>
         <source>App password</source>
-        <translation>Mot de passe d&apos;application</translation>
+        <translation>Mot de passe d'application</translation>
     </message>
     <message>
         <source>Your name (optional)</source>
@@ -1934,15 +2604,15 @@ Objet : %3
     </message>
     <message>
         <source>The certificate of %1 is not the one you trusted before.</source>
-        <translation>Le certificat de %1 n&apos;est pas celui que vous aviez approuvé.</translation>
+        <translation>Le certificat de %1 n'est pas celui que vous aviez approuvé.</translation>
     </message>
     <message>
         <source>The certificate of %1 (sending) is not trusted.</source>
-        <translation>Le certificat de %1 (envoi) n&apos;est pas reconnu.</translation>
+        <translation>Le certificat de %1 (envoi) n'est pas reconnu.</translation>
     </message>
     <message>
         <source>The certificate of %1 is not trusted.</source>
-        <translation>Le certificat de %1 n&apos;est pas reconnu.</translation>
+        <translation>Le certificat de %1 n'est pas reconnu.</translation>
     </message>
     <message>
         <source>SHA-256 fingerprint</source>
@@ -1950,11 +2620,11 @@ Objet : %3
     </message>
     <message>
         <source>Issued to %1 by %2, valid until %3.</source>
-        <translation>Délivré à %1 par %2, valable jusqu&apos;au %3.</translation>
+        <translation>Délivré à %1 par %2, valable jusqu'au %3.</translation>
     </message>
     <message>
-        <source>Trust it only if this fingerprint matches the one your server&apos;s administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
-        <translation>Ne l&apos;approuvez que si cette empreinte correspond à celle fournie par l&apos;administrateur de votre serveur. e3mail acceptera alors ce certificat de ce serveur, et aucun autre.</translation>
+        <source>Trust it only if this fingerprint matches the one your server's administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
+        <translation>Ne l'approuvez que si cette empreinte correspond à celle fournie par l'administrateur de votre serveur. e3mail acceptera alors ce certificat de ce serveur, et aucun autre.</translation>
     </message>
     <message>
         <source>Trust this certificate</source>
@@ -2002,6 +2672,10 @@ Objet : %3
     <message>
         <source>Inbox</source>
         <translation>Réception</translation>
+    </message>
+    <message>
+        <source>Calendar</source>
+        <translation>Calendrier</translation>
     </message>
     <message>
         <source>Unverified</source>
@@ -2086,7 +2760,7 @@ Objet : %3
         <translation>La connexion a pris trop de temps. Réessayez.</translation>
     </message>
     <message>
-        <source>Cannot listen for the browser&apos;s answer on this device.</source>
+        <source>Cannot listen for the browser's answer on this device.</source>
         <translation>Impossible de recevoir la réponse du navigateur sur cet appareil.</translation>
     </message>
     <message>
@@ -2095,7 +2769,7 @@ Objet : %3
     </message>
     <message>
         <source>%1 did not allow e3mail to stay signed in.</source>
-        <translation>%1 n&apos;a pas permis à e3mail de rester connecté.</translation>
+        <translation>%1 n'a pas permis à e3mail de rester connecté.</translation>
     </message>
     <message>
         <source>%1 refused the sign-in.</source>
@@ -2276,8 +2950,8 @@ Objet : %3
 <context>
     <name>StructuredCard</name>
     <message>
-        <source>Add to calendar…</source>
-        <translation>Ajouter au calendrier…</translation>
+        <source>Add to calendar</source>
+        <translation>Ajouter au calendrier</translation>
     </message>
     <message>
         <source>Open…</source>
@@ -2286,10 +2960,6 @@ Objet : %3
     <message>
         <source>Shown as text only. Buttons appear for senders you trust whose mail is signed by their key; check these details against the message.</source>
         <translation>Affiché en texte seulement. Les boutons apparaissent pour les expéditeurs de confiance dont le courrier est signé par leur clé ; vérifiez ces informations dans le message.</translation>
-    </message>
-    <message>
-        <source>Calendar files (*.ics)</source>
-        <translation>Fichiers de calendrier (*.ics)</translation>
     </message>
 </context>
 <context>
@@ -2385,27 +3055,27 @@ Objet : %3
     <name>e3::PairingJoin</name>
     <message>
         <source>The code could not be read.</source>
-        <translation>Le code n&apos;a pas pu être lu.</translation>
+        <translation>Le code n'a pas pu être lu.</translation>
     </message>
     <message>
         <source>The connection to the other device was lost: %1</source>
-        <translation>La connexion à l&apos;autre appareil a été perdue : %1</translation>
+        <translation>La connexion à l'autre appareil a été perdue : %1</translation>
     </message>
     <message>
         <source>The other device did not allow it.</source>
-        <translation>L&apos;autre appareil ne l&apos;a pas accepté.</translation>
+        <translation>L'autre appareil ne l'a pas accepté.</translation>
     </message>
     <message>
         <source>The other device offered a different account.</source>
-        <translation>L&apos;autre appareil a proposé un autre compte.</translation>
+        <translation>L'autre appareil a proposé un autre compte.</translation>
     </message>
     <message>
         <source>Cannot write here.</source>
-        <translation>Impossible d&apos;écrire ici.</translation>
+        <translation>Impossible d'écrire ici.</translation>
     </message>
     <message>
         <source>The other device sent something unexpected.</source>
-        <translation>L&apos;autre appareil a envoyé quelque chose d&apos;inattendu.</translation>
+        <translation>L'autre appareil a envoyé quelque chose d'inattendu.</translation>
     </message>
     <message>
         <source>A file arrived damaged.</source>
@@ -2424,7 +3094,7 @@ Objet : %3
     </message>
     <message>
         <source>The other device went away.</source>
-        <translation>L&apos;autre appareil est parti.</translation>
+        <translation>L'autre appareil est parti.</translation>
     </message>
     <message>
         <source>Another device</source>
@@ -2432,11 +3102,11 @@ Objet : %3
     </message>
     <message>
         <source>Pairing was refused on this device.</source>
-        <translation>L&apos;association a été refusée sur cet appareil.</translation>
+        <translation>L'association a été refusée sur cet appareil.</translation>
     </message>
     <message>
         <source>A file asked for is not here.</source>
-        <translation>Un fichier demandé n&apos;est pas ici.</translation>
+        <translation>Un fichier demandé n'est pas ici.</translation>
     </message>
     <message>
         <source>A file here is damaged; the copy was stopped.</source>
@@ -2444,7 +3114,7 @@ Objet : %3
     </message>
     <message>
         <source>The copy of the mailbox could not be read.</source>
-        <translation>La copie de la boîte n&apos;a pas pu être lue.</translation>
+        <translation>La copie de la boîte n'a pas pu être lue.</translation>
     </message>
 </context>
 </TS>

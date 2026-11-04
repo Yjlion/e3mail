@@ -17,6 +17,7 @@ Rectangle {
     // What a page is called, for the narrow layout's title bar.
     function title(p) {
         if (p === "contacts") return qsTr("Contacts")
+        if (p === "calendar") return qsTr("Calendar")
         if (p === "settings") return qsTr("Settings")
         if (p === "setup") return qsTr("Add a mailbox…")
         for (let i = 0; i < MailApp.labels.length; ++i)
@@ -153,6 +154,10 @@ Rectangle {
             }
 
             SectionLabel { text: qsTr("Account") }
+            NavItem {
+                text: qsTr("Calendar"); active: page === "calendar"
+                onClicked: sidebar.navigate("calendar")
+            }
             NavItem {
                 text: qsTr("Contacts"); active: page === "contacts"
                 onClicked: sidebar.navigate("contacts")

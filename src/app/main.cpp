@@ -152,6 +152,10 @@ int main(int argc, char *argv[])
             QMetaObject::invokeMethod(root, "openMenu");
         else if (p.value(page) == QLatin1String("source")) // of the message --open selected
             QMetaObject::invokeMethod(root, "showSource");
+        else if (p.value(page) == QLatin1String("calendar-event")) // the calendar, its first event opened
+            QMetaObject::invokeMethod(root, "showCalendarEvent");
+        else if (p.value(page) == QLatin1String("calendar-new")) // the calendar, a new event
+            QMetaObject::invokeMethod(root, "showCalendarNew");
         else
             root->setProperty("page", p.value(page));
     }

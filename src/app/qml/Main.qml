@@ -16,7 +16,7 @@ ApplicationWindow {
     title: MailApp.accountAddr.length ? "e3mail — " + MailApp.accountAddr : "e3mail"
     color: Theme.window
 
-    // mail | compose | contacts | settings | setup
+    // mail | compose | contacts | calendar | settings | setup
     property string page: "mail"
     // Narrow: the open message covers the list.
     property bool reading: false
@@ -36,6 +36,7 @@ ApplicationWindow {
         else if (page === "compose") composerView.close()
         else if (reading) reading = false
         else if (page === "contacts" && contactsView.back()) return true
+        else if (page === "calendar" && calendarView.back()) return true
         else if (page !== "mail") page = "mail"
         else return false
         return true
@@ -60,6 +61,10 @@ ApplicationWindow {
     function showVerify() { page = "contacts"; contactsView.verify() }
     function showContact() { page = "contacts"; contactsView.showFirst() }
     function showBackups() { page = "settings"; settingsView.showBackups() }
+    // For screenshots (--page calendar-event, calendar-new).
+    function showCalendarEvent() { page = "calendar"; calendarView.showFirst() }
+    function showCalendarNew() { page = "calendar"; calendarView.showNew() }
+    function showEvent(uid) { page = "calendar"; calendarView.showEvent(uid) }
     onClosing: (close) => { if (narrow && back()) close.accepted = false }
 
     Shortcut { sequences: [StandardKey.New]; onActivated: window.compose("new", 0) }
@@ -131,7 +136,7 @@ ApplicationWindow {
             StackLayout {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                currentIndex: ["mail", "compose", "contacts", "settings", "setup"].indexOf(window.page)
+                currentIndex: ["mail", "compose", "contacts", "calendar", "settings", "setup"].indexOf(window.page)
 
                 RowLayout {
                     spacing: 0
@@ -154,6 +159,7 @@ ApplicationWindow {
                         onReply: (id, all) => window.compose(all ? "replyAll" : "reply", id)
                         onForward: (id) => window.compose("forward", id)
                         onEditDraft: (id) => window.compose("draft", id)
+                        onShowEvent: (uid) => window.showEvent(uid)
                     }
                 }
                 ComposerView {
@@ -161,6 +167,7 @@ ApplicationWindow {
                     onClosed: window.page = "mail"
                 }
                 ContactsView { id: contactsView }
+                CalendarView { id: calendarView }
                 SettingsView { id: settingsView; onAddAccount: window.page = "setup" }
                 SetupView {
                     cancellable: true
