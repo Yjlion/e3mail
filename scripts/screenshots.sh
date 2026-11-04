@@ -31,6 +31,14 @@ shot unlock --page unlock
 shot disappearing --open inbox:2
 shot structured --open inbox:2
 shot structured-inert --open unverified
+# The calendar (P15): the month and what is coming, an event, a new one; an
+# invitation, an answer that came back, a stranger's invitation (inert).
+shot calendar --page calendar
+shot calendar-event --page calendar-event
+shot calendar-new --page calendar-new
+shot invite --open inbox:5
+shot invite-reply --open inbox:4
+shot invite-inert --open unverified:1
 shot source --open inbox:0 --page source
 shot settings --page settings
 # Other languages: right to left, CJK, and a long-worded one. CJK needs a
@@ -60,6 +68,9 @@ shot verify-ar --page verify --lang ar
 shot contact-ar --page contact --lang ar
 shot unlock-ar --page unlock --lang ar
 shot structured-ar --open inbox:2 --lang ar
+shot calendar-ar --page calendar --lang ar
+shot invite-ar --open inbox:5 --lang ar
+shot calendar-event-he --page calendar-event --lang he
 # Removed on another device while away.
 "$BUILD/src/cli/e3mail-cli" --data-dir "$DATA" config p2p_removed_by Desktop >/dev/null
 shot devices-removed --page devices
@@ -95,6 +106,10 @@ shot phone-contacts --page contacts "${PHONE[@]}"
 shot phone-verify --page verify "${PHONE[@]}"
 shot phone-contact --page contact "${PHONE[@]}"
 shot phone-structured --open inbox:2 "${PHONE[@]}"
+shot phone-calendar --page calendar "${PHONE[@]}"
+shot phone-calendar-event --page calendar-event "${PHONE[@]}"
+shot phone-invite --open inbox:5 "${PHONE[@]}"
+shot phone-calendar-ar --page calendar --lang ar "${PHONE[@]}"
 shot phone-settings --page settings "${PHONE[@]}"
 shot phone-signature --page signature "${PHONE[@]}"
 shot phone-devices --page devices "${PHONE[@]}"

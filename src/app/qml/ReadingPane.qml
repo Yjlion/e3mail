@@ -10,6 +10,7 @@ Rectangle {
     signal reply(int id, bool all)
     signal forward(int id)
     signal editDraft(int id)
+    signal showEvent(string uid)
 
     readonly property var thread: MailApp.thread
     readonly property var last: thread.length ? thread[thread.length - 1] : null
@@ -113,6 +114,7 @@ Rectangle {
                     onEditDraft: (id) => pane.editDraft(id)
                     onShowSource: (id) => sourceDialog.show(id)
                     onAskOpenLink: (url) => linkDialog.ask(url)
+                    onShowEvent: (uid) => pane.showEvent(uid)
                 }
             }
         }

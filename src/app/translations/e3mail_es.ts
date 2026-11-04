@@ -19,7 +19,7 @@
         <translation>e3mail se mantiene sincronizado</translation>
     </message>
     <message>
-        <source>New mail and other devices&apos; changes arrive while e3mail is in the background.</source>
+        <source>New mail and other devices' changes arrive while e3mail is in the background.</source>
         <translation>El correo nuevo y los cambios de otros dispositivos llegan mientras e3mail está en segundo plano.</translation>
     </message>
     <message>
@@ -165,20 +165,236 @@
         <translation>Se crea un nuevo dispositivo de la cuenta a partir de la copia más reciente. No se sincroniza con tus otros dispositivos hasta que lo vincules.</translation>
     </message>
     <message>
-        <source>The server&apos;s SSH host key has changed. Trust the new one only if the server&apos;s administrator says it changed:</source>
+        <source>The server's SSH host key has changed. Trust the new one only if the server's administrator says it changed:</source>
         <translation>La clave de host SSH del servidor ha cambiado. Confía en la nueva solo si el administrador del servidor dice que cambió:</translation>
     </message>
     <message>
-        <source>The server&apos;s SSH host key is not known yet. Trust it only if it matches what the server&apos;s administrator gives you:</source>
+        <source>The server's SSH host key is not known yet. Trust it only if it matches what the server's administrator gives you:</source>
         <translation>La clave de host SSH del servidor aún no se conoce. Confía en ella solo si coincide con la que te da el administrador del servidor:</translation>
     </message>
     <message>
-        <source>The server&apos;s certificate is not trusted. Trust it only if its fingerprint matches what the server&apos;s administrator gives you:</source>
+        <source>The server's certificate is not trusted. Trust it only if its fingerprint matches what the server's administrator gives you:</source>
         <translation>No se confía en el certificado del servidor. Confía en él solo si su huella coincide con la que te da el administrador del servidor:</translation>
     </message>
     <message>
         <source>Trust it</source>
         <translation>Confiar</translation>
+    </message>
+</context>
+<context>
+    <name>Calendar</name>
+    <message>
+        <source>Repeats (rule not understood: %1)</source>
+        <translation>Se repite (regla no entendida: %1)</translation>
+    </message>
+    <message>
+        <source>Every day</source>
+        <translation>Cada día</translation>
+    </message>
+    <message numerus="yes">
+        <source>Every %n days</source>
+        <translation>
+            <numerusform>Cada %n día</numerusform>
+            <numerusform>Cada %n días</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Every week</source>
+        <translation>Cada semana</translation>
+    </message>
+    <message numerus="yes">
+        <source>Every %n weeks</source>
+        <translation>
+            <numerusform>Cada %n semana</numerusform>
+            <numerusform>Cada %n semanas</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>%1 on %2</source>
+        <translation>%1 los %2</translation>
+    </message>
+    <message>
+        <source>Every month</source>
+        <translation>Cada mes</translation>
+    </message>
+    <message numerus="yes">
+        <source>Every %n months</source>
+        <translation>
+            <numerusform>Cada %n mes</numerusform>
+            <numerusform>Cada %n meses</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Every year</source>
+        <translation>Cada año</translation>
+    </message>
+    <message numerus="yes">
+        <source>Every %n years</source>
+        <translation>
+            <numerusform>Cada %n año</numerusform>
+            <numerusform>Cada %n años</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%1, %n time(s)</source>
+        <translation>
+            <numerusform>%1, %n vez</numerusform>
+            <numerusform>%1, %n veces</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>%1, until %2</source>
+        <translation>%1, hasta el %2</translation>
+    </message>
+    <message>
+        <source>%1 – %2</source>
+        <translation>%1 – %2</translation>
+    </message>
+    <message>
+        <source>%1, %2</source>
+        <translation>%1, %2</translation>
+    </message>
+    <message>
+        <source>%1, %2 – %3</source>
+        <translation>%1, %2 – %3</translation>
+    </message>
+    <message>
+        <source>%1 has accepted the invitation to “%2”.</source>
+        <translation>%1 ha aceptado la invitación a «%2».</translation>
+    </message>
+    <message>
+        <source>%1 has tentatively accepted the invitation to “%2”.</source>
+        <translation>%1 ha aceptado provisionalmente la invitación a «%2».</translation>
+    </message>
+    <message>
+        <source>%1 has declined the invitation to “%2”.</source>
+        <translation>%1 ha rechazado la invitación a «%2».</translation>
+    </message>
+    <message>
+        <source>%1 has not answered the invitation to “%2”.</source>
+        <translation>%1 no ha respondido a la invitación a «%2».</translation>
+    </message>
+    <message>
+        <source>Accepted: %1</source>
+        <translation>Aceptada: %1</translation>
+    </message>
+    <message>
+        <source>Tentative: %1</source>
+        <translation>Provisional: %1</translation>
+    </message>
+    <message>
+        <source>Declined: %1</source>
+        <translation>Rechazada: %1</translation>
+    </message>
+    <message>
+        <source>Cancelled: %1</source>
+        <translation>Cancelada: %1</translation>
+    </message>
+    <message>
+        <source>%1 has cancelled “%2”.</source>
+        <translation>%1 ha cancelado «%2».</translation>
+    </message>
+    <message>
+        <source>Updated invitation: %1</source>
+        <translation>Invitación actualizada: %1</translation>
+    </message>
+    <message>
+        <source>%1 has changed “%2”. Here are the new details.</source>
+        <translation>%1 ha cambiado «%2». Estos son los nuevos datos.</translation>
+    </message>
+    <message>
+        <source>Invitation: %1</source>
+        <translation>Invitación: %1</translation>
+    </message>
+    <message>
+        <source>%1 invites you to “%2”.</source>
+        <translation>%1 te invita a «%2».</translation>
+    </message>
+    <message>
+        <source>When: %1</source>
+        <translation>Cuándo: %1</translation>
+    </message>
+    <message>
+        <source>Repeats: %1</source>
+        <translation>Repetición: %1</translation>
+    </message>
+    <message>
+        <source>Where: %1</source>
+        <translation>Dónde: %1</translation>
+    </message>
+    <message>
+        <source>Link: %1</source>
+        <translation>Enlace: %1</translation>
+    </message>
+    <message>
+        <source>Who: %1</source>
+        <translation>Quién: %1</translation>
+    </message>
+    <message>
+        <source>This invitation cannot be answered.</source>
+        <translation>Esta invitación no se puede responder.</translation>
+    </message>
+    <message>
+        <source>A newer version of this invitation is in your calendar.</source>
+        <translation>Una versión más reciente de esta invitación está en tu calendario.</translation>
+    </message>
+    <message>
+        <source>This invitation cannot be added.</source>
+        <translation>Esta invitación no se puede añadir.</translation>
+    </message>
+</context>
+<context>
+    <name>CalendarView</name>
+    <message>
+        <source>Previous month</source>
+        <translation>Mes anterior</translation>
+    </message>
+    <message>
+        <source>Next month</source>
+        <translation>Mes siguiente</translation>
+    </message>
+    <message>
+        <source>Today</source>
+        <translation>Hoy</translation>
+    </message>
+    <message>
+        <source>New event</source>
+        <translation>Nuevo evento</translation>
+    </message>
+    <message numerus="yes">
+        <source>+%n more</source>
+        <translation>
+            <numerusform>+%n más</numerusform>
+            <numerusform>+%n más</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Coming up</source>
+        <translation>Próximamente</translation>
+    </message>
+    <message>
+        <source>Show what is coming</source>
+        <translation>Mostrar lo próximo</translation>
+    </message>
+    <message>
+        <source>Tentative</source>
+        <translation>Provisional</translation>
+    </message>
+    <message>
+        <source>Not answered</source>
+        <translation>Sin responder</translation>
+    </message>
+    <message>
+        <source>Repeats</source>
+        <translation>Repetición</translation>
+    </message>
+    <message>
+        <source>Nothing on this day.</source>
+        <translation>Nada este día.</translation>
+    </message>
+    <message>
+        <source>Nothing coming up. Invitations you accept and events you add appear here.</source>
+        <translation>Nada próximo. Las invitaciones que aceptes y los eventos que añadas aparecen aquí.</translation>
     </message>
 </context>
 <context>
@@ -566,6 +782,260 @@ Para: %4
     </message>
 </context>
 <context>
+    <name>DateField</name>
+    <message>
+        <source>Pick a date</source>
+        <translation>Elegir una fecha</translation>
+    </message>
+    <message>
+        <source>Previous month</source>
+        <translation>Mes anterior</translation>
+    </message>
+    <message>
+        <source>Next month</source>
+        <translation>Mes siguiente</translation>
+    </message>
+</context>
+<context>
+    <name>EventDialog</name>
+    <message>
+        <source>Edit event</source>
+        <translation>Editar evento</translation>
+    </message>
+    <message>
+        <source>New event</source>
+        <translation>Nuevo evento</translation>
+    </message>
+    <message>
+        <source>Title</source>
+        <translation>Título</translation>
+    </message>
+    <message>
+        <source>All day</source>
+        <translation>Todo el día</translation>
+    </message>
+    <message>
+        <source>Starts</source>
+        <translation>Empieza</translation>
+    </message>
+    <message>
+        <source>Ends</source>
+        <translation>Termina</translation>
+    </message>
+    <message>
+        <source>Times are in this device's time zone.</source>
+        <translation>Las horas están en la zona horaria de este dispositivo.</translation>
+    </message>
+    <message>
+        <source>Repeats</source>
+        <translation>Repetición</translation>
+    </message>
+    <message>
+        <source>Never</source>
+        <translation>Nunca</translation>
+    </message>
+    <message>
+        <source>Every day</source>
+        <translation>Cada día</translation>
+    </message>
+    <message>
+        <source>Every week</source>
+        <translation>Cada semana</translation>
+    </message>
+    <message>
+        <source>Every month</source>
+        <translation>Cada mes</translation>
+    </message>
+    <message>
+        <source>Every year</source>
+        <translation>Cada año</translation>
+    </message>
+    <message>
+        <source>As received</source>
+        <translation>Como se recibió</translation>
+    </message>
+    <message>
+        <source>every</source>
+        <translation>cada</translation>
+    </message>
+    <message>
+        <source>day(s)</source>
+        <translation>día(s)</translation>
+    </message>
+    <message>
+        <source>week(s)</source>
+        <translation>semana(s)</translation>
+    </message>
+    <message>
+        <source>month(s)</source>
+        <translation>mes(es)</translation>
+    </message>
+    <message>
+        <source>year(s)</source>
+        <translation>año(s)</translation>
+    </message>
+    <message>
+        <source>This rule came with the invitation and is kept as it is: %1</source>
+        <translation>Esta regla vino con la invitación y se conserva tal cual: %1</translation>
+    </message>
+    <message>
+        <source>After</source>
+        <translation>Tras</translation>
+    </message>
+    <message>
+        <source>On</source>
+        <translation>El</translation>
+    </message>
+    <message>
+        <source>time(s)</source>
+        <translation>vez/veces</translation>
+    </message>
+    <message>
+        <source>Where</source>
+        <translation>Dónde</translation>
+    </message>
+    <message>
+        <source>Link</source>
+        <translation>Enlace</translation>
+    </message>
+    <message>
+        <source>Attendees</source>
+        <translation>Asistentes</translation>
+    </message>
+    <message>
+        <source>Names or addresses, separated by commas</source>
+        <translation>Nombres o direcciones, separados por comas</translation>
+    </message>
+    <message>
+        <source>Attendees get an invitation by email, and an update when the meeting changes.</source>
+        <translation>Los asistentes reciben una invitación por correo y una actualización cuando la reunión cambia.</translation>
+    </message>
+    <message>
+        <source>The invitation will be encrypted: every attendee has a key.</source>
+        <translation>La invitación irá cifrada: todos los asistentes tienen clave.</translation>
+    </message>
+    <message>
+        <source>The invitation goes unencrypted: no key yet for %1.</source>
+        <translation>La invitación va sin cifrar: aún no hay clave para %1.</translation>
+    </message>
+    <message>
+        <source>The invitation goes unencrypted.</source>
+        <translation>La invitación va sin cifrar.</translation>
+    </message>
+    <message>
+        <source>Reminder</source>
+        <translation>Recordatorio</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Ninguno</translation>
+    </message>
+    <message>
+        <source>At the start</source>
+        <translation>Al empezar</translation>
+    </message>
+    <message>
+        <source>5 minutes before</source>
+        <translation>5 minutos antes</translation>
+    </message>
+    <message>
+        <source>10 minutes before</source>
+        <translation>10 minutos antes</translation>
+    </message>
+    <message>
+        <source>15 minutes before</source>
+        <translation>15 minutos antes</translation>
+    </message>
+    <message>
+        <source>30 minutes before</source>
+        <translation>30 minutos antes</translation>
+    </message>
+    <message>
+        <source>1 hour before</source>
+        <translation>1 hora antes</translation>
+    </message>
+    <message>
+        <source>2 hours before</source>
+        <translation>2 horas antes</translation>
+    </message>
+    <message>
+        <source>1 day before</source>
+        <translation>1 día antes</translation>
+    </message>
+    <message>
+        <source>Details</source>
+        <translation>Detalles</translation>
+    </message>
+    <message>
+        <source>%1 organizes this meeting; only the reminder is yours to change here. Answer from the invitation in your mail.</source>
+        <translation>%1 organiza esta reunión; aquí solo puedes cambiar el recordatorio. Responde desde la invitación en tu correo.</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>Guardar</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Cancelar</translation>
+    </message>
+    <message>
+        <source>Cancel meeting…</source>
+        <translation>Cancelar la reunión…</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Quitar</translation>
+    </message>
+    <message>
+        <source>Export…</source>
+        <translation>Exportar…</translation>
+    </message>
+    <message>
+        <source>Send the update?</source>
+        <translation>¿Enviar la actualización?</translation>
+    </message>
+    <message>
+        <source>Send the invitation?</source>
+        <translation>¿Enviar la invitación?</translation>
+    </message>
+    <message>
+        <source>The attendees get an updated invitation by email and are asked to answer again.</source>
+        <translation>Los asistentes reciben una invitación actualizada por correo y se les pide responder de nuevo.</translation>
+    </message>
+    <message>
+        <source>The attendees get an invitation by email.</source>
+        <translation>Los asistentes reciben una invitación por correo.</translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation>Enviar</translation>
+    </message>
+    <message>
+        <source>Save only</source>
+        <translation>Solo guardar</translation>
+    </message>
+    <message>
+        <source>Back</source>
+        <translation>Atrás</translation>
+    </message>
+    <message>
+        <source>Cancel the meeting?</source>
+        <translation>¿Cancelar la reunión?</translation>
+    </message>
+    <message>
+        <source>The attendees are told by email that it is cancelled.</source>
+        <translation>Los asistentes saben por correo que se ha cancelado.</translation>
+    </message>
+    <message>
+        <source>Cancel meeting</source>
+        <translation>Cancelar la reunión</translation>
+    </message>
+    <message>
+        <source>Calendar files (*.ics)</source>
+        <translation>Archivos de calendario (*.ics)</translation>
+    </message>
+</context>
+<context>
     <name>FirstRunDialog</name>
     <message>
         <source>Before you start</source>
@@ -608,6 +1078,125 @@ Para: %4
         <translation>Este mensaje está cifrado y no se pudo descifrar en este dispositivo.
 
 %1</translation>
+    </message>
+</context>
+<context>
+    <name>InvitationCard</name>
+    <message>
+        <source>Accepted</source>
+        <translation>Aceptada</translation>
+    </message>
+    <message>
+        <source>Tentative</source>
+        <translation>Provisional</translation>
+    </message>
+    <message>
+        <source>Declined</source>
+        <translation>Rechazada</translation>
+    </message>
+    <message>
+        <source>Not answered</source>
+        <translation>Sin responder</translation>
+    </message>
+    <message>
+        <source>Cancelled: %1</source>
+        <translation>Cancelada: %1</translation>
+    </message>
+    <message>
+        <source>%1 accepted.</source>
+        <translation>%1 ha aceptado.</translation>
+    </message>
+    <message>
+        <source>%1 declined.</source>
+        <translation>%1 ha rechazado.</translation>
+    </message>
+    <message>
+        <source>%1 might come.</source>
+        <translation>%1 quizá venga.</translation>
+    </message>
+    <message>
+        <source>%1 answered.</source>
+        <translation>%1 ha respondido.</translation>
+    </message>
+    <message>
+        <source>This meeting was cancelled; your calendar is updated.</source>
+        <translation>Esta reunión se canceló; tu calendario está actualizado.</translation>
+    </message>
+    <message>
+        <source>This meeting was cancelled.</source>
+        <translation>Esta reunión se canceló.</translation>
+    </message>
+    <message>
+        <source>Your invitation.</source>
+        <translation>Tu invitación.</translation>
+    </message>
+    <message>
+        <source>A newer version of this invitation is in your calendar.</source>
+        <translation>Una versión más reciente de esta invitación está en tu calendario.</translation>
+    </message>
+    <message>
+        <source>This meeting has since been cancelled.</source>
+        <translation>Esta reunión se ha cancelado desde entonces.</translation>
+    </message>
+    <message>
+        <source>In your calendar: %1.</source>
+        <translation>En tu calendario: %1.</translation>
+    </message>
+    <message>
+        <source>%1 invites you.</source>
+        <translation>%1 te invita.</translation>
+    </message>
+    <message>
+        <source>When</source>
+        <translation>Cuándo</translation>
+    </message>
+    <message>
+        <source>Repeats</source>
+        <translation>Repetición</translation>
+    </message>
+    <message>
+        <source>Where</source>
+        <translation>Dónde</translation>
+    </message>
+    <message>
+        <source>Organizer</source>
+        <translation>Organizador</translation>
+    </message>
+    <message>
+        <source>Who</source>
+        <translation>Quién</translation>
+    </message>
+    <message>
+        <source>Details</source>
+        <translation>Detalles</translation>
+    </message>
+    <message>
+        <source>Accept</source>
+        <translation>Aceptar</translation>
+    </message>
+    <message>
+        <source>Decline</source>
+        <translation>Rechazar</translation>
+    </message>
+    <message>
+        <source>Add to calendar</source>
+        <translation>Añadir al calendario</translation>
+    </message>
+    <message>
+        <source>Show in calendar</source>
+        <translation>Ver en el calendario</translation>
+    </message>
+    <message>
+        <source>Open link…</source>
+        <translation>Abrir enlace…</translation>
+    </message>
+    <message>
+        <source>Answers can be sent to senders you trust; accept this sender first. Check these details against the message.</source>
+        <translation>Las respuestas solo van a remitentes de confianza; acepta primero a este remitente. Comprueba estos datos con el mensaje.</translation>
+    </message>
+    <message>
+        <source>This message was not sent by the meeting's organizer, so it cannot be answered from here. Check these details against the message.</source>
+        <translation>Este mensaje no lo envió el organizador de la reunión, así que no se puede responder desde aquí. Comprueba estos datos con el mensaje.</translation>
     </message>
 </context>
 <context>
@@ -690,6 +1279,18 @@ Para: %4
 <context>
     <name>MailApp</name>
     <message>
+        <source>Today</source>
+        <translation>Hoy</translation>
+    </message>
+    <message>
+        <source>Event</source>
+        <translation>Evento</translation>
+    </message>
+    <message>
+        <source>%1 · %2</source>
+        <translation>%1 · %2</translation>
+    </message>
+    <message>
         <source>Unnamed device</source>
         <translation>Dispositivo sin nombre</translation>
     </message>
@@ -753,8 +1354,56 @@ Para: %4
         <translation>No se pudo guardar el adjunto.</translation>
     </message>
     <message>
+        <source>Could not add the event.</source>
+        <translation>No se pudo añadir el evento.</translation>
+    </message>
+    <message>
+        <source>Added to the calendar.</source>
+        <translation>Añadido al calendario.</translation>
+    </message>
+    <message>
+        <source>(No title)</source>
+        <translation>(Sin título)</translation>
+    </message>
+    <message>
+        <source>All day</source>
+        <translation>Todo el día</translation>
+    </message>
+    <message>
+        <source>Give the event a title.</source>
+        <translation>Pon un título al evento.</translation>
+    </message>
+    <message>
+        <source>The start is not a date and time.</source>
+        <translation>El inicio no es una fecha y hora.</translation>
+    </message>
+    <message>
+        <source>Saved, but the invitation was not sent: %1</source>
+        <translation>Guardado, pero la invitación no se envió: %1</translation>
+    </message>
+    <message>
+        <source>Invitation sent.</source>
+        <translation>Invitación enviada.</translation>
+    </message>
+    <message>
+        <source>Cancelled, but the attendees were not told: %1</source>
+        <translation>Cancelada, pero no se avisó a los asistentes: %1</translation>
+    </message>
+    <message>
+        <source>Saved in your calendar, but the answer was not sent: %1</source>
+        <translation>Guardado en tu calendario, pero la respuesta no se envió: %1</translation>
+    </message>
+    <message>
+        <source>Answer sent.</source>
+        <translation>Respuesta enviada.</translation>
+    </message>
+    <message>
         <source>Could not save the event.</source>
         <translation>No se pudo guardar el evento.</translation>
+    </message>
+    <message>
+        <source>event</source>
+        <translation>evento</translation>
     </message>
     <message>
         <source>This message cannot be decrypted, or its original is no longer kept.</source>
@@ -765,7 +1414,7 @@ Para: %4
         <translation>El original de este mensaje ya no se conserva.</translation>
     </message>
     <message>
-        <source>This is not a contact&apos;s code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
+        <source>This is not a contact's code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
         <translation>Esto no es el código de un contacto. Un código para verificar a alguien empieza por OPENPGP4FPR: o https://i.delta.chat/.</translation>
     </message>
     <message numerus="yes">
@@ -1319,32 +1968,9 @@ Para: %4
     </message>
 </context>
 <context>
-    <name>ScanView</name>
-    <message>
-        <source>This device has no camera. Type the code instead.</source>
-        <translation>Este dispositivo no tiene cámara. Escribe el código en su lugar.</translation>
-    </message>
-    <message>
-        <source>e3mail may not use the camera. Allow it in the system settings, or type the code instead.</source>
-        <translation>e3mail no puede usar la cámara. Permítelo en los ajustes del sistema o escribe el código en su lugar.</translation>
-    </message>
-    <message>
-        <source>Asking for the camera…</source>
-        <translation>Pidiendo acceso a la cámara…</translation>
-    </message>
-    <message>
-        <source>Point the camera at the QR code on the other device.</source>
-        <translation>Apunta la cámara al código QR del otro dispositivo.</translation>
-    </message>
-    <message>
-        <source>Type the code instead</source>
-        <translation>Escribir el código</translation>
-    </message>
-</context>
-<context>
     <name>SecureJoin</name>
     <message>
-        <source>This is your own code. Scan the other person&apos;s code instead.</source>
+        <source>This is your own code. Scan the other person's code instead.</source>
         <translation>Este es tu propio código. Escanea el código de la otra persona.</translation>
     </message>
     <message>
@@ -1387,7 +2013,7 @@ Para: %4
         <translation>Mostrar quién escribe y el asunto</translation>
     </message>
     <message>
-        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system&apos;s notification history, outside e3mail&apos;s encryption.</source>
+        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system's notification history, outside e3mail's encryption.</source>
         <translation>Para este dispositivo, mientras e3mail está abierto y no en primer plano. Un asunto mostrado aquí queda en el historial de notificaciones del sistema, fuera del cifrado de e3mail.</translation>
     </message>
     <message>
@@ -1399,7 +2025,7 @@ Para: %4
         <translation>Seguir sincronizando en segundo plano</translation>
     </message>
     <message>
-        <source>Mail and your other devices&apos; changes keep arriving while e3mail is not in front. Android shows a notification for as long as this is on, and it uses more battery. Swiping e3mail away from the recent apps ends it.</source>
+        <source>Mail and your other devices' changes keep arriving while e3mail is not in front. Android shows a notification for as long as this is on, and it uses more battery. Swiping e3mail away from the recent apps ends it.</source>
         <translation>El correo y los cambios de tus otros dispositivos siguen llegando cuando e3mail no está en primer plano. Android muestra una notificación mientras esté activado, y gasta más batería. Deslizar e3mail fuera de las aplicaciones recientes lo detiene.</translation>
     </message>
     <message>
@@ -1439,7 +2065,7 @@ Para: %4
         <translation>Añadir una firma…</translation>
     </message>
     <message>
-        <source>The chosen one goes into new mail. The composer&apos;s signature button swaps it for another.</source>
+        <source>The chosen one goes into new mail. The composer's signature button swaps it for another.</source>
         <translation>La elegida se pone en los mensajes nuevos. El botón de firma del editor la cambia por otra.</translation>
     </message>
     <message>
@@ -1495,6 +2121,50 @@ Para: %4
         <translation>La confirmación se envía una vez, al abrir el mensaje por primera vez, en cualquier dispositivo. Los desconocidos y quien no sea de tu confianza nunca la reciben.</translation>
     </message>
     <message>
+        <source>Calendar</source>
+        <translation>Calendario</translation>
+    </message>
+    <message>
+        <source>Remind me before an event</source>
+        <translation>Recordarme antes de un evento</translation>
+    </message>
+    <message>
+        <source>Never</source>
+        <translation>Nunca</translation>
+    </message>
+    <message>
+        <source>At the start</source>
+        <translation>Al empezar</translation>
+    </message>
+    <message>
+        <source>5 minutes before</source>
+        <translation>5 minutos antes</translation>
+    </message>
+    <message>
+        <source>10 minutes before</source>
+        <translation>10 minutos antes</translation>
+    </message>
+    <message>
+        <source>15 minutes before</source>
+        <translation>15 minutos antes</translation>
+    </message>
+    <message>
+        <source>30 minutes before</source>
+        <translation>30 minutos antes</translation>
+    </message>
+    <message>
+        <source>1 hour before</source>
+        <translation>1 hora antes</translation>
+    </message>
+    <message>
+        <source>1 day before</source>
+        <translation>1 día antes</translation>
+    </message>
+    <message>
+        <source>For events you add and invitations you accept; each event can differ. Reminders show only while e3mail runs. The calendar lives on your devices and is arranged by email; nothing is shared with a calendar server.</source>
+        <translation>Para los eventos que añadas y las invitaciones que aceptes; cada evento puede ser distinto. Los recordatorios solo aparecen mientras e3mail está abierto. El calendario vive en tus dispositivos y se organiza por correo; nada se comparte con un servidor de calendario.</translation>
+    </message>
+    <message>
         <source>Trash</source>
         <translation>Papelera</translation>
     </message>
@@ -1535,7 +2205,7 @@ Para: %4
         <translation>días</translation>
     </message>
     <message>
-        <source>Mail that was on the server before e3mail first connected is never removed. &quot;Never&quot; lets another mail program keep using this mailbox.</source>
+        <source>Mail that was on the server before e3mail first connected is never removed. "Never" lets another mail program keep using this mailbox.</source>
         <translation>El correo que estaba en el servidor antes de la primera conexión de e3mail nunca se borra. «Nunca» permite que otro programa de correo siga usando este buzón.</translation>
     </message>
     <message>
@@ -1547,15 +2217,15 @@ Para: %4
         <translation>segundos</translation>
     </message>
     <message>
-        <source>The sending server&apos;s certificate is not trusted, or is not the one trusted before.</source>
+        <source>The sending server's certificate is not trusted, or is not the one trusted before.</source>
         <translation>El certificado del servidor de salida no es de confianza o no es el que se aceptó antes.</translation>
     </message>
     <message>
-        <source>The incoming server&apos;s certificate is not trusted, or is not the one trusted before.</source>
+        <source>The incoming server's certificate is not trusted, or is not the one trusted before.</source>
         <translation>El certificado del servidor de entrada no es de confianza o no es el que se aceptó antes.</translation>
     </message>
     <message>
-        <source>Trust it only if this SHA-256 fingerprint matches the one your server&apos;s administrator gave you.</source>
+        <source>Trust it only if this SHA-256 fingerprint matches the one your server's administrator gave you.</source>
         <translation>Confía en él solo si esta huella SHA-256 coincide con la que te dio quien administra tu servidor.</translation>
     </message>
     <message>
@@ -1619,7 +2289,7 @@ Para: %4
         <translation>Originales</translation>
     </message>
     <message>
-        <source>Keep each message&apos;s original for</source>
+        <source>Keep each message's original for</source>
         <translation>Guardar el original de cada mensaje durante</translation>
     </message>
     <message>
@@ -1687,7 +2357,7 @@ Para: %4
         <translation>Retransmisor</translation>
     </message>
     <message>
-        <source>n0&apos;s public relays</source>
+        <source>n0's public relays</source>
         <translation>Retransmisores públicos de n0</translation>
     </message>
     <message>
@@ -1819,7 +2489,7 @@ Para: %4
         <translation>¿Quitar %1?</translation>
     </message>
     <message>
-        <source>It stops syncing with this account&apos;s other devices. What is already on it stays there.</source>
+        <source>It stops syncing with this account's other devices. What is already on it stays there.</source>
         <translation>Deja de sincronizarse con los demás dispositivos de esta cuenta. Lo que ya tiene se queda ahí.</translation>
     </message>
     <message>
@@ -1834,15 +2504,15 @@ Para: %4
         <translation>Ajustes del servidor de tu proveedor.</translation>
     </message>
     <message>
-        <source>Server settings from Thunderbird&apos;s provider database.</source>
+        <source>Server settings from Thunderbird's provider database.</source>
         <translation>Ajustes del servidor de la base de datos de proveedores de Thunderbird.</translation>
     </message>
     <message>
-        <source>Server settings of the service that receives your domain&apos;s mail. Check them before connecting.</source>
+        <source>Server settings of the service that receives your domain's mail. Check them before connecting.</source>
         <translation>Ajustes del servidor del servicio que recibe el correo de tu dominio. Revísalos antes de conectar.</translation>
     </message>
     <message>
-        <source>Server settings from your provider&apos;s Autodiscover service.</source>
+        <source>Server settings from your provider's Autodiscover service.</source>
         <translation>Ajustes del servidor del servicio Autodiscover de tu proveedor.</translation>
     </message>
     <message>
@@ -1953,7 +2623,7 @@ Para: %4
         <translation>Emitido para %1 por %2, válido hasta el %3.</translation>
     </message>
     <message>
-        <source>Trust it only if this fingerprint matches the one your server&apos;s administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
+        <source>Trust it only if this fingerprint matches the one your server's administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
         <translation>Confía en él solo si esta huella coincide con la que te dio quien administra tu servidor. Entonces e3mail aceptará este certificado de este servidor, y ningún otro.</translation>
     </message>
     <message>
@@ -2002,6 +2672,10 @@ Para: %4
     <message>
         <source>Inbox</source>
         <translation>Entrada</translation>
+    </message>
+    <message>
+        <source>Calendar</source>
+        <translation>Calendario</translation>
     </message>
     <message>
         <source>Unverified</source>
@@ -2086,7 +2760,7 @@ Para: %4
         <translation>El inicio de sesión tardó demasiado. Inténtalo de nuevo.</translation>
     </message>
     <message>
-        <source>Cannot listen for the browser&apos;s answer on this device.</source>
+        <source>Cannot listen for the browser's answer on this device.</source>
         <translation>No se puede recibir la respuesta del navegador en este dispositivo.</translation>
     </message>
     <message>
@@ -2276,8 +2950,8 @@ Para: %4
 <context>
     <name>StructuredCard</name>
     <message>
-        <source>Add to calendar…</source>
-        <translation>Añadir al calendario…</translation>
+        <source>Add to calendar</source>
+        <translation>Añadir al calendario</translation>
     </message>
     <message>
         <source>Open…</source>
@@ -2286,10 +2960,6 @@ Para: %4
     <message>
         <source>Shown as text only. Buttons appear for senders you trust whose mail is signed by their key; check these details against the message.</source>
         <translation>Solo se muestra como texto. Los botones aparecen para remitentes de confianza cuyo correo está firmado con su clave; comprueba estos datos con el mensaje.</translation>
-    </message>
-    <message>
-        <source>Calendar files (*.ics)</source>
-        <translation>Archivos de calendario (*.ics)</translation>
     </message>
 </context>
 <context>

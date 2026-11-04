@@ -127,3 +127,27 @@ Iroh joins the build.
 - **`msg.read`** with `read: true` also starts a disappearing message's
   clock, from the op's HLC time, unless the clock already runs. An expired
   message then travels as `msg.trash` with reason `Expired`, as before.
+
+## Amendment — 2026-11-04: the calendar
+
+- **`cal.event`** carries an event as one record, keyed `cal:<uid>` (the
+  iCalendar UID, the same on every device): uid, summary, description,
+  location, url, start, end, allDay, tzid, rrule, exdates, organizer,
+  sequence, status, reminder, sourceMid, and the attendees with their
+  status and the time of the newest answer heard. Last writer wins for the
+  whole record, with two guards when it is applied: a record whose
+  `sequence` is lower than the stored one is dropped (the organizer's
+  newer version reached that device by mail first), and each attendee's
+  status is taken from whichever side heard the newer answer, so a status
+  derived from a REPLY is never undone by a device that had not fetched it.
+- **`cal.remove`** `{uid}` is keyed `calremove:<uid>` and competes with
+  `cal.event` across keys as `contact.remove` does with contact ops: the
+  removal applies only if no newer `cal.event` exists, and a `cal.event`
+  applies only if no newer removal exists.
+- **Attendee answers, updates and cancellations that arrive by mail are
+  derived**, not recorded (ADR 0025): every device fetches the message and
+  applies the same rule. After a `cal.event` is applied the device reads
+  the REPLY messages it already holds for that uid again, so an answer
+  that came before the event did is kept.
+- **Reminders shown** are per device and never travel.
+- `calendar_reminder` joins the synced settings.

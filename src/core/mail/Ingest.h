@@ -41,6 +41,10 @@ public:
         // Structured data (ADR 0024): the first application/ld+json part,
         // never listed as an attachment.
         QByteArray structured;
+        // The first text/calendar part (ADR 0025), wherever it sat, with the
+        // method its Content-Type named; never listed, never shown as text.
+        QByteArray calendar;
+        QByteArray calendarMethod;
     };
     static Content extract(const mime::Part &root);
 

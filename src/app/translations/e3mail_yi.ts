@@ -19,7 +19,7 @@
         <translation>e3mail האַלט זיך סינכראָניזירט</translation>
     </message>
     <message>
-        <source>New mail and other devices&apos; changes arrive while e3mail is in the background.</source>
+        <source>New mail and other devices' changes arrive while e3mail is in the background.</source>
         <translation>נײַע פּאָסט און ענדערונגען פֿון אַנדערע מכשירים קומען אָן בשעת e3mail איז אין הינטערגרונט.</translation>
     </message>
     <message>
@@ -165,20 +165,236 @@
         <translation>פֿון דער נײַסטער זיכערונג דאָרט ווערט אַ נײַער מכשיר פֿונעם חשבון. ער סינכראָניזירט זיך נישט מיט אײַערע אַנדערע מכשירים ביז איר פֿאַרבינדט אים.</translation>
     </message>
     <message>
-        <source>The server&apos;s SSH host key has changed. Trust the new one only if the server&apos;s administrator says it changed:</source>
+        <source>The server's SSH host key has changed. Trust the new one only if the server's administrator says it changed:</source>
         <translation>דעם סערווערס SSH־שליסל האָט זיך געביטן. גלייבט דעם נײַעם נאָר אויב דער סערווער־פֿאַרוואַלטער זאָגט אַז ער האָט זיך געביטן:</translation>
     </message>
     <message>
-        <source>The server&apos;s SSH host key is not known yet. Trust it only if it matches what the server&apos;s administrator gives you:</source>
+        <source>The server's SSH host key is not known yet. Trust it only if it matches what the server's administrator gives you:</source>
         <translation>דעם סערווערס SSH־שליסל איז נאָך נישט באַקאַנט. גלייבט אים נאָר אויב ער שטימט מיט דעם וואָס דער סערווער־פֿאַרוואַלטער גיט אײַך:</translation>
     </message>
     <message>
-        <source>The server&apos;s certificate is not trusted. Trust it only if its fingerprint matches what the server&apos;s administrator gives you:</source>
+        <source>The server's certificate is not trusted. Trust it only if its fingerprint matches what the server's administrator gives you:</source>
         <translation>דעם סערווערס סערטיפֿיקאַט ווערט נישט געגלייבט. גלייבט אים נאָר אויב זײַן פֿינגער־אָפּדרוק שטימט מיט דעם וואָס דער סערווער־פֿאַרוואַלטער גיט אײַך:</translation>
     </message>
     <message>
         <source>Trust it</source>
         <translation>גלייבן</translation>
+    </message>
+</context>
+<context>
+    <name>Calendar</name>
+    <message>
+        <source>Repeats (rule not understood: %1)</source>
+        <translation>חזרט זיך איבער (כּלל נישט פֿאַרשטאַנען: %1)</translation>
+    </message>
+    <message>
+        <source>Every day</source>
+        <translation>יעדן טאָג</translation>
+    </message>
+    <message numerus="yes">
+        <source>Every %n days</source>
+        <translation>
+            <numerusform>יעדן טאָג</numerusform>
+            <numerusform>יעדע %n טעג</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Every week</source>
+        <translation>יעדע וואָך</translation>
+    </message>
+    <message numerus="yes">
+        <source>Every %n weeks</source>
+        <translation>
+            <numerusform>יעדע וואָך</numerusform>
+            <numerusform>יעדע %n וואָכן</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>%1 on %2</source>
+        <translation>%1 אום %2</translation>
+    </message>
+    <message>
+        <source>Every month</source>
+        <translation>יעדן חודש</translation>
+    </message>
+    <message numerus="yes">
+        <source>Every %n months</source>
+        <translation>
+            <numerusform>יעדן חודש</numerusform>
+            <numerusform>יעדע %n חדשים</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Every year</source>
+        <translation>יעדעס יאָר</translation>
+    </message>
+    <message numerus="yes">
+        <source>Every %n years</source>
+        <translation>
+            <numerusform>יעדעס יאָר</numerusform>
+            <numerusform>יעדע %n יאָר</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%1, %n time(s)</source>
+        <translation>
+            <numerusform>%1, איין מאָל</numerusform>
+            <numerusform>%1, %n מאָל</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>%1, until %2</source>
+        <translation>%1, ביז %2</translation>
+    </message>
+    <message>
+        <source>%1 – %2</source>
+        <translation>%1 – %2</translation>
+    </message>
+    <message>
+        <source>%1, %2</source>
+        <translation>%1, %2</translation>
+    </message>
+    <message>
+        <source>%1, %2 – %3</source>
+        <translation>%1, %2 – %3</translation>
+    </message>
+    <message>
+        <source>%1 has accepted the invitation to “%2”.</source>
+        <translation>%1 האָט אָנגענומען די פֿאַרבעטונג צו „%2“.</translation>
+    </message>
+    <message>
+        <source>%1 has tentatively accepted the invitation to “%2”.</source>
+        <translation>%1 האָט אפֿשר אָנגענומען די פֿאַרבעטונג צו „%2“.</translation>
+    </message>
+    <message>
+        <source>%1 has declined the invitation to “%2”.</source>
+        <translation>%1 האָט אָפּגעזאָגט די פֿאַרבעטונג צו „%2“.</translation>
+    </message>
+    <message>
+        <source>%1 has not answered the invitation to “%2”.</source>
+        <translation>%1 האָט נישט געענטפֿערט אויף דער פֿאַרבעטונג צו „%2“.</translation>
+    </message>
+    <message>
+        <source>Accepted: %1</source>
+        <translation>אָנגענומען: %1</translation>
+    </message>
+    <message>
+        <source>Tentative: %1</source>
+        <translation>אפֿשר: %1</translation>
+    </message>
+    <message>
+        <source>Declined: %1</source>
+        <translation>אָפּגעזאָגט: %1</translation>
+    </message>
+    <message>
+        <source>Cancelled: %1</source>
+        <translation>אָפּגעזאָגט: %1</translation>
+    </message>
+    <message>
+        <source>%1 has cancelled “%2”.</source>
+        <translation>%1 האָט אָפּגעזאָגט „%2“.</translation>
+    </message>
+    <message>
+        <source>Updated invitation: %1</source>
+        <translation>אַפּדייטעטע פֿאַרבעטונג: %1</translation>
+    </message>
+    <message>
+        <source>%1 has changed “%2”. Here are the new details.</source>
+        <translation>%1 האָט געענדערט „%2“. אָט זענען די נײַע פּרטים.</translation>
+    </message>
+    <message>
+        <source>Invitation: %1</source>
+        <translation>פֿאַרבעטונג: %1</translation>
+    </message>
+    <message>
+        <source>%1 invites you to “%2”.</source>
+        <translation>%1 פֿאַרבעט אײַך צו „%2“.</translation>
+    </message>
+    <message>
+        <source>When: %1</source>
+        <translation>ווען: %1</translation>
+    </message>
+    <message>
+        <source>Repeats: %1</source>
+        <translation>חזרה: %1</translation>
+    </message>
+    <message>
+        <source>Where: %1</source>
+        <translation>וווּ: %1</translation>
+    </message>
+    <message>
+        <source>Link: %1</source>
+        <translation>לינק: %1</translation>
+    </message>
+    <message>
+        <source>Who: %1</source>
+        <translation>ווער: %1</translation>
+    </message>
+    <message>
+        <source>This invitation cannot be answered.</source>
+        <translation>אויף דער פֿאַרבעטונג קען מען נישט ענטפֿערן.</translation>
+    </message>
+    <message>
+        <source>A newer version of this invitation is in your calendar.</source>
+        <translation>אַ נײַערע ווערסיע פֿון דער פֿאַרבעטונג איז אין אײַער קאַלענדאַר.</translation>
+    </message>
+    <message>
+        <source>This invitation cannot be added.</source>
+        <translation>די פֿאַרבעטונג קען מען נישט צוגעבן.</translation>
+    </message>
+</context>
+<context>
+    <name>CalendarView</name>
+    <message>
+        <source>Previous month</source>
+        <translation>פֿריִערדיקער חודש</translation>
+    </message>
+    <message>
+        <source>Next month</source>
+        <translation>קומענדיקער חודש</translation>
+    </message>
+    <message>
+        <source>Today</source>
+        <translation>הײַנט</translation>
+    </message>
+    <message>
+        <source>New event</source>
+        <translation>נײַע געשעעניש</translation>
+    </message>
+    <message numerus="yes">
+        <source>+%n more</source>
+        <translation>
+            <numerusform>+%n נאָך</numerusform>
+            <numerusform>+%n נאָך</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Coming up</source>
+        <translation>באַלד</translation>
+    </message>
+    <message>
+        <source>Show what is coming</source>
+        <translation>ווײַזן וואָס קומט</translation>
+    </message>
+    <message>
+        <source>Tentative</source>
+        <translation>אפֿשר</translation>
+    </message>
+    <message>
+        <source>Not answered</source>
+        <translation>נישט געענטפֿערט</translation>
+    </message>
+    <message>
+        <source>Repeats</source>
+        <translation>חזרה</translation>
+    </message>
+    <message>
+        <source>Nothing on this day.</source>
+        <translation>גאָרנישט דעם טאָג.</translation>
+    </message>
+    <message>
+        <source>Nothing coming up. Invitations you accept and events you add appear here.</source>
+        <translation>גאָרנישט קומט. אָנגענומענע פֿאַרבעטונגען און צוגעגעבענע געשעענישן ווײַזן זיך דאָ.</translation>
     </message>
 </context>
 <context>
@@ -566,6 +782,260 @@ To: %4
     </message>
 </context>
 <context>
+    <name>DateField</name>
+    <message>
+        <source>Pick a date</source>
+        <translation>אויסקלײַבן אַ דאַטע</translation>
+    </message>
+    <message>
+        <source>Previous month</source>
+        <translation>פֿריִערדיקער חודש</translation>
+    </message>
+    <message>
+        <source>Next month</source>
+        <translation>קומענדיקער חודש</translation>
+    </message>
+</context>
+<context>
+    <name>EventDialog</name>
+    <message>
+        <source>Edit event</source>
+        <translation>רעדאַקטירן געשעעניש</translation>
+    </message>
+    <message>
+        <source>New event</source>
+        <translation>נײַע געשעעניש</translation>
+    </message>
+    <message>
+        <source>Title</source>
+        <translation>טיטל</translation>
+    </message>
+    <message>
+        <source>All day</source>
+        <translation>אַ גאַנצן טאָג</translation>
+    </message>
+    <message>
+        <source>Starts</source>
+        <translation>הייבט זיך אָן</translation>
+    </message>
+    <message>
+        <source>Ends</source>
+        <translation>ענדיקט זיך</translation>
+    </message>
+    <message>
+        <source>Times are in this device's time zone.</source>
+        <translation>די צײַטן זענען לויט דער צײַטזאָנע פֿון דעם מכשיר.</translation>
+    </message>
+    <message>
+        <source>Repeats</source>
+        <translation>חזרה</translation>
+    </message>
+    <message>
+        <source>Never</source>
+        <translation>קיין מאָל</translation>
+    </message>
+    <message>
+        <source>Every day</source>
+        <translation>יעדן טאָג</translation>
+    </message>
+    <message>
+        <source>Every week</source>
+        <translation>יעדע וואָך</translation>
+    </message>
+    <message>
+        <source>Every month</source>
+        <translation>יעדן חודש</translation>
+    </message>
+    <message>
+        <source>Every year</source>
+        <translation>יעדעס יאָר</translation>
+    </message>
+    <message>
+        <source>As received</source>
+        <translation>ווי באַקומען</translation>
+    </message>
+    <message>
+        <source>every</source>
+        <translation>יעדע</translation>
+    </message>
+    <message>
+        <source>day(s)</source>
+        <translation>טעג</translation>
+    </message>
+    <message>
+        <source>week(s)</source>
+        <translation>וואָכן</translation>
+    </message>
+    <message>
+        <source>month(s)</source>
+        <translation>חדשים</translation>
+    </message>
+    <message>
+        <source>year(s)</source>
+        <translation>יאָר</translation>
+    </message>
+    <message>
+        <source>This rule came with the invitation and is kept as it is: %1</source>
+        <translation>דער כּלל איז געקומען מיט דער פֿאַרבעטונג און בלײַבט ווי ער איז: %1</translation>
+    </message>
+    <message>
+        <source>After</source>
+        <translation>נאָך</translation>
+    </message>
+    <message>
+        <source>On</source>
+        <translation>אום</translation>
+    </message>
+    <message>
+        <source>time(s)</source>
+        <translation>מאָל</translation>
+    </message>
+    <message>
+        <source>Where</source>
+        <translation>וווּ</translation>
+    </message>
+    <message>
+        <source>Link</source>
+        <translation>לינק</translation>
+    </message>
+    <message>
+        <source>Attendees</source>
+        <translation>אָנטיילנעמער</translation>
+    </message>
+    <message>
+        <source>Names or addresses, separated by commas</source>
+        <translation>נעמען אָדער אַדרעסן, אָפּגעטיילט מיט קאָמעס</translation>
+    </message>
+    <message>
+        <source>Attendees get an invitation by email, and an update when the meeting changes.</source>
+        <translation>אָנטיילנעמער באַקומען אַ פֿאַרבעטונג דורך בליצפּאָסט, און אַן אַפּדייט ווען די זיצונג ענדערט זיך.</translation>
+    </message>
+    <message>
+        <source>The invitation will be encrypted: every attendee has a key.</source>
+        <translation>די פֿאַרבעטונג וועט זײַן פֿאַרשליסלט: יעדער אָנטיילנעמער האָט אַ שליסל.</translation>
+    </message>
+    <message>
+        <source>The invitation goes unencrypted: no key yet for %1.</source>
+        <translation>די פֿאַרבעטונג גייט נישט פֿאַרשליסלט: נאָך קיין שליסל פֿאַר %1.</translation>
+    </message>
+    <message>
+        <source>The invitation goes unencrypted.</source>
+        <translation>די פֿאַרבעטונג גייט נישט פֿאַרשליסלט.</translation>
+    </message>
+    <message>
+        <source>Reminder</source>
+        <translation>דערמאָנונג</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>קיינע</translation>
+    </message>
+    <message>
+        <source>At the start</source>
+        <translation>בײַם אָנהייב</translation>
+    </message>
+    <message>
+        <source>5 minutes before</source>
+        <translation>5 מינוט פֿריִער</translation>
+    </message>
+    <message>
+        <source>10 minutes before</source>
+        <translation>10 מינוט פֿריִער</translation>
+    </message>
+    <message>
+        <source>15 minutes before</source>
+        <translation>15 מינוט פֿריִער</translation>
+    </message>
+    <message>
+        <source>30 minutes before</source>
+        <translation>30 מינוט פֿריִער</translation>
+    </message>
+    <message>
+        <source>1 hour before</source>
+        <translation>1 שעה פֿריִער</translation>
+    </message>
+    <message>
+        <source>2 hours before</source>
+        <translation>2 שעה פֿריִער</translation>
+    </message>
+    <message>
+        <source>1 day before</source>
+        <translation>1 טאָג פֿריִער</translation>
+    </message>
+    <message>
+        <source>Details</source>
+        <translation>פּרטים</translation>
+    </message>
+    <message>
+        <source>%1 organizes this meeting; only the reminder is yours to change here. Answer from the invitation in your mail.</source>
+        <translation>%1 אָרגאַניזירט די זיצונג; דאָ קענט איר ענדערן בלויז די דערמאָנונג. ענטפֿערט פֿון דער פֿאַרבעטונג אין אײַער פּאָסט.</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>אויפֿהיטן</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>אַנולירן</translation>
+    </message>
+    <message>
+        <source>Cancel meeting…</source>
+        <translation>אָפּזאָגן זיצונג…</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>אַראָפּנעמען</translation>
+    </message>
+    <message>
+        <source>Export…</source>
+        <translation>עקספּאָרטירן…</translation>
+    </message>
+    <message>
+        <source>Send the update?</source>
+        <translation>שיקן דעם אַפּדייט?</translation>
+    </message>
+    <message>
+        <source>Send the invitation?</source>
+        <translation>שיקן די פֿאַרבעטונג?</translation>
+    </message>
+    <message>
+        <source>The attendees get an updated invitation by email and are asked to answer again.</source>
+        <translation>די אָנטיילנעמער באַקומען אַן אַפּדייטעטע פֿאַרבעטונג דורך בליצפּאָסט און מע בעט זיי ווידער צו ענטפֿערן.</translation>
+    </message>
+    <message>
+        <source>The attendees get an invitation by email.</source>
+        <translation>די אָנטיילנעמער באַקומען אַ פֿאַרבעטונג דורך בליצפּאָסט.</translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation>שיקן</translation>
+    </message>
+    <message>
+        <source>Save only</source>
+        <translation>בלויז אויפֿהיטן</translation>
+    </message>
+    <message>
+        <source>Back</source>
+        <translation>צוריק</translation>
+    </message>
+    <message>
+        <source>Cancel the meeting?</source>
+        <translation>אָפּזאָגן די זיצונג?</translation>
+    </message>
+    <message>
+        <source>The attendees are told by email that it is cancelled.</source>
+        <translation>מע זאָגט די אָנטיילנעמער דורך בליצפּאָסט אַז זי איז אָפּגעזאָגט.</translation>
+    </message>
+    <message>
+        <source>Cancel meeting</source>
+        <translation>אָפּזאָגן זיצונג</translation>
+    </message>
+    <message>
+        <source>Calendar files (*.ics)</source>
+        <translation>קאַלענדאַר־טעקעס (*.ics)</translation>
+    </message>
+</context>
+<context>
     <name>FirstRunDialog</name>
     <message>
         <source>Before you start</source>
@@ -608,6 +1078,125 @@ To: %4
         <translation>דער בריוו איז פֿאַרשיפֿרירט און מע האָט אים ניט געקענט אויסשיפֿרירן אויף דעם מכשיר.
 
 %1</translation>
+    </message>
+</context>
+<context>
+    <name>InvitationCard</name>
+    <message>
+        <source>Accepted</source>
+        <translation>אָנגענומען</translation>
+    </message>
+    <message>
+        <source>Tentative</source>
+        <translation>אפֿשר</translation>
+    </message>
+    <message>
+        <source>Declined</source>
+        <translation>אָפּגעזאָגט</translation>
+    </message>
+    <message>
+        <source>Not answered</source>
+        <translation>נישט געענטפֿערט</translation>
+    </message>
+    <message>
+        <source>Cancelled: %1</source>
+        <translation>אָפּגעזאָגט: %1</translation>
+    </message>
+    <message>
+        <source>%1 accepted.</source>
+        <translation>%1 האָט אָנגענומען.</translation>
+    </message>
+    <message>
+        <source>%1 declined.</source>
+        <translation>%1 האָט אָפּגעזאָגט.</translation>
+    </message>
+    <message>
+        <source>%1 might come.</source>
+        <translation>%1 קומט אפֿשר.</translation>
+    </message>
+    <message>
+        <source>%1 answered.</source>
+        <translation>%1 האָט געענטפֿערט.</translation>
+    </message>
+    <message>
+        <source>This meeting was cancelled; your calendar is updated.</source>
+        <translation>די זיצונג איז אָפּגעזאָגט געוואָרן; אײַער קאַלענדאַר איז אַפּדייטעט.</translation>
+    </message>
+    <message>
+        <source>This meeting was cancelled.</source>
+        <translation>די זיצונג איז אָפּגעזאָגט געוואָרן.</translation>
+    </message>
+    <message>
+        <source>Your invitation.</source>
+        <translation>אײַער פֿאַרבעטונג.</translation>
+    </message>
+    <message>
+        <source>A newer version of this invitation is in your calendar.</source>
+        <translation>אַ נײַערע ווערסיע פֿון דער פֿאַרבעטונג איז אין אײַער קאַלענדאַר.</translation>
+    </message>
+    <message>
+        <source>This meeting has since been cancelled.</source>
+        <translation>די זיצונג איז זינט דעמאָלט אָפּגעזאָגט געוואָרן.</translation>
+    </message>
+    <message>
+        <source>In your calendar: %1.</source>
+        <translation>אין אײַער קאַלענדאַר: %1.</translation>
+    </message>
+    <message>
+        <source>%1 invites you.</source>
+        <translation>%1 פֿאַרבעט אײַך.</translation>
+    </message>
+    <message>
+        <source>When</source>
+        <translation>ווען</translation>
+    </message>
+    <message>
+        <source>Repeats</source>
+        <translation>חזרה</translation>
+    </message>
+    <message>
+        <source>Where</source>
+        <translation>וווּ</translation>
+    </message>
+    <message>
+        <source>Organizer</source>
+        <translation>אָרגאַניזאַטאָר</translation>
+    </message>
+    <message>
+        <source>Who</source>
+        <translation>ווער</translation>
+    </message>
+    <message>
+        <source>Details</source>
+        <translation>פּרטים</translation>
+    </message>
+    <message>
+        <source>Accept</source>
+        <translation>אָננעמען</translation>
+    </message>
+    <message>
+        <source>Decline</source>
+        <translation>אָפּזאָגן</translation>
+    </message>
+    <message>
+        <source>Add to calendar</source>
+        <translation>צוגעבן צום קאַלענדאַר</translation>
+    </message>
+    <message>
+        <source>Show in calendar</source>
+        <translation>ווײַזן אין קאַלענדאַר</translation>
+    </message>
+    <message>
+        <source>Open link…</source>
+        <translation>עפֿענען לינק…</translation>
+    </message>
+    <message>
+        <source>Answers can be sent to senders you trust; accept this sender first. Check these details against the message.</source>
+        <translation>ענטפֿערס גייען בלויז צו שיקערס וואָס איר געטרויט; נעמט קודם אָן דעם שיקער. קאָנטראָלירט די פּרטים קעגן דער מעלדונג.</translation>
+    </message>
+    <message>
+        <source>This message was not sent by the meeting's organizer, so it cannot be answered from here. Check these details against the message.</source>
+        <translation>די מעלדונג איז נישט געשיקט געוואָרן פֿונעם אָרגאַניזאַטאָר פֿון דער זיצונג, דעריבער קען מען נישט ענטפֿערן פֿון דאַנען. קאָנטראָלירט די פּרטים קעגן דער מעלדונג.</translation>
     </message>
 </context>
 <context>
@@ -690,6 +1279,18 @@ To: %4
 <context>
     <name>MailApp</name>
     <message>
+        <source>Today</source>
+        <translation>הײַנט</translation>
+    </message>
+    <message>
+        <source>Event</source>
+        <translation>געשעעניש</translation>
+    </message>
+    <message>
+        <source>%1 · %2</source>
+        <translation>%1 · %2</translation>
+    </message>
+    <message>
         <source>Unnamed device</source>
         <translation>מכשיר אָן נאָמען</translation>
     </message>
@@ -753,8 +1354,56 @@ To: %4
         <translation>מע האָט ניט געקענט אָפּהיטן די בײַלאַגע.</translation>
     </message>
     <message>
+        <source>Could not add the event.</source>
+        <translation>מע האָט נישט געקענט צוגעבן די געשעעניש.</translation>
+    </message>
+    <message>
+        <source>Added to the calendar.</source>
+        <translation>צוגעגעבן צום קאַלענדאַר.</translation>
+    </message>
+    <message>
+        <source>(No title)</source>
+        <translation>(אָן טיטל)</translation>
+    </message>
+    <message>
+        <source>All day</source>
+        <translation>אַ גאַנצן טאָג</translation>
+    </message>
+    <message>
+        <source>Give the event a title.</source>
+        <translation>גיט דער געשעעניש אַ טיטל.</translation>
+    </message>
+    <message>
+        <source>The start is not a date and time.</source>
+        <translation>דער אָנהייב איז נישט קיין דאַטע מיט אַ צײַט.</translation>
+    </message>
+    <message>
+        <source>Saved, but the invitation was not sent: %1</source>
+        <translation>אויפֿגעהיט, אָבער די פֿאַרבעטונג איז נישט געשיקט געוואָרן: %1</translation>
+    </message>
+    <message>
+        <source>Invitation sent.</source>
+        <translation>פֿאַרבעטונג געשיקט.</translation>
+    </message>
+    <message>
+        <source>Cancelled, but the attendees were not told: %1</source>
+        <translation>אָפּגעזאָגט, אָבער די אָנטיילנעמער זענען נישט געמאָלדן געוואָרן: %1</translation>
+    </message>
+    <message>
+        <source>Saved in your calendar, but the answer was not sent: %1</source>
+        <translation>אויפֿגעהיט אין אײַער קאַלענדאַר, אָבער דער ענטפֿער איז נישט געשיקט געוואָרן: %1</translation>
+    </message>
+    <message>
+        <source>Answer sent.</source>
+        <translation>ענטפֿער געשיקט.</translation>
+    </message>
+    <message>
         <source>Could not save the event.</source>
         <translation>מע האָט נישט געקענט אָפּהיטן די געשעעניש.</translation>
+    </message>
+    <message>
+        <source>event</source>
+        <translation>געשעעניש</translation>
     </message>
     <message>
         <source>This message cannot be decrypted, or its original is no longer kept.</source>
@@ -765,7 +1414,7 @@ To: %4
         <translation>דער אָריגינאַל פֿון דעם בריוו ווערט מער נישט אָפּגעהיט.</translation>
     </message>
     <message>
-        <source>This is not a contact&apos;s code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
+        <source>This is not a contact's code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
         <translation>דאָס איז נישט קיין קאָנטאַקט־קאָד. אַ קאָד צו באַשטעטיקן הייבט זיך אָן מיט OPENPGP4FPR: אָדער https://i.delta.chat/.</translation>
     </message>
     <message numerus="yes">
@@ -1319,32 +1968,9 @@ To: %4
     </message>
 </context>
 <context>
-    <name>ScanView</name>
-    <message>
-        <source>This device has no camera. Type the code instead.</source>
-        <translation>דער מכשיר האָט נישט קיין קאַמערע. שרײַבט אַרײַן דעם קאָד אַנשטאָט.</translation>
-    </message>
-    <message>
-        <source>e3mail may not use the camera. Allow it in the system settings, or type the code instead.</source>
-        <translation>e3mail טאָר נישט ניצן די קאַמערע. דערלויבט עס אין די סיסטעם־איינשטעלונגען, אָדער שרײַבט אַרײַן דעם קאָד אַנשטאָט.</translation>
-    </message>
-    <message>
-        <source>Asking for the camera…</source>
-        <translation>מע בעט רשות פֿאַר דער קאַמערע…</translation>
-    </message>
-    <message>
-        <source>Point the camera at the QR code on the other device.</source>
-        <translation>ווענדט די קאַמערע צום QR־קאָד אויפֿן אַנדערן מכשיר.</translation>
-    </message>
-    <message>
-        <source>Type the code instead</source>
-        <translation>אַרײַנשרײַבן דעם קאָד אַנשטאָט</translation>
-    </message>
-</context>
-<context>
     <name>SecureJoin</name>
     <message>
-        <source>This is your own code. Scan the other person&apos;s code instead.</source>
+        <source>This is your own code. Scan the other person's code instead.</source>
         <translation>דאָס איז דײַן אייגענער קאָד. סקאַנירט אַנשטאָט דעם דעם אַנדערנס קאָד.</translation>
     </message>
     <message>
@@ -1387,7 +2013,7 @@ To: %4
         <translation>ווײַזן ווער האָט געשריבן און די טעמע</translation>
     </message>
     <message>
-        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system&apos;s notification history, outside e3mail&apos;s encryption.</source>
+        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system's notification history, outside e3mail's encryption.</source>
         <translation>פֿאַר דעם מכשיר, ווען e3mail איז אָפֿן און נישט פֿאָרנט. אַ טעמע וואָס ווערט דאָ געוויזן בלײַבט אין דער סיסטעמס מעלדונג־היסטאָריע, אַרויס פֿון e3mail ס פֿאַרשליסלונג.</translation>
     </message>
     <message>
@@ -1399,7 +2025,7 @@ To: %4
         <translation>ווײַטער סינכראָניזירן אין הינטערגרונט</translation>
     </message>
     <message>
-        <source>Mail and your other devices&apos; changes keep arriving while e3mail is not in front. Android shows a notification for as long as this is on, and it uses more battery. Swiping e3mail away from the recent apps ends it.</source>
+        <source>Mail and your other devices' changes keep arriving while e3mail is not in front. Android shows a notification for as long as this is on, and it uses more battery. Swiping e3mail away from the recent apps ends it.</source>
         <translation>פּאָסט און ענדערונגען פֿון אײַערע אַנדערע מכשירים קומען ווײַטער אָן ווען e3mail איז נישט פֿאָרנט. Android ווײַזט אַ מעלדונג אַזוי לאַנג ווי דאָס איז אָן, און עס ניצט מער באַטעריע. אַוועקשלעפּן e3mail פֿון די לעצטע אַפּס ענדיקט עס.</translation>
     </message>
     <message>
@@ -1439,7 +2065,7 @@ To: %4
         <translation>צולייגן אַן אונטערשריפֿט…</translation>
     </message>
     <message>
-        <source>The chosen one goes into new mail. The composer&apos;s signature button swaps it for another.</source>
+        <source>The chosen one goes into new mail. The composer's signature button swaps it for another.</source>
         <translation>די אויסגעקליבענע גייט אַרײַן אין נײַע בריוו. דער אונטערשריפֿט־קנעפּל בײַם שרײַבן בײַט זי אויף אַן אַנדערע.</translation>
     </message>
     <message>
@@ -1495,6 +2121,50 @@ To: %4
         <translation>אַ באַשטעטיקונג גייט איין מאָל, ווען דו עפֿנסט ערשט דעם בריוו, אויף וועלכן עס איז מכשיר. פֿרעמדע און ווער דו טרויסט נישט באַקומען קיינמאָל נישט.</translation>
     </message>
     <message>
+        <source>Calendar</source>
+        <translation>קאַלענדאַר</translation>
+    </message>
+    <message>
+        <source>Remind me before an event</source>
+        <translation>דערמאָנען מיר פֿאַר אַ געשעעניש</translation>
+    </message>
+    <message>
+        <source>Never</source>
+        <translation>קיין מאָל</translation>
+    </message>
+    <message>
+        <source>At the start</source>
+        <translation>בײַם אָנהייב</translation>
+    </message>
+    <message>
+        <source>5 minutes before</source>
+        <translation>5 מינוט פֿריִער</translation>
+    </message>
+    <message>
+        <source>10 minutes before</source>
+        <translation>10 מינוט פֿריִער</translation>
+    </message>
+    <message>
+        <source>15 minutes before</source>
+        <translation>15 מינוט פֿריִער</translation>
+    </message>
+    <message>
+        <source>30 minutes before</source>
+        <translation>30 מינוט פֿריִער</translation>
+    </message>
+    <message>
+        <source>1 hour before</source>
+        <translation>1 שעה פֿריִער</translation>
+    </message>
+    <message>
+        <source>1 day before</source>
+        <translation>1 טאָג פֿריִער</translation>
+    </message>
+    <message>
+        <source>For events you add and invitations you accept; each event can differ. Reminders show only while e3mail runs. The calendar lives on your devices and is arranged by email; nothing is shared with a calendar server.</source>
+        <translation>פֿאַר געשעענישן וואָס איר גיט צו און פֿאַרבעטונגען וואָס איר נעמט אָן; יעדע געשעעניש קען זײַן אַנדערש. דערמאָנונגען ווײַזן זיך בלויז בעת e3mail לויפֿט. דער קאַלענדאַר לעבט אויף אײַערע מכשירים און ווערט אײַנגעאָרדנט דורך בליצפּאָסט; גאָרנישט ווערט געטיילט מיט אַ קאַלענדאַר־סערווער.</translation>
+    </message>
+    <message>
         <source>Trash</source>
         <translation>מיסט</translation>
     </message>
@@ -1535,7 +2205,7 @@ To: %4
         <translation>טעג</translation>
     </message>
     <message>
-        <source>Mail that was on the server before e3mail first connected is never removed. &quot;Never&quot; lets another mail program keep using this mailbox.</source>
+        <source>Mail that was on the server before e3mail first connected is never removed. "Never" lets another mail program keep using this mailbox.</source>
         <translation>פּאָסט וואָס איז געווען אויפֿן סערווער איידער e3mail האָט זיך צום ערשטן מאָל פֿאַרבונדן, ווערט קיינמאָל ניט אויסגעמעקט. „קיינמאָל” לאָזט אַן אַנדער פּאָסט־פּראָגראַם ווײַטער ניצן דעם פּאָסטקאַסטן.</translation>
     </message>
     <message>
@@ -1547,15 +2217,15 @@ To: %4
         <translation>סעקונדעס</translation>
     </message>
     <message>
-        <source>The sending server&apos;s certificate is not trusted, or is not the one trusted before.</source>
+        <source>The sending server's certificate is not trusted, or is not the one trusted before.</source>
         <translation>דער סערטיפֿיקאַט פֿון שיקן־סערווער איז ניט באַגלייבט, אָדער ניט דער וואָס מע האָט פֿריִער באַגלייבט.</translation>
     </message>
     <message>
-        <source>The incoming server&apos;s certificate is not trusted, or is not the one trusted before.</source>
+        <source>The incoming server's certificate is not trusted, or is not the one trusted before.</source>
         <translation>דער סערטיפֿיקאַט פֿון אַרײַנקומענדיקן סערווער איז ניט באַגלייבט, אָדער ניט דער וואָס מע האָט פֿריִער באַגלייבט.</translation>
     </message>
     <message>
-        <source>Trust it only if this SHA-256 fingerprint matches the one your server&apos;s administrator gave you.</source>
+        <source>Trust it only if this SHA-256 fingerprint matches the one your server's administrator gave you.</source>
         <translation>באַגלייבט אים נאָר אויב דער SHA-256 פֿינגערדרוק שטימט מיטן וואָס דער אַדמיניסטראַטאָר פֿון אײַער סערווער האָט אײַך געגעבן.</translation>
     </message>
     <message>
@@ -1619,7 +2289,7 @@ To: %4
         <translation>אָריגינאַלן</translation>
     </message>
     <message>
-        <source>Keep each message&apos;s original for</source>
+        <source>Keep each message's original for</source>
         <translation>האַלטן דעם אָריגינאַל פֿון יעדן בריוו</translation>
     </message>
     <message>
@@ -1687,7 +2357,7 @@ To: %4
         <translation>רעלע</translation>
     </message>
     <message>
-        <source>n0&apos;s public relays</source>
+        <source>n0's public relays</source>
         <translation>די עפֿנטלעכע רעלעס פֿון n0</translation>
     </message>
     <message>
@@ -1819,7 +2489,7 @@ To: %4
         <translation>אַוועקנעמען %1?</translation>
     </message>
     <message>
-        <source>It stops syncing with this account&apos;s other devices. What is already on it stays there.</source>
+        <source>It stops syncing with this account's other devices. What is already on it stays there.</source>
         <translation>ער הערט אויף זיך סינכראָניזירן מיט די אַנדערע מכשירים פֿון דעם חשבון. וואָס איז שוין אויף אים, בלײַבט דאָרט.</translation>
     </message>
     <message>
@@ -1834,15 +2504,15 @@ To: %4
         <translation>סערווער־איינשטעלונגען פֿון אײַער פּראָווײַדער.</translation>
     </message>
     <message>
-        <source>Server settings from Thunderbird&apos;s provider database.</source>
+        <source>Server settings from Thunderbird's provider database.</source>
         <translation>סערווער־איינשטעלונגען פֿון Thunderbird ס פּראָווײַדער־דאַטנבאַזע.</translation>
     </message>
     <message>
-        <source>Server settings of the service that receives your domain&apos;s mail. Check them before connecting.</source>
+        <source>Server settings of the service that receives your domain's mail. Check them before connecting.</source>
         <translation>סערווער־איינשטעלונגען פֿון דער סערוויס וואָס באַקומט די פּאָסט פֿון אײַער דאָמען. קאָנטראָלירט זיי איידער איר פֿאַרבינדט זיך.</translation>
     </message>
     <message>
-        <source>Server settings from your provider&apos;s Autodiscover service.</source>
+        <source>Server settings from your provider's Autodiscover service.</source>
         <translation>סערווער־איינשטעלונגען פֿון אײַער פּראָווײַדערס Autodiscover־סערוויס.</translation>
     </message>
     <message>
@@ -1953,7 +2623,7 @@ To: %4
         <translation>אַרויסגעגעבן פֿאַר %1 פֿון %2, גילטיק ביז %3.</translation>
     </message>
     <message>
-        <source>Trust it only if this fingerprint matches the one your server&apos;s administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
+        <source>Trust it only if this fingerprint matches the one your server's administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
         <translation>באַגלייבט אים נאָר אויב דער פֿינגערדרוק שטימט מיטן וואָס דער אַדמיניסטראַטאָר פֿון אײַער סערווער האָט אײַך געגעבן. דעמאָלט נעמט e3mail אָן פֿון דעם סערווער דעם סערטיפֿיקאַט, און קיין אַנדערן ניט.</translation>
     </message>
     <message>
@@ -2002,6 +2672,10 @@ To: %4
     <message>
         <source>Inbox</source>
         <translation>אַרײַנקומענדיקע</translation>
+    </message>
+    <message>
+        <source>Calendar</source>
+        <translation>קאַלענדאַר</translation>
     </message>
     <message>
         <source>Unverified</source>
@@ -2086,7 +2760,7 @@ To: %4
         <translation>דאָס אַרײַנגיין האָט געדויערט צו לאַנג. פּרובירט ווידער.</translation>
     </message>
     <message>
-        <source>Cannot listen for the browser&apos;s answer on this device.</source>
+        <source>Cannot listen for the browser's answer on this device.</source>
         <translation>מע קען נישט באַקומען דעם בלעטערערס ענטפֿער אויף דעם מכשיר.</translation>
     </message>
     <message>
@@ -2276,8 +2950,8 @@ To: %4
 <context>
     <name>StructuredCard</name>
     <message>
-        <source>Add to calendar…</source>
-        <translation>צולייגן צום קאַלענדאַר…</translation>
+        <source>Add to calendar</source>
+        <translation>צוגעבן צום קאַלענדאַר</translation>
     </message>
     <message>
         <source>Open…</source>
@@ -2286,10 +2960,6 @@ To: %4
     <message>
         <source>Shown as text only. Buttons appear for senders you trust whose mail is signed by their key; check these details against the message.</source>
         <translation>בלויז ווי טעקסט געוויזן. קנעפּלעך באַווײַזן זיך פֿאַר געטרויטע שיקער וועמענס פּאָסט איז אונטערגעשריבן מיט זייער שליסל; קאָנטראָלירט די פּרטים לויטן בריוו.</translation>
-    </message>
-    <message>
-        <source>Calendar files (*.ics)</source>
-        <translation>קאַלענדאַר־טעקעס (*.ics)</translation>
     </message>
 </context>
 <context>

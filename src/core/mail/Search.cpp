@@ -128,7 +128,7 @@ std::optional<MessageDetail> Search::detail(MailContext &ctx, qint64 msgId)
     Statement st(ctx.db, (QByteArray("SELECT ") + kSummaryColumns
                           + ", m.message_id, m.in_reply_to, m.reply_to, m.body_text, m.body_html, m.raw_blob, "
                             "m.raw_expires_at, m.send_encryption, m.mdn_to, m.ephemeral_seconds, m.expires_at, "
-                            "m.structured FROM messages m WHERE m.id=?")
+                            "m.structured, m.calendar, m.cal_uid, m.cal_method FROM messages m WHERE m.id=?")
                              .constData());
     st.bind(1, msgId);
     if (!st.step())
@@ -154,6 +154,9 @@ std::optional<MessageDetail> Search::detail(MailContext &ctx, qint64 msgId)
     if (!st.isNull(25))
         d.expiresAt = QDateTime::fromMSecsSinceEpoch(st.int64(25));
     d.structured = st.text(26);
+    d.calendar = st.text(27);
+    d.calUid = st.text(28);
+    d.calMethod = st.text(29);
     Statement rc(ctx.db, "SELECT addr, at FROM receipts WHERE msg_id=? ORDER BY at");
     rc.bind(1, msgId);
     while (rc.step())

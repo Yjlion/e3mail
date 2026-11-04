@@ -19,7 +19,7 @@
         <translation>e3mail ממשיך להסתנכרן</translation>
     </message>
     <message>
-        <source>New mail and other devices&apos; changes arrive while e3mail is in the background.</source>
+        <source>New mail and other devices' changes arrive while e3mail is in the background.</source>
         <translation>דואר חדש ושינויים ממכשירים אחרים מגיעים בזמן ש־e3mail ברקע.</translation>
     </message>
     <message>
@@ -165,20 +165,236 @@
         <translation>מהגיבוי החדש ביותר שם נוצר מכשיר חדש של החשבון. הוא לא מסתנכרן עם המכשירים האחרים שלכם עד שתצמדו אותו.</translation>
     </message>
     <message>
-        <source>The server&apos;s SSH host key has changed. Trust the new one only if the server&apos;s administrator says it changed:</source>
+        <source>The server's SSH host key has changed. Trust the new one only if the server's administrator says it changed:</source>
         <translation>מפתח המארח SSH של השרת השתנה. בטחו בחדש רק אם מנהל השרת אומר שהוא השתנה:</translation>
     </message>
     <message>
-        <source>The server&apos;s SSH host key is not known yet. Trust it only if it matches what the server&apos;s administrator gives you:</source>
+        <source>The server's SSH host key is not known yet. Trust it only if it matches what the server's administrator gives you:</source>
         <translation>מפתח המארח SSH של השרת עדיין לא מוכר. בטחו בו רק אם הוא תואם למה שמנהל השרת נותן לכם:</translation>
     </message>
     <message>
-        <source>The server&apos;s certificate is not trusted. Trust it only if its fingerprint matches what the server&apos;s administrator gives you:</source>
+        <source>The server's certificate is not trusted. Trust it only if its fingerprint matches what the server's administrator gives you:</source>
         <translation>האישור של השרת אינו מהימן. בטחו בו רק אם טביעת האצבע שלו תואמת למה שמנהל השרת נותן לכם:</translation>
     </message>
     <message>
         <source>Trust it</source>
         <translation>לבטוח</translation>
+    </message>
+</context>
+<context>
+    <name>Calendar</name>
+    <message>
+        <source>Repeats (rule not understood: %1)</source>
+        <translation>חוזר (כלל לא מובן: %1)</translation>
+    </message>
+    <message>
+        <source>Every day</source>
+        <translation>כל יום</translation>
+    </message>
+    <message numerus="yes">
+        <source>Every %n days</source>
+        <translation>
+            <numerusform>כל יום</numerusform>
+            <numerusform>כל %n ימים</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Every week</source>
+        <translation>כל שבוע</translation>
+    </message>
+    <message numerus="yes">
+        <source>Every %n weeks</source>
+        <translation>
+            <numerusform>כל שבוע</numerusform>
+            <numerusform>כל %n שבועות</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>%1 on %2</source>
+        <translation>%1 ב%2</translation>
+    </message>
+    <message>
+        <source>Every month</source>
+        <translation>כל חודש</translation>
+    </message>
+    <message numerus="yes">
+        <source>Every %n months</source>
+        <translation>
+            <numerusform>כל חודש</numerusform>
+            <numerusform>כל %n חודשים</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Every year</source>
+        <translation>כל שנה</translation>
+    </message>
+    <message numerus="yes">
+        <source>Every %n years</source>
+        <translation>
+            <numerusform>כל שנה</numerusform>
+            <numerusform>כל %n שנים</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%1, %n time(s)</source>
+        <translation>
+            <numerusform>%1, פעם אחת</numerusform>
+            <numerusform>%1, %n פעמים</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>%1, until %2</source>
+        <translation>%1, עד %2</translation>
+    </message>
+    <message>
+        <source>%1 – %2</source>
+        <translation>%1 – %2</translation>
+    </message>
+    <message>
+        <source>%1, %2</source>
+        <translation>%1, %2</translation>
+    </message>
+    <message>
+        <source>%1, %2 – %3</source>
+        <translation>%1, %2 – %3</translation>
+    </message>
+    <message>
+        <source>%1 has accepted the invitation to “%2”.</source>
+        <translation>%1 אישר/ה את ההזמנה ל„%2”.</translation>
+    </message>
+    <message>
+        <source>%1 has tentatively accepted the invitation to “%2”.</source>
+        <translation>%1 אישר/ה באופן זמני את ההזמנה ל„%2”.</translation>
+    </message>
+    <message>
+        <source>%1 has declined the invitation to “%2”.</source>
+        <translation>%1 דחה/תה את ההזמנה ל„%2”.</translation>
+    </message>
+    <message>
+        <source>%1 has not answered the invitation to “%2”.</source>
+        <translation>%1 לא השיב/ה על ההזמנה ל„%2”.</translation>
+    </message>
+    <message>
+        <source>Accepted: %1</source>
+        <translation>אושר: %1</translation>
+    </message>
+    <message>
+        <source>Tentative: %1</source>
+        <translation>אולי: %1</translation>
+    </message>
+    <message>
+        <source>Declined: %1</source>
+        <translation>נדחה: %1</translation>
+    </message>
+    <message>
+        <source>Cancelled: %1</source>
+        <translation>בוטל: %1</translation>
+    </message>
+    <message>
+        <source>%1 has cancelled “%2”.</source>
+        <translation>%1 ביטל/ה את „%2”.</translation>
+    </message>
+    <message>
+        <source>Updated invitation: %1</source>
+        <translation>הזמנה מעודכנת: %1</translation>
+    </message>
+    <message>
+        <source>%1 has changed “%2”. Here are the new details.</source>
+        <translation>%1 שינה/תה את „%2”. אלה הפרטים החדשים.</translation>
+    </message>
+    <message>
+        <source>Invitation: %1</source>
+        <translation>הזמנה: %1</translation>
+    </message>
+    <message>
+        <source>%1 invites you to “%2”.</source>
+        <translation>%1 מזמין/ה אותך ל„%2”.</translation>
+    </message>
+    <message>
+        <source>When: %1</source>
+        <translation>מתי: %1</translation>
+    </message>
+    <message>
+        <source>Repeats: %1</source>
+        <translation>חזרה: %1</translation>
+    </message>
+    <message>
+        <source>Where: %1</source>
+        <translation>איפה: %1</translation>
+    </message>
+    <message>
+        <source>Link: %1</source>
+        <translation>קישור: %1</translation>
+    </message>
+    <message>
+        <source>Who: %1</source>
+        <translation>מי: %1</translation>
+    </message>
+    <message>
+        <source>This invitation cannot be answered.</source>
+        <translation>אי אפשר להשיב על הזמנה זו.</translation>
+    </message>
+    <message>
+        <source>A newer version of this invitation is in your calendar.</source>
+        <translation>גרסה חדשה יותר של הזמנה זו נמצאת ביומן שלך.</translation>
+    </message>
+    <message>
+        <source>This invitation cannot be added.</source>
+        <translation>אי אפשר להוסיף הזמנה זו.</translation>
+    </message>
+</context>
+<context>
+    <name>CalendarView</name>
+    <message>
+        <source>Previous month</source>
+        <translation>החודש הקודם</translation>
+    </message>
+    <message>
+        <source>Next month</source>
+        <translation>החודש הבא</translation>
+    </message>
+    <message>
+        <source>Today</source>
+        <translation>היום</translation>
+    </message>
+    <message>
+        <source>New event</source>
+        <translation>אירוע חדש</translation>
+    </message>
+    <message numerus="yes">
+        <source>+%n more</source>
+        <translation>
+            <numerusform>+%n נוסף</numerusform>
+            <numerusform>+%n נוספים</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Coming up</source>
+        <translation>בקרוב</translation>
+    </message>
+    <message>
+        <source>Show what is coming</source>
+        <translation>הצגת מה שבקרוב</translation>
+    </message>
+    <message>
+        <source>Tentative</source>
+        <translation>אולי</translation>
+    </message>
+    <message>
+        <source>Not answered</source>
+        <translation>ללא תשובה</translation>
+    </message>
+    <message>
+        <source>Repeats</source>
+        <translation>חזרה</translation>
+    </message>
+    <message>
+        <source>Nothing on this day.</source>
+        <translation>אין כלום ביום זה.</translation>
+    </message>
+    <message>
+        <source>Nothing coming up. Invitations you accept and events you add appear here.</source>
+        <translation>אין אירועים קרובים. הזמנות שתאשרו ואירועים שתוסיפו יופיעו כאן.</translation>
     </message>
 </context>
 <context>
@@ -566,6 +782,260 @@ To: %4
     </message>
 </context>
 <context>
+    <name>DateField</name>
+    <message>
+        <source>Pick a date</source>
+        <translation>בחירת תאריך</translation>
+    </message>
+    <message>
+        <source>Previous month</source>
+        <translation>החודש הקודם</translation>
+    </message>
+    <message>
+        <source>Next month</source>
+        <translation>החודש הבא</translation>
+    </message>
+</context>
+<context>
+    <name>EventDialog</name>
+    <message>
+        <source>Edit event</source>
+        <translation>עריכת אירוע</translation>
+    </message>
+    <message>
+        <source>New event</source>
+        <translation>אירוע חדש</translation>
+    </message>
+    <message>
+        <source>Title</source>
+        <translation>כותרת</translation>
+    </message>
+    <message>
+        <source>All day</source>
+        <translation>כל היום</translation>
+    </message>
+    <message>
+        <source>Starts</source>
+        <translation>התחלה</translation>
+    </message>
+    <message>
+        <source>Ends</source>
+        <translation>סיום</translation>
+    </message>
+    <message>
+        <source>Times are in this device's time zone.</source>
+        <translation>השעות לפי אזור הזמן של מכשיר זה.</translation>
+    </message>
+    <message>
+        <source>Repeats</source>
+        <translation>חזרה</translation>
+    </message>
+    <message>
+        <source>Never</source>
+        <translation>אף פעם</translation>
+    </message>
+    <message>
+        <source>Every day</source>
+        <translation>כל יום</translation>
+    </message>
+    <message>
+        <source>Every week</source>
+        <translation>כל שבוע</translation>
+    </message>
+    <message>
+        <source>Every month</source>
+        <translation>כל חודש</translation>
+    </message>
+    <message>
+        <source>Every year</source>
+        <translation>כל שנה</translation>
+    </message>
+    <message>
+        <source>As received</source>
+        <translation>כפי שהתקבל</translation>
+    </message>
+    <message>
+        <source>every</source>
+        <translation>כל</translation>
+    </message>
+    <message>
+        <source>day(s)</source>
+        <translation>ימים</translation>
+    </message>
+    <message>
+        <source>week(s)</source>
+        <translation>שבועות</translation>
+    </message>
+    <message>
+        <source>month(s)</source>
+        <translation>חודשים</translation>
+    </message>
+    <message>
+        <source>year(s)</source>
+        <translation>שנים</translation>
+    </message>
+    <message>
+        <source>This rule came with the invitation and is kept as it is: %1</source>
+        <translation>כלל זה הגיע עם ההזמנה ונשמר כמות שהוא: %1</translation>
+    </message>
+    <message>
+        <source>After</source>
+        <translation>אחרי</translation>
+    </message>
+    <message>
+        <source>On</source>
+        <translation>בתאריך</translation>
+    </message>
+    <message>
+        <source>time(s)</source>
+        <translation>פעמים</translation>
+    </message>
+    <message>
+        <source>Where</source>
+        <translation>איפה</translation>
+    </message>
+    <message>
+        <source>Link</source>
+        <translation>קישור</translation>
+    </message>
+    <message>
+        <source>Attendees</source>
+        <translation>משתתפים</translation>
+    </message>
+    <message>
+        <source>Names or addresses, separated by commas</source>
+        <translation>שמות או כתובות, מופרדים בפסיקים</translation>
+    </message>
+    <message>
+        <source>Attendees get an invitation by email, and an update when the meeting changes.</source>
+        <translation>המשתתפים מקבלים הזמנה בדוא״ל, ועדכון כשהפגישה משתנה.</translation>
+    </message>
+    <message>
+        <source>The invitation will be encrypted: every attendee has a key.</source>
+        <translation>ההזמנה תוצפן: לכל המשתתפים יש מפתח.</translation>
+    </message>
+    <message>
+        <source>The invitation goes unencrypted: no key yet for %1.</source>
+        <translation>ההזמנה תישלח ללא הצפנה: עדיין אין מפתח עבור %1.</translation>
+    </message>
+    <message>
+        <source>The invitation goes unencrypted.</source>
+        <translation>ההזמנה תישלח ללא הצפנה.</translation>
+    </message>
+    <message>
+        <source>Reminder</source>
+        <translation>תזכורת</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>ללא</translation>
+    </message>
+    <message>
+        <source>At the start</source>
+        <translation>בתחילה</translation>
+    </message>
+    <message>
+        <source>5 minutes before</source>
+        <translation>5 דקות לפני</translation>
+    </message>
+    <message>
+        <source>10 minutes before</source>
+        <translation>10 דקות לפני</translation>
+    </message>
+    <message>
+        <source>15 minutes before</source>
+        <translation>15 דקות לפני</translation>
+    </message>
+    <message>
+        <source>30 minutes before</source>
+        <translation>30 דקות לפני</translation>
+    </message>
+    <message>
+        <source>1 hour before</source>
+        <translation>שעה לפני</translation>
+    </message>
+    <message>
+        <source>2 hours before</source>
+        <translation>שעתיים לפני</translation>
+    </message>
+    <message>
+        <source>1 day before</source>
+        <translation>יום לפני</translation>
+    </message>
+    <message>
+        <source>Details</source>
+        <translation>פרטים</translation>
+    </message>
+    <message>
+        <source>%1 organizes this meeting; only the reminder is yours to change here. Answer from the invitation in your mail.</source>
+        <translation>%1 מארגן/ת פגישה זו; כאן אפשר לשנות רק את התזכורת. יש להשיב מההזמנה שבדואר.</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>שמירה</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>ביטול</translation>
+    </message>
+    <message>
+        <source>Cancel meeting…</source>
+        <translation>ביטול הפגישה…</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>הסרה</translation>
+    </message>
+    <message>
+        <source>Export…</source>
+        <translation>ייצוא…</translation>
+    </message>
+    <message>
+        <source>Send the update?</source>
+        <translation>לשלוח את העדכון?</translation>
+    </message>
+    <message>
+        <source>Send the invitation?</source>
+        <translation>לשלוח את ההזמנה?</translation>
+    </message>
+    <message>
+        <source>The attendees get an updated invitation by email and are asked to answer again.</source>
+        <translation>המשתתפים יקבלו הזמנה מעודכנת בדוא״ל ויתבקשו להשיב שוב.</translation>
+    </message>
+    <message>
+        <source>The attendees get an invitation by email.</source>
+        <translation>המשתתפים יקבלו הזמנה בדוא״ל.</translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation>שליחה</translation>
+    </message>
+    <message>
+        <source>Save only</source>
+        <translation>שמירה בלבד</translation>
+    </message>
+    <message>
+        <source>Back</source>
+        <translation>חזרה</translation>
+    </message>
+    <message>
+        <source>Cancel the meeting?</source>
+        <translation>לבטל את הפגישה?</translation>
+    </message>
+    <message>
+        <source>The attendees are told by email that it is cancelled.</source>
+        <translation>המשתתפים יקבלו הודעה בדוא״ל שהיא בוטלה.</translation>
+    </message>
+    <message>
+        <source>Cancel meeting</source>
+        <translation>ביטול הפגישה</translation>
+    </message>
+    <message>
+        <source>Calendar files (*.ics)</source>
+        <translation>קובצי יומן (*.ics)</translation>
+    </message>
+</context>
+<context>
     <name>FirstRunDialog</name>
     <message>
         <source>Before you start</source>
@@ -608,6 +1078,125 @@ To: %4
         <translation>ההודעה הזו מוצפנת ולא ניתן היה לפענח אותה במכשיר הזה.
 
 %1</translation>
+    </message>
+</context>
+<context>
+    <name>InvitationCard</name>
+    <message>
+        <source>Accepted</source>
+        <translation>אושר</translation>
+    </message>
+    <message>
+        <source>Tentative</source>
+        <translation>אולי</translation>
+    </message>
+    <message>
+        <source>Declined</source>
+        <translation>נדחה</translation>
+    </message>
+    <message>
+        <source>Not answered</source>
+        <translation>ללא תשובה</translation>
+    </message>
+    <message>
+        <source>Cancelled: %1</source>
+        <translation>בוטל: %1</translation>
+    </message>
+    <message>
+        <source>%1 accepted.</source>
+        <translation>%1 אישר/ה.</translation>
+    </message>
+    <message>
+        <source>%1 declined.</source>
+        <translation>%1 דחה/תה.</translation>
+    </message>
+    <message>
+        <source>%1 might come.</source>
+        <translation>%1 אולי יגיע/תגיע.</translation>
+    </message>
+    <message>
+        <source>%1 answered.</source>
+        <translation>%1 השיב/ה.</translation>
+    </message>
+    <message>
+        <source>This meeting was cancelled; your calendar is updated.</source>
+        <translation>פגישה זו בוטלה; היומן שלך עודכן.</translation>
+    </message>
+    <message>
+        <source>This meeting was cancelled.</source>
+        <translation>פגישה זו בוטלה.</translation>
+    </message>
+    <message>
+        <source>Your invitation.</source>
+        <translation>ההזמנה שלך.</translation>
+    </message>
+    <message>
+        <source>A newer version of this invitation is in your calendar.</source>
+        <translation>גרסה חדשה יותר של הזמנה זו נמצאת ביומן שלך.</translation>
+    </message>
+    <message>
+        <source>This meeting has since been cancelled.</source>
+        <translation>פגישה זו בוטלה מאז.</translation>
+    </message>
+    <message>
+        <source>In your calendar: %1.</source>
+        <translation>ביומן שלך: %1.</translation>
+    </message>
+    <message>
+        <source>%1 invites you.</source>
+        <translation>%1 מזמין/ה אותך.</translation>
+    </message>
+    <message>
+        <source>When</source>
+        <translation>מתי</translation>
+    </message>
+    <message>
+        <source>Repeats</source>
+        <translation>חזרה</translation>
+    </message>
+    <message>
+        <source>Where</source>
+        <translation>איפה</translation>
+    </message>
+    <message>
+        <source>Organizer</source>
+        <translation>מארגן/ת</translation>
+    </message>
+    <message>
+        <source>Who</source>
+        <translation>מי</translation>
+    </message>
+    <message>
+        <source>Details</source>
+        <translation>פרטים</translation>
+    </message>
+    <message>
+        <source>Accept</source>
+        <translation>אישור</translation>
+    </message>
+    <message>
+        <source>Decline</source>
+        <translation>דחייה</translation>
+    </message>
+    <message>
+        <source>Add to calendar</source>
+        <translation>הוספה ליומן</translation>
+    </message>
+    <message>
+        <source>Show in calendar</source>
+        <translation>הצגה ביומן</translation>
+    </message>
+    <message>
+        <source>Open link…</source>
+        <translation>פתיחת קישור…</translation>
+    </message>
+    <message>
+        <source>Answers can be sent to senders you trust; accept this sender first. Check these details against the message.</source>
+        <translation>תשובות נשלחות רק לשולחים שסומכים עליהם; תחילה יש לאשר שולח זה. יש לבדוק פרטים אלה מול ההודעה.</translation>
+    </message>
+    <message>
+        <source>This message was not sent by the meeting's organizer, so it cannot be answered from here. Check these details against the message.</source>
+        <translation>הודעה זו לא נשלחה על ידי מארגן הפגישה, ולכן אי אפשר להשיב עליה מכאן. יש לבדוק פרטים אלה מול ההודעה.</translation>
     </message>
 </context>
 <context>
@@ -690,6 +1279,18 @@ To: %4
 <context>
     <name>MailApp</name>
     <message>
+        <source>Today</source>
+        <translation>היום</translation>
+    </message>
+    <message>
+        <source>Event</source>
+        <translation>אירוע</translation>
+    </message>
+    <message>
+        <source>%1 · %2</source>
+        <translation>%1 · %2</translation>
+    </message>
+    <message>
         <source>Unnamed device</source>
         <translation>מכשיר ללא שם</translation>
     </message>
@@ -753,8 +1354,56 @@ To: %4
         <translation>לא ניתן היה לשמור את הקובץ המצורף.</translation>
     </message>
     <message>
+        <source>Could not add the event.</source>
+        <translation>לא ניתן להוסיף את האירוע.</translation>
+    </message>
+    <message>
+        <source>Added to the calendar.</source>
+        <translation>נוסף ליומן.</translation>
+    </message>
+    <message>
+        <source>(No title)</source>
+        <translation>(ללא כותרת)</translation>
+    </message>
+    <message>
+        <source>All day</source>
+        <translation>כל היום</translation>
+    </message>
+    <message>
+        <source>Give the event a title.</source>
+        <translation>יש לתת לאירוע כותרת.</translation>
+    </message>
+    <message>
+        <source>The start is not a date and time.</source>
+        <translation>ההתחלה אינה תאריך ושעה.</translation>
+    </message>
+    <message>
+        <source>Saved, but the invitation was not sent: %1</source>
+        <translation>נשמר, אך ההזמנה לא נשלחה: %1</translation>
+    </message>
+    <message>
+        <source>Invitation sent.</source>
+        <translation>ההזמנה נשלחה.</translation>
+    </message>
+    <message>
+        <source>Cancelled, but the attendees were not told: %1</source>
+        <translation>בוטל, אך המשתתפים לא עודכנו: %1</translation>
+    </message>
+    <message>
+        <source>Saved in your calendar, but the answer was not sent: %1</source>
+        <translation>נשמר ביומן שלך, אך התשובה לא נשלחה: %1</translation>
+    </message>
+    <message>
+        <source>Answer sent.</source>
+        <translation>התשובה נשלחה.</translation>
+    </message>
+    <message>
         <source>Could not save the event.</source>
         <translation>לא ניתן היה לשמור את האירוע.</translation>
+    </message>
+    <message>
+        <source>event</source>
+        <translation>אירוע</translation>
     </message>
     <message>
         <source>This message cannot be decrypted, or its original is no longer kept.</source>
@@ -765,7 +1414,7 @@ To: %4
         <translation>העותק המקורי של הודעה זו כבר לא נשמר.</translation>
     </message>
     <message>
-        <source>This is not a contact&apos;s code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
+        <source>This is not a contact's code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
         <translation>זה אינו קוד של איש קשר. קוד לאימות מתחיל ב־OPENPGP4FPR: או ב־https://i.delta.chat/.</translation>
     </message>
     <message numerus="yes">
@@ -1319,32 +1968,9 @@ To: %4
     </message>
 </context>
 <context>
-    <name>ScanView</name>
-    <message>
-        <source>This device has no camera. Type the code instead.</source>
-        <translation>אין מצלמה במכשיר הזה. הקלידו את הקוד במקום.</translation>
-    </message>
-    <message>
-        <source>e3mail may not use the camera. Allow it in the system settings, or type the code instead.</source>
-        <translation>ל־e3mail אין הרשאה להשתמש במצלמה. אפשרו זאת בהגדרות המערכת, או הקלידו את הקוד במקום.</translation>
-    </message>
-    <message>
-        <source>Asking for the camera…</source>
-        <translation>מבקשים גישה למצלמה…</translation>
-    </message>
-    <message>
-        <source>Point the camera at the QR code on the other device.</source>
-        <translation>כוונו את המצלמה אל קוד ה־QR במכשיר השני.</translation>
-    </message>
-    <message>
-        <source>Type the code instead</source>
-        <translation>הקלדת הקוד במקום</translation>
-    </message>
-</context>
-<context>
     <name>SecureJoin</name>
     <message>
-        <source>This is your own code. Scan the other person&apos;s code instead.</source>
+        <source>This is your own code. Scan the other person's code instead.</source>
         <translation>זה הקוד שלך. יש לסרוק את הקוד של האדם השני.</translation>
     </message>
     <message>
@@ -1387,7 +2013,7 @@ To: %4
         <translation>להציג מי כתב ואת הנושא</translation>
     </message>
     <message>
-        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system&apos;s notification history, outside e3mail&apos;s encryption.</source>
+        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system's notification history, outside e3mail's encryption.</source>
         <translation>למכשיר הזה, כש־e3mail פתוח ולא בחזית. נושא שמוצג כאן נשמר בהיסטוריית ההתראות של המערכת, מחוץ להצפנה של e3mail.</translation>
     </message>
     <message>
@@ -1399,7 +2025,7 @@ To: %4
         <translation>להמשיך לסנכרן ברקע</translation>
     </message>
     <message>
-        <source>Mail and your other devices&apos; changes keep arriving while e3mail is not in front. Android shows a notification for as long as this is on, and it uses more battery. Swiping e3mail away from the recent apps ends it.</source>
+        <source>Mail and your other devices' changes keep arriving while e3mail is not in front. Android shows a notification for as long as this is on, and it uses more battery. Swiping e3mail away from the recent apps ends it.</source>
         <translation>דואר ושינויים מהמכשירים האחרים שלכם ממשיכים להגיע כש־e3mail לא בחזית. Android מציג התראה כל עוד זה פועל, וזה צורך יותר סוללה. החלקת e3mail מהאפליקציות האחרונות מסיימת את זה.</translation>
     </message>
     <message>
@@ -1439,7 +2065,7 @@ To: %4
         <translation>הוספת חתימה…</translation>
     </message>
     <message>
-        <source>The chosen one goes into new mail. The composer&apos;s signature button swaps it for another.</source>
+        <source>The chosen one goes into new mail. The composer's signature button swaps it for another.</source>
         <translation>החתימה שנבחרה נכנסת להודעות חדשות. כפתור החתימה בעורך מחליף אותה באחרת.</translation>
     </message>
     <message>
@@ -1495,6 +2121,50 @@ To: %4
         <translation>אישור נשלח פעם אחת, כשפותחים את ההודעה לראשונה, בכל מכשיר שהוא. זרים ומי שאינו מהימן עליך לא יקבלו אותו לעולם.</translation>
     </message>
     <message>
+        <source>Calendar</source>
+        <translation>יומן</translation>
+    </message>
+    <message>
+        <source>Remind me before an event</source>
+        <translation>תזכורת לפני אירוע</translation>
+    </message>
+    <message>
+        <source>Never</source>
+        <translation>אף פעם</translation>
+    </message>
+    <message>
+        <source>At the start</source>
+        <translation>בתחילה</translation>
+    </message>
+    <message>
+        <source>5 minutes before</source>
+        <translation>5 דקות לפני</translation>
+    </message>
+    <message>
+        <source>10 minutes before</source>
+        <translation>10 דקות לפני</translation>
+    </message>
+    <message>
+        <source>15 minutes before</source>
+        <translation>15 דקות לפני</translation>
+    </message>
+    <message>
+        <source>30 minutes before</source>
+        <translation>30 דקות לפני</translation>
+    </message>
+    <message>
+        <source>1 hour before</source>
+        <translation>שעה לפני</translation>
+    </message>
+    <message>
+        <source>1 day before</source>
+        <translation>יום לפני</translation>
+    </message>
+    <message>
+        <source>For events you add and invitations you accept; each event can differ. Reminders show only while e3mail runs. The calendar lives on your devices and is arranged by email; nothing is shared with a calendar server.</source>
+        <translation>לאירועים שתוסיפו ולהזמנות שתאשרו; כל אירוע יכול להיות שונה. תזכורות מוצגות רק בזמן ש‑e3mail פועל. היומן חי על המכשירים שלכם ומתואם בדוא״ל; שום דבר לא משותף עם שרת יומן.</translation>
+    </message>
+    <message>
         <source>Trash</source>
         <translation>אשפה</translation>
     </message>
@@ -1535,7 +2205,7 @@ To: %4
         <translation>ימים</translation>
     </message>
     <message>
-        <source>Mail that was on the server before e3mail first connected is never removed. &quot;Never&quot; lets another mail program keep using this mailbox.</source>
+        <source>Mail that was on the server before e3mail first connected is never removed. "Never" lets another mail program keep using this mailbox.</source>
         <translation>דואר שהיה בשרת לפני החיבור הראשון של e3mail לעולם לא נמחק. „לעולם לא” מאפשר לתוכנת דואר אחרת להמשיך להשתמש בתיבה הזו.</translation>
     </message>
     <message>
@@ -1547,15 +2217,15 @@ To: %4
         <translation>שניות</translation>
     </message>
     <message>
-        <source>The sending server&apos;s certificate is not trusted, or is not the one trusted before.</source>
+        <source>The sending server's certificate is not trusted, or is not the one trusted before.</source>
         <translation>התעודה של שרת השליחה אינה מהימנה, או שאינה זו שאושרה קודם.</translation>
     </message>
     <message>
-        <source>The incoming server&apos;s certificate is not trusted, or is not the one trusted before.</source>
+        <source>The incoming server's certificate is not trusted, or is not the one trusted before.</source>
         <translation>התעודה של שרת הדואר הנכנס אינה מהימנה, או שאינה זו שאושרה קודם.</translation>
     </message>
     <message>
-        <source>Trust it only if this SHA-256 fingerprint matches the one your server&apos;s administrator gave you.</source>
+        <source>Trust it only if this SHA-256 fingerprint matches the one your server's administrator gave you.</source>
         <translation>יש לסמוך עליה רק אם טביעת ה־SHA-256 הזו תואמת את זו שמנהל השרת מסר לך.</translation>
     </message>
     <message>
@@ -1619,7 +2289,7 @@ To: %4
         <translation>מקורות</translation>
     </message>
     <message>
-        <source>Keep each message&apos;s original for</source>
+        <source>Keep each message's original for</source>
         <translation>שמירת המקור של כל הודעה למשך</translation>
     </message>
     <message>
@@ -1687,7 +2357,7 @@ To: %4
         <translation>ממסר</translation>
     </message>
     <message>
-        <source>n0&apos;s public relays</source>
+        <source>n0's public relays</source>
         <translation>הממסרים הציבוריים של n0</translation>
     </message>
     <message>
@@ -1819,7 +2489,7 @@ To: %4
         <translation>להסיר את %1?</translation>
     </message>
     <message>
-        <source>It stops syncing with this account&apos;s other devices. What is already on it stays there.</source>
+        <source>It stops syncing with this account's other devices. What is already on it stays there.</source>
         <translation>הוא יפסיק להסתנכרן עם שאר מכשירי החשבון. מה שכבר נמצא בו נשאר שם.</translation>
     </message>
     <message>
@@ -1834,15 +2504,15 @@ To: %4
         <translation>הגדרות השרת מספק הדואר שלך.</translation>
     </message>
     <message>
-        <source>Server settings from Thunderbird&apos;s provider database.</source>
+        <source>Server settings from Thunderbird's provider database.</source>
         <translation>הגדרות השרת ממאגר הספקים של Thunderbird.</translation>
     </message>
     <message>
-        <source>Server settings of the service that receives your domain&apos;s mail. Check them before connecting.</source>
+        <source>Server settings of the service that receives your domain's mail. Check them before connecting.</source>
         <translation>הגדרות השרת של השירות שמקבל את הדואר של הדומיין שלך. יש לבדוק אותן לפני ההתחברות.</translation>
     </message>
     <message>
-        <source>Server settings from your provider&apos;s Autodiscover service.</source>
+        <source>Server settings from your provider's Autodiscover service.</source>
         <translation>הגדרות השרת משירות ה־Autodiscover של הספק.</translation>
     </message>
     <message>
@@ -1953,7 +2623,7 @@ To: %4
         <translation>הונפקה ל־%1 על ידי %2, בתוקף עד %3.</translation>
     </message>
     <message>
-        <source>Trust it only if this fingerprint matches the one your server&apos;s administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
+        <source>Trust it only if this fingerprint matches the one your server's administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
         <translation>יש לסמוך עליה רק אם טביעת האצבע הזו תואמת את זו שמנהל השרת מסר לך. אז e3mail יקבל מהשרת הזה את התעודה הזו, ולא שום תעודה אחרת.</translation>
     </message>
     <message>
@@ -2002,6 +2672,10 @@ To: %4
     <message>
         <source>Inbox</source>
         <translation>דואר נכנס</translation>
+    </message>
+    <message>
+        <source>Calendar</source>
+        <translation>יומן</translation>
     </message>
     <message>
         <source>Unverified</source>
@@ -2086,7 +2760,7 @@ To: %4
         <translation>ההתחברות ארכה יותר מדי. נסו שוב.</translation>
     </message>
     <message>
-        <source>Cannot listen for the browser&apos;s answer on this device.</source>
+        <source>Cannot listen for the browser's answer on this device.</source>
         <translation>אי אפשר לקבל במכשיר הזה את תשובת הדפדפן.</translation>
     </message>
     <message>
@@ -2276,8 +2950,8 @@ To: %4
 <context>
     <name>StructuredCard</name>
     <message>
-        <source>Add to calendar…</source>
-        <translation>הוספה ליומן…</translation>
+        <source>Add to calendar</source>
+        <translation>הוספה ליומן</translation>
     </message>
     <message>
         <source>Open…</source>
@@ -2286,10 +2960,6 @@ To: %4
     <message>
         <source>Shown as text only. Buttons appear for senders you trust whose mail is signed by their key; check these details against the message.</source>
         <translation>מוצג כטקסט בלבד. כפתורים מופיעים לשולחים מהימנים שהדואר שלהם חתום במפתח שלהם; יש לבדוק את הפרטים מול ההודעה.</translation>
-    </message>
-    <message>
-        <source>Calendar files (*.ics)</source>
-        <translation>קובצי יומן (*.ics)</translation>
     </message>
 </context>
 <context>

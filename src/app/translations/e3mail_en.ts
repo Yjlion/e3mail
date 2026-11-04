@@ -2,6 +2,54 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="en" sourcelanguage="en">
 <context>
+    <name>Calendar</name>
+    <message numerus="yes">
+        <source>Every %n days</source>
+        <translation>
+            <numerusform>Every %n day</numerusform>
+            <numerusform>Every %n days</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>Every %n weeks</source>
+        <translation>
+            <numerusform>Every %n week</numerusform>
+            <numerusform>Every %n weeks</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>Every %n months</source>
+        <translation>
+            <numerusform>Every %n month</numerusform>
+            <numerusform>Every %n months</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>Every %n years</source>
+        <translation>
+            <numerusform>Every %n year</numerusform>
+            <numerusform>Every %n years</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%1, %n time(s)</source>
+        <translation>
+            <numerusform>%1, %n time</numerusform>
+            <numerusform>%1, %n times</numerusform>
+        </translation>
+    </message>
+</context>
+<context>
+    <name>CalendarView</name>
+    <message numerus="yes">
+        <source>+%n more</source>
+        <translation>
+            <numerusform>+%n more</numerusform>
+            <numerusform>+%n more</numerusform>
+        </translation>
+    </message>
+</context>
+<context>
     <name>MailApp</name>
     <message numerus="yes">
         <source>Accepted %1. %n message(s) moved to the Inbox.</source>

@@ -7,6 +7,7 @@
 
 #include "FakeMailServer.h"
 #include "engine/AccountManager.h"
+#include "mail/Calendar.h"
 #include "mail/Compose.h"
 #include "mail/Signatures.h"
 #include "mail/Contacts.h"
@@ -17,6 +18,8 @@
 #include "util/Paths.h"
 
 #include <QCoreApplication>
+#include <QDateTime>
+#include <QTimeZone>
 #include <QDir>
 #include <QFile>
 
@@ -197,6 +200,84 @@ int main(int argc, char **argv)
                QStringLiteral(R"({"@type":"ParcelDelivery","carrier":{"name":"Swift Post"},"trackingNumber":"SP123",)"
                               R"("itemShipped":{"name":"Your prize"},"expectedArrivalUntil":"2026-11-05",)"
                               R"("trackingUrl":"https://deals.example/claim"})"));
+
+    // The calendar (P15): Ada organizes a review next week and Mira has
+    // accepted; Mira runs a weekly standup Ada accepted; a stranger's
+    // invitation waits in Unverified, inert; two notes of Ada's own. The
+    // mail is dated earlier than the rest so the Inbox screenshots keep
+    // their rows.
+    {
+        const QDate today = QDate::currentDate();
+        QDate tuesday = today.addDays((2 - today.dayOfWeek() + 7) % 7 + 7);
+        const QTimeZone zone = QTimeZone::systemTimeZone();
+        mail::Calendar::Event review;
+        review.summary = QStringLiteral("Design review");
+        review.description = QStringLiteral("The sidebar mockups, then lunch.");
+        review.location = QStringLiteral("Room 4");
+        review.start = QDateTime(tuesday, QTime(10, 0), zone).toUTC();
+        review.end = QDateTime(tuesday, QTime(11, 0), zone).toUTC();
+        review.tzid = QString::fromLatin1(zone.id());
+        review.attendees = {{QStringLiteral("mira@example.org"), QStringLiteral("Mira Dorn"), mail::ICal::PartStat::NeedsAction, true},
+                            {QStringLiteral("tomas@example.net"), QStringLiteral("Tomas Reyes"), mail::ICal::PartStat::NeedsAction, true}};
+        review.reminderMinutes = 15;
+        mail::Calendar::save(ctx, review, true);
+        fetchMail(ada);
+        fetchMail(mira);
+        fetchMail(tomas);
+        for (const auto &m : mail::Search::list(mira->ctx(), SearchQuery::forTag(tag::Inbox))) {
+            if (m.subject.startsWith(QLatin1String("Invitation:")))
+                mail::Calendar::rsvp(mira->ctx(), m.id, mail::ICal::PartStat::Accepted);
+        }
+        fetchMail(mira);
+
+        QDate monday = today.addDays((1 - today.dayOfWeek() + 7) % 7);
+        if (monday <= today)
+            monday = monday.addDays(7);
+        mail::Calendar::Event standup;
+        standup.summary = QStringLiteral("Standup");
+        standup.location = QStringLiteral("https://meet.example.org/standup");
+        standup.start = QDateTime(monday, QTime(9, 30), zone).toUTC();
+        standup.end = QDateTime(monday, QTime(9, 45), zone).toUTC();
+        standup.tzid = QString::fromLatin1(zone.id());
+        standup.rrule = QStringLiteral("FREQ=WEEKLY;BYDAY=MO");
+        standup.attendees = {{QStringLiteral("ada@example.org"), QStringLiteral("Ada Lovelace"), mail::ICal::PartStat::NeedsAction, true},
+                             {QStringLiteral("tomas@example.net"), QStringLiteral("Tomas Reyes"), mail::ICal::PartStat::Accepted, true}};
+        mail::Calendar::save(mira->ctx(), standup, true);
+        fetchMail(mira);
+
+        mail::Calendar::Event prize;
+        prize.summary = QStringLiteral("Prize ceremony");
+        prize.location = QStringLiteral("Grand Hotel");
+        prize.start = QDateTime(today.addDays(10), QTime(19, 0), zone).toUTC();
+        prize.end = QDateTime(today.addDays(10), QTime(22, 0), zone).toUTC();
+        prize.attendees = {{QStringLiteral("ada@example.org"), QString(), mail::ICal::PartStat::NeedsAction, true}};
+        mail::Calendar::save(stranger->ctx(), prize, true);
+        fetchMail(stranger);
+        fetchMail(ada);
+        for (const auto &m : mail::Search::list(ctx, SearchQuery::forTag(tag::Inbox))) {
+            if (m.subject == QLatin1String("Invitation: Standup"))
+                mail::Calendar::rsvp(ctx, m.id, mail::ICal::PartStat::Accepted);
+        }
+        const qint64 at = QDateTime::currentMSecsSinceEpoch();
+        ctx.db.run("UPDATE messages SET date=?, unread=0 WHERE subject=?", at - 3LL * 24 * 3600 * 1000, QStringLiteral("Invitation: Standup"));
+        ctx.db.run("UPDATE messages SET date=?, unread=0 WHERE subject=?", at - 2LL * 24 * 3600 * 1000, QStringLiteral("Accepted: Design review"));
+        ctx.db.run("UPDATE messages SET date=? WHERE subject=?", at - 3600 * 1000, QStringLiteral("Invitation: Prize ceremony"));
+
+        mail::Calendar::Event offsite;
+        offsite.summary = QStringLiteral("Team offsite");
+        offsite.allDay = true;
+        offsite.start = QDateTime(today.addDays(16), QTime(0, 0), QTimeZone::UTC);
+        offsite.end = QDateTime(today.addDays(18), QTime(0, 0), QTimeZone::UTC);
+        offsite.location = QStringLiteral("Lisbon");
+        mail::Calendar::saveLocal(ctx, offsite);
+        mail::Calendar::Event dentist;
+        dentist.summary = QStringLiteral("Dentist");
+        dentist.start = QDateTime(today.addDays(3), QTime(8, 15), zone).toUTC();
+        dentist.end = QDateTime(today.addDays(3), QTime(9, 0), zone).toUTC();
+        dentist.tzid = QString::fromLatin1(zone.id());
+        dentist.reminderMinutes = 30;
+        mail::Calendar::saveLocal(ctx, dentist);
+    }
 
     Draft draft;
     draft.to = {{QStringLiteral("Mira Dorn"), QStringLiteral("mira@example.org")}};

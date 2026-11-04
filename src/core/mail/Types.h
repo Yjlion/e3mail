@@ -140,6 +140,10 @@ struct MessageDetail : MessageSummary
     QDateTime expiresAt;
     // Structured data the message carried (JSON-LD, ADR 0024), or empty.
     QString structured;
+    // The text/calendar part it carried (ADR 0025), as received, and what it was.
+    QString calendar;
+    QString calUid;
+    QString calMethod;
 };
 
 struct SearchQuery
@@ -211,6 +215,11 @@ struct Draft
     SendEncryption encryption = SendEncryption::Auto;
     bool requestReceipt = false;
     int ephemeralSeconds = 0; // 0: kept
+    // An invitation (ADR 0025), made by Calendar, never by the composer:
+    // the iCalendar text, its method, and the JSON-LD sent beside it.
+    QByteArray calendar;
+    QByteArray calendarMethod;
+    QByteArray structured;
 };
 
 // Everything a mail operation needs, constructed per thread: each thread has

@@ -38,6 +38,11 @@ struct OutgoingMail
     // Only inside the encrypted part, with the protected headers; never on
     // the outside and never in cleartext mail (e.g. SecureJoin's tokens).
     QList<QPair<QByteArray, QByteArray>> innerHeaders;
+    // An invitation (ADR 0025): a text/calendar alternative with its iTIP
+    // method, and the structured data (JSON-LD, ADR 0024) sent beside it.
+    QByteArray calendar;
+    QByteArray calendarMethod; // REQUEST, REPLY, CANCEL
+    QByteArray structured;
 };
 
 class Builder
@@ -45,7 +50,11 @@ class Builder
 public:
     // The content entity: text, optional HTML alternative, attachments, with
     // its own Content-Type headers. `protectedHeaders` adds RFC 9788 header
-    // copies inside the entity, for use as an encrypted payload.
+    // copies inside the entity, for use as an encrypted payload. With a
+    // calendar part the alternative reads: the JSON-LD (first, so clients
+    // that show the last part they understand never show it), the text, the
+    // HTML, then text/calendar last, which is the part the common clients
+    // read.
     static QByteArray contentEntity(const OutgoingMail &mail, bool protectedHeaders = false);
 
     // A read receipt (RFC 8098) for `originalMessageId`, as the content

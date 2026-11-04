@@ -13,6 +13,7 @@
 #include "crypto/Pgp.h"
 #include "engine/AccountManager.h"
 #include "engine/AtRest.h"
+#include "mail/Calendar.h"
 #include "mail/Compose.h"
 #include "mail/Contacts.h"
 #ifdef E3MAIL_HAVE_P2P
@@ -24,6 +25,7 @@
 #include "mail/ContactsCsv.h"
 #include "mail/Export.h"
 #include "mail/Organize.h"
+#include "mail/Policy.h"
 #include "mail/Preferences.h"
 #include "mail/Search.h"
 #include "mail/SecureJoin.h"
@@ -49,6 +51,7 @@
 #include <QSaveFile>
 #include <QSet>
 #include <QSysInfo>
+#include <QTimeZone>
 #include <QTextDocument>
 
 using namespace e3;
@@ -108,6 +111,19 @@ MailApp::MailApp(AccountManager *manager, QObject *parent) : QObject(parent), m_
         armExpiry();
     });
     QTimer::singleShot(0, this, &MailApp::armExpiry);
+    m_reminder.setSingleShot(true);
+    connect(&m_reminder, &QTimer::timeout, this, [this] {
+        const qint64 now = QDateTime::currentMSecsSinceEpoch();
+        for (Account *a : m_mgr->accounts()) {
+            for (const auto &o : mail::Calendar::dueReminders(a->ctx(), now)) {
+                const QString when = o.event.allDay ? tr("Today") : QLocale().toString(o.start.toLocalTime().time(), QLocale::ShortFormat);
+                m_notifier->remind(a->id(), o.event.uid, o.event.summary.isEmpty() ? tr("Event") : o.event.summary,
+                                   o.event.location.isEmpty() ? when : tr("%1 · %2").arg(when, o.event.location));
+            }
+        }
+        armReminder();
+    });
+    QTimer::singleShot(0, this, &MailApp::armReminder);
     connect(m_mgr, &AccountManager::accountsChanged, this, &MailApp::accountsChanged);
     connect(m_mgr, &AccountManager::selectedChanged, this, &MailApp::switchAccount);
     for (Account *a : m_mgr->accounts()) {
@@ -135,6 +151,12 @@ MailApp::MailApp(AccountManager *manager, QObject *parent) : QObject(parent), m_
     backupTimer->start(3 * 60 * 1000);
     if (backgroundSync())
         androidsync::start();
+    connect(m_notifier, &Notifier::reminderActivated, this, [this](int accountId, const QString &uid) {
+        if (m_mgr->account(accountId))
+            m_mgr->select(accountId);
+        Q_EMIT showEventRequested(uid);
+        Q_EMIT raiseRequested();
+    });
     connect(m_notifier, &Notifier::activated, this, [this](int accountId, qint64 msgId) {
         if (accountId >= 0 && m_mgr->account(accountId)) {
             m_mgr->select(accountId);
@@ -639,6 +661,8 @@ void MailApp::refresh()
     reloadCounts();
     reloadThread();
     reloadSignatures();
+    Q_EMIT calendarChanged();
+    armReminder();
 }
 
 void MailApp::reloadMessages()
@@ -828,6 +852,40 @@ QVariantMap MailApp::messageMap(qint64 id) const
              }
              return names.join(QStringLiteral(", "));
          }()},
+        {QStringLiteral("invitation"), [&]() -> QVariantMap {
+             const auto inv = mail::Calendar::invitation(account()->ctx(), *d);
+             if (!inv)
+                 return {};
+             auto statusName = [](mail::ICal::PartStat p) {
+                 return QString::fromLatin1(mail::ICal::partStatName(p)).toLower();
+             };
+             QVariantList attendees;
+             for (const auto &a : inv->attendees)
+                 attendees.append(QVariantMap{{QStringLiteral("addr"), a.addr},
+                                              {QStringLiteral("name"), a.name.isEmpty() ? a.addr : a.name},
+                                              {QStringLiteral("status"), statusName(a.partstat)}});
+             return {{QStringLiteral("method"), QString::fromLatin1(mail::ICal::methodName(inv->method)).toLower()},
+                     {QStringLiteral("uid"), inv->event.uid},
+                     {QStringLiteral("title"), inv->event.summary},
+                     {QStringLiteral("when"), mail::Calendar::describeWhen(inv->event)},
+                     {QStringLiteral("where"), inv->event.location},
+                     {QStringLiteral("description"), inv->event.description},
+                     {QStringLiteral("url"), inv->event.url},
+                     {QStringLiteral("recurrence"), mail::Calendar::describeRule(inv->event.rrule)},
+                     {QStringLiteral("organizer"), inv->event.organizer.name.isEmpty() ? inv->event.organizer.addr : inv->event.organizer.name},
+                     {QStringLiteral("attendees"), attendees},
+                     {QStringLiteral("myStatus"), inv->ourStatus ? statusName(*inv->ourStatus) : QString()},
+                     {QStringLiteral("inCalendar"), inv->inCalendar},
+                     {QStringLiteral("outdated"), inv->outdated},
+                     {QStringLiteral("cancelled"), inv->cancelled || inv->event.status == mail::ICal::Status::Cancelled},
+                     {QStringLiteral("mine"), inv->organizerIsSelf},
+                     {QStringLiteral("organizerIsSender"), inv->organizerIsSender},
+                     {QStringLiteral("active"), mail::Calendar::actionable(account()->ctx(), *d)},
+                     {QStringLiteral("canAdd"), d->direction == Direction::Incoming && !d->held && !d->trashed
+                                                    && inv->method != mail::ICal::Method::Reply && !inv->outdated},
+                     {QStringLiteral("replyFrom"), inv->replyFrom},
+                     {QStringLiteral("replyStatus"), statusName(inv->replyStatus)}};
+         }()},
         {QStringLiteral("structuredActive"), mail::Structured::actionable(account()->ctx(), *d)},
         {QStringLiteral("structured"), [&] {
              QVariantList out;
@@ -882,6 +940,21 @@ void MailApp::armExpiry()
     // At most a day ahead, so a clock change is noticed; never in the past.
     const qint64 wait = qBound<qint64>(0, *next - QDateTime::currentMSecsSinceEpoch() + 500, 24LL * 3600 * 1000);
     m_expiry.start(int(wait));
+}
+
+void MailApp::armReminder()
+{
+    std::optional<qint64> next;
+    const qint64 now = QDateTime::currentMSecsSinceEpoch();
+    for (Account *a : m_mgr->accounts()) {
+        if (const auto at = mail::Calendar::nextReminderMs(a->ctx(), now))
+            next = next ? qMin(*next, *at) : *at;
+    }
+    if (!next) {
+        m_reminder.stop();
+        return;
+    }
+    m_reminder.start(int(qBound<qint64>(0, *next - now + 500, 24LL * 3600 * 1000)));
 }
 
 void MailApp::syncNow()
@@ -998,21 +1071,346 @@ bool MailApp::saveAttachment(qint64 msgId, int index, const QUrl &dest)
     return ok;
 }
 
-bool MailApp::saveCalendarEvent(qint64 msgId, int item, const QUrl &dest)
+QString MailApp::addStructuredToCalendar(qint64 msgId, int item)
 {
     if (!account())
-        return false;
+        return {};
     const auto d = mail::Search::detail(account()->ctx(), msgId);
     // Only from a card that offers it: the same rule as the button.
     if (!d || !mail::Structured::actionable(account()->ctx(), *d))
-        return false;
+        return {};
     const auto items = mail::Structured::parse(d->structured);
-    if (item < 0 || item >= items.size())
+    if (item < 0 || item >= items.size() || !items[item].start.isValid())
+        return {};
+    const auto &it = items[item];
+    mail::ICal::Event e;
+    e.summary = it.title;
+    e.allDay = it.allDay;
+    e.start = it.start;
+    if (it.end.isValid())
+        e.end = it.allDay ? it.end.addDays(1) : it.end;
+    else
+        e.end = it.start.addSecs(it.allDay ? 86400 : 3600);
+    e.location = it.place;
+    QStringList lines;
+    for (const auto &f : it.fields)
+        lines.append(f.label + QStringLiteral(": ") + f.value);
+    e.description = lines.join(u'\n');
+    e.url = it.link;
+    QString uid;
+    WITH_ACCOUNT(uid = mail::Calendar::addEvent(ctx, e, d->messageId));
+    Q_EMIT notify(uid.isEmpty() ? tr("Could not add the event.") : tr("Added to the calendar."));
+    return uid;
+}
+
+namespace {
+
+QString partStatName(mail::ICal::PartStat p)
+{
+    return QString::fromLatin1(mail::ICal::partStatName(p)).toLower();
+}
+
+} // namespace
+
+QVariantMap MailApp::eventMap(const mail::Calendar::Event &e, const QDateTime &start, const QDateTime &end) const
+{
+    auto &ctx = account()->ctx();
+    QVariantList attendees;
+    for (const auto &a : e.attendees)
+        attendees.append(QVariantMap{{QStringLiteral("addr"), a.addr},
+                                     {QStringLiteral("name"), a.name.isEmpty() ? a.addr : a.name},
+                                     {QStringLiteral("status"), partStatName(a.partstat)}});
+    mail::ICal::Event instance = e;
+    instance.start = start;
+    instance.end = end;
+    const auto mine = mail::Calendar::ourStatus(ctx, e);
+    return {{QStringLiteral("uid"), e.uid},
+            {QStringLiteral("title"), e.summary.isEmpty() ? tr("(No title)") : e.summary},
+            {QStringLiteral("start"), start.toLocalTime()},
+            {QStringLiteral("end"), end.toLocalTime()},
+            {QStringLiteral("allDay"), e.allDay},
+            {QStringLiteral("location"), e.location},
+            {QStringLiteral("description"), e.description},
+            {QStringLiteral("url"), e.url},
+            {QStringLiteral("organizer"), e.organizer.addr},
+            {QStringLiteral("organizerName"), e.organizer.name.isEmpty() ? e.organizer.addr : e.organizer.name},
+            {QStringLiteral("mine"), e.organizer.addr.isEmpty() || mail::Calendar::organizedByUs(ctx, e)},
+            {QStringLiteral("status"), int(e.status)},
+            {QStringLiteral("myStatus"), mine ? partStatName(*mine) : QString()},
+            {QStringLiteral("recurring"), !e.rrule.isEmpty()},
+            {QStringLiteral("recurrence"), mail::Calendar::describeRule(e.rrule)},
+            {QStringLiteral("attendees"), attendees},
+            {QStringLiteral("reminder"), e.reminderMinutes ? *e.reminderMinutes : -1},
+            {QStringLiteral("when"), mail::Calendar::describeWhen(instance)},
+            {QStringLiteral("timeText"), e.allDay ? tr("All day")
+                                                  : QLocale().toString(start.toLocalTime().time(), QLocale::ShortFormat) + QStringLiteral(" – ")
+                                                        + QLocale().toString(end.toLocalTime().time(), QLocale::ShortFormat)},
+            {QStringLiteral("day"), (e.allDay ? start.toUTC().date() : start.toLocalTime().date()).toString(Qt::ISODate)}};
+}
+
+QVariantList MailApp::calendarEvents(const QDateTime &from, const QDateTime &to) const
+{
+    QVariantList out;
+    if (!account() || !from.isValid() || !to.isValid())
+        return out;
+    for (const auto &o : mail::Calendar::list(account()->ctx(), from.toUTC(), to.toUTC()))
+        out.append(eventMap(o.event, o.start, o.end));
+    return out;
+}
+
+QVariantMap MailApp::calendarEvent(const QString &uid) const
+{
+    if (!account())
+        return {};
+    const auto e = mail::Calendar::get(account()->ctx(), uid);
+    if (!e)
+        return {};
+    QVariantMap m = eventMap(*e, e->start, e->end);
+    const QDateTime s = e->allDay ? e->start.toUTC() : e->start.toLocalTime();
+    // The end as the editor shows it: all-day ends are inclusive on screen.
+    const QDateTime t = e->allDay ? e->end.toUTC().addDays(-1) : e->end.toLocalTime();
+    m.insert(QStringLiteral("startDate"), s.date().toString(Qt::ISODate));
+    m.insert(QStringLiteral("startTime"), s.time().toString(QStringLiteral("HH:mm")));
+    m.insert(QStringLiteral("endDate"), t.date().toString(Qt::ISODate));
+    m.insert(QStringLiteral("endTime"), t.time().toString(QStringLiteral("HH:mm")));
+    QStringList attendees;
+    for (const auto &a : e->attendees)
+        attendees.append(mime::Address{a.name, a.addr}.display());
+    m.insert(QStringLiteral("attendees"), attendees.join(QStringLiteral(", ")));
+    m.insert(QStringLiteral("attendeeList"), eventMap(*e, e->start, e->end).value(QStringLiteral("attendees")));
+    const auto rule = e->rule();
+    QString freq = QStringLiteral("none");
+    QVariantList byDay;
+    QString ends = QStringLiteral("never");
+    if (rule) {
+        switch (rule->freq) {
+        case mail::ICal::Rule::Freq::Daily: freq = QStringLiteral("daily"); break;
+        case mail::ICal::Rule::Freq::Weekly: freq = QStringLiteral("weekly"); break;
+        case mail::ICal::Rule::Freq::Monthly: freq = QStringLiteral("monthly"); break;
+        case mail::ICal::Rule::Freq::Yearly: freq = QStringLiteral("yearly"); break;
+        }
+        for (const Qt::DayOfWeek d : rule->byDay)
+            byDay.append(int(d));
+        if (rule->count > 0)
+            ends = QStringLiteral("count");
+        else if (rule->until.isValid())
+            ends = QStringLiteral("until");
+    } else if (!e->rrule.isEmpty()) {
+        freq = QStringLiteral("other"); // kept as it came, not editable here
+    }
+    m.insert(QStringLiteral("freq"), freq);
+    m.insert(QStringLiteral("rrule"), e->rrule);
+    m.insert(QStringLiteral("interval"), rule ? rule->interval : 1);
+    m.insert(QStringLiteral("byDay"), byDay);
+    m.insert(QStringLiteral("ends"), ends);
+    m.insert(QStringLiteral("count"), rule ? rule->count : 0);
+    m.insert(QStringLiteral("untilDate"), rule && rule->until.isValid() ? rule->until.toLocalTime().date().toString(Qt::ISODate) : QString());
+    m.insert(QStringLiteral("sent"), mail::Calendar::organizedByUs(account()->ctx(), *e) && !e->attendees.isEmpty());
+    m.insert(QStringLiteral("sequence"), e->sequence);
+    return m;
+}
+
+QString MailApp::saveEvent(const QVariantMap &f, bool sendUpdate)
+{
+    if (!account())
+        return {};
+    auto &ctx = account()->ctx();
+    const QString uid = f.value(QStringLiteral("uid")).toString();
+    mail::Calendar::Event e;
+    if (!uid.isEmpty()) {
+        if (const auto have = mail::Calendar::get(ctx, uid))
+            e = *have;
+    }
+    e.uid = uid;
+    e.summary = f.value(QStringLiteral("title")).toString().trimmed();
+    e.allDay = f.value(QStringLiteral("allDay")).toBool();
+    e.location = f.value(QStringLiteral("location")).toString().trimmed();
+    e.description = f.value(QStringLiteral("description")).toString();
+    e.url = f.value(QStringLiteral("url")).toString().trimmed();
+    const QDate sd = QDate::fromString(f.value(QStringLiteral("startDate")).toString(), Qt::ISODate);
+    const QDate ed = QDate::fromString(f.value(QStringLiteral("endDate")).toString(), Qt::ISODate);
+    const QTime st = QTime::fromString(f.value(QStringLiteral("startTime")).toString(), QStringLiteral("HH:mm"));
+    const QTime et = QTime::fromString(f.value(QStringLiteral("endTime")).toString(), QStringLiteral("HH:mm"));
+    if (e.summary.isEmpty()) {
+        Q_EMIT notify(tr("Give the event a title."));
+        return {};
+    }
+    if (!sd.isValid() || (!e.allDay && !st.isValid())) {
+        Q_EMIT notify(tr("The start is not a date and time."));
+        return {};
+    }
+    if (e.allDay) {
+        e.start = QDateTime(sd, QTime(0, 0), QTimeZone::UTC);
+        e.end = QDateTime((ed.isValid() && ed >= sd ? ed : sd).addDays(1), QTime(0, 0), QTimeZone::UTC);
+        e.tzid.clear();
+    } else {
+        const QTimeZone zone = QTimeZone::systemTimeZone();
+        e.start = QDateTime(sd, st, zone).toUTC();
+        const QDateTime end = QDateTime(ed.isValid() ? ed : sd, et.isValid() ? et : st.addSecs(3600), zone).toUTC();
+        e.end = end > e.start ? end : e.start.addSecs(3600);
+        e.tzid = QString::fromLatin1(zone.id());
+    }
+    // Recurrence
+    const QString freq = f.value(QStringLiteral("freq")).toString();
+    if (freq == QLatin1String("none")) {
+        e.rrule.clear();
+    } else if (freq != QLatin1String("other")) {
+        mail::ICal::Rule r;
+        r.freq = freq == QLatin1String("daily") ? mail::ICal::Rule::Freq::Daily
+            : freq == QLatin1String("monthly")  ? mail::ICal::Rule::Freq::Monthly
+            : freq == QLatin1String("yearly")   ? mail::ICal::Rule::Freq::Yearly
+                                                : mail::ICal::Rule::Freq::Weekly;
+        r.interval = qBound(1, f.value(QStringLiteral("interval")).toInt(), 999);
+        if (r.freq == mail::ICal::Rule::Freq::Weekly) {
+            for (const QVariant &d : f.value(QStringLiteral("byDay")).toList()) {
+                const int day = d.toInt();
+                if (day >= 1 && day <= 7 && !r.byDay.contains(Qt::DayOfWeek(day)))
+                    r.byDay.append(Qt::DayOfWeek(day));
+            }
+        }
+        const QString ends = f.value(QStringLiteral("ends")).toString();
+        if (ends == QLatin1String("count"))
+            r.count = qBound(1, f.value(QStringLiteral("count")).toInt(), 10000);
+        else if (ends == QLatin1String("until")) {
+            const QDate u = QDate::fromString(f.value(QStringLiteral("untilDate")).toString(), Qt::ISODate);
+            if (u.isValid())
+                r.until = QDateTime(u, QTime(23, 59, 59), e.allDay ? QTimeZone(QTimeZone::UTC) : QTimeZone::systemTimeZone()).toUTC();
+        }
+        e.rrule = mail::ICal::writeRule(r);
+    }
+    const int reminder = f.value(QStringLiteral("reminder"), -1).toInt();
+    if (reminder >= 0)
+        e.reminderMinutes = reminder;
+    else
+        e.reminderMinutes.reset();
+    // Attendees, as a recipient line.
+    QList<mail::ICal::Attendee> attendees;
+    const QString self = mime::normalizeAddr(ctx.config.get(cfg::Addr));
+    for (const mime::Address &a : mime::parseAddressList(f.value(QStringLiteral("attendees")).toString().toUtf8())) {
+        const QString addr = mime::normalizeAddr(a.addr);
+        if (!addr.contains(u'@') || addr == self)
+            continue;
+        mail::ICal::Attendee at;
+        at.addr = addr;
+        at.name = a.name;
+        at.rsvp = true;
+        for (const auto &old : e.attendees) {
+            if (old.addr == addr) {
+                at.partstat = old.partstat;
+                if (at.name.isEmpty())
+                    at.name = old.name;
+            }
+        }
+        attendees.append(at);
+    }
+    // Someone else's meeting keeps its attendees; only the organizer edits them.
+    if (e.organizer.addr.isEmpty() || mail::Calendar::organizedByUs(ctx, e))
+        e.attendees = attendees;
+    const mail::Calendar::SendResult r = mail::Calendar::save(ctx, e, sendUpdate);
+    account()->notifyChanged();
+    if (!r.error.isEmpty())
+        Q_EMIT notify(tr("Saved, but the invitation was not sent: %1").arg(r.error));
+    else if (!r.queued.isEmpty())
+        Q_EMIT notify(tr("Invitation sent."));
+    return r.uid;
+}
+
+void MailApp::cancelEvent(const QString &uid, bool sendCancel)
+{
+    if (!account())
+        return;
+    const auto r = mail::Calendar::cancel(account()->ctx(), uid, sendCancel);
+    account()->notifyChanged();
+    if (!r.error.isEmpty())
+        Q_EMIT notify(tr("Cancelled, but the attendees were not told: %1").arg(r.error));
+}
+
+void MailApp::removeEvent(const QString &uid)
+{
+    WITH_ACCOUNT(mail::Calendar::removeLocal(ctx, uid));
+}
+
+void MailApp::replyToInvitation(qint64 msgId, const QString &answer)
+{
+    if (!account())
+        return;
+    const mail::ICal::PartStat p = answer == QLatin1String("accept") ? mail::ICal::PartStat::Accepted
+        : answer == QLatin1String("decline")                        ? mail::ICal::PartStat::Declined
+                                                                    : mail::ICal::PartStat::Tentative;
+    const auto r = mail::Calendar::rsvp(account()->ctx(), msgId, p);
+    account()->notifyChanged();
+    account()->syncNow();
+    if (r.uid.isEmpty())
+        Q_EMIT notify(r.error);
+    else if (!r.error.isEmpty())
+        Q_EMIT notify(tr("Saved in your calendar, but the answer was not sent: %1").arg(r.error));
+    else
+        Q_EMIT notify(tr("Answer sent."));
+}
+
+void MailApp::addInvitationToCalendar(qint64 msgId)
+{
+    if (!account())
+        return;
+    const auto r = mail::Calendar::addFromMessage(account()->ctx(), msgId);
+    account()->notifyChanged();
+    Q_EMIT notify(r.uid.isEmpty() ? r.error : tr("Added to the calendar."));
+}
+
+bool MailApp::exportEvent(const QString &uid, const QUrl &dest)
+{
+    if (!account())
         return false;
-    const QByteArray ics = mail::Structured::toIcs(items[item], d->messageId + u'-' + QString::number(item));
+    const QByteArray ics = mail::Calendar::exportIcs(account()->ctx(), uid);
     const bool ok = !ics.isEmpty() && FileIo::write(dest, ics);
     Q_EMIT notify(ok ? tr("Saved %1.").arg(FileIo::displayName(dest)) : tr("Could not save the event."));
     return ok;
+}
+
+QString MailApp::suggestedEventFileName(const QString &uid) const
+{
+    QString name = tr("event");
+    if (account()) {
+        if (const auto e = mail::Calendar::get(account()->ctx(), uid); e && !e->summary.isEmpty())
+            name = e->summary;
+    }
+    static const QRegularExpression unsafe(QStringLiteral("[\\\\/:*?\"<>|]"));
+    return name.replace(unsafe, QStringLiteral("_")).left(80) + QStringLiteral(".ics");
+}
+
+QString MailApp::describeRecurrence(const QString &rrule) const
+{
+    return mail::Calendar::describeRule(rrule);
+}
+
+QVariantMap MailApp::attendeePolicy(const QString &attendees) const
+{
+    QVariantMap out{{QStringLiteral("encrypt"), false}, {QStringLiteral("missing"), QStringList()}};
+    if (!account())
+        return out;
+    QStringList addrs;
+    for (const mime::Address &a : mime::parseAddressList(attendees.toUtf8())) {
+        if (a.addr.contains(u'@'))
+            addrs.append(mime::normalizeAddr(a.addr));
+    }
+    if (addrs.isEmpty())
+        return out;
+    const auto ready = mail::Policy::evaluate(account()->ctx(), addrs, SendEncryption::Auto);
+    out.insert(QStringLiteral("encrypt"), ready.willEncrypt);
+    out.insert(QStringLiteral("missing"), ready.missingKeys);
+    out.insert(QStringLiteral("canSend"), ready.canSend);
+    return out;
+}
+
+QString MailApp::formatDay(const QString &isoDate) const
+{
+    const QDate d = QDate::fromString(isoDate, Qt::ISODate);
+    return d.isValid() ? QLocale().toString(d, QLocale::LongFormat) : QString();
+}
+
+int MailApp::calendarReminderDefault() const
+{
+    return account() ? account()->ctx().config.getInt(cfg::CalendarReminder) : 15;
 }
 
 QString MailApp::suggestedFileName(qint64 msgId, int index) const
@@ -1403,6 +1801,7 @@ QVariantMap MailApp::settings() const
             {QStringLiteral("unverifiedTrashDays"), c.getInt(cfg::UnverifiedTrashDays)},
             {QStringLiteral("gating"), c.getBool(cfg::Gating)},
             {QStringLiteral("mdnSend"), c.get(cfg::MdnSend)},
+            {QStringLiteral("calendarReminder"), c.getInt(cfg::CalendarReminder)},
             {QStringLiteral("pollSeconds"), c.getInt(cfg::PollSeconds)},
             {QStringLiteral("fingerprint"), [&] {
                  QString f = c.get(cfg::SelfFingerprint);
@@ -1451,6 +1850,7 @@ void MailApp::setSetting(const QString &key, const QVariant &value)
         {QStringLiteral("unverifiedTrashDays"), cfg::UnverifiedTrashDays},
         {QStringLiteral("gating"), cfg::Gating},
         {QStringLiteral("mdnSend"), cfg::MdnSend},
+        {QStringLiteral("calendarReminder"), cfg::CalendarReminder},
         {QStringLiteral("pollSeconds"), cfg::PollSeconds},
     };
     const char *k = keys.value(key);

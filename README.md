@@ -89,6 +89,7 @@ over TLS in [`scripts/e2e.py`](scripts/e2e.py).
 | Read receipts (to trusted senders) and disappearing mail | ✅ |
 | Encryption at rest: database and attachments, keyring or passphrase | ✅ |
 | Structured email (bookings, parcels, orders), inert unless trusted and signed | ✅ |
+| Calendar on your devices: meetings by mail (invite, answer, update, cancel), recurrence, reminders; no CalDAV | ✅ |
 | Interop with Delta Chat ([`scripts/interop-pass.py`](scripts/interop-pass.py)) | ✅ verification and encrypted mail, both ways |
 | Interop with Thunderbird or a mainstream provider | ❌ |
 | Code signing | ❌ |

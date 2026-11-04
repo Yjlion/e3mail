@@ -17,6 +17,7 @@ bool Preferences::isSynced(const QString &key)
         QLatin1String(cfg::ServerKeepDays),  QLatin1String(cfg::TrashPurgeDays),
         QLatin1String(cfg::UnverifiedTrashDays), QLatin1String(cfg::Gating),
         QLatin1String(cfg::SignatureDefault), QLatin1String(cfg::MdnSend),
+        QLatin1String(cfg::CalendarReminder),
     };
     // Each signature is a setting of its own (Signatures), so two devices
     // editing different ones both keep their edit.

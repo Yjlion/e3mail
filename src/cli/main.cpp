@@ -13,6 +13,7 @@
 #include "engine/Pairing.h"
 #include "sync/IrohTransport.h"
 #endif
+#include "mail/Calendar.h"
 #include "mail/Compose.h"
 #include "mail/Contacts.h"
 #include "mail/ContactsCsv.h"
@@ -149,6 +150,15 @@ int main(int argc, char **argv)
         "  contact-trust <addr> on|off|auto\n"
         "                                 trust their mail or not, or leave it to the address book\n"
         "  contact-add                    add a contact (--addr, --name)\n"
+        "  calendar [--from --until]      events in a range (default: the next 30 days)\n"
+        "  calendar-add --title --start [--end|--all-day] [--location] [--attendee a]... [--rrule]\n"
+        "                                 [--reminder min] [--send]   a new event; --send mails the attendees\n"
+        "  calendar-cancel <uid> [--send] cancel an event (and tell its attendees)\n"
+        "  calendar-remove <uid>          take an event out of this calendar, telling no one\n"
+        "  calendar-export <uid>          the event as iCalendar, on stdout\n"
+        "  invite-reply <id> accept|tentative|decline\n"
+        "                                 answer the invitation a message carries\n"
+        "  invite-add <id>                put an invitation's event in the calendar without answering\n"
         "  contact-remove <addr>          remove a contact\n"
         "  vcard-import <file>            import contacts from a vCard file\n"
         "  contacts-export [file]         export the address book as vCard 4.0, or CSV with --csv\n"
@@ -224,6 +234,17 @@ int main(int argc, char **argv)
         {QStringLiteral("passphrase"), QStringLiteral("Backups: the passphrase that opens them."), QStringLiteral("text")},
         {QStringLiteral("snapshot"), QStringLiteral("With restore: which backup (default: the newest)."), QStringLiteral("name")},
         {QStringLiteral("renew"), QStringLiteral("With verify-invite: a new code; earlier ones stop working.")},
+        {QStringLiteral("from"), QStringLiteral("With calendar: the range's start, ISO 8601."), QStringLiteral("time")},
+        {QStringLiteral("until"), QStringLiteral("With calendar: the range's end, ISO 8601."), QStringLiteral("time")},
+        {QStringLiteral("title"), QStringLiteral("With calendar-add: the event's title."), QStringLiteral("text")},
+        {QStringLiteral("start"), QStringLiteral("With calendar-add: when it starts, ISO 8601 (a date for --all-day)."), QStringLiteral("time")},
+        {QStringLiteral("end"), QStringLiteral("With calendar-add: when it ends (default: an hour, or the day)."), QStringLiteral("time")},
+        {QStringLiteral("all-day"), QStringLiteral("With calendar-add: a whole day.")},
+        {QStringLiteral("location"), QStringLiteral("With calendar-add: where."), QStringLiteral("text")},
+        {QStringLiteral("attendee"), QStringLiteral("With calendar-add: someone to invite (repeatable)."), QStringLiteral("addr")},
+        {QStringLiteral("rrule"), QStringLiteral("With calendar-add: a recurrence rule, e.g. FREQ=WEEKLY;BYDAY=MO."), QStringLiteral("rule")},
+        {QStringLiteral("reminder"), QStringLiteral("With calendar-add: minutes before the start to remind."), QStringLiteral("minutes")},
+        {QStringLiteral("send"), QStringLiteral("With calendar-add and calendar-cancel: mail the attendees.")},
     };
     p.addOptions(opts);
     p.addPositionalArgument(QStringLiteral("command"), QStringLiteral("What to do."));
@@ -541,6 +562,110 @@ int main(int argc, char **argv)
         } else if (cmd == QLatin1String("read")) {
             mail::Organize::markRead(ctx, idArg, true);
             print(QJsonObject{{QStringLiteral("read"), idArg}});
+        } else if (cmd == QLatin1String("calendar")) {
+            const QDateTime from = p.isSet(QStringLiteral("from")) ? QDateTime::fromString(p.value(QStringLiteral("from")), Qt::ISODate)
+                                                                   : QDateTime::currentDateTimeUtc();
+            const QDateTime to = p.isSet(QStringLiteral("until")) ? QDateTime::fromString(p.value(QStringLiteral("until")), Qt::ISODate)
+                                                                  : from.addDays(30);
+            if (!from.isValid() || !to.isValid())
+                fail(QStringLiteral("--from and --until take ISO 8601 times"));
+            QJsonArray out;
+            for (const auto &o : mail::Calendar::list(ctx, from, to)) {
+                QJsonObject e{{QStringLiteral("uid"), o.event.uid},
+                              {QStringLiteral("summary"), o.event.summary},
+                              {QStringLiteral("start"), o.start.toUTC().toString(Qt::ISODate)},
+                              {QStringLiteral("end"), o.end.toUTC().toString(Qt::ISODate)},
+                              {QStringLiteral("allDay"), o.event.allDay},
+                              {QStringLiteral("location"), o.event.location},
+                              {QStringLiteral("organizer"), o.event.organizer.addr},
+                              {QStringLiteral("sequence"), o.event.sequence}};
+                if (!o.event.rrule.isEmpty())
+                    e.insert(QStringLiteral("rrule"), o.event.rrule);
+                QJsonArray att;
+                for (const auto &a : o.event.attendees)
+                    att.append(QJsonObject{{QStringLiteral("addr"), a.addr},
+                                           {QStringLiteral("status"), QString::fromLatin1(mail::ICal::partStatName(a.partstat)).toLower()}});
+                if (!att.isEmpty())
+                    e.insert(QStringLiteral("attendees"), att);
+                if (const auto mine = mail::Calendar::ourStatus(ctx, o.event))
+                    e.insert(QStringLiteral("myStatus"), QString::fromLatin1(mail::ICal::partStatName(*mine)).toLower());
+                out.append(e);
+            }
+            print(out);
+        } else if (cmd == QLatin1String("calendar-add")) {
+            mail::Calendar::Event e;
+            e.summary = p.value(QStringLiteral("title"));
+            e.allDay = p.isSet(QStringLiteral("all-day"));
+            e.start = QDateTime::fromString(p.value(QStringLiteral("start")), Qt::ISODate);
+            if (e.allDay && !e.start.isValid())
+                e.start = QDateTime(QDate::fromString(p.value(QStringLiteral("start")), Qt::ISODate), QTime(0, 0), QTimeZone::UTC);
+            if (e.summary.isEmpty() || !e.start.isValid())
+                fail(QStringLiteral("calendar-add needs --title and --start"));
+            if (p.isSet(QStringLiteral("end"))) {
+                e.end = QDateTime::fromString(p.value(QStringLiteral("end")), Qt::ISODate);
+                if (e.allDay && !e.end.isValid())
+                    e.end = QDateTime(QDate::fromString(p.value(QStringLiteral("end")), Qt::ISODate).addDays(1), QTime(0, 0), QTimeZone::UTC);
+            } else {
+                e.end = e.allDay ? e.start.addDays(1) : e.start.addSecs(3600);
+            }
+            if (!e.allDay)
+                e.tzid = QString::fromLatin1(QTimeZone::systemTimeZoneId());
+            e.location = p.value(QStringLiteral("location"));
+            e.rrule = p.value(QStringLiteral("rrule"));
+            if (!e.rrule.isEmpty() && !mail::ICal::parseRule(e.rrule))
+                fail(QStringLiteral("--rrule is not a rule e3mail understands"));
+            if (p.isSet(QStringLiteral("reminder")))
+                e.reminderMinutes = p.value(QStringLiteral("reminder")).toInt();
+            else if (ctx.config.getInt(cfg::CalendarReminder) >= 0)
+                e.reminderMinutes = ctx.config.getInt(cfg::CalendarReminder);
+            for (const QString &a : p.values(QStringLiteral("attendee")))
+                e.attendees.append({mime::normalizeAddr(a), QString(), mail::ICal::PartStat::NeedsAction, true});
+            const auto r = mail::Calendar::save(ctx, e, p.isSet(QStringLiteral("send")));
+            QJsonObject o{{QStringLiteral("uid"), r.uid}, {QStringLiteral("queued"), int(r.queued.size())}};
+            if (!r.error.isEmpty())
+                o.insert(QStringLiteral("error"), r.error);
+            print(o);
+        } else if (cmd == QLatin1String("calendar-cancel")) {
+            const auto r = mail::Calendar::cancel(ctx, args.value(1), p.isSet(QStringLiteral("send")));
+            if (r.uid.isEmpty())
+                fail(QStringLiteral("no such event"));
+            QJsonObject o{{QStringLiteral("uid"), r.uid}, {QStringLiteral("queued"), int(r.queued.size())}};
+            if (!r.error.isEmpty())
+                o.insert(QStringLiteral("error"), r.error);
+            print(o);
+        } else if (cmd == QLatin1String("calendar-remove")) {
+            if (!mail::Calendar::get(ctx, args.value(1)))
+                fail(QStringLiteral("no such event"));
+            mail::Calendar::removeLocal(ctx, args.value(1));
+            print(QJsonObject{{QStringLiteral("removed"), args.value(1)}});
+        } else if (cmd == QLatin1String("calendar-export")) {
+            const QByteArray ics = mail::Calendar::exportIcs(ctx, args.value(1));
+            if (ics.isEmpty())
+                fail(QStringLiteral("no such event"));
+            QTextStream(stdout) << QString::fromUtf8(ics);
+        } else if (cmd == QLatin1String("invite-reply")) {
+            const QString v = args.value(2);
+            mail::ICal::PartStat answer;
+            if (v == QLatin1String("accept"))
+                answer = mail::ICal::PartStat::Accepted;
+            else if (v == QLatin1String("tentative"))
+                answer = mail::ICal::PartStat::Tentative;
+            else if (v == QLatin1String("decline"))
+                answer = mail::ICal::PartStat::Declined;
+            else
+                fail(QStringLiteral("invite-reply <id> accept|tentative|decline"));
+            const auto r = mail::Calendar::rsvp(ctx, idArg, answer);
+            if (r.uid.isEmpty())
+                fail(r.error);
+            QJsonObject o{{QStringLiteral("uid"), r.uid}, {QStringLiteral("queued"), int(r.queued.size())}};
+            if (!r.error.isEmpty())
+                o.insert(QStringLiteral("error"), r.error);
+            print(o);
+        } else if (cmd == QLatin1String("invite-add")) {
+            const auto r = mail::Calendar::addFromMessage(ctx, idArg);
+            if (r.uid.isEmpty())
+                fail(r.error);
+            print(QJsonObject{{QStringLiteral("uid"), r.uid}});
         } else if (cmd == QLatin1String("contact-trust")) {
             const QString v = args.value(2);
             if (v != QLatin1String("on") && v != QLatin1String("off") && v != QLatin1String("auto"))

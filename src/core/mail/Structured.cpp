@@ -2,6 +2,7 @@
 #include "Structured.h"
 
 #include "Contacts.h"
+#include "ICal.h"
 
 #include <QCoreApplication>
 #include <QJsonArray>
@@ -296,40 +297,6 @@ std::optional<Structured::Item> itemFrom(const QJsonObject &o)
     return item;
 }
 
-QByteArray icsText(const QString &s)
-{
-    QString out = s;
-    out.replace(u'\\', QStringLiteral("\\\\"));
-    out.replace(u';', QStringLiteral("\\;"));
-    out.replace(u',', QStringLiteral("\\,"));
-    out.replace(u'\n', QStringLiteral("\\n"));
-    return out.toUtf8();
-}
-
-// Folded at 75 octets (RFC 5545, 3.1), never inside a UTF-8 sequence.
-QByteArray icsLine(const QByteArray &line)
-{
-    QByteArray out;
-    qsizetype start = 0;
-    int limit = 75;
-    while (line.size() - start > limit) {
-        qsizetype cut = start + limit;
-        while (cut > start && (quint8(line[cut]) & 0xC0) == 0x80)
-            --cut;
-        out += line.mid(start, cut - start) + "\r\n ";
-        start = cut;
-        limit = 74;
-    }
-    return out + line.mid(start) + "\r\n";
-}
-
-QByteArray icsTime(const QDateTime &t, bool allDay)
-{
-    if (allDay)
-        return ";VALUE=DATE:" + t.date().toString(QStringLiteral("yyyyMMdd")).toLatin1();
-    return ":" + t.toUTC().toString(QStringLiteral("yyyyMMdd'T'HHmmss'Z'")).toLatin1();
-}
-
 } // namespace
 
 bool Structured::actionable(MailContext &ctx, const MessageDetail &m)
@@ -384,24 +351,28 @@ QByteArray Structured::toIcs(const Item &item, const QString &uid)
 {
     if (!item.start.isValid())
         return {};
-    const QDateTime end = item.end.isValid() ? item.end : item.start.addSecs(item.allDay ? 86400 : 3600);
-    QByteArray out = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//e3mail//structured email//EN\r\nBEGIN:VEVENT\r\n";
-    out += icsLine("UID:" + icsText(uid));
-    out += icsLine("DTSTAMP:" + QDateTime::currentDateTimeUtc().toString(QStringLiteral("yyyyMMdd'T'HHmmss'Z'")).toLatin1());
-    out += icsLine("DTSTART" + icsTime(item.start, item.allDay));
-    out += icsLine("DTEND" + icsTime(end, item.allDay));
-    out += icsLine("SUMMARY:" + icsText(item.title));
-    if (!item.place.isEmpty())
-        out += icsLine("LOCATION:" + icsText(item.place));
+    ICal::Event e;
+    e.uid = uid;
+    e.summary = item.title;
+    e.allDay = item.allDay;
+    e.start = item.start;
+    // schema.org's end is the last moment (or day) of the booking; iCalendar's
+    // is exclusive, so an all-day end date gains the day after it.
+    if (item.end.isValid())
+        e.end = item.allDay ? item.end.addDays(1) : item.end;
+    else
+        e.end = item.start.addSecs(item.allDay ? 86400 : 3600);
+    if (item.allDay) {
+        e.start = QDateTime(e.start.toUTC().date(), QTime(0, 0), QTimeZone::UTC);
+        e.end = QDateTime(e.end.toUTC().date(), QTime(0, 0), QTimeZone::UTC);
+    }
+    e.location = item.place;
     QStringList lines;
     for (const Field &f : item.fields)
         lines.append(f.label + QStringLiteral(": ") + f.value);
-    if (!lines.isEmpty())
-        out += icsLine("DESCRIPTION:" + icsText(lines.join(u'\n')));
-    if (!item.link.isEmpty())
-        out += icsLine("URL:" + item.link.toUtf8());
-    out += "END:VEVENT\r\nEND:VCALENDAR\r\n";
-    return out;
+    e.description = lines.join(u'\n');
+    e.url = item.link;
+    return ICal::write({ICal::Method::None, {e}});
 }
 
 } // namespace e3::mail

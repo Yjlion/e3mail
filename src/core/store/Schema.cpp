@@ -320,6 +320,53 @@ CREATE TABLE receipts (
     R"sql(
 ALTER TABLE messages ADD COLUMN structured TEXT;
 )sql",
+
+    // 8 — the calendar (P15, ADR 0025): events named by their iCalendar UID
+    // on every device, their attendees, and the text/calendar part a message
+    // carried, kept as received and read again when the message is shown.
+    R"sql(
+CREATE TABLE events (
+    id           INTEGER PRIMARY KEY,
+    uid          TEXT NOT NULL UNIQUE,
+    summary      TEXT NOT NULL DEFAULT '',
+    description  TEXT NOT NULL DEFAULT '',
+    location     TEXT NOT NULL DEFAULT '',
+    url          TEXT NOT NULL DEFAULT '',
+    start_ms     INTEGER NOT NULL,            -- UTC
+    end_ms       INTEGER NOT NULL,            -- exclusive; all-day: the midnight after the last day
+    all_day      INTEGER NOT NULL DEFAULT 0,
+    tzid         TEXT NOT NULL DEFAULT '',    -- the IANA zone recurrence follows; '' for UTC
+    rrule        TEXT NOT NULL DEFAULT '',    -- the RRULE value, or ''
+    exdates      TEXT NOT NULL DEFAULT '[]',  -- JSON array of occurrence starts, UTC ms
+    organizer    TEXT NOT NULL DEFAULT '',    -- normalised address; '' for an event without attendees
+    organizer_name TEXT NOT NULL DEFAULT '',
+    sequence     INTEGER NOT NULL DEFAULT 0,
+    status       INTEGER NOT NULL DEFAULT 0,  -- 0 confirmed, 1 tentative, 2 cancelled
+    reminder_min INTEGER,                     -- NULL: none
+    source_mid   TEXT,                        -- Message-ID of the invitation it came from
+    stamp_ms     INTEGER NOT NULL DEFAULT 0,  -- DTSTAMP
+    updated_ms   INTEGER NOT NULL
+);
+CREATE INDEX events_start ON events(start_ms);
+CREATE TABLE event_attendees (
+    event_id   INTEGER NOT NULL REFERENCES events(id) ON DELETE CASCADE,
+    addr       TEXT NOT NULL,
+    name       TEXT NOT NULL DEFAULT '',
+    partstat   INTEGER NOT NULL DEFAULT 0,    -- 0 needs action, 1 accepted, 2 tentative, 3 declined
+    replied_ms INTEGER,                       -- DTSTAMP of the newest answer seen, or when we answered
+    PRIMARY KEY (event_id, addr)
+);
+-- Reminders this device has shown, so a restart does not show them again.
+CREATE TABLE reminders_shown (
+    uid           TEXT NOT NULL,
+    occurrence_ms INTEGER NOT NULL,
+    PRIMARY KEY (uid, occurrence_ms)
+);
+ALTER TABLE messages ADD COLUMN calendar TEXT;
+ALTER TABLE messages ADD COLUMN cal_uid TEXT;
+ALTER TABLE messages ADD COLUMN cal_method TEXT;
+CREATE INDEX messages_cal_uid ON messages(cal_uid) WHERE cal_uid IS NOT NULL;
+)sql",
 };
 
 } // namespace

@@ -1290,6 +1290,118 @@ draft-ietf-sml-structured-email-06 and draft-ietf-sml-trust-01.
 - The saved `.ics` opened in a real calendar.
 - Microdata, which is not read.
 
+## The calendar and invitations by mail (2026-11-04)
+
+P15 ([ADR 0025](adr/0025-local-calendar-and-invitations-by-mail.md)),
+with ADR 0024 and ADR 0013 amended. Events live on the person's devices
+and sync through the op-log; meetings are arranged by iTIP over mail.
+
+- **What was wrong before:** a `text/calendar` part was dropped inside
+  `multipart/alternative` and dumped as raw VCALENDAR into the body
+  elsewhere (`Ingest::walk`). No iCalendar reader existed.
+- **Core:** `mail/ICal` (reader, writer, recurrence), `mail/Calendar`
+  (store, invitations, derivation, reminders), migration 8, ops `cal.event`
+  and `cal.remove`, `Builder` and `Draft` carrying a calendar part and the
+  JSON-LD Event, `Ingest` keeping the part with the message.
+- **App:** a Calendar page (month and agenda), `EventDialog`,
+  `InvitationCard`, reminders through the notifier, a Settings section.
+  The structured card's "Add to calendar" creates a local event.
+- **CLI:** `calendar`, `calendar-add`, `calendar-cancel`, `calendar-remove`,
+  `calendar-export`, `invite-reply`, `invite-add`.
+
+**What it taught:**
+- **This machine had no Qt.** The project needs Qt 6.10 and the apt here
+  has 6.4; Qt's mirrors were refused by the network policy. Qt 6.12 came
+  from conda-forge (`qt6-main`, through `py-rattler` from PyPI, since
+  micromamba's own host was refused too), RNP, Botan 2, ICU, libssh and
+  json-c from apt, Rust from rustup. zxing-cpp's GitHub archive was
+  refused as well, so this build has `E3MAIL_CAMERA=OFF`; everything else
+  is as the dev preset builds it. The whole suite passes that way.
+- **`DTSTAMP` has whole seconds.** Two answers from one attendee within a
+  second (a test does that) compared equal, and the second was dropped.
+  Replies are read in message-date order and an equal stamp now wins, so
+  the later message decides.
+- **Nested `Transaction`s do not exist (trap 41), so `Calendar::save`
+  commits the event first and then calls `Compose::queue`**, which opens
+  its own. A policy refusal leaves the event saved and reported.
+- **lupdate does not see through a `tr()` helper.** The core's calendar
+  strings were first collected under `e3::mail::Calendar` while the code
+  looked them up under `Calendar`; they are now literal
+  `QCoreApplication::translate("Calendar", …)` calls.
+- **A source string ending in a space cannot be translated into Chinese.**
+  The checker refuses `、` for `, `; weekday lists now use
+  `QLocale::createSeparatedList`.
+- **`GridLayout` counts the divider.** Three children in two columns put
+  the agenda under the month instead of beside it.
+- **`Qt.formatTime` in QML under the C locale prints seconds**; the agenda
+  takes its texts from C++ (`QLocale`), like the cards.
+- **The reply-merge guard in `applyEvent` is covered twice.** Taking it
+  out alone did not fail `tst_sync::calendarTravels`, because `rederive`
+  reads the stored REPLY again after the op is applied; taking the
+  sequence guard out did fail it.
+
+**Verified here** (Qt 6.12 from conda-forge, RNP 0.17 on Botan 2, GCC 13;
+camera off):
+- `ctest --preset dev`: 25 suites pass, `p2p_cargo` included. New:
+  - `tst_ical` (12): Gmail-, Thunderbird- and Outlook-shaped samples in
+    `tests/data/ical/` (written from knowledge of those clients, not
+    captured), Windows zone names, a VTIMEZONE fallback offset, floating
+    times, DURATION, alarms, REPLY and CANCEL; the write-parse round trip
+    with folding at 75 octets inside UTF-8; recurrence across the DST
+    changes of 29 March (Berlin) and 8 March (New York) keeping the wall
+    clock, COUNT before EXDATE, monthly on the 31st skipping short months,
+    UNTIL inclusive, the 1000-instance and two-year caps; hostile input
+    (a giant file, no calendar, unbalanced components, markup and bidi
+    controls, 300 attendees, a `javascript:` URL).
+  - `tst_calendar` (10) over the fake mail system: the MIME shape sent
+    and read back, Gmail's `invite.ics` not listed; organizer and two
+    attendees through invitation, answer, update (sequence 1, asked
+    again), one attendee taken off (CANCEL to her, a new REQUEST without
+    her), cancellation, a stale REQUEST not reviving it; who may act
+    (stranger with gating off: inert, added by hand without an organizer;
+    with gating on: held and nothing possible; a forwarded invitation;
+    a third party's "update" ignored); a stranger answering in Bob's
+    name and Bob's older answer ignored; encrypted invitations whose
+    summary the server never saw, answered encrypted; the structured
+    card's event; reminders shown once. The trust rule, the organizer
+    rule and the sequence rule each failed it when taken out.
+  - `tst_sync::calendarTravels`: the record travels, the later edit wins,
+    a reply derived on B survives A's edit, a newer sequence from mail is
+    kept against an older op (fails without the guard), the removal rule
+    both ways, the synced setting.
+  - `tst_structured` still passes with `toIcs` on `ICal`.
+- Screenshots looked at: `calendar`, `calendar-event`, `calendar-new`,
+  `invite` (the standup thread with Ada's answer), `invite-reply`,
+  `invite-inert`, `calendar-ar`, `invite-ar`, `calendar-event-he`, and
+  `phone-calendar`, `phone-calendar-event`, `phone-invite`,
+  `phone-calendar-ar`. They found the agenda under the month (fixed), the
+  phone month sitting at the bottom of its half (fixed), seconds in the
+  agenda times (fixed), and undefined bindings on cards without an
+  invitation (fixed).
+- The translations test: 168 new strings in ten languages, machine-made
+  like the rest.
+
+**Not verified:**
+- **Any other client.** No e3mail invitation has been opened in Gmail,
+  Outlook, Apple Mail or Thunderbird, and no invitation from them has
+  been fetched through a real server: the samples are hand-written to the
+  shapes those clients emit. Outlook's handling of our VTIMEZONE (one
+  observance per transition, no RRULE inside it) is the first thing to
+  look at.
+- The reminder notification on a real desktop (offscreen shows none, trap
+  24), and clicking it.
+- The date picker, the weekday toggles and the send/cancel questions by
+  hand: no screenshot shows a popup.
+- The CLI commands against `server/compose` (`scripts/e2e.py` was not run:
+  Docker is not available in this session; the fake server covers the
+  transport).
+- Android: not built here (no toolchain); the new QML uses nothing the
+  rest does not, except `MonthGrid` and `DayOfWeekRow` from
+  QtQuick.Controls.
+- The camera: this build had it off; CI will build it on.
+- A recurring event edited on two devices at once (the whole record is
+  last-writer-wins, as the ADR says).
+
 ## Known gaps
 
 - **Signed-only mail** is checked only for PGP/MIME (`multipart/signed`);
@@ -1322,6 +1434,10 @@ draft-ietf-sml-structured-email-06 and draft-ietf-sml-trust-01.
   back if another tags with the old name first (ADR 0013).
 - **Translations are machine-made** and unreviewed in all ten languages, and
   Settings says so. Yiddish is the least certain of them.
+- **The calendar** reads only simple recurrence rules (ADR 0025); others
+  are kept as received and give one occurrence. No per-occurrence edits,
+  no counter-proposals, no free/busy, no week view. Invitations from and
+  to other clients have not been tried.
 - **Without an OS keyring and without a passphrase**, the database key sits
   beside the mail, so encryption at rest protects nothing there; Settings says
   so (ADR 0012, ADR 0023). Passwords fall back into that database.

@@ -19,7 +19,7 @@
         <translation>e3mail поддерживает синхронизацию</translation>
     </message>
     <message>
-        <source>New mail and other devices&apos; changes arrive while e3mail is in the background.</source>
+        <source>New mail and other devices' changes arrive while e3mail is in the background.</source>
         <translation>Новая почта и изменения с других устройств приходят, пока e3mail в фоне.</translation>
     </message>
     <message>
@@ -165,20 +165,242 @@
         <translation>Из самой новой резервной копии создаётся новое устройство учётной записи. Оно не синхронизируется с другими вашими устройствами, пока вы его не привяжете.</translation>
     </message>
     <message>
-        <source>The server&apos;s SSH host key has changed. Trust the new one only if the server&apos;s administrator says it changed:</source>
+        <source>The server's SSH host key has changed. Trust the new one only if the server's administrator says it changed:</source>
         <translation>SSH-ключ сервера изменился. Доверяйте новому, только если администратор сервера подтверждает изменение:</translation>
     </message>
     <message>
-        <source>The server&apos;s SSH host key is not known yet. Trust it only if it matches what the server&apos;s administrator gives you:</source>
+        <source>The server's SSH host key is not known yet. Trust it only if it matches what the server's administrator gives you:</source>
         <translation>SSH-ключ сервера ещё не известен. Доверяйте ему, только если он совпадает с тем, что сообщил администратор сервера:</translation>
     </message>
     <message>
-        <source>The server&apos;s certificate is not trusted. Trust it only if its fingerprint matches what the server&apos;s administrator gives you:</source>
+        <source>The server's certificate is not trusted. Trust it only if its fingerprint matches what the server's administrator gives you:</source>
         <translation>Сертификату сервера нет доверия. Доверяйте ему, только если его отпечаток совпадает с тем, что сообщил администратор сервера:</translation>
     </message>
     <message>
         <source>Trust it</source>
         <translation>Доверять</translation>
+    </message>
+</context>
+<context>
+    <name>Calendar</name>
+    <message>
+        <source>Repeats (rule not understood: %1)</source>
+        <translation>Повторяется (правило не распознано: %1)</translation>
+    </message>
+    <message>
+        <source>Every day</source>
+        <translation>Каждый день</translation>
+    </message>
+    <message numerus="yes">
+        <source>Every %n days</source>
+        <translation>
+            <numerusform>Каждый %n день</numerusform>
+            <numerusform>Каждые %n дня</numerusform>
+            <numerusform>Каждые %n дней</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Every week</source>
+        <translation>Каждую неделю</translation>
+    </message>
+    <message numerus="yes">
+        <source>Every %n weeks</source>
+        <translation>
+            <numerusform>Каждую %n неделю</numerusform>
+            <numerusform>Каждые %n недели</numerusform>
+            <numerusform>Каждые %n недель</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>%1 on %2</source>
+        <translation>%1 по %2</translation>
+    </message>
+    <message>
+        <source>Every month</source>
+        <translation>Каждый месяц</translation>
+    </message>
+    <message numerus="yes">
+        <source>Every %n months</source>
+        <translation>
+            <numerusform>Каждый %n месяц</numerusform>
+            <numerusform>Каждые %n месяца</numerusform>
+            <numerusform>Каждые %n месяцев</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Every year</source>
+        <translation>Каждый год</translation>
+    </message>
+    <message numerus="yes">
+        <source>Every %n years</source>
+        <translation>
+            <numerusform>Каждый %n год</numerusform>
+            <numerusform>Каждые %n года</numerusform>
+            <numerusform>Каждые %n лет</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%1, %n time(s)</source>
+        <translation>
+            <numerusform>%1, %n раз</numerusform>
+            <numerusform>%1, %n раза</numerusform>
+            <numerusform>%1, %n раз</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>%1, until %2</source>
+        <translation>%1, до %2</translation>
+    </message>
+    <message>
+        <source>%1 – %2</source>
+        <translation>%1 – %2</translation>
+    </message>
+    <message>
+        <source>%1, %2</source>
+        <translation>%1, %2</translation>
+    </message>
+    <message>
+        <source>%1, %2 – %3</source>
+        <translation>%1, %2 – %3</translation>
+    </message>
+    <message>
+        <source>%1 has accepted the invitation to “%2”.</source>
+        <translation>%1 принял(а) приглашение на «%2».</translation>
+    </message>
+    <message>
+        <source>%1 has tentatively accepted the invitation to “%2”.</source>
+        <translation>%1 предварительно принял(а) приглашение на «%2».</translation>
+    </message>
+    <message>
+        <source>%1 has declined the invitation to “%2”.</source>
+        <translation>%1 отклонил(а) приглашение на «%2».</translation>
+    </message>
+    <message>
+        <source>%1 has not answered the invitation to “%2”.</source>
+        <translation>%1 не ответил(а) на приглашение на «%2».</translation>
+    </message>
+    <message>
+        <source>Accepted: %1</source>
+        <translation>Принято: %1</translation>
+    </message>
+    <message>
+        <source>Tentative: %1</source>
+        <translation>Под вопросом: %1</translation>
+    </message>
+    <message>
+        <source>Declined: %1</source>
+        <translation>Отклонено: %1</translation>
+    </message>
+    <message>
+        <source>Cancelled: %1</source>
+        <translation>Отменено: %1</translation>
+    </message>
+    <message>
+        <source>%1 has cancelled “%2”.</source>
+        <translation>%1 отменил(а) «%2».</translation>
+    </message>
+    <message>
+        <source>Updated invitation: %1</source>
+        <translation>Обновлённое приглашение: %1</translation>
+    </message>
+    <message>
+        <source>%1 has changed “%2”. Here are the new details.</source>
+        <translation>%1 изменил(а) «%2». Вот новые сведения.</translation>
+    </message>
+    <message>
+        <source>Invitation: %1</source>
+        <translation>Приглашение: %1</translation>
+    </message>
+    <message>
+        <source>%1 invites you to “%2”.</source>
+        <translation>%1 приглашает вас на «%2».</translation>
+    </message>
+    <message>
+        <source>When: %1</source>
+        <translation>Когда: %1</translation>
+    </message>
+    <message>
+        <source>Repeats: %1</source>
+        <translation>Повтор: %1</translation>
+    </message>
+    <message>
+        <source>Where: %1</source>
+        <translation>Где: %1</translation>
+    </message>
+    <message>
+        <source>Link: %1</source>
+        <translation>Ссылка: %1</translation>
+    </message>
+    <message>
+        <source>Who: %1</source>
+        <translation>Кто: %1</translation>
+    </message>
+    <message>
+        <source>This invitation cannot be answered.</source>
+        <translation>На это приглашение нельзя ответить.</translation>
+    </message>
+    <message>
+        <source>A newer version of this invitation is in your calendar.</source>
+        <translation>В календаре уже есть более новая версия этого приглашения.</translation>
+    </message>
+    <message>
+        <source>This invitation cannot be added.</source>
+        <translation>Это приглашение нельзя добавить.</translation>
+    </message>
+</context>
+<context>
+    <name>CalendarView</name>
+    <message>
+        <source>Previous month</source>
+        <translation>Предыдущий месяц</translation>
+    </message>
+    <message>
+        <source>Next month</source>
+        <translation>Следующий месяц</translation>
+    </message>
+    <message>
+        <source>Today</source>
+        <translation>Сегодня</translation>
+    </message>
+    <message>
+        <source>New event</source>
+        <translation>Новое событие</translation>
+    </message>
+    <message numerus="yes">
+        <source>+%n more</source>
+        <translation>
+            <numerusform>ещё %n</numerusform>
+            <numerusform>ещё %n</numerusform>
+            <numerusform>ещё %n</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Coming up</source>
+        <translation>Скоро</translation>
+    </message>
+    <message>
+        <source>Show what is coming</source>
+        <translation>Показать ближайшие</translation>
+    </message>
+    <message>
+        <source>Tentative</source>
+        <translation>Под вопросом</translation>
+    </message>
+    <message>
+        <source>Not answered</source>
+        <translation>Без ответа</translation>
+    </message>
+    <message>
+        <source>Repeats</source>
+        <translation>Повтор</translation>
+    </message>
+    <message>
+        <source>Nothing on this day.</source>
+        <translation>В этот день ничего нет.</translation>
+    </message>
+    <message>
+        <source>Nothing coming up. Invitations you accept and events you add appear here.</source>
+        <translation>Ближайших событий нет. Принятые приглашения и добавленные события появятся здесь.</translation>
     </message>
 </context>
 <context>
@@ -566,6 +788,260 @@ To: %4
     </message>
 </context>
 <context>
+    <name>DateField</name>
+    <message>
+        <source>Pick a date</source>
+        <translation>Выбрать дату</translation>
+    </message>
+    <message>
+        <source>Previous month</source>
+        <translation>Предыдущий месяц</translation>
+    </message>
+    <message>
+        <source>Next month</source>
+        <translation>Следующий месяц</translation>
+    </message>
+</context>
+<context>
+    <name>EventDialog</name>
+    <message>
+        <source>Edit event</source>
+        <translation>Изменить событие</translation>
+    </message>
+    <message>
+        <source>New event</source>
+        <translation>Новое событие</translation>
+    </message>
+    <message>
+        <source>Title</source>
+        <translation>Название</translation>
+    </message>
+    <message>
+        <source>All day</source>
+        <translation>Весь день</translation>
+    </message>
+    <message>
+        <source>Starts</source>
+        <translation>Начало</translation>
+    </message>
+    <message>
+        <source>Ends</source>
+        <translation>Конец</translation>
+    </message>
+    <message>
+        <source>Times are in this device's time zone.</source>
+        <translation>Время указано в часовом поясе этого устройства.</translation>
+    </message>
+    <message>
+        <source>Repeats</source>
+        <translation>Повтор</translation>
+    </message>
+    <message>
+        <source>Never</source>
+        <translation>Никогда</translation>
+    </message>
+    <message>
+        <source>Every day</source>
+        <translation>Каждый день</translation>
+    </message>
+    <message>
+        <source>Every week</source>
+        <translation>Каждую неделю</translation>
+    </message>
+    <message>
+        <source>Every month</source>
+        <translation>Каждый месяц</translation>
+    </message>
+    <message>
+        <source>Every year</source>
+        <translation>Каждый год</translation>
+    </message>
+    <message>
+        <source>As received</source>
+        <translation>Как получено</translation>
+    </message>
+    <message>
+        <source>every</source>
+        <translation>каждые</translation>
+    </message>
+    <message>
+        <source>day(s)</source>
+        <translation>дн.</translation>
+    </message>
+    <message>
+        <source>week(s)</source>
+        <translation>нед.</translation>
+    </message>
+    <message>
+        <source>month(s)</source>
+        <translation>мес.</translation>
+    </message>
+    <message>
+        <source>year(s)</source>
+        <translation>г.</translation>
+    </message>
+    <message>
+        <source>This rule came with the invitation and is kept as it is: %1</source>
+        <translation>Это правило пришло с приглашением и сохраняется как есть: %1</translation>
+    </message>
+    <message>
+        <source>After</source>
+        <translation>После</translation>
+    </message>
+    <message>
+        <source>On</source>
+        <translation>До</translation>
+    </message>
+    <message>
+        <source>time(s)</source>
+        <translation>раз</translation>
+    </message>
+    <message>
+        <source>Where</source>
+        <translation>Где</translation>
+    </message>
+    <message>
+        <source>Link</source>
+        <translation>Ссылка</translation>
+    </message>
+    <message>
+        <source>Attendees</source>
+        <translation>Участники</translation>
+    </message>
+    <message>
+        <source>Names or addresses, separated by commas</source>
+        <translation>Имена или адреса через запятую</translation>
+    </message>
+    <message>
+        <source>Attendees get an invitation by email, and an update when the meeting changes.</source>
+        <translation>Участники получают приглашение по почте и обновление, когда встреча меняется.</translation>
+    </message>
+    <message>
+        <source>The invitation will be encrypted: every attendee has a key.</source>
+        <translation>Приглашение будет зашифровано: у всех участников есть ключ.</translation>
+    </message>
+    <message>
+        <source>The invitation goes unencrypted: no key yet for %1.</source>
+        <translation>Приглашение уйдёт без шифрования: пока нет ключа для %1.</translation>
+    </message>
+    <message>
+        <source>The invitation goes unencrypted.</source>
+        <translation>Приглашение уйдёт без шифрования.</translation>
+    </message>
+    <message>
+        <source>Reminder</source>
+        <translation>Напоминание</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Нет</translation>
+    </message>
+    <message>
+        <source>At the start</source>
+        <translation>В момент начала</translation>
+    </message>
+    <message>
+        <source>5 minutes before</source>
+        <translation>За 5 минут</translation>
+    </message>
+    <message>
+        <source>10 minutes before</source>
+        <translation>За 10 минут</translation>
+    </message>
+    <message>
+        <source>15 minutes before</source>
+        <translation>За 15 минут</translation>
+    </message>
+    <message>
+        <source>30 minutes before</source>
+        <translation>За 30 минут</translation>
+    </message>
+    <message>
+        <source>1 hour before</source>
+        <translation>За 1 час</translation>
+    </message>
+    <message>
+        <source>2 hours before</source>
+        <translation>За 2 часа</translation>
+    </message>
+    <message>
+        <source>1 day before</source>
+        <translation>За 1 день</translation>
+    </message>
+    <message>
+        <source>Details</source>
+        <translation>Подробности</translation>
+    </message>
+    <message>
+        <source>%1 organizes this meeting; only the reminder is yours to change here. Answer from the invitation in your mail.</source>
+        <translation>Эту встречу организует %1; здесь можно изменить только напоминание. Ответьте из приглашения в почте.</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>Сохранить</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Отмена</translation>
+    </message>
+    <message>
+        <source>Cancel meeting…</source>
+        <translation>Отменить встречу…</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Удалить</translation>
+    </message>
+    <message>
+        <source>Export…</source>
+        <translation>Экспорт…</translation>
+    </message>
+    <message>
+        <source>Send the update?</source>
+        <translation>Отправить обновление?</translation>
+    </message>
+    <message>
+        <source>Send the invitation?</source>
+        <translation>Отправить приглашение?</translation>
+    </message>
+    <message>
+        <source>The attendees get an updated invitation by email and are asked to answer again.</source>
+        <translation>Участники получат обновлённое приглашение по почте, и их попросят ответить снова.</translation>
+    </message>
+    <message>
+        <source>The attendees get an invitation by email.</source>
+        <translation>Участники получат приглашение по почте.</translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation>Отправить</translation>
+    </message>
+    <message>
+        <source>Save only</source>
+        <translation>Только сохранить</translation>
+    </message>
+    <message>
+        <source>Back</source>
+        <translation>Назад</translation>
+    </message>
+    <message>
+        <source>Cancel the meeting?</source>
+        <translation>Отменить встречу?</translation>
+    </message>
+    <message>
+        <source>The attendees are told by email that it is cancelled.</source>
+        <translation>Участникам сообщат по почте, что она отменена.</translation>
+    </message>
+    <message>
+        <source>Cancel meeting</source>
+        <translation>Отменить встречу</translation>
+    </message>
+    <message>
+        <source>Calendar files (*.ics)</source>
+        <translation>Файлы календаря (*.ics)</translation>
+    </message>
+</context>
+<context>
     <name>FirstRunDialog</name>
     <message>
         <source>Before you start</source>
@@ -608,6 +1084,125 @@ To: %4
         <translation>Это сообщение зашифровано, и на этом устройстве его не удалось расшифровать.
 
 %1</translation>
+    </message>
+</context>
+<context>
+    <name>InvitationCard</name>
+    <message>
+        <source>Accepted</source>
+        <translation>Принято</translation>
+    </message>
+    <message>
+        <source>Tentative</source>
+        <translation>Под вопросом</translation>
+    </message>
+    <message>
+        <source>Declined</source>
+        <translation>Отклонено</translation>
+    </message>
+    <message>
+        <source>Not answered</source>
+        <translation>Без ответа</translation>
+    </message>
+    <message>
+        <source>Cancelled: %1</source>
+        <translation>Отменено: %1</translation>
+    </message>
+    <message>
+        <source>%1 accepted.</source>
+        <translation>%1 принял(а).</translation>
+    </message>
+    <message>
+        <source>%1 declined.</source>
+        <translation>%1 отклонил(а).</translation>
+    </message>
+    <message>
+        <source>%1 might come.</source>
+        <translation>%1, возможно, придёт.</translation>
+    </message>
+    <message>
+        <source>%1 answered.</source>
+        <translation>%1 ответил(а).</translation>
+    </message>
+    <message>
+        <source>This meeting was cancelled; your calendar is updated.</source>
+        <translation>Эта встреча отменена; календарь обновлён.</translation>
+    </message>
+    <message>
+        <source>This meeting was cancelled.</source>
+        <translation>Эта встреча отменена.</translation>
+    </message>
+    <message>
+        <source>Your invitation.</source>
+        <translation>Ваше приглашение.</translation>
+    </message>
+    <message>
+        <source>A newer version of this invitation is in your calendar.</source>
+        <translation>В календаре уже есть более новая версия этого приглашения.</translation>
+    </message>
+    <message>
+        <source>This meeting has since been cancelled.</source>
+        <translation>Эта встреча с тех пор отменена.</translation>
+    </message>
+    <message>
+        <source>In your calendar: %1.</source>
+        <translation>В вашем календаре: %1.</translation>
+    </message>
+    <message>
+        <source>%1 invites you.</source>
+        <translation>%1 приглашает вас.</translation>
+    </message>
+    <message>
+        <source>When</source>
+        <translation>Когда</translation>
+    </message>
+    <message>
+        <source>Repeats</source>
+        <translation>Повтор</translation>
+    </message>
+    <message>
+        <source>Where</source>
+        <translation>Где</translation>
+    </message>
+    <message>
+        <source>Organizer</source>
+        <translation>Организатор</translation>
+    </message>
+    <message>
+        <source>Who</source>
+        <translation>Кто</translation>
+    </message>
+    <message>
+        <source>Details</source>
+        <translation>Подробности</translation>
+    </message>
+    <message>
+        <source>Accept</source>
+        <translation>Принять</translation>
+    </message>
+    <message>
+        <source>Decline</source>
+        <translation>Отклонить</translation>
+    </message>
+    <message>
+        <source>Add to calendar</source>
+        <translation>В календарь</translation>
+    </message>
+    <message>
+        <source>Show in calendar</source>
+        <translation>Показать в календаре</translation>
+    </message>
+    <message>
+        <source>Open link…</source>
+        <translation>Открыть ссылку…</translation>
+    </message>
+    <message>
+        <source>Answers can be sent to senders you trust; accept this sender first. Check these details against the message.</source>
+        <translation>Отвечать можно только отправителям, которым вы доверяете; сначала примите этого отправителя. Сверьте эти сведения с письмом.</translation>
+    </message>
+    <message>
+        <source>This message was not sent by the meeting's organizer, so it cannot be answered from here. Check these details against the message.</source>
+        <translation>Это письмо отправил не организатор встречи, поэтому ответить отсюда нельзя. Сверьте эти сведения с письмом.</translation>
     </message>
 </context>
 <context>
@@ -690,6 +1285,18 @@ To: %4
 <context>
     <name>MailApp</name>
     <message>
+        <source>Today</source>
+        <translation>Сегодня</translation>
+    </message>
+    <message>
+        <source>Event</source>
+        <translation>Событие</translation>
+    </message>
+    <message>
+        <source>%1 · %2</source>
+        <translation>%1 · %2</translation>
+    </message>
+    <message>
         <source>Unnamed device</source>
         <translation>Устройство без имени</translation>
     </message>
@@ -754,8 +1361,56 @@ To: %4
         <translation>Не удалось сохранить вложение.</translation>
     </message>
     <message>
+        <source>Could not add the event.</source>
+        <translation>Не удалось добавить событие.</translation>
+    </message>
+    <message>
+        <source>Added to the calendar.</source>
+        <translation>Добавлено в календарь.</translation>
+    </message>
+    <message>
+        <source>(No title)</source>
+        <translation>(Без названия)</translation>
+    </message>
+    <message>
+        <source>All day</source>
+        <translation>Весь день</translation>
+    </message>
+    <message>
+        <source>Give the event a title.</source>
+        <translation>Дайте событию название.</translation>
+    </message>
+    <message>
+        <source>The start is not a date and time.</source>
+        <translation>Начало не является датой и временем.</translation>
+    </message>
+    <message>
+        <source>Saved, but the invitation was not sent: %1</source>
+        <translation>Сохранено, но приглашение не отправлено: %1</translation>
+    </message>
+    <message>
+        <source>Invitation sent.</source>
+        <translation>Приглашение отправлено.</translation>
+    </message>
+    <message>
+        <source>Cancelled, but the attendees were not told: %1</source>
+        <translation>Отменено, но участники не уведомлены: %1</translation>
+    </message>
+    <message>
+        <source>Saved in your calendar, but the answer was not sent: %1</source>
+        <translation>Сохранено в календаре, но ответ не отправлен: %1</translation>
+    </message>
+    <message>
+        <source>Answer sent.</source>
+        <translation>Ответ отправлен.</translation>
+    </message>
+    <message>
         <source>Could not save the event.</source>
         <translation>Не удалось сохранить событие.</translation>
+    </message>
+    <message>
+        <source>event</source>
+        <translation>событие</translation>
     </message>
     <message>
         <source>This message cannot be decrypted, or its original is no longer kept.</source>
@@ -766,7 +1421,7 @@ To: %4
         <translation>Оригинал этого сообщения больше не хранится.</translation>
     </message>
     <message>
-        <source>This is not a contact&apos;s code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
+        <source>This is not a contact's code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
         <translation>Это не код контакта. Код для проверки начинается с OPENPGP4FPR: или https://i.delta.chat/.</translation>
     </message>
     <message numerus="yes">
@@ -1333,32 +1988,9 @@ To: %4
     </message>
 </context>
 <context>
-    <name>ScanView</name>
-    <message>
-        <source>This device has no camera. Type the code instead.</source>
-        <translation>У этого устройства нет камеры. Введите код вручную.</translation>
-    </message>
-    <message>
-        <source>e3mail may not use the camera. Allow it in the system settings, or type the code instead.</source>
-        <translation>e3mail не может использовать камеру. Разрешите это в настройках системы или введите код вручную.</translation>
-    </message>
-    <message>
-        <source>Asking for the camera…</source>
-        <translation>Запрашиваем доступ к камере…</translation>
-    </message>
-    <message>
-        <source>Point the camera at the QR code on the other device.</source>
-        <translation>Наведите камеру на QR-код на другом устройстве.</translation>
-    </message>
-    <message>
-        <source>Type the code instead</source>
-        <translation>Ввести код вручную</translation>
-    </message>
-</context>
-<context>
     <name>SecureJoin</name>
     <message>
-        <source>This is your own code. Scan the other person&apos;s code instead.</source>
+        <source>This is your own code. Scan the other person's code instead.</source>
         <translation>Это ваш собственный код. Отсканируйте код другого человека.</translation>
     </message>
     <message>
@@ -1401,7 +2033,7 @@ To: %4
         <translation>Показывать отправителя и тему</translation>
     </message>
     <message>
-        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system&apos;s notification history, outside e3mail&apos;s encryption.</source>
+        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system's notification history, outside e3mail's encryption.</source>
         <translation>На этом устройстве, когда e3mail открыт, но не на переднем плане. Показанная здесь тема остаётся в истории уведомлений системы, вне шифрования e3mail.</translation>
     </message>
     <message>
@@ -1413,7 +2045,7 @@ To: %4
         <translation>Синхронизировать в фоне</translation>
     </message>
     <message>
-        <source>Mail and your other devices&apos; changes keep arriving while e3mail is not in front. Android shows a notification for as long as this is on, and it uses more battery. Swiping e3mail away from the recent apps ends it.</source>
+        <source>Mail and your other devices' changes keep arriving while e3mail is not in front. Android shows a notification for as long as this is on, and it uses more battery. Swiping e3mail away from the recent apps ends it.</source>
         <translation>Почта и изменения с ваших других устройств продолжают приходить, когда e3mail не на переднем плане. Пока это включено, Android показывает уведомление, и расход батареи выше. Если смахнуть e3mail из недавних приложений, это прекратится.</translation>
     </message>
     <message>
@@ -1453,7 +2085,7 @@ To: %4
         <translation>Добавить подпись…</translation>
     </message>
     <message>
-        <source>The chosen one goes into new mail. The composer&apos;s signature button swaps it for another.</source>
+        <source>The chosen one goes into new mail. The composer's signature button swaps it for another.</source>
         <translation>Выбранная подпись добавляется в новые письма. Кнопка подписи в редакторе заменяет её другой.</translation>
     </message>
     <message>
@@ -1509,6 +2141,50 @@ To: %4
         <translation>Уведомление уходит один раз, когда вы впервые открываете письмо, на любом устройстве. Незнакомцы и те, кому вы не доверяете, его не получают.</translation>
     </message>
     <message>
+        <source>Calendar</source>
+        <translation>Календарь</translation>
+    </message>
+    <message>
+        <source>Remind me before an event</source>
+        <translation>Напоминать перед событием</translation>
+    </message>
+    <message>
+        <source>Never</source>
+        <translation>Никогда</translation>
+    </message>
+    <message>
+        <source>At the start</source>
+        <translation>В момент начала</translation>
+    </message>
+    <message>
+        <source>5 minutes before</source>
+        <translation>За 5 минут</translation>
+    </message>
+    <message>
+        <source>10 minutes before</source>
+        <translation>За 10 минут</translation>
+    </message>
+    <message>
+        <source>15 minutes before</source>
+        <translation>За 15 минут</translation>
+    </message>
+    <message>
+        <source>30 minutes before</source>
+        <translation>За 30 минут</translation>
+    </message>
+    <message>
+        <source>1 hour before</source>
+        <translation>За 1 час</translation>
+    </message>
+    <message>
+        <source>1 day before</source>
+        <translation>За 1 день</translation>
+    </message>
+    <message>
+        <source>For events you add and invitations you accept; each event can differ. Reminders show only while e3mail runs. The calendar lives on your devices and is arranged by email; nothing is shared with a calendar server.</source>
+        <translation>Для добавленных событий и принятых приглашений; у каждого события может быть своё. Напоминания показываются только пока e3mail запущен. Календарь хранится на ваших устройствах и согласуется по почте; с сервером календаря ничего не передаётся.</translation>
+    </message>
+    <message>
         <source>Trash</source>
         <translation>Корзина</translation>
     </message>
@@ -1549,7 +2225,7 @@ To: %4
         <translation>дн.</translation>
     </message>
     <message>
-        <source>Mail that was on the server before e3mail first connected is never removed. &quot;Never&quot; lets another mail program keep using this mailbox.</source>
+        <source>Mail that was on the server before e3mail first connected is never removed. "Never" lets another mail program keep using this mailbox.</source>
         <translation>Письма, лежавшие на сервере до первого подключения e3mail, никогда не удаляются. «Никогда» позволяет другой почтовой программе продолжать пользоваться этим ящиком.</translation>
     </message>
     <message>
@@ -1561,15 +2237,15 @@ To: %4
         <translation>с</translation>
     </message>
     <message>
-        <source>The sending server&apos;s certificate is not trusted, or is not the one trusted before.</source>
+        <source>The sending server's certificate is not trusted, or is not the one trusted before.</source>
         <translation>Сертификат сервера отправки не доверенный или не тот, которому вы доверяли раньше.</translation>
     </message>
     <message>
-        <source>The incoming server&apos;s certificate is not trusted, or is not the one trusted before.</source>
+        <source>The incoming server's certificate is not trusted, or is not the one trusted before.</source>
         <translation>Сертификат сервера входящей почты не доверенный или не тот, которому вы доверяли раньше.</translation>
     </message>
     <message>
-        <source>Trust it only if this SHA-256 fingerprint matches the one your server&apos;s administrator gave you.</source>
+        <source>Trust it only if this SHA-256 fingerprint matches the one your server's administrator gave you.</source>
         <translation>Доверяйте ему, только если этот отпечаток SHA-256 совпадает с тем, что дал администратор вашего сервера.</translation>
     </message>
     <message>
@@ -1633,7 +2309,7 @@ To: %4
         <translation>Оригиналы</translation>
     </message>
     <message>
-        <source>Keep each message&apos;s original for</source>
+        <source>Keep each message's original for</source>
         <translation>Хранить оригинал каждого письма</translation>
     </message>
     <message>
@@ -1701,7 +2377,7 @@ To: %4
         <translation>Ретранслятор</translation>
     </message>
     <message>
-        <source>n0&apos;s public relays</source>
+        <source>n0's public relays</source>
         <translation>Публичные ретрансляторы n0</translation>
     </message>
     <message>
@@ -1833,7 +2509,7 @@ To: %4
         <translation>Удалить %1?</translation>
     </message>
     <message>
-        <source>It stops syncing with this account&apos;s other devices. What is already on it stays there.</source>
+        <source>It stops syncing with this account's other devices. What is already on it stays there.</source>
         <translation>Оно перестанет синхронизироваться с другими устройствами этой учётной записи. То, что уже на нём, останется.</translation>
     </message>
     <message>
@@ -1848,15 +2524,15 @@ To: %4
         <translation>Настройки сервера от вашего провайдера.</translation>
     </message>
     <message>
-        <source>Server settings from Thunderbird&apos;s provider database.</source>
+        <source>Server settings from Thunderbird's provider database.</source>
         <translation>Настройки сервера из базы провайдеров Thunderbird.</translation>
     </message>
     <message>
-        <source>Server settings of the service that receives your domain&apos;s mail. Check them before connecting.</source>
+        <source>Server settings of the service that receives your domain's mail. Check them before connecting.</source>
         <translation>Настройки сервера службы, которая принимает почту вашего домена. Проверьте их перед подключением.</translation>
     </message>
     <message>
-        <source>Server settings from your provider&apos;s Autodiscover service.</source>
+        <source>Server settings from your provider's Autodiscover service.</source>
         <translation>Настройки сервера из службы Autodiscover вашего провайдера.</translation>
     </message>
     <message>
@@ -1967,7 +2643,7 @@ To: %4
         <translation>Выдан %1, издатель %2, действует до %3.</translation>
     </message>
     <message>
-        <source>Trust it only if this fingerprint matches the one your server&apos;s administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
+        <source>Trust it only if this fingerprint matches the one your server's administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
         <translation>Доверяйте ему, только если этот отпечаток совпадает с тем, что дал администратор вашего сервера. Тогда e3mail будет принимать от этого сервера этот сертификат и никакой другой.</translation>
     </message>
     <message>
@@ -2016,6 +2692,10 @@ To: %4
     <message>
         <source>Inbox</source>
         <translation>Входящие</translation>
+    </message>
+    <message>
+        <source>Calendar</source>
+        <translation>Календарь</translation>
     </message>
     <message>
         <source>Unverified</source>
@@ -2101,7 +2781,7 @@ To: %4
         <translation>Вход занял слишком много времени. Попробуйте ещё раз.</translation>
     </message>
     <message>
-        <source>Cannot listen for the browser&apos;s answer on this device.</source>
+        <source>Cannot listen for the browser's answer on this device.</source>
         <translation>На этом устройстве не удаётся получить ответ браузера.</translation>
     </message>
     <message>
@@ -2291,8 +2971,8 @@ To: %4
 <context>
     <name>StructuredCard</name>
     <message>
-        <source>Add to calendar…</source>
-        <translation>Добавить в календарь…</translation>
+        <source>Add to calendar</source>
+        <translation>В календарь</translation>
     </message>
     <message>
         <source>Open…</source>
@@ -2301,10 +2981,6 @@ To: %4
     <message>
         <source>Shown as text only. Buttons appear for senders you trust whose mail is signed by their key; check these details against the message.</source>
         <translation>Показано только как текст. Кнопки появляются для доверенных отправителей, чьи письма подписаны их ключом; сверьте эти данные с письмом.</translation>
-    </message>
-    <message>
-        <source>Calendar files (*.ics)</source>
-        <translation>Файлы календаря (*.ics)</translation>
     </message>
 </context>
 <context>

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MPL-2.0
 #include "OpApply.h"
 
+#include "mail/Calendar.h"
 #include "mail/Contacts.h"
 #include "mail/Organize.h"
 #include "mail/Preferences.h"
@@ -82,6 +83,20 @@ bool newerContactOp(MailContext &ctx, const Op &o, bool removals)
                                "AND lower(json_extract(payload, '$.addr')) = ?1 "
                                "AND (hlc > ?2 OR (hlc = ?2 AND device > ?3)) LIMIT 1");
     st.bindAll(mime::normalizeAddr(str(o, "addr")), o.hlc, o.device);
+    return st.step();
+}
+
+// A calendar removal competes with the event's own ops the same way
+// (ADR 0013, amendment of 2026-11-04).
+bool newerCalendarOp(MailContext &ctx, const Op &o, bool removals)
+{
+    Statement st(ctx.db, removals ? "SELECT 1 FROM ops WHERE kind = 'cal.remove' "
+                                    "AND json_extract(payload, '$.uid') = ?1 "
+                                    "AND (hlc > ?2 OR (hlc = ?2 AND device > ?3)) LIMIT 1"
+                                  : "SELECT 1 FROM ops WHERE kind = 'cal.event' "
+                                    "AND json_extract(payload, '$.uid') = ?1 "
+                                    "AND (hlc > ?2 OR (hlc = ?2 AND device > ?3)) LIMIT 1");
+    st.bindAll(str(o, "uid"), o.hlc, o.device);
     return st.step();
 }
 
@@ -244,6 +259,17 @@ bool applyOne(MailContext &ctx, const Op &o, OpApply::Result *r)
                        device, str(o, "name"), QDateTime::currentMSecsSinceEpoch(), str(o, "node"));
         else
             ctx.db.run("DELETE FROM devices WHERE id=?", device);
+        return true;
+    }
+    if (o.kind == op::CalendarEvent) {
+        if (newerCalendarOp(ctx, o, true))
+            return false; // taken out since
+        return mail::Calendar::applyEvent(ctx, o.payload);
+    }
+    if (o.kind == op::CalendarRemove) {
+        if (newerCalendarOp(ctx, o, false))
+            return false; // put back or edited since
+        mail::Calendar::applyRemove(ctx, str(o, "uid"));
         return true;
     }
     if (o.kind == op::ServerAck) {

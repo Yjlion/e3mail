@@ -19,7 +19,7 @@
         <translation>e3mail 正在保持同步</translation>
     </message>
     <message>
-        <source>New mail and other devices&apos; changes arrive while e3mail is in the background.</source>
+        <source>New mail and other devices' changes arrive while e3mail is in the background.</source>
         <translation>e3mail 在后台时，新邮件和其他设备的更改仍会到达。</translation>
     </message>
     <message>
@@ -165,20 +165,230 @@
         <translation>将用那里最新的备份创建该账户的一台新设备。在你配对之前，它不会与其他设备同步。</translation>
     </message>
     <message>
-        <source>The server&apos;s SSH host key has changed. Trust the new one only if the server&apos;s administrator says it changed:</source>
+        <source>The server's SSH host key has changed. Trust the new one only if the server's administrator says it changed:</source>
         <translation>服务器的 SSH 主机密钥已更改。只有在服务器管理员确认已更改时才信任新的密钥：</translation>
     </message>
     <message>
-        <source>The server&apos;s SSH host key is not known yet. Trust it only if it matches what the server&apos;s administrator gives you:</source>
+        <source>The server's SSH host key is not known yet. Trust it only if it matches what the server's administrator gives you:</source>
         <translation>服务器的 SSH 主机密钥尚不为人所知。只有在它与服务器管理员提供的一致时才信任它：</translation>
     </message>
     <message>
-        <source>The server&apos;s certificate is not trusted. Trust it only if its fingerprint matches what the server&apos;s administrator gives you:</source>
+        <source>The server's certificate is not trusted. Trust it only if its fingerprint matches what the server's administrator gives you:</source>
         <translation>服务器的证书不受信任。只有在其指纹与服务器管理员提供的一致时才信任它：</translation>
     </message>
     <message>
         <source>Trust it</source>
         <translation>信任</translation>
+    </message>
+</context>
+<context>
+    <name>Calendar</name>
+    <message>
+        <source>Repeats (rule not understood: %1)</source>
+        <translation>重复（无法理解的规则：%1）</translation>
+    </message>
+    <message>
+        <source>Every day</source>
+        <translation>每天</translation>
+    </message>
+    <message numerus="yes">
+        <source>Every %n days</source>
+        <translation>
+            <numerusform>每 %n 天</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Every week</source>
+        <translation>每周</translation>
+    </message>
+    <message numerus="yes">
+        <source>Every %n weeks</source>
+        <translation>
+            <numerusform>每 %n 周</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>%1 on %2</source>
+        <translation>%1，%2</translation>
+    </message>
+    <message>
+        <source>Every month</source>
+        <translation>每月</translation>
+    </message>
+    <message numerus="yes">
+        <source>Every %n months</source>
+        <translation>
+            <numerusform>每 %n 个月</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Every year</source>
+        <translation>每年</translation>
+    </message>
+    <message numerus="yes">
+        <source>Every %n years</source>
+        <translation>
+            <numerusform>每 %n 年</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%1, %n time(s)</source>
+        <translation>
+            <numerusform>%1，共 %n 次</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>%1, until %2</source>
+        <translation>%1，直到 %2</translation>
+    </message>
+    <message>
+        <source>%1 – %2</source>
+        <translation>%1 – %2</translation>
+    </message>
+    <message>
+        <source>%1, %2</source>
+        <translation>%1，%2</translation>
+    </message>
+    <message>
+        <source>%1, %2 – %3</source>
+        <translation>%1，%2 – %3</translation>
+    </message>
+    <message>
+        <source>%1 has accepted the invitation to “%2”.</source>
+        <translation>%1 已接受“%2”的邀请。</translation>
+    </message>
+    <message>
+        <source>%1 has tentatively accepted the invitation to “%2”.</source>
+        <translation>%1 已暂定接受“%2”的邀请。</translation>
+    </message>
+    <message>
+        <source>%1 has declined the invitation to “%2”.</source>
+        <translation>%1 已拒绝“%2”的邀请。</translation>
+    </message>
+    <message>
+        <source>%1 has not answered the invitation to “%2”.</source>
+        <translation>%1 尚未回复“%2”的邀请。</translation>
+    </message>
+    <message>
+        <source>Accepted: %1</source>
+        <translation>已接受：%1</translation>
+    </message>
+    <message>
+        <source>Tentative: %1</source>
+        <translation>暂定：%1</translation>
+    </message>
+    <message>
+        <source>Declined: %1</source>
+        <translation>已拒绝：%1</translation>
+    </message>
+    <message>
+        <source>Cancelled: %1</source>
+        <translation>已取消：%1</translation>
+    </message>
+    <message>
+        <source>%1 has cancelled “%2”.</source>
+        <translation>%1 已取消“%2”。</translation>
+    </message>
+    <message>
+        <source>Updated invitation: %1</source>
+        <translation>更新的邀请：%1</translation>
+    </message>
+    <message>
+        <source>%1 has changed “%2”. Here are the new details.</source>
+        <translation>%1 已更改“%2”。以下是新的详情。</translation>
+    </message>
+    <message>
+        <source>Invitation: %1</source>
+        <translation>邀请：%1</translation>
+    </message>
+    <message>
+        <source>%1 invites you to “%2”.</source>
+        <translation>%1 邀请您参加“%2”。</translation>
+    </message>
+    <message>
+        <source>When: %1</source>
+        <translation>时间：%1</translation>
+    </message>
+    <message>
+        <source>Repeats: %1</source>
+        <translation>重复：%1</translation>
+    </message>
+    <message>
+        <source>Where: %1</source>
+        <translation>地点：%1</translation>
+    </message>
+    <message>
+        <source>Link: %1</source>
+        <translation>链接：%1</translation>
+    </message>
+    <message>
+        <source>Who: %1</source>
+        <translation>参与者：%1</translation>
+    </message>
+    <message>
+        <source>This invitation cannot be answered.</source>
+        <translation>无法回复此邀请。</translation>
+    </message>
+    <message>
+        <source>A newer version of this invitation is in your calendar.</source>
+        <translation>您的日历中已有此邀请的更新版本。</translation>
+    </message>
+    <message>
+        <source>This invitation cannot be added.</source>
+        <translation>无法添加此邀请。</translation>
+    </message>
+</context>
+<context>
+    <name>CalendarView</name>
+    <message>
+        <source>Previous month</source>
+        <translation>上个月</translation>
+    </message>
+    <message>
+        <source>Next month</source>
+        <translation>下个月</translation>
+    </message>
+    <message>
+        <source>Today</source>
+        <translation>今天</translation>
+    </message>
+    <message>
+        <source>New event</source>
+        <translation>新建日程</translation>
+    </message>
+    <message numerus="yes">
+        <source>+%n more</source>
+        <translation>
+            <numerusform>还有 %n 项</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Coming up</source>
+        <translation>即将到来</translation>
+    </message>
+    <message>
+        <source>Show what is coming</source>
+        <translation>显示即将到来的日程</translation>
+    </message>
+    <message>
+        <source>Tentative</source>
+        <translation>暂定</translation>
+    </message>
+    <message>
+        <source>Not answered</source>
+        <translation>未回复</translation>
+    </message>
+    <message>
+        <source>Repeats</source>
+        <translation>重复</translation>
+    </message>
+    <message>
+        <source>Nothing on this day.</source>
+        <translation>这一天没有日程。</translation>
+    </message>
+    <message>
+        <source>Nothing coming up. Invitations you accept and events you add appear here.</source>
+        <translation>没有即将到来的日程。您接受的邀请和添加的日程会显示在这里。</translation>
     </message>
 </context>
 <context>
@@ -566,6 +776,260 @@ To: %4
     </message>
 </context>
 <context>
+    <name>DateField</name>
+    <message>
+        <source>Pick a date</source>
+        <translation>选择日期</translation>
+    </message>
+    <message>
+        <source>Previous month</source>
+        <translation>上个月</translation>
+    </message>
+    <message>
+        <source>Next month</source>
+        <translation>下个月</translation>
+    </message>
+</context>
+<context>
+    <name>EventDialog</name>
+    <message>
+        <source>Edit event</source>
+        <translation>编辑日程</translation>
+    </message>
+    <message>
+        <source>New event</source>
+        <translation>新建日程</translation>
+    </message>
+    <message>
+        <source>Title</source>
+        <translation>标题</translation>
+    </message>
+    <message>
+        <source>All day</source>
+        <translation>全天</translation>
+    </message>
+    <message>
+        <source>Starts</source>
+        <translation>开始</translation>
+    </message>
+    <message>
+        <source>Ends</source>
+        <translation>结束</translation>
+    </message>
+    <message>
+        <source>Times are in this device's time zone.</source>
+        <translation>时间按本设备的时区计。</translation>
+    </message>
+    <message>
+        <source>Repeats</source>
+        <translation>重复</translation>
+    </message>
+    <message>
+        <source>Never</source>
+        <translation>从不</translation>
+    </message>
+    <message>
+        <source>Every day</source>
+        <translation>每天</translation>
+    </message>
+    <message>
+        <source>Every week</source>
+        <translation>每周</translation>
+    </message>
+    <message>
+        <source>Every month</source>
+        <translation>每月</translation>
+    </message>
+    <message>
+        <source>Every year</source>
+        <translation>每年</translation>
+    </message>
+    <message>
+        <source>As received</source>
+        <translation>按收到的原样</translation>
+    </message>
+    <message>
+        <source>every</source>
+        <translation>每</translation>
+    </message>
+    <message>
+        <source>day(s)</source>
+        <translation>天</translation>
+    </message>
+    <message>
+        <source>week(s)</source>
+        <translation>周</translation>
+    </message>
+    <message>
+        <source>month(s)</source>
+        <translation>个月</translation>
+    </message>
+    <message>
+        <source>year(s)</source>
+        <translation>年</translation>
+    </message>
+    <message>
+        <source>This rule came with the invitation and is kept as it is: %1</source>
+        <translation>此规则随邀请而来，保持原样：%1</translation>
+    </message>
+    <message>
+        <source>After</source>
+        <translation>重复次数</translation>
+    </message>
+    <message>
+        <source>On</source>
+        <translation>截止日期</translation>
+    </message>
+    <message>
+        <source>time(s)</source>
+        <translation>次</translation>
+    </message>
+    <message>
+        <source>Where</source>
+        <translation>地点</translation>
+    </message>
+    <message>
+        <source>Link</source>
+        <translation>链接</translation>
+    </message>
+    <message>
+        <source>Attendees</source>
+        <translation>参与者</translation>
+    </message>
+    <message>
+        <source>Names or addresses, separated by commas</source>
+        <translation>姓名或地址，以逗号分隔</translation>
+    </message>
+    <message>
+        <source>Attendees get an invitation by email, and an update when the meeting changes.</source>
+        <translation>参与者会收到电子邮件邀请，会议变更时会收到更新。</translation>
+    </message>
+    <message>
+        <source>The invitation will be encrypted: every attendee has a key.</source>
+        <translation>邀请将被加密：每位参与者都有密钥。</translation>
+    </message>
+    <message>
+        <source>The invitation goes unencrypted: no key yet for %1.</source>
+        <translation>邀请将不加密发送：%1 尚无密钥。</translation>
+    </message>
+    <message>
+        <source>The invitation goes unencrypted.</source>
+        <translation>邀请将不加密发送。</translation>
+    </message>
+    <message>
+        <source>Reminder</source>
+        <translation>提醒</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>无</translation>
+    </message>
+    <message>
+        <source>At the start</source>
+        <translation>开始时</translation>
+    </message>
+    <message>
+        <source>5 minutes before</source>
+        <translation>提前 5 分钟</translation>
+    </message>
+    <message>
+        <source>10 minutes before</source>
+        <translation>提前 10 分钟</translation>
+    </message>
+    <message>
+        <source>15 minutes before</source>
+        <translation>提前 15 分钟</translation>
+    </message>
+    <message>
+        <source>30 minutes before</source>
+        <translation>提前 30 分钟</translation>
+    </message>
+    <message>
+        <source>1 hour before</source>
+        <translation>提前 1 小时</translation>
+    </message>
+    <message>
+        <source>2 hours before</source>
+        <translation>提前 2 小时</translation>
+    </message>
+    <message>
+        <source>1 day before</source>
+        <translation>提前 1 天</translation>
+    </message>
+    <message>
+        <source>Details</source>
+        <translation>详情</translation>
+    </message>
+    <message>
+        <source>%1 organizes this meeting; only the reminder is yours to change here. Answer from the invitation in your mail.</source>
+        <translation>此会议由 %1 组织；在这里您只能更改提醒。请在邮件中的邀请里回复。</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>保存</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>取消</translation>
+    </message>
+    <message>
+        <source>Cancel meeting…</source>
+        <translation>取消会议…</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>移除</translation>
+    </message>
+    <message>
+        <source>Export…</source>
+        <translation>导出…</translation>
+    </message>
+    <message>
+        <source>Send the update?</source>
+        <translation>发送更新？</translation>
+    </message>
+    <message>
+        <source>Send the invitation?</source>
+        <translation>发送邀请？</translation>
+    </message>
+    <message>
+        <source>The attendees get an updated invitation by email and are asked to answer again.</source>
+        <translation>参与者会收到更新后的电子邮件邀请，并被要求再次回复。</translation>
+    </message>
+    <message>
+        <source>The attendees get an invitation by email.</source>
+        <translation>参与者会收到电子邮件邀请。</translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation>发送</translation>
+    </message>
+    <message>
+        <source>Save only</source>
+        <translation>仅保存</translation>
+    </message>
+    <message>
+        <source>Back</source>
+        <translation>返回</translation>
+    </message>
+    <message>
+        <source>Cancel the meeting?</source>
+        <translation>取消会议？</translation>
+    </message>
+    <message>
+        <source>The attendees are told by email that it is cancelled.</source>
+        <translation>参与者会通过电子邮件得知会议已取消。</translation>
+    </message>
+    <message>
+        <source>Cancel meeting</source>
+        <translation>取消会议</translation>
+    </message>
+    <message>
+        <source>Calendar files (*.ics)</source>
+        <translation>日历文件 (*.ics)</translation>
+    </message>
+</context>
+<context>
     <name>FirstRunDialog</name>
     <message>
         <source>Before you start</source>
@@ -608,6 +1072,125 @@ To: %4
         <translation>此邮件已加密，无法在这台设备上解密。
 
 %1</translation>
+    </message>
+</context>
+<context>
+    <name>InvitationCard</name>
+    <message>
+        <source>Accepted</source>
+        <translation>已接受</translation>
+    </message>
+    <message>
+        <source>Tentative</source>
+        <translation>暂定</translation>
+    </message>
+    <message>
+        <source>Declined</source>
+        <translation>已拒绝</translation>
+    </message>
+    <message>
+        <source>Not answered</source>
+        <translation>未回复</translation>
+    </message>
+    <message>
+        <source>Cancelled: %1</source>
+        <translation>已取消：%1</translation>
+    </message>
+    <message>
+        <source>%1 accepted.</source>
+        <translation>%1 已接受。</translation>
+    </message>
+    <message>
+        <source>%1 declined.</source>
+        <translation>%1 已拒绝。</translation>
+    </message>
+    <message>
+        <source>%1 might come.</source>
+        <translation>%1 可能参加。</translation>
+    </message>
+    <message>
+        <source>%1 answered.</source>
+        <translation>%1 已回复。</translation>
+    </message>
+    <message>
+        <source>This meeting was cancelled; your calendar is updated.</source>
+        <translation>此会议已取消；您的日历已更新。</translation>
+    </message>
+    <message>
+        <source>This meeting was cancelled.</source>
+        <translation>此会议已取消。</translation>
+    </message>
+    <message>
+        <source>Your invitation.</source>
+        <translation>您发出的邀请。</translation>
+    </message>
+    <message>
+        <source>A newer version of this invitation is in your calendar.</source>
+        <translation>您的日历中已有此邀请的更新版本。</translation>
+    </message>
+    <message>
+        <source>This meeting has since been cancelled.</source>
+        <translation>此会议此后已被取消。</translation>
+    </message>
+    <message>
+        <source>In your calendar: %1.</source>
+        <translation>已在您的日历中：%1。</translation>
+    </message>
+    <message>
+        <source>%1 invites you.</source>
+        <translation>%1 邀请您。</translation>
+    </message>
+    <message>
+        <source>When</source>
+        <translation>时间</translation>
+    </message>
+    <message>
+        <source>Repeats</source>
+        <translation>重复</translation>
+    </message>
+    <message>
+        <source>Where</source>
+        <translation>地点</translation>
+    </message>
+    <message>
+        <source>Organizer</source>
+        <translation>组织者</translation>
+    </message>
+    <message>
+        <source>Who</source>
+        <translation>参与者</translation>
+    </message>
+    <message>
+        <source>Details</source>
+        <translation>详情</translation>
+    </message>
+    <message>
+        <source>Accept</source>
+        <translation>接受</translation>
+    </message>
+    <message>
+        <source>Decline</source>
+        <translation>拒绝</translation>
+    </message>
+    <message>
+        <source>Add to calendar</source>
+        <translation>添加到日历</translation>
+    </message>
+    <message>
+        <source>Show in calendar</source>
+        <translation>在日历中显示</translation>
+    </message>
+    <message>
+        <source>Open link…</source>
+        <translation>打开链接…</translation>
+    </message>
+    <message>
+        <source>Answers can be sent to senders you trust; accept this sender first. Check these details against the message.</source>
+        <translation>只能回复您信任的发件人；请先接受此发件人。请对照邮件核对这些信息。</translation>
+    </message>
+    <message>
+        <source>This message was not sent by the meeting's organizer, so it cannot be answered from here. Check these details against the message.</source>
+        <translation>此邮件并非由会议组织者发送，因此无法在此回复。请对照邮件核对这些信息。</translation>
     </message>
 </context>
 <context>
@@ -690,6 +1273,18 @@ To: %4
 <context>
     <name>MailApp</name>
     <message>
+        <source>Today</source>
+        <translation>今天</translation>
+    </message>
+    <message>
+        <source>Event</source>
+        <translation>日程</translation>
+    </message>
+    <message>
+        <source>%1 · %2</source>
+        <translation>%1 · %2</translation>
+    </message>
+    <message>
         <source>Unnamed device</source>
         <translation>未命名设备</translation>
     </message>
@@ -752,8 +1347,56 @@ To: %4
         <translation>无法保存附件。</translation>
     </message>
     <message>
+        <source>Could not add the event.</source>
+        <translation>无法添加日程。</translation>
+    </message>
+    <message>
+        <source>Added to the calendar.</source>
+        <translation>已添加到日历。</translation>
+    </message>
+    <message>
+        <source>(No title)</source>
+        <translation>（无标题）</translation>
+    </message>
+    <message>
+        <source>All day</source>
+        <translation>全天</translation>
+    </message>
+    <message>
+        <source>Give the event a title.</source>
+        <translation>请为日程填写标题。</translation>
+    </message>
+    <message>
+        <source>The start is not a date and time.</source>
+        <translation>开始时间不是有效的日期和时间。</translation>
+    </message>
+    <message>
+        <source>Saved, but the invitation was not sent: %1</source>
+        <translation>已保存，但邀请未发送：%1</translation>
+    </message>
+    <message>
+        <source>Invitation sent.</source>
+        <translation>邀请已发送。</translation>
+    </message>
+    <message>
+        <source>Cancelled, but the attendees were not told: %1</source>
+        <translation>已取消，但未通知参与者：%1</translation>
+    </message>
+    <message>
+        <source>Saved in your calendar, but the answer was not sent: %1</source>
+        <translation>已保存到您的日历，但回复未发送：%1</translation>
+    </message>
+    <message>
+        <source>Answer sent.</source>
+        <translation>回复已发送。</translation>
+    </message>
+    <message>
         <source>Could not save the event.</source>
         <translation>无法保存该事件。</translation>
+    </message>
+    <message>
+        <source>event</source>
+        <translation>日程</translation>
     </message>
     <message>
         <source>This message cannot be decrypted, or its original is no longer kept.</source>
@@ -764,7 +1407,7 @@ To: %4
         <translation>此邮件的原件已不再保留。</translation>
     </message>
     <message>
-        <source>This is not a contact&apos;s code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
+        <source>This is not a contact's code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
         <translation>这不是联系人的代码。用于验证的代码以 OPENPGP4FPR: 或 https://i.delta.chat/ 开头。</translation>
     </message>
     <message numerus="yes">
@@ -1305,32 +1948,9 @@ To: %4
     </message>
 </context>
 <context>
-    <name>ScanView</name>
-    <message>
-        <source>This device has no camera. Type the code instead.</source>
-        <translation>此设备没有摄像头。请改为输入代码。</translation>
-    </message>
-    <message>
-        <source>e3mail may not use the camera. Allow it in the system settings, or type the code instead.</source>
-        <translation>e3mail 无权使用摄像头。请在系统设置中允许，或改为输入代码。</translation>
-    </message>
-    <message>
-        <source>Asking for the camera…</source>
-        <translation>正在请求使用摄像头…</translation>
-    </message>
-    <message>
-        <source>Point the camera at the QR code on the other device.</source>
-        <translation>将摄像头对准另一台设备上的二维码。</translation>
-    </message>
-    <message>
-        <source>Type the code instead</source>
-        <translation>改为输入代码</translation>
-    </message>
-</context>
-<context>
     <name>SecureJoin</name>
     <message>
-        <source>This is your own code. Scan the other person&apos;s code instead.</source>
+        <source>This is your own code. Scan the other person's code instead.</source>
         <translation>这是你自己的代码。请扫描对方的代码。</translation>
     </message>
     <message>
@@ -1373,7 +1993,7 @@ To: %4
         <translation>显示发件人和主题</translation>
     </message>
     <message>
-        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system&apos;s notification history, outside e3mail&apos;s encryption.</source>
+        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system's notification history, outside e3mail's encryption.</source>
         <translation>仅限本设备，在 e3mail 打开但不在前台时通知。此处显示的主题会保留在系统的通知历史中，不受 e3mail 加密保护。</translation>
     </message>
     <message>
@@ -1385,7 +2005,7 @@ To: %4
         <translation>在后台继续同步</translation>
     </message>
     <message>
-        <source>Mail and your other devices&apos; changes keep arriving while e3mail is not in front. Android shows a notification for as long as this is on, and it uses more battery. Swiping e3mail away from the recent apps ends it.</source>
+        <source>Mail and your other devices' changes keep arriving while e3mail is not in front. Android shows a notification for as long as this is on, and it uses more battery. Swiping e3mail away from the recent apps ends it.</source>
         <translation>e3mail 不在前台时，邮件和你其他设备的更改仍会继续到达。开启期间 Android 会一直显示一条通知，并且会更耗电。从最近使用的应用中划掉 e3mail 会结束它。</translation>
     </message>
     <message>
@@ -1425,7 +2045,7 @@ To: %4
         <translation>添加签名…</translation>
     </message>
     <message>
-        <source>The chosen one goes into new mail. The composer&apos;s signature button swaps it for another.</source>
+        <source>The chosen one goes into new mail. The composer's signature button swaps it for another.</source>
         <translation>所选签名会加入新邮件。撰写时可用签名按钮换成另一个。</translation>
     </message>
     <message>
@@ -1481,6 +2101,50 @@ To: %4
         <translation>回执只发送一次，在你首次打开邮件时，无论在哪台设备上。陌生人和你不信任的人永远不会收到。</translation>
     </message>
     <message>
+        <source>Calendar</source>
+        <translation>日历</translation>
+    </message>
+    <message>
+        <source>Remind me before an event</source>
+        <translation>日程开始前提醒我</translation>
+    </message>
+    <message>
+        <source>Never</source>
+        <translation>从不</translation>
+    </message>
+    <message>
+        <source>At the start</source>
+        <translation>开始时</translation>
+    </message>
+    <message>
+        <source>5 minutes before</source>
+        <translation>提前 5 分钟</translation>
+    </message>
+    <message>
+        <source>10 minutes before</source>
+        <translation>提前 10 分钟</translation>
+    </message>
+    <message>
+        <source>15 minutes before</source>
+        <translation>提前 15 分钟</translation>
+    </message>
+    <message>
+        <source>30 minutes before</source>
+        <translation>提前 30 分钟</translation>
+    </message>
+    <message>
+        <source>1 hour before</source>
+        <translation>提前 1 小时</translation>
+    </message>
+    <message>
+        <source>1 day before</source>
+        <translation>提前 1 天</translation>
+    </message>
+    <message>
+        <source>For events you add and invitations you accept; each event can differ. Reminders show only while e3mail runs. The calendar lives on your devices and is arranged by email; nothing is shared with a calendar server.</source>
+        <translation>适用于您添加的日程和接受的邀请；每个日程可单独设置。提醒仅在 e3mail 运行时显示。日历保存在您的设备上，通过电子邮件安排；不会与任何日历服务器共享。</translation>
+    </message>
+    <message>
         <source>Trash</source>
         <translation>废纸篓</translation>
     </message>
@@ -1521,7 +2185,7 @@ To: %4
         <translation>天</translation>
     </message>
     <message>
-        <source>Mail that was on the server before e3mail first connected is never removed. &quot;Never&quot; lets another mail program keep using this mailbox.</source>
+        <source>Mail that was on the server before e3mail first connected is never removed. "Never" lets another mail program keep using this mailbox.</source>
         <translation>e3mail 首次连接前已在服务器上的邮件永远不会被删除。选择“从不”可让其他邮件程序继续使用此邮箱。</translation>
     </message>
     <message>
@@ -1533,15 +2197,15 @@ To: %4
         <translation>秒</translation>
     </message>
     <message>
-        <source>The sending server&apos;s certificate is not trusted, or is not the one trusted before.</source>
+        <source>The sending server's certificate is not trusted, or is not the one trusted before.</source>
         <translation>发送服务器的证书不受信任，或不是之前信任的那个。</translation>
     </message>
     <message>
-        <source>The incoming server&apos;s certificate is not trusted, or is not the one trusted before.</source>
+        <source>The incoming server's certificate is not trusted, or is not the one trusted before.</source>
         <translation>接收服务器的证书不受信任，或不是之前信任的那个。</translation>
     </message>
     <message>
-        <source>Trust it only if this SHA-256 fingerprint matches the one your server&apos;s administrator gave you.</source>
+        <source>Trust it only if this SHA-256 fingerprint matches the one your server's administrator gave you.</source>
         <translation>仅当此 SHA-256 指纹与服务器管理员提供的一致时才信任它。</translation>
     </message>
     <message>
@@ -1605,7 +2269,7 @@ To: %4
         <translation>原件</translation>
     </message>
     <message>
-        <source>Keep each message&apos;s original for</source>
+        <source>Keep each message's original for</source>
         <translation>每封邮件原件的保留期限</translation>
     </message>
     <message>
@@ -1673,7 +2337,7 @@ To: %4
         <translation>中继</translation>
     </message>
     <message>
-        <source>n0&apos;s public relays</source>
+        <source>n0's public relays</source>
         <translation>n0 的公共中继</translation>
     </message>
     <message>
@@ -1805,7 +2469,7 @@ To: %4
         <translation>移除 %1？</translation>
     </message>
     <message>
-        <source>It stops syncing with this account&apos;s other devices. What is already on it stays there.</source>
+        <source>It stops syncing with this account's other devices. What is already on it stays there.</source>
         <translation>它将不再与此账户的其他设备同步。已在其上的内容会保留。</translation>
     </message>
     <message>
@@ -1820,15 +2484,15 @@ To: %4
         <translation>来自您的服务商的服务器设置。</translation>
     </message>
     <message>
-        <source>Server settings from Thunderbird&apos;s provider database.</source>
+        <source>Server settings from Thunderbird's provider database.</source>
         <translation>来自 Thunderbird 服务商数据库的服务器设置。</translation>
     </message>
     <message>
-        <source>Server settings of the service that receives your domain&apos;s mail. Check them before connecting.</source>
+        <source>Server settings of the service that receives your domain's mail. Check them before connecting.</source>
         <translation>接收您域名邮件的服务的服务器设置。连接前请检查。</translation>
     </message>
     <message>
-        <source>Server settings from your provider&apos;s Autodiscover service.</source>
+        <source>Server settings from your provider's Autodiscover service.</source>
         <translation>来自您的服务商 Autodiscover 服务的服务器设置。</translation>
     </message>
     <message>
@@ -1939,7 +2603,7 @@ To: %4
         <translation>由 %2 颁发给 %1，有效期至 %3。</translation>
     </message>
     <message>
-        <source>Trust it only if this fingerprint matches the one your server&apos;s administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
+        <source>Trust it only if this fingerprint matches the one your server's administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
         <translation>仅当此指纹与服务器管理员提供的一致时才信任它。之后 e3mail 只接受该服务器的这一个证书。</translation>
     </message>
     <message>
@@ -1988,6 +2652,10 @@ To: %4
     <message>
         <source>Inbox</source>
         <translation>收件箱</translation>
+    </message>
+    <message>
+        <source>Calendar</source>
+        <translation>日历</translation>
     </message>
     <message>
         <source>Unverified</source>
@@ -2071,7 +2739,7 @@ To: %4
         <translation>登录耗时过长。请重试。</translation>
     </message>
     <message>
-        <source>Cannot listen for the browser&apos;s answer on this device.</source>
+        <source>Cannot listen for the browser's answer on this device.</source>
         <translation>无法在此设备上接收浏览器的回应。</translation>
     </message>
     <message>
@@ -2261,8 +2929,8 @@ To: %4
 <context>
     <name>StructuredCard</name>
     <message>
-        <source>Add to calendar…</source>
-        <translation>添加到日历…</translation>
+        <source>Add to calendar</source>
+        <translation>添加到日历</translation>
     </message>
     <message>
         <source>Open…</source>
@@ -2271,10 +2939,6 @@ To: %4
     <message>
         <source>Shown as text only. Buttons appear for senders you trust whose mail is signed by their key; check these details against the message.</source>
         <translation>仅以文本显示。只有你信任且邮件由其密钥签名的发件人才会显示按钮；请对照邮件正文核对这些信息。</translation>
-    </message>
-    <message>
-        <source>Calendar files (*.ics)</source>
-        <translation>日历文件 (*.ics)</translation>
     </message>
 </context>
 <context>
