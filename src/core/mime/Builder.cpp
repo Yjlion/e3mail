@@ -10,6 +10,18 @@ namespace e3::mime {
 
 namespace {
 
+// A part whose bytes must arrive exactly as given (iCalendar's folding and
+// CRLF), so it travels in base64.
+QByteArray dataPart(const QByteArray &contentType, const QList<QByteArray> &extraHeaders, const QByteArray &data)
+{
+    QByteArray out = "Content-Type: " + contentType + "\r\n";
+    for (const QByteArray &h : extraHeaders)
+        out += h + "\r\n";
+    out += "Content-Transfer-Encoding: base64\r\n\r\n";
+    out += encodeBase64Lines(data);
+    return out;
+}
+
 QByteArray textPart(const QString &text, const QByteArray &subtype)
 {
     QString normalized = text;
@@ -93,8 +105,21 @@ QByteArray Builder::newBoundary()
 QByteArray Builder::contentEntity(const OutgoingMail &mail, bool protectedHeaders)
 {
     QByteArray body = textPart(mail.text, "plain");
+    QList<QByteArray> alternatives;
+    if (!mail.structured.isEmpty())
+        alternatives.append(dataPart("application/ld+json; charset=utf-8",
+                                     {"Content-Purpose: Machine-readable", "Content-Disposition: inline"}, mail.structured));
+    alternatives.append(body);
     if (!mail.html.isEmpty())
-        body = multipart("alternative", {body, textPart(mail.html, "html")});
+        alternatives.append(textPart(mail.html, "html"));
+    if (!mail.calendar.isEmpty()) {
+        QByteArray type = "text/calendar; charset=utf-8";
+        if (!mail.calendarMethod.isEmpty())
+            type += "; method=" + mail.calendarMethod;
+        alternatives.append(dataPart(type, {}, mail.calendar));
+    }
+    if (alternatives.size() > 1)
+        body = multipart("alternative", alternatives);
     if (!mail.attachments.isEmpty()) {
         QList<QByteArray> parts{body};
         for (const OutgoingAttachment &a : mail.attachments)

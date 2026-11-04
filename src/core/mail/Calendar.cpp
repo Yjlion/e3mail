@@ -420,8 +420,10 @@ void Calendar::rederive(MailContext &ctx, const QString &uid)
                     if (mine.addr != a.addr)
                         continue;
                     const QDateTime at = r.stamp.isValid() ? r.stamp : QDateTime::currentDateTimeUtc();
+                    // DTSTAMP has whole seconds: of two answers stamped alike,
+                    // the message that came later (they are read in date order) wins.
                     const auto have = e->replied.constFind(a.addr);
-                    if (have != e->replied.constEnd() && *have >= at)
+                    if (have != e->replied.constEnd() && *have > at)
                         continue;
                     mine.partstat = a.partstat;
                     e->replied.insert(a.addr, at);
@@ -536,6 +538,470 @@ QString Calendar::describeWhen(const ICal::Event &e, const QLocale &locale)
         return QCoreApplication::translate("Calendar", "%1, %2 – %3").arg(day, from, locale.toString(t.time(), QLocale::ShortFormat));
     return QCoreApplication::translate("Calendar", "%1, %2 – %3")
         .arg(day, from, locale.toString(t, QLocale::ShortFormat));
+}
+
+// --- Invitations by mail ---
+
+namespace {
+
+QString tr(const char *text)
+{
+    return QCoreApplication::translate("Calendar", text);
+}
+
+QString displayName(MailContext &ctx)
+{
+    const QString n = ctx.config.get(cfg::DisplayName).trimmed();
+    return n.isEmpty() ? selfAddr(ctx) : n;
+}
+
+QString escapeHtml(const QString &s)
+{
+    return s.toHtmlEscaped();
+}
+
+QString addrDisplay(const ICal::Attendee &a)
+{
+    return a.name.isEmpty() ? a.addr : a.name + QStringLiteral(" <") + a.addr + u'>';
+}
+
+// Everyone but ourselves, as the mail's recipients.
+QList<mime::Address> recipientsOf(const QList<ICal::Attendee> &attendees, const QString &self)
+{
+    QList<mime::Address> out;
+    for (const ICal::Attendee &a : attendees) {
+        if (a.addr != self)
+            out.append({a.name, a.addr});
+    }
+    return out;
+}
+
+Draft draftFor(const Calendar::InviteMail &m, const QList<mime::Address> &to)
+{
+    Draft d;
+    d.to = to;
+    d.subject = m.subject;
+    d.text = m.text;
+    d.html = m.html;
+    d.calendar = m.ics;
+    d.calendarMethod = m.method;
+    d.structured = m.jsonLd;
+    return d;
+}
+
+QString partStatSentence(ICal::PartStat p, const QString &who, const QString &summary)
+{
+    switch (p) {
+    case ICal::PartStat::Accepted: return tr("%1 has accepted the invitation to “%2”.").arg(who, summary);
+    case ICal::PartStat::Tentative: return tr("%1 has tentatively accepted the invitation to “%2”.").arg(who, summary);
+    case ICal::PartStat::Declined: return tr("%1 has declined the invitation to “%2”.").arg(who, summary);
+    case ICal::PartStat::NeedsAction: break;
+    }
+    return tr("%1 has not answered the invitation to “%2”.").arg(who, summary);
+}
+
+} // namespace
+
+Calendar::InviteMail Calendar::inviteMail(MailContext &ctx, const Event &e, ICal::Method method,
+                                          std::optional<ICal::PartStat> answer)
+{
+    InviteMail m;
+    m.method = ICal::methodName(method);
+    const QString self = selfAddr(ctx);
+    const QString when = describeWhen(e);
+    const QString repeats = describeRule(e.rrule);
+    QStringList lines;
+    QStringList html;
+    if (method == ICal::Method::Reply && answer) {
+        const QString who = displayName(ctx);
+        m.subject = (*answer == ICal::PartStat::Accepted ? tr("Accepted: %1")
+                     : *answer == ICal::PartStat::Tentative ? tr("Tentative: %1")
+                                                            : tr("Declined: %1"))
+                        .arg(e.summary);
+        lines.append(partStatSentence(*answer, who, e.summary));
+        html.append(QStringLiteral("<p>") + escapeHtml(lines.last()) + QStringLiteral("</p>"));
+        ICal::Event r;
+        r.uid = e.uid;
+        r.summary = e.summary;
+        r.start = e.start;
+        r.end = e.end;
+        r.allDay = e.allDay;
+        r.tzid = e.tzid;
+        r.rrule = e.rrule;
+        r.sequence = e.sequence;
+        r.stamp = QDateTime::currentDateTimeUtc();
+        r.organizer = e.organizer;
+        r.attendees = {{self, displayName(ctx), *answer, false}};
+        m.ics = ICal::write({ICal::Method::Reply, {r}});
+    } else {
+        const QString organizer = e.organizer.name.isEmpty() ? e.organizer.addr : e.organizer.name;
+        if (method == ICal::Method::Cancel) {
+            m.subject = tr("Cancelled: %1").arg(e.summary);
+            lines.append(tr("%1 has cancelled “%2”.").arg(organizer, e.summary));
+        } else if (e.sequence > 0) {
+            m.subject = tr("Updated invitation: %1").arg(e.summary);
+            lines.append(tr("%1 has changed “%2”. Here are the new details.").arg(organizer, e.summary));
+        } else {
+            m.subject = tr("Invitation: %1").arg(e.summary);
+            lines.append(tr("%1 invites you to “%2”.").arg(organizer, e.summary));
+        }
+        html.append(QStringLiteral("<p>") + escapeHtml(lines.last()) + QStringLiteral("</p>"));
+        lines.append(QString());
+        QStringList facts;
+        facts.append(tr("When: %1").arg(when));
+        if (!repeats.isEmpty())
+            facts.append(tr("Repeats: %1").arg(repeats));
+        if (!e.location.isEmpty())
+            facts.append(tr("Where: %1").arg(e.location));
+        if (!e.url.isEmpty())
+            facts.append(tr("Link: %1").arg(e.url));
+        QStringList guests;
+        for (const ICal::Attendee &a : e.attendees)
+            guests.append(addrDisplay(a));
+        if (!guests.isEmpty())
+            facts.append(tr("Who: %1").arg(guests.join(QStringLiteral(", "))));
+        lines += facts;
+        QStringList factHtml;
+        for (const QString &f : facts)
+            factHtml.append(escapeHtml(f));
+        html.append(QStringLiteral("<p>") + factHtml.join(QStringLiteral("<br>")) + QStringLiteral("</p>"));
+        if (!e.description.isEmpty()) {
+            lines.append(QString());
+            lines.append(e.description);
+            html.append(QStringLiteral("<p>") + escapeHtml(e.description).replace(u'\n', QStringLiteral("<br>")) + QStringLiteral("</p>"));
+        }
+        ICal::Event out = e;
+        out.stamp = QDateTime::currentDateTimeUtc();
+        if (method == ICal::Method::Cancel)
+            out.status = ICal::Status::Cancelled;
+        for (ICal::Attendee &a : out.attendees)
+            a.rsvp = method != ICal::Method::Cancel;
+        m.ics = ICal::write({method, {out}});
+        if (method != ICal::Method::Cancel) {
+            // The same facts as schema.org, for clients that read structured
+            // mail (ADR 0024 amendment).
+            QJsonObject ld{{QStringLiteral("@context"), QStringLiteral("https://schema.org")},
+                           {QStringLiteral("@type"), QStringLiteral("Event")},
+                           {QStringLiteral("name"), e.summary},
+                           {QStringLiteral("startDate"), e.allDay ? e.start.toUTC().date().toString(Qt::ISODate) : e.start.toUTC().toString(Qt::ISODate)},
+                           {QStringLiteral("endDate"), e.allDay ? e.end.toUTC().date().addDays(-1).toString(Qt::ISODate) : e.end.toUTC().toString(Qt::ISODate)}};
+            if (!e.location.isEmpty())
+                ld.insert(QStringLiteral("location"), QJsonObject{{QStringLiteral("@type"), QStringLiteral("Place")}, {QStringLiteral("name"), e.location}});
+            if (!e.description.isEmpty())
+                ld.insert(QStringLiteral("description"), e.description);
+            if (!e.url.isEmpty())
+                ld.insert(QStringLiteral("url"), e.url);
+            ld.insert(QStringLiteral("organizer"), QJsonObject{{QStringLiteral("@type"), QStringLiteral("Person")},
+                                                                {QStringLiteral("name"), organizer},
+                                                                {QStringLiteral("email"), e.organizer.addr}});
+            m.jsonLd = QJsonDocument(ld).toJson(QJsonDocument::Compact);
+        }
+    }
+    m.text = lines.join(u'\n');
+    m.html = html.join(QString());
+    return m;
+}
+
+std::optional<Calendar::Invitation> Calendar::invitation(MailContext &ctx, const MessageDetail &m)
+{
+    if (m.calendar.isEmpty())
+        return std::nullopt;
+    const auto doc = ICal::parse(m.calendar.toUtf8(), m.calMethod.toLatin1());
+    if (!doc || doc->events.isEmpty())
+        return std::nullopt;
+    Invitation inv;
+    inv.method = doc->method;
+    inv.event = doc->events.first();
+    for (const ICal::Event &e : doc->events) {
+        if (!m.calUid.isEmpty() && e.uid == m.calUid && !e.recurrenceId.isValid())
+            inv.event = e;
+    }
+    const QString self = selfAddr(ctx);
+    const QString from = mime::normalizeAddr(m.from.addr);
+    inv.organizerIsSender = !inv.event.organizer.addr.isEmpty() && inv.event.organizer.addr == from;
+    inv.organizerIsSelf = m.direction == Direction::Outgoing || inv.event.organizer.addr == self;
+    if (const auto stored = get(ctx, inv.event.uid)) {
+        inv.inCalendar = true;
+        inv.cancelled = stored->status == ICal::Status::Cancelled;
+        inv.outdated = stored->sequence > inv.event.sequence;
+        inv.ourStatus = ourStatus(ctx, *stored);
+        inv.attendees = organizedByUs(ctx, *stored) ? stored->attendees : inv.event.attendees;
+    } else {
+        inv.attendees = inv.event.attendees;
+    }
+    if (doc->method == ICal::Method::Reply) {
+        for (const ICal::Attendee &a : inv.event.attendees) {
+            if (a.addr == from) {
+                inv.replyFrom = a.name.isEmpty() ? a.addr : a.name;
+                inv.replyStatus = a.partstat;
+            }
+        }
+    }
+    return inv;
+}
+
+bool Calendar::actionable(MailContext &ctx, const MessageDetail &m)
+{
+    if (m.direction != Direction::Incoming || m.held || m.trashed)
+        return false;
+    const auto inv = invitation(ctx, m);
+    return inv && inv->method == ICal::Method::Request && inv->organizerIsSender && !inv->organizerIsSelf
+        && Contacts::isTrusted(ctx, m.from.addr);
+}
+
+Calendar::SendResult Calendar::save(MailContext &ctx, Event e, bool notify)
+{
+    SendResult r;
+    const QString self = selfAddr(ctx);
+    if (e.uid.isEmpty())
+        e.uid = newUid(ctx);
+    e = cleaned(e);
+    QList<ICal::Attendee> attendees;
+    for (const ICal::Attendee &a : e.attendees) {
+        if (a.addr != self)
+            attendees.append(a);
+    }
+    e.attendees = attendees;
+    if (!e.attendees.isEmpty() && e.organizer.addr.isEmpty()) {
+        e.organizer.addr = self;
+        e.organizer.name = ctx.config.get(cfg::DisplayName).trimmed();
+    }
+    const auto before = get(ctx, e.uid);
+    const bool ours = organizedByUs(ctx, e);
+    const bool sentBefore = before && organizedByUs(ctx, *before) && !before->attendees.isEmpty();
+    if (before) {
+        // What attendees answered is theirs to say, not this edit's.
+        for (ICal::Attendee &a : e.attendees) {
+            for (const ICal::Attendee &b : before->attendees) {
+                if (b.addr == a.addr) {
+                    a.partstat = b.partstat;
+                    if (const auto at = before->replied.constFind(a.addr); at != before->replied.constEnd())
+                        e.replied.insert(a.addr, *at);
+                }
+            }
+        }
+        e.sequence = qMax(e.sequence, before->sequence);
+        if (e.sourceMid.isEmpty())
+            e.sourceMid = before->sourceMid;
+    }
+    if (ours && !e.attendees.isEmpty() && sentBefore && notify)
+        ++e.sequence;
+    e.stamp = QDateTime::currentDateTimeUtc();
+    r.uid = saveLocal(ctx, e);
+    if (!notify || !ours)
+        return r;
+    const Event saved = *get(ctx, r.uid);
+    try {
+        if (!saved.attendees.isEmpty()) {
+            const InviteMail m = inviteMail(ctx, saved, ICal::Method::Request);
+            r.queued.append(Compose::queue(ctx, draftFor(m, recipientsOf(saved.attendees, self))));
+        }
+        if (before) {
+            // Anyone taken off the list hears that their copy is cancelled.
+            Event gone = saved;
+            gone.attendees.clear();
+            for (const ICal::Attendee &b : before->attendees) {
+                bool still = false;
+                for (const ICal::Attendee &a : saved.attendees)
+                    still = still || a.addr == b.addr;
+                if (!still && b.addr != self)
+                    gone.attendees.append(b);
+            }
+            if (!gone.attendees.isEmpty() && sentBefore) {
+                const InviteMail m = inviteMail(ctx, gone, ICal::Method::Cancel);
+                r.queued.append(Compose::queue(ctx, draftFor(m, recipientsOf(gone.attendees, self))));
+            }
+        }
+    } catch (const ComposeError &err) {
+        r.error = err.message();
+        qCWarning(lcMail) << "invitation for" << r.uid << "not sent:" << r.error;
+    }
+    return r;
+}
+
+Calendar::SendResult Calendar::cancel(MailContext &ctx, const QString &uid, bool notify)
+{
+    SendResult r;
+    auto e = get(ctx, uid);
+    if (!e)
+        return r;
+    r.uid = uid;
+    const bool ours = organizedByUs(ctx, *e);
+    const bool tell = notify && ours && !e->attendees.isEmpty();
+    e->status = ICal::Status::Cancelled;
+    if (tell)
+        ++e->sequence;
+    e->stamp = QDateTime::currentDateTimeUtc();
+    saveLocal(ctx, *e);
+    if (!tell)
+        return r;
+    try {
+        const InviteMail m = inviteMail(ctx, *e, ICal::Method::Cancel);
+        r.queued.append(Compose::queue(ctx, draftFor(m, recipientsOf(e->attendees, selfAddr(ctx)))));
+    } catch (const ComposeError &err) {
+        r.error = err.message();
+        qCWarning(lcMail) << "cancellation of" << uid << "not sent:" << r.error;
+    }
+    return r;
+}
+
+namespace {
+
+// The invitation's event as ours, with our own row in it.
+Calendar::Event adopt(MailContext &ctx, const Calendar::Invitation &inv, const QString &messageId,
+                      const std::optional<Calendar::Event> &stored)
+{
+    Calendar::Event e;
+    if (stored)
+        e = *stored;
+    static_cast<ICal::Event &>(e) = inv.event;
+    e.sourceMid = messageId;
+    if (stored) {
+        e.id = stored->id;
+        e.replied = stored->replied;
+        if (!e.reminderMinutes)
+            e.reminderMinutes = stored->reminderMinutes;
+        // Answers the organizer told us about stay unless we heard newer ones.
+        for (ICal::Attendee &a : e.attendees) {
+            for (const ICal::Attendee &s : stored->attendees) {
+                if (s.addr == a.addr && stored->replied.contains(a.addr))
+                    a.partstat = s.partstat;
+            }
+        }
+    }
+    if (!e.reminderMinutes) {
+        const int d = ctx.config.getInt(cfg::CalendarReminder);
+        if (d >= 0)
+            e.reminderMinutes = d;
+    }
+    return e;
+}
+
+} // namespace
+
+Calendar::SendResult Calendar::rsvp(MailContext &ctx, qint64 msgId, ICal::PartStat answer)
+{
+    SendResult r;
+    const auto d = Search::detail(ctx, msgId);
+    if (!d || !actionable(ctx, *d)) {
+        r.error = tr("This invitation cannot be answered.");
+        return r;
+    }
+    const auto inv = invitation(ctx, *d);
+    if (inv->outdated) {
+        r.error = tr("A newer version of this invitation is in your calendar.");
+        return r;
+    }
+    const QString self = selfAddr(ctx);
+    Event e = adopt(ctx, *inv, d->messageId, get(ctx, inv->event.uid));
+    bool found = false;
+    for (ICal::Attendee &a : e.attendees) {
+        if (a.addr == self) {
+            a.partstat = answer;
+            found = true;
+        }
+    }
+    if (!found)
+        e.attendees.append({self, displayName(ctx), answer, true});
+    e.replied.insert(self, QDateTime::currentDateTimeUtc());
+    r.uid = saveLocal(ctx, e);
+    const Event saved = *get(ctx, r.uid);
+    try {
+        Draft reply = draftFor(inviteMail(ctx, saved, ICal::Method::Reply, answer), {{saved.organizer.name, saved.organizer.addr}});
+        reply.inReplyToId = msgId;
+        // An answer to an encrypted invitation never goes in cleartext (as
+        // read receipts, ADR 0022).
+        reply.encryption = d->encrypted ? SendEncryption::Required : SendEncryption::Auto;
+        r.queued.append(Compose::queue(ctx, reply));
+    } catch (const ComposeError &err) {
+        r.error = err.message();
+        qCWarning(lcMail) << "answer to" << saved.organizer.addr << "not sent:" << r.error;
+    }
+    return r;
+}
+
+Calendar::SendResult Calendar::addFromMessage(MailContext &ctx, qint64 msgId)
+{
+    SendResult r;
+    const auto d = Search::detail(ctx, msgId);
+    if (!d || d->direction != Direction::Incoming || d->held || d->trashed) {
+        r.error = tr("This invitation cannot be added.");
+        return r;
+    }
+    const auto inv = invitation(ctx, *d);
+    if (!inv || inv->method == ICal::Method::Reply || inv->outdated) {
+        r.error = tr("This invitation cannot be added.");
+        return r;
+    }
+    Event e = adopt(ctx, *inv, d->messageId, get(ctx, inv->event.uid));
+    if (inv->method == ICal::Method::Cancel)
+        e.status = ICal::Status::Cancelled;
+    // Someone we do not trust, or whose message does not name them as the
+    // organizer, gets no answer and no say later: the facts, as a note of our
+    // own, with the sender remembered as the organizer only when it is them.
+    if (!inv->organizerIsSender || !Contacts::isTrusted(ctx, d->from.addr)) {
+        e.attendees.clear();
+        e.organizer = {};
+    }
+    r.uid = saveLocal(ctx, e);
+    return r;
+}
+
+void Calendar::receive(MailContext &ctx, qint64 msgId, const ICal::Document &doc, const QString &fromAddr,
+                       const QDateTime &date, bool fromSelf)
+{
+    Q_UNUSED(msgId);
+    if (fromSelf)
+        return; // our own invitation: the calendar already has it
+    const QString from = mime::normalizeAddr(fromAddr);
+    for (const ICal::Event &ev : doc.events) {
+        if (ev.uid.isEmpty() || ev.recurrenceId.isValid())
+            continue;
+        const auto stored = get(ctx, ev.uid);
+        if (!stored)
+            continue; // nothing enters the calendar on arrival (ADR 0025)
+        if (doc.method == ICal::Method::Reply) {
+            if (organizedByUs(ctx, *stored))
+                rederive(ctx, ev.uid);
+            continue;
+        }
+        if (doc.method != ICal::Method::Request && doc.method != ICal::Method::Cancel)
+            continue;
+        // Only the organizer the person took the event from, writing as
+        // themselves, may change or cancel it; and never with older news.
+        if (stored->organizer.addr.isEmpty() || stored->organizer.addr != from || ev.organizer.addr != from)
+            continue;
+        if (!Contacts::isTrusted(ctx, from))
+            continue;
+        if (ev.sequence < stored->sequence)
+            continue;
+        Event e = *stored;
+        if (doc.method == ICal::Method::Cancel) {
+            e.status = ICal::Status::Cancelled;
+            e.sequence = ev.sequence;
+        } else {
+            const int before = e.sequence;
+            const QString self = selfAddr(ctx);
+            const auto mine = ourStatus(ctx, *stored);
+            static_cast<ICal::Event &>(e) = ev;
+            e.reminderMinutes = stored->reminderMinutes ? stored->reminderMinutes : ev.reminderMinutes;
+            e.tzid = ev.tzid;
+            bool present = false;
+            for (ICal::Attendee &a : e.attendees) {
+                if (a.addr != self)
+                    continue;
+                present = true;
+                // A changed meeting asks again; the same version keeps our answer.
+                a.partstat = (ev.sequence == before && mine) ? *mine : ICal::PartStat::NeedsAction;
+            }
+            if (!present && mine)
+                e.attendees.append({self, displayName(ctx), ev.sequence == before ? *mine : ICal::PartStat::NeedsAction, true});
+        }
+        e.stamp = ev.stamp.isValid() ? ev.stamp : date;
+        writeEvent(ctx, e);
+        qCInfo(lcMail) << "calendar:" << (doc.method == ICal::Method::Cancel ? "cancelled" : "updated") << ev.uid
+                       << "from" << from;
+    }
 }
 
 } // namespace e3::mail

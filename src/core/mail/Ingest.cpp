@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MPL-2.0
 #include "Ingest.h"
 
+#include "Calendar.h"
 #include "Contacts.h"
 #include "Keyring.h"
 #include "Organize.h"
@@ -128,7 +129,10 @@ void walk(const mime::Part &p, Ingest::Content &out, bool inAlternative)
                     html = &c;
                 else if (c.mimeType == "application/ld+json" && out.structured.isEmpty())
                     out.structured = c.body; // the full representation (SML)
-                else if (c.isMultipart())
+                else if (c.mimeType == "text/calendar" && out.calendar.isEmpty()) {
+                    out.calendar = c.body; // an invitation (ADR 0025)
+                    out.calendarMethod = c.typeParams.value("method").toLatin1();
+                } else if (c.isMultipart())
                     walk(c, out, true);
             }
             if (text && out.text.isEmpty())
@@ -152,6 +156,15 @@ void walk(const mime::Part &p, Ingest::Content &out, bool inAlternative)
         && (!attachment || p.headers.raw("Content-Purpose").trimmed().toLower() == "machine-readable")) {
         if (out.structured.isEmpty())
             out.structured = p.body;
+        return;
+    }
+    // An invitation (ADR 0025), inline or as invite.ics: read, never listed
+    // (Gmail attaches the same part again) and not shown as text.
+    if (p.mimeType == "text/calendar" || p.mimeType == "application/ics") {
+        if (out.calendar.isEmpty()) {
+            out.calendar = p.body;
+            out.calendarMethod = p.typeParams.value("method").toLatin1();
+        }
         return;
     }
     if (!attachment && p.mimeType == "text/plain" && out.text.isEmpty()) {
@@ -460,17 +473,22 @@ Ingest::Result Ingest::process(MailContext &ctx, const QByteArray &raw)
     if (report && !fromSelf)
         Receipts::receive(ctx, content, from.addr, date);
 
+    const QString calendar = ICal::accept(body.calendar, body.calendarMethod);
+    const auto calDoc = calendar.isEmpty() ? std::nullopt : ICal::parse(body.calendar, body.calendarMethod);
     ctx.db.run("INSERT INTO messages(message_id, direction, state, subject, from_addr, from_name, reply_to, date, "
                "received_at, in_reply_to, body_text, body_html, preview, importance, encrypted, signed_fpr, "
-               "verified, has_attachments, raw_blob, raw_expires_at, hidden, unread, structured) "
-               "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+               "verified, has_attachments, raw_blob, raw_expires_at, hidden, unread, structured, "
+               "calendar, cal_uid, cal_method) "
+               "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                messageId, int(fromSelf ? Direction::Outgoing : Direction::Incoming),
                int(fromSelf ? MessageState::Sent : MessageState::Received), subject, from.addr, from.name,
                replyTo.isEmpty() ? std::optional<QString>() : nullIfEmpty(replyTo.first().addr), date.toMSecsSinceEpoch(), now, inReplyTo,
                body.text, nullIfEmpty(body.html), makePreview(body.text), importance,
                encrypted, nullIfEmpty(signedFpr), verified, !body.attachments.isEmpty(),
                nullIfEmpty(rawBlob), rawExpires, hidden, !fromSelf,
-               nullIfEmpty(Structured::accept(body.structured)));
+               nullIfEmpty(Structured::accept(body.structured)), nullIfEmpty(calendar),
+               nullIfEmpty(calDoc ? calDoc->events.value(0).uid : QString()),
+               nullIfEmpty(calDoc ? QString::fromLatin1(ICal::methodName(calDoc->method)) : QString()));
     const qint64 id = ctx.db.lastInsertId();
     result.msgId = id;
     if (!receiptTo.isEmpty() || ephemeralSeconds > 0) {
@@ -518,6 +536,10 @@ Ingest::Result Ingest::process(MailContext &ctx, const QByteArray &raw)
             result.held = true;
         }
     }
+    // What an invitation, an answer or a cancellation means for the calendar
+    // (ADR 0025): derived here, on every device, never recorded.
+    if (calDoc && !hidden && !result.held && !result.trashed)
+        Calendar::receive(ctx, id, *calDoc, from.addr, date, fromSelf);
     // Device-sync mail reaches every device from the server; passing it on
     // would only be more ops to sync.
     if (!hidden)

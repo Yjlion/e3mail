@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: MPL-2.0
 #include "Compose.h"
 
+#include "ICal.h"
+#include "Structured.h"
+
 #include "Contacts.h"
 #include "Ingest.h"
 #include "Keyring.h"
@@ -199,6 +202,9 @@ qint64 Compose::queue(MailContext &ctx, const Draft &draft)
     mail.importance = draft.importance;
     for (const OutgoingAttachmentRef &a : draft.attachments)
         mail.attachments.append({a.filename, a.mimeType.toLatin1(), a.data});
+    mail.calendar = draft.calendar;
+    mail.calendarMethod = draft.calendarMethod;
+    mail.structured = draft.structured;
     mail.extraHeaders.append(
         {"Autocrypt", crypto::Autocrypt::format(selfAddr, ctx.pgp.exportAutocrypt(selfFpr, selfAddr), true)});
     // Asking for a read receipt, and how long the message should live: inside
@@ -220,7 +226,10 @@ qint64 Compose::queue(MailContext &ctx, const Draft &draft)
     if (ready.willEncrypt) {
         // Gossip every recipient's key to the others, so a reply-all can
         // encrypt without each of them having met.
-        const QStringList visible = allAddrs(Draft{0, draft.to, draft.cc, {}, {}, {}, {}, {}, 0, 0, {}});
+        Draft visibleOnly;
+        visibleOnly.to = draft.to;
+        visibleOnly.cc = draft.cc;
+        const QStringList visible = allAddrs(visibleOnly);
         if (visible.size() > 1) {
             for (const QString &addr : visible) {
                 const auto c = Contacts::get(ctx, addr);
@@ -253,6 +262,15 @@ qint64 Compose::queue(MailContext &ctx, const Draft &draft)
     // Our own copy of disappearing mail starts its timer as it is sent.
     if (draft.ephemeralSeconds > 0)
         ctx.db.run("UPDATE messages SET expires_at=? WHERE id=?", now + qint64(draft.ephemeralSeconds) * 1000, id);
+    // Our own invitation shows its card, and its attendees' answers, from Sent.
+    if (!draft.calendar.isEmpty()) {
+        if (const auto doc = ICal::parse(draft.calendar, draft.calendarMethod)) {
+            ctx.db.run("UPDATE messages SET calendar=?, cal_uid=?, cal_method=?, structured=? WHERE id=?",
+                       QString::fromUtf8(draft.calendar), nullIfEmpty(doc->events.value(0).uid),
+                       nullIfEmpty(QString::fromLatin1(ICal::methodName(doc->method))),
+                       nullIfEmpty(Structured::accept(draft.structured)), id);
+        }
+    }
     ctx.db.run("INSERT INTO outbox(msg_id, raw, mail_from, rcpts) VALUES(?, ?, ?, ?)", id, raw, selfAddr,
                rcpts.join(u'\n'));
     // Writing to someone puts them in the address book, on every device, and
