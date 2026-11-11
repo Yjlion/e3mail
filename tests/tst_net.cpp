@@ -11,6 +11,10 @@
 #include <QSslSocket>
 #include <QTcpServer>
 #include <QtTest>
+#ifdef Q_OS_MACOS
+#include <QProcess>
+#include <QTemporaryDir>
+#endif
 
 // A TLS endpoint with the self-signed certificate in tests/data: it starts
 // TLS at once and then says "hello". With STARTTLS the client connects in
@@ -28,6 +32,13 @@ public:
         }
         listen(QHostAddress::LocalHost);
     }
+    // With another certificate than the one in tests/data.
+    TlsServer(const QByteArray &certPem, const QByteArray &keyPem)
+        : cert(certPem)
+        , key(keyPem, QSsl::Rsa)
+    {
+        listen(QHostAddress::LocalHost);
+    }
     QSslCertificate cert;
     QSslKey key;
 
@@ -42,6 +53,50 @@ protected:
         s->startServerEncryption();
     }
 };
+
+#ifdef Q_OS_MACOS
+// A certificate made now, good for a month. macOS (15 and 26, seen on CI)
+// trusts a TLS server certificate only if it is valid for 825 days or less,
+// also when it was added as a CA by hand; the one in tests/data is good for
+// a hundred years so that it never needs replacing, and macOS will not have
+// it. One that short cannot be committed, so the system's own openssl makes
+// it. Empty with `why` when that did not work.
+static bool freshCertificate(QByteArray *certPem, QByteArray *keyPem, QString *why)
+{
+    QTemporaryDir dir;
+    QFile cnf(dir.filePath(QStringLiteral("cert.cnf")));
+    if (!dir.isValid() || !cnf.open(QIODevice::WriteOnly)) {
+        *why = QStringLiteral("no temporary directory");
+        return false;
+    }
+    cnf.write("[req]\ndistinguished_name = dn\nprompt = no\nx509_extensions = v3\n"
+              "[dn]\nCN = mail.e3.test\n"
+              "[v3]\nbasicConstraints = critical,CA:TRUE\n"
+              "subjectAltName = DNS:mail.e3.test,IP:127.0.0.1\nextendedKeyUsage = serverAuth\n");
+    cnf.close();
+    QProcess openssl;
+    openssl.setProcessChannelMode(QProcess::MergedChannels);
+    openssl.start(QStringLiteral("/usr/bin/openssl"),
+                  {QStringLiteral("req"), QStringLiteral("-x509"), QStringLiteral("-newkey"), QStringLiteral("rsa:2048"),
+                   QStringLiteral("-nodes"), QStringLiteral("-days"), QStringLiteral("30"), QStringLiteral("-config"),
+                   cnf.fileName(), QStringLiteral("-keyout"), dir.filePath(QStringLiteral("key.pem")), QStringLiteral("-out"),
+                   dir.filePath(QStringLiteral("cert.pem"))});
+    if (!openssl.waitForFinished(60000) || openssl.exitStatus() != QProcess::NormalExit || openssl.exitCode() != 0) {
+        *why = QStringLiteral("/usr/bin/openssl: ") + openssl.errorString() + QLatin1Char(' ')
+            + QString::fromLocal8Bit(openssl.readAll());
+        return false;
+    }
+    QFile c(dir.filePath(QStringLiteral("cert.pem")));
+    QFile k(dir.filePath(QStringLiteral("key.pem")));
+    if (!c.open(QIODevice::ReadOnly) || !k.open(QIODevice::ReadOnly)) {
+        *why = QStringLiteral("openssl wrote no certificate");
+        return false;
+    }
+    *certPem = c.readAll();
+    *keyPem = k.readAll();
+    return true;
+}
+#endif
 
 using namespace e3::net;
 
@@ -307,18 +362,33 @@ private Q_SLOTS:
     // certificate accepted from that server.
     void pinRefusesATrustedCertificate()
     {
+#ifdef Q_OS_MACOS
+        QByteArray certPem, keyPem;
+        QString why;
+        QVERIFY2(freshCertificate(&certPem, &keyPem, &why), qPrintable(why));
+        TlsServer srv(certPem, keyPem);
+#else
         TlsServer srv;
+#endif
+        QVERIFY(!srv.cert.isNull());
+        QVERIFY(!srv.key.isNull());
+        // The default configuration is the process's: put it back whatever happens.
         const QSslConfiguration before = QSslConfiguration::defaultConfiguration();
+        const auto restore = qScopeGuard([&before] { QSslConfiguration::setDefaultConfiguration(before); });
         QSslConfiguration trusting = before;
         trusting.addCaCertificate(srv.cert);
         QSslConfiguration::setDefaultConfiguration(trusting);
         ServerSettings s;
         s.host = QStringLiteral("127.0.0.1");
         s.port = srv.serverPort();
-        {
+        // Trusted, without a pin. If the platform will not trust it, the
+        // rest of this test would prove nothing: say so instead of going on.
+        try {
             SyncSocket sock(5000);
             sock.connectToHost(s);
-            QCOMPARE(sock.readLine(), QByteArray("hello")); // trusted, no pin
+            QCOMPARE(sock.readLine(), QByteArray("hello"));
+        } catch (const CertError &e) {
+            QFAIL(qPrintable(QStringLiteral("the certificate added as a CA was not trusted: ") + e.message()));
         }
         s.pinnedSha256 = QByteArray(64, 'b');
         SyncSocket sock(5000);
@@ -328,7 +398,6 @@ private Q_SLOTS:
         } catch (const CertError &e) {
             refused = e.info.pinChanged;
         }
-        QSslConfiguration::setDefaultConfiguration(before);
         QVERIFY(refused);
     }
 

@@ -30,6 +30,7 @@ jobs:
         include:
           - { name: Linux, os: ubuntu-24.04 }
           - { name: Windows, os: windows-2022 }
+          - { name: macOS, os: macos-15 }
     steps:
       - uses: actions/checkout@v4
       # Sync between devices is a Rust crate (src/p2p, ADR 0010), built by
@@ -59,6 +60,13 @@ jobs:
           fi
           echo "CMAKE_PREFIX_PATH=$HOME/deps" >> "$GITHUB_ENV"
           echo "LD_LIBRARY_PATH=$HOME/deps/lib:$LD_LIBRARY_PATH" >> "$GITHUB_ENV"
+
+      - name: Dependencies (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          brew install ninja rnp pkg-config gnupg icu4c libssh botan
+          # icu4c is keg-only: tell find_package(ICU) where it is.
+          echo "ICU_ROOT=$(brew --prefix icu4c)" >> "$GITHUB_ENV"
 
       - name: MSVC environment (Windows)
         if: runner.os == 'Windows'

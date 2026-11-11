@@ -67,6 +67,7 @@ jobs:
         include:
           - { name: Linux, os: ubuntu-22.04 }   # the oldest glibc we target, for the AppImage
           - { name: Windows, os: windows-2022 }
+          - { name: macOS, os: macos-15 }
     steps:
       - uses: actions/checkout@v4
       # Sync between devices is a Rust crate (src/p2p, ADR 0010), built by
@@ -91,6 +92,11 @@ jobs:
           RNP_CRYPTO_BACKEND=botan scripts/build-rnp.sh "$HOME/deps"
           echo "CMAKE_PREFIX_PATH=$HOME/deps" >> "$GITHUB_ENV"
           echo "LD_LIBRARY_PATH=$HOME/deps/lib:$LD_LIBRARY_PATH" >> "$GITHUB_ENV"
+      - name: Dependencies (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          brew install ninja rnp pkg-config icu4c libssh botan
+          echo "ICU_ROOT=$(brew --prefix icu4c)" >> "$GITHUB_ENV"
       - uses: ilammy/msvc-dev-cmd@v1
         if: runner.os == 'Windows'
       - name: Dependencies (Windows)
@@ -116,6 +122,12 @@ jobs:
           (cd build/release && cpack -G "DEB;TGZ")
           packaging/linux/build-appimage.sh build/release
           mkdir -p dist && mv build/release/*.deb* build/release/*.tar.gz* *.AppImage* dist/
+
+      - name: Package (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          (cd build/release && cpack -G DragNDrop)
+          mkdir -p dist && mv build/release/*.dmg* dist/
 
       - name: Package (Windows)
         if: runner.os == 'Windows'
