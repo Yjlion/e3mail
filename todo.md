@@ -29,8 +29,11 @@ Built (ADR 0025, `docs/handoff.md`). **Open:**
   Thunderbird and answer one from each, through `server/compose` or a
   real account; look at how each treats our VTIMEZONE.
 - Recurrence beyond the subset: BYMONTHDAY, BYSETPOS, RDATE, edits of one
-  occurrence (RECURRENCE-ID), which are kept as received today.
-- A week view, and dragging an event to move it.
+  occurrence (RECURRENCE-ID), which are kept as received today. Until one
+  occurrence can be changed, a repeating event cannot be dragged.
+- In the week and the day (built, ADR 0025 amendment 2026-11-10): moving
+  an event by touch, moving all-day events, a way to see more than four
+  all-day lanes, and the keyboard.
 - Counter-proposals (iTIP COUNTER) and delegation.
 - Reminders while e3mail is not running (Android's alarm manager).
 

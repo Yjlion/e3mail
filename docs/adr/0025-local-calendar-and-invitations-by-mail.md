@@ -96,3 +96,47 @@ data too.
   updates and cancellations still match them.
 - Interoperability is designed from the clients' documented and observed
   output, not verified against them here; see the handoff.
+
+## Amendment — 2026-11-10: the week and the day as hours
+
+The calendar had a month and an agenda. A week and a day are now drawn as
+a grid of hours, and an event can be moved by dragging it.
+
+- **The layout is decided in the core** (`mail/CalendarLayout`), from
+  nothing but when things start and end, so its rules are tested without
+  the interface:
+  - An all-day event, and a timed one lasting 24 hours or more, is a bar
+    above the hours. An all-day event's days are its dates as stored (UTC),
+    not where its midnights fall on the reader's clock: the tenth is the
+    tenth in Tokyo and in Los Angeles.
+  - A timed event that crosses midnight is drawn on each day it touches;
+    one ending at midnight ends that day.
+  - A day is 24 rows of the reader's wall clock, also on the days that
+    last 23 or 25 hours. An event sits at the time its clock shows; in the
+    hour the clocks repeat, one that ends at an earlier clock time than it
+    began is drawn as long as it lasts.
+  - Events that overlap, directly or through others, share the day's
+    width in columns; each takes the first column free when it starts. A
+    block is never drawn shorter than 20 minutes, and that drawn length is
+    what counts as overlapping, so short events never cover each other.
+  - Bars take the first lane free on their first day, the longer first.
+- **The week is the locale's week** (`QLocale::firstDayOfWeek`). A phone
+  shows three days from the chosen day instead of seven. The hours in the
+  margin and the title's span of days are written by CLDR's patterns
+  through ICU (`LocalePatterns::hour`, `dateRange`).
+- **The view chosen is kept per device** (`calendarMode` in `app.ini`),
+  like the other things that are about a screen rather than about the
+  account.
+- **What dragging may change** (`Calendar::reschedule`): a timed event of
+  the person's own that does not repeat. Someone else's meeting is theirs
+  to move. One occurrence of a series cannot be changed alone (no
+  RECURRENCE-ID edits yet), so a repeating event is not moved at all
+  rather than moving every occurrence by surprise. All-day events are
+  changed in the editor.
+- **A dragged meeting asks before it mails.** It is `Calendar::save`, so a
+  meeting with attendees raises its sequence and sends a new REQUEST; the
+  person is asked first, with the editor's own question (Send, Save only,
+  Back). Nothing is saved until they answer.
+- **Dragging is the mouse's.** A finger on the grid scrolls it; on a phone
+  an event is moved in its editor. Times snap to 15 minutes.
+- **A click on an empty half hour** opens a new event there, an hour long.
