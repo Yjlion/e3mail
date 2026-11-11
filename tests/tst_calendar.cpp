@@ -553,6 +553,90 @@ private Q_SLOTS:
         QVERIFY(next);
         QCOMPARE(*next, later.start.addSecs(-1800).toMSecsSinceEpoch());
     }
+
+    // Dragging an event in the week (ADR 0025, amendment 2026-11-10).
+    void reschedule()
+    {
+        auto &ctx = m_alice->ctx();
+        // A note of Alice's own moves, and keeps the rest of itself.
+        Calendar::Event note;
+        note.summary = QStringLiteral("Dentist");
+        note.location = QStringLiteral("Main St 4");
+        note.start = utc(2026, 11, 10, 8, 0);
+        note.end = utc(2026, 11, 10, 8, 45);
+        note.reminderMinutes = 30;
+        const QString own = Calendar::saveLocal(ctx, note);
+        QVERIFY(Calendar::movable(ctx, *Calendar::get(ctx, own)));
+        auto r = Calendar::reschedule(ctx, own, utc(2026, 11, 12, 15, 0), utc(2026, 11, 12, 15, 45), true);
+        QCOMPARE(r.uid, own);
+        QVERIFY(r.queued.isEmpty()); // nobody to tell
+        auto moved = *Calendar::get(ctx, own);
+        QCOMPARE(moved.start, utc(2026, 11, 12, 15, 0));
+        QCOMPARE(moved.end, utc(2026, 11, 12, 15, 45));
+        QCOMPARE(moved.summary, QStringLiteral("Dentist"));
+        QCOMPARE(moved.location, QStringLiteral("Main St 4"));
+        QCOMPARE(moved.reminderMinutes, std::optional<int>(30));
+        // An end that is not after the start, or no time at all: refused.
+        QVERIFY(Calendar::reschedule(ctx, own, utc(2026, 11, 12, 15, 0), utc(2026, 11, 12, 15, 0), true).uid.isEmpty());
+        QVERIFY(Calendar::reschedule(ctx, own, QDateTime(), utc(2026, 11, 12, 15, 0), true).uid.isEmpty());
+        QVERIFY(Calendar::reschedule(ctx, QStringLiteral("no-such-event"), utc(2026, 11, 12, 15, 0), utc(2026, 11, 12, 16, 0), true).uid.isEmpty());
+        QCOMPARE(Calendar::get(ctx, own)->start, utc(2026, 11, 12, 15, 0));
+
+        // A meeting Alice organizes: "save only" moves it here and mails
+        // nobody; sending asks the attendees again with a new sequence.
+        const QString uid = aliceInvites();
+        Calendar::rsvp(m_bob->ctx(), find(m_bob, QStringLiteral("Invitation: Design review")), ICal::PartStat::Accepted);
+        sync(m_bob);
+        sync(m_alice);
+        r = Calendar::reschedule(ctx, uid, utc(2026, 11, 10, 13, 0), utc(2026, 11, 10, 14, 0), false);
+        QCOMPARE(r.uid, uid);
+        QVERIFY(r.queued.isEmpty());
+        QCOMPARE(Calendar::get(ctx, uid)->start, utc(2026, 11, 10, 13, 0));
+        QCOMPARE(Calendar::get(ctx, uid)->sequence, 0);
+        r = Calendar::reschedule(ctx, uid, utc(2026, 11, 11, 14, 0), utc(2026, 11, 11, 15, 30), true);
+        QVERIFY2(r.error.isEmpty(), qPrintable(r.error));
+        QCOMPARE(r.queued.size(), 1);
+        QCOMPARE(Calendar::get(ctx, uid)->sequence, 1);
+        QCOMPARE(Calendar::get(ctx, uid)->attendees.size(), 2);
+        sync(m_alice);
+        sync(m_bob);
+        auto onBob = *Calendar::get(m_bob->ctx(), uid);
+        QCOMPARE(onBob.start, utc(2026, 11, 11, 14, 0));
+        QCOMPARE(onBob.end, utc(2026, 11, 11, 15, 30));
+        QCOMPARE(Calendar::ourStatus(m_bob->ctx(), onBob), std::optional<ICal::PartStat>(ICal::PartStat::NeedsAction));
+        // Dropped where it already is: nothing is sent and the sequence stays.
+        r = Calendar::reschedule(ctx, uid, utc(2026, 11, 11, 14, 0), utc(2026, 11, 11, 15, 30), true);
+        QCOMPARE(r.uid, uid);
+        QVERIFY(r.queued.isEmpty());
+        QCOMPARE(Calendar::get(ctx, uid)->sequence, 1);
+
+        // Bob's copy of Alice's meeting is hers to move, not his.
+        QVERIFY(!Calendar::movable(m_bob->ctx(), onBob));
+        QVERIFY(Calendar::reschedule(m_bob->ctx(), uid, utc(2026, 11, 12, 9, 0), utc(2026, 11, 12, 10, 0), true).uid.isEmpty());
+        QCOMPARE(Calendar::get(m_bob->ctx(), uid)->start, utc(2026, 11, 11, 14, 0));
+
+        // One occurrence of a series cannot be moved alone, so none is.
+        Calendar::Event weekly;
+        weekly.summary = QStringLiteral("Standup");
+        weekly.start = utc(2026, 11, 9, 9, 30);
+        weekly.end = utc(2026, 11, 9, 9, 45);
+        weekly.rrule = QStringLiteral("FREQ=WEEKLY;BYDAY=MO");
+        const QString series = Calendar::saveLocal(ctx, weekly);
+        QVERIFY(!Calendar::movable(ctx, *Calendar::get(ctx, series)));
+        QVERIFY(Calendar::reschedule(ctx, series, utc(2026, 11, 16, 11, 0), utc(2026, 11, 16, 11, 15), true).uid.isEmpty());
+        QCOMPARE(Calendar::get(ctx, series)->start, utc(2026, 11, 9, 9, 30));
+
+        // Nor an all-day event, nor a cancelled one.
+        Calendar::Event offsite;
+        offsite.summary = QStringLiteral("Offsite");
+        offsite.allDay = true;
+        offsite.start = utc(2026, 11, 20, 0, 0);
+        offsite.end = utc(2026, 11, 21, 0, 0);
+        const QString day = Calendar::saveLocal(ctx, offsite);
+        QVERIFY(Calendar::reschedule(ctx, day, utc(2026, 11, 22, 9, 0), utc(2026, 11, 22, 10, 0), true).uid.isEmpty());
+        Calendar::cancel(ctx, own, false);
+        QVERIFY(Calendar::reschedule(ctx, own, utc(2026, 11, 13, 9, 0), utc(2026, 11, 13, 10, 0), true).uid.isEmpty());
+    }
 };
 
 QTEST_GUILESS_MAIN(TestCalendar)
