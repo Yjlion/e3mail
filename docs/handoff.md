@@ -1530,17 +1530,30 @@ America/Chicago):
 - The translations test: 7 new strings in ten languages, machine-made like
   the rest, and the 5 restored.
 
+**Verified by CI** (run 42950285025, Qt 6.10.3):
+- Linux and Windows build with warnings as errors and pass all 31 tests;
+  both APKs build.
+- macOS builds and passes 30 of 31, every calendar test among them. That
+  took moving CI from `macos-14` to `macos-15`: GitHub now cancels a
+  `macos-14` job before it starts ("The configuration
+  'macos-14-arm64-us-default' is not supported"); the last one that ran
+  was on 4 November. **The release workflow still names `macos-14`.**
+- **The one failure on macOS 15 is not this work's:**
+  `tst_net::pinRefusesATrustedCertificate`. Its first step adds the test
+  certificate as a CA and expects a connection without a pin; macOS 15
+  answers "The root CA certificate is not trusted for this purpose", and
+  the test ends on the uncaught `CertError`. The pinning it goes on to
+  test is never reached. Left as it is: the choice is between a test
+  certificate macOS 15 accepts as a CA and not making that step on macOS,
+  and it is about what the pinning test should prove.
+
 **Not verified:**
 - **Any of it by hand, on a display.** The drag was driven by QtTest's
   events offscreen: the cursor shapes, how it feels, and whether a real
   trackpad's press-and-move reaches the event before the hours scroll
   have not been seen.
-- **macOS.** CI's macOS job was cancelled both times another job failed,
-  so nothing here has run there yet; whether `TZ` moves the clock for
-  `ical_west` on macOS is one thing to look at (if not, it passes as UTC
-  does). Windows built and passed everything on the probe run
-  (42946913365), `tst_timegrid` and `tst_callayout`'s zones included;
-  Linux passed all but `tst_timegrid`, for the reason above.
+- Whether `TZ` really moves the clock for `ical_west` on macOS. It
+  passes there, as it would in UTC.
 - **The "Send the update?" dialog after a drag** was answered through the
   hook, not clicked; a popup is not in a grabbed screenshot. Opening it
   logs "Binding loop detected for property implicitWidth" (Qt's
@@ -1931,6 +1944,9 @@ layout sets (an item's `y`), then send events.
    Connect button, then a real account (receive, send, a notification, the
    Keystore). Setup can now trust `server/compose`'s self-signed certificate
    (ADR 0017); from the emulator the host is `10.0.2.2`.
-9. The calendar's week on a real display: drag an event with a mouse and
+9. Make CI's macOS job pass on macOS 15 (`tst_net`'s trusted-certificate
+   step, see "The week and the day as hours"), and move the release
+   workflow off `macos-14` before the next release.
+10. The calendar's week on a real display: drag an event with a mouse and
    with a trackpad, answer "Send the update?", and try three days on a
    phone (see "The week and the day as hours" above).
