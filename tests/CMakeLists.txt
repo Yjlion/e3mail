@@ -78,16 +78,16 @@ if(E3MAIL_BUILD_APP)
     target_link_libraries(tst_formatting PRIVATE e3richtext Qt6::Quick Qt6::QuickControls2)
     # The calendar's grid of hours, the real TimeGrid.qml, clicked and
     # dragged offscreen. It needs nothing of the app but the theme, so the
-    # two files are a small E3mail module of the test's own.
-    set_source_files_properties(${PROJECT_SOURCE_DIR}/src/app/qml/TimeGrid.qml PROPERTIES
-        QT_RESOURCE_ALIAS TimeGrid.qml)
-    set_source_files_properties(${PROJECT_SOURCE_DIR}/src/app/qml/Theme.qml PROPERTIES
-        QT_RESOURCE_ALIAS Theme.qml QT_QML_SINGLETON_TYPE TRUE)
-    qt_add_qml_module(tst_timegrid
-        URI E3mail
-        VERSION 1.0
-        NO_LINT
-        QML_FILES ${PROJECT_SOURCE_DIR}/src/app/qml/TimeGrid.qml ${PROJECT_SOURCE_DIR}/src/app/qml/Theme.qml)
+    # two files are copied into an import path of the test's own and read
+    # from there when it runs. (A QML module built from files outside this
+    # directory puts ".." into the names of its generated files, which
+    # Windows refuses.)
+    set(E3_TIMEGRID_IMPORT ${CMAKE_CURRENT_BINARY_DIR}/timegrid-import)
+    foreach(qml TimeGrid Theme)
+        configure_file(${PROJECT_SOURCE_DIR}/src/app/qml/${qml}.qml ${E3_TIMEGRID_IMPORT}/E3mail/${qml}.qml COPYONLY)
+    endforeach()
+    file(WRITE ${E3_TIMEGRID_IMPORT}/E3mail/qmldir "module E3mail\nsingleton Theme 1.0 Theme.qml\nTimeGrid 1.0 TimeGrid.qml\n")
+    target_compile_definitions(tst_timegrid PRIVATE E3_TIMEGRID_IMPORT="${E3_TIMEGRID_IMPORT}")
     target_link_libraries(tst_timegrid PRIVATE Qt6::Quick Qt6::QuickControls2)
     # Boots the real QML application offscreen against an empty data
     # directory: every QML file must load and every type must resolve.

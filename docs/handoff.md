@@ -1461,12 +1461,25 @@ The calendar has a Month | Week | Day switch, kept per device.
 - **A flick is measured in time.** Touch moves sent by QtTest with no wait
   between them cancel the press but scroll nothing; 10 ms between them
   does.
-- **A test can have a QML module of its own.** `tst_timegrid` builds
-  `TimeGrid.qml` and `Theme.qml` as its own `E3mail` module
-  (`QT_RESOURCE_ALIAS`, since the files are outside `tests/`), so the real
-  file is clicked and dragged without the app. `TimeGrid` takes what to
-  draw as a property and only emits signals, which is what makes that
-  possible.
+- **A test can load the app's own QML without the app.** `tst_timegrid`
+  copies `TimeGrid.qml` and `Theme.qml` into an import path of its own
+  (`tests/CMakeLists.txt` writes the `qmldir`) and clicks and drags the
+  real file. `TimeGrid` takes what to draw as a property and only emits
+  signals, which is what makes that possible. Building the two files as a
+  QML module of the test's (`qt_add_qml_module`) worked here and failed on
+  Windows: files outside the directory put `..` into the generated path
+  (`tests/.rcc/qmlcache/tst_timegrid_../src`), a name Windows will not
+  create (run 42944672771).
+- **A window is not laid out until its first frame.** On CI the same test
+  failed four ways with every time 90 minutes early. A run with the scroll
+  state printed (branch `ci-probe`, since deleted) showed the hours 599 px
+  tall when the drags began and 525 after: the days' names and the all-day
+  band took their 74 px in the middle of a drag, and the hours slid down
+  under the pointer. Here the first frame always came first. The test now
+  waits for the hours to sit below the header. Neither Qt 6.10.3 (fetched
+  with aqt into `~/.cache/e3mail-qt`, the test built alone against it,
+  with and without compiled QML) nor anything else here reproduced it;
+  only printing on CI did.
 - **gdb may not attach here** (`ptrace_scope` 1). Run the program under
   gdb and interrupt it: `timeout -s INT 25 gdb -batch -ex run -ex
   "thread 1" -ex bt --args …`.
@@ -1522,10 +1535,12 @@ America/Chicago):
   events offscreen: the cursor shapes, how it feels, and whether a real
   trackpad's press-and-move reaches the event before the hours scroll
   have not been seen.
-- **CI.** Nothing here has run on macOS or Windows: `tst_timegrid`'s own
-  QML module, the zone names `tst_callayout` asks Windows for, and whether
-  `TZ` moves the clock for `ical_west` on macOS (if not, it passes as UTC
-  does).
+- **macOS.** CI's macOS job was cancelled both times another job failed,
+  so nothing here has run there yet; whether `TZ` moves the clock for
+  `ical_west` on macOS is one thing to look at (if not, it passes as UTC
+  does). Windows built and passed everything on the probe run
+  (42946913365), `tst_timegrid` and `tst_callayout`'s zones included;
+  Linux passed all but `tst_timegrid`, for the reason above.
 - **The "Send the update?" dialog after a drag** was answered through the
   hook, not clicked; a popup is not in a grabbed screenshot. Opening it
   logs "Binding loop detected for property implicitWidth" (Qt's
@@ -1888,6 +1903,11 @@ under another `TZ` before believing them; `ical_west` does for one.
 no output is a polish loop until shown otherwise; the smoke tests that
 start in another view have a time limit for it.
 
+**57. A Qt Quick test must wait for the first frame.** `qWaitForWindowExposed`
+is not enough: layouts are polished with the first frame, and on a slow
+machine the test's first events arrive before it. Wait for something the
+layout sets (an item's `y`), then send events.
+
 ## Next
 
 1. Release v0.2.2 to internal testers in Play Console (it is a draft
@@ -1913,6 +1933,4 @@ start in another view have a time limit for it.
    (ADR 0017); from the emulator the host is `10.0.2.2`.
 9. The calendar's week on a real display: drag an event with a mouse and
    with a trackpad, answer "Send the update?", and try three days on a
-   phone (see "The week and the day as hours" above). Look at CI's first
-   run of `tst_timegrid`, `tst_callayout` and `ical_west` on macOS and
-   Windows.
+   phone (see "The week and the day as hours" above).

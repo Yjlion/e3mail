@@ -77,6 +77,7 @@ class TestTimeGrid : public QObject
     {
         m_view = std::make_unique<QQuickView>();
         m_view->resize(700, 600);
+        m_view->engine()->addImportPath(QStringLiteral(E3_TIMEGRID_IMPORT));
         QQmlComponent c(m_view->engine());
         c.setData(QByteArray("import QtQuick\nimport E3mail\n"
                              "Item {\n"
@@ -101,6 +102,11 @@ class TestTimeGrid : public QObject
         m_canvas = m_grid->findChild<QQuickItem *>(QStringLiteral("canvas"));
         m_hours = m_grid->findChild<QQuickItem *>(QStringLiteral("hours"));
         QVERIFY(m_canvas && m_hours);
+        // Laid out: the days' names and the all-day band are above the hours.
+        // Until the window's first frame they are not, and a test that
+        // starts before it has the hours slide down under the pointer in
+        // the middle of a drag (CI's machines did exactly that).
+        QTRY_VERIFY(m_hours->y() > 70);
         // It opens at seven: ten o'clock is on the screen.
         QTRY_VERIFY(m_hours->property("contentY").toReal() > 300);
         QCOMPARE(m_grid->property("days").toList().size(), 3);
@@ -244,9 +250,11 @@ private Q_SLOTS:
         QVERIFY(moved.isEmpty());
         QVERIFY(opened.isEmpty());
         QVERIFY(m_hours->property("contentY").toReal() < before);
-        // Nor has it an edge to pull.
+        // Nor has it an edge to pull. (The flick may have coasted to the
+        // top of the day; bring the event back into the window.)
         QTRY_VERIFY(!m_hours->property("moving").toBool());
-        drag(at(1, 660, -3), at(1, 720));
+        m_hours->setProperty("contentY", 328);
+        drag(at(1, 660, -3), at(1, 620));
         QVERIFY(stretched.isEmpty());
         QVERIFY(moved.isEmpty());
     }
@@ -291,6 +299,7 @@ private Q_SLOTS:
         QVERIFY(m_hours->property("contentY").toReal() < before);
         // The same on its lower edge.
         QTRY_VERIFY(!m_hours->property("moving").toBool());
+        m_hours->setProperty("contentY", 328);
         const QPoint edge = at(0, 660, -3);
         QTest::touchEvent(m_view.get(), m_finger).press(0, edge);
         for (int i = 1; i <= 8; ++i) {
@@ -302,6 +311,7 @@ private Q_SLOTS:
         QVERIFY(moved.isEmpty());
 
         QTRY_VERIFY(!m_hours->property("moving").toBool());
+        m_hours->setProperty("contentY", 328);
         const QPoint tap = at(0, 630);
         QTest::touchEvent(m_view.get(), m_finger).press(0, tap);
         QTest::touchEvent(m_view.get(), m_finger).release(0, tap);
