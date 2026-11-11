@@ -1533,27 +1533,35 @@ America/Chicago):
 **Verified by CI** (run 42950285025, Qt 6.10.3):
 - Linux and Windows build with warnings as errors and pass all 31 tests;
   both APKs build.
-- macOS builds and passes 30 of 31, every calendar test among them. That
-  took moving CI from `macos-14` to `macos-15`: GitHub now cancels a
-  `macos-14` job before it starts ("The configuration
-  'macos-14-arm64-us-default' is not supported"); the last one that ran
-  was on 4 November. **The release workflow still names `macos-14`.**
-- **The one failure on macOS 15 is not this work's:**
+- macOS, once, on that run: built, and 30 of 31 passed, every calendar
+  test among them.
+
+**macOS is out of CI and out of the release workflow (2026-11-11), at the
+owner's word.** What led to it:
+- GitHub cancels a `macos-14` job before it starts ("The configuration
+  'macos-14-arm64-us-default' is not supported"). The last one that ran
+  was on 4 November.
+- On `macos-15` the job ran and one test failed, not this work's:
   `tst_net::pinRefusesATrustedCertificate`. Its first step adds the test
   certificate as a CA and expects a connection without a pin; macOS 15
   answers "The root CA certificate is not trusted for this purpose", and
   the test ends on the uncaught `CertError`. The pinning it goes on to
-  test is never reached. Left as it is: the choice is between a test
-  certificate macOS 15 accepts as a CA and not making that step on macOS,
-  and it is about what the pinning test should prove.
+  test is never reached.
+- The release workflow's `publish` job needs every package job, so its
+  macOS leg, still on `macos-14`, would have stopped every release.
+
+So nothing builds or tests e3mail on macOS now, and a release carries no
+`.dmg`. The source still has its macOS parts (the frameworks in
+`cmake/E3mailP2p.cmake`, the tray notifier, the bundle settings); they
+will rot unseen. Bringing it back is the matrix entry, the Homebrew step
+and the DragNDrop package step in the two workflows (this commit's
+diff), on an image GitHub still offers, and a decision about that test.
 
 **Not verified:**
 - **Any of it by hand, on a display.** The drag was driven by QtTest's
   events offscreen: the cursor shapes, how it feels, and whether a real
   trackpad's press-and-move reaches the event before the hours scroll
   have not been seen.
-- Whether `TZ` really moves the clock for `ical_west` on macOS. It
-  passes there, as it would in UTC.
 - **The "Send the update?" dialog after a drag** was answered through the
   hook, not clicked; a popup is not in a grabbed screenshot. Opening it
   logs "Binding loop detected for property implicitWidth" (Qt's
@@ -1608,6 +1616,9 @@ America/Chicago):
   free/busy. Dragging is the mouse's, and not for all-day events. The
   all-day band shows four lanes. Invitations from and to other clients
   have not been tried.
+- **macOS** is not built, tested or packaged by any workflow since
+  2026-11-11. Releases up to v0.4.0 carried a `.dmg`; nothing here records
+  it ever being installed.
 - **Without an OS keyring and without a passphrase**, the database key sits
   beside the mail, so encryption at rest protects nothing there; Settings says
   so (ADR 0012, ADR 0023). Passwords fall back into that database.
@@ -1944,9 +1955,8 @@ layout sets (an item's `y`), then send events.
    Connect button, then a real account (receive, send, a notification, the
    Keystore). Setup can now trust `server/compose`'s self-signed certificate
    (ADR 0017); from the emulator the host is `10.0.2.2`.
-9. Make CI's macOS job pass on macOS 15 (`tst_net`'s trusted-certificate
-   step, see "The week and the day as hours"), and move the release
-   workflow off `macos-14` before the next release.
+9. Decide whether macOS comes back (see "The week and the day as hours"):
+   nothing builds it since 2026-11-11.
 10. The calendar's week on a real display: drag an event with a mouse and
    with a trackpad, answer "Send the update?", and try three days on a
    phone (see "The week and the day as hours" above).
