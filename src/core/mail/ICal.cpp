@@ -156,7 +156,14 @@ QDateTime parseTime(const QByteArray &value, const QByteArray &tzidParam, bool v
         if (it != fallbackOffsets.constEnd())
             return QDateTime(d, t, QTimeZone::fromSecondsAheadOfUtc(*it)).toUTC();
     }
-    // Floating: the reader's own time.
+    // Floating: the reader's own time. The zone it was read in is kept, so
+    // that a floating event that repeats keeps its clock time; one given in
+    // UTC or by an offset has no zone and repeats at the same instant.
+    if (tzidOut) {
+        const QByteArray here = QTimeZone::systemTimeZoneId();
+        if (QTimeZone::isTimeZoneIdAvailable(here))
+            *tzidOut = QString::fromLatin1(here);
+    }
     return QDateTime(d, t).toUTC();
 }
 
@@ -289,7 +296,10 @@ QTimeZone ICal::Event::zone() const
 {
     if (!tzid.isEmpty() && QTimeZone::isTimeZoneIdAvailable(tzid.toLatin1()))
         return QTimeZone(tzid.toLatin1());
-    return allDay ? QTimeZone(QTimeZone::UTC) : QTimeZone::systemTimeZone();
+    // No zone: all-day dates, or a time given in UTC or by a bare offset.
+    // RFC 5545 has those repeat at the same instant, not at the reader's
+    // clock time (which changes with the reader's daylight saving).
+    return QTimeZone(QTimeZone::UTC);
 }
 
 QString ICal::clean(const QString &s, int limit, bool keepNewlines)

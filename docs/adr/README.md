@@ -29,4 +29,4 @@ that supersedes it, or a dated amendment block inside it, and add a row here.
 | [0022](0022-read-receipts-disappearing-mail-and-trust.md) | Read receipts to trusted senders, disappearing mail into Trash, trust set by hand | Accepted |
 | [0023](0023-encryption-at-rest.md) | Encryption at rest: the database and blobs, under a per-account key | Accepted |
 | [0024](0024-structured-email.md) | Structured email: shown as text, with buttons only for the trusted and signed | Accepted; amended 2026-11-04 (sent with invitations; add to calendar) |
-| [0025](0025-local-calendar-and-invitations-by-mail.md) | A local calendar, with meetings arranged by mail | Accepted |
+| [0025](0025-local-calendar-and-invitations-by-mail.md) | A local calendar, with meetings arranged by mail | Accepted; amended 2026-11-10 (the week and the day as hours; dragging) |

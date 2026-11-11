@@ -19,7 +19,7 @@
         <translation>يُبقي e3mail المزامنة جارية</translation>
     </message>
     <message>
-        <source>New mail and other devices' changes arrive while e3mail is in the background.</source>
+        <source>New mail and other devices&apos; changes arrive while e3mail is in the background.</source>
         <translation>يصل البريد الجديد وتغييرات الأجهزة الأخرى بينما e3mail في الخلفية.</translation>
     </message>
     <message>
@@ -165,15 +165,15 @@
         <translation>يُنشأ جهاز جديد للحساب من أحدث نسخة احتياطية هناك. ولا يتزامن مع أجهزتك الأخرى حتى تقرنه.</translation>
     </message>
     <message>
-        <source>The server's SSH host key has changed. Trust the new one only if the server's administrator says it changed:</source>
+        <source>The server&apos;s SSH host key has changed. Trust the new one only if the server&apos;s administrator says it changed:</source>
         <translation>تغيّر مفتاح المضيف SSH للخادم. لا تثق بالجديد إلا إذا قال مسؤول الخادم إنه تغيّر:</translation>
     </message>
     <message>
-        <source>The server's SSH host key is not known yet. Trust it only if it matches what the server's administrator gives you:</source>
+        <source>The server&apos;s SSH host key is not known yet. Trust it only if it matches what the server&apos;s administrator gives you:</source>
         <translation>مفتاح المضيف SSH للخادم غير معروف بعد. لا تثق به إلا إذا طابق ما يعطيك إياه مسؤول الخادم:</translation>
     </message>
     <message>
-        <source>The server's certificate is not trusted. Trust it only if its fingerprint matches what the server's administrator gives you:</source>
+        <source>The server&apos;s certificate is not trusted. Trust it only if its fingerprint matches what the server&apos;s administrator gives you:</source>
         <translation>شهادة الخادم غير موثوقة. لا تثق بها إلا إذا طابقت بصمتها ما يعطيك إياه مسؤول الخادم:</translation>
     </message>
     <message>
@@ -370,16 +370,40 @@
         <translation>الشهر السابق</translation>
     </message>
     <message>
+        <source>Earlier</source>
+        <translation>السابق</translation>
+    </message>
+    <message>
         <source>Next month</source>
         <translation>الشهر التالي</translation>
+    </message>
+    <message>
+        <source>Later</source>
+        <translation>التالي</translation>
     </message>
     <message>
         <source>Today</source>
         <translation>اليوم</translation>
     </message>
     <message>
+        <source>Month</source>
+        <translation>شهر</translation>
+    </message>
+    <message>
+        <source>Week</source>
+        <translation>أسبوع</translation>
+    </message>
+    <message>
+        <source>Day</source>
+        <translation>يوم</translation>
+    </message>
+    <message>
         <source>New event</source>
         <translation>حدث جديد</translation>
+    </message>
+    <message>
+        <source>3 days</source>
+        <translation>3 أيام</translation>
     </message>
     <message numerus="yes">
         <source>+%n more</source>
@@ -847,7 +871,7 @@ To: %4
         <translation>ينتهي</translation>
     </message>
     <message>
-        <source>Times are in this device's time zone.</source>
+        <source>Times are in this device&apos;s time zone.</source>
         <translation>الأوقات بالمنطقة الزمنية لهذا الجهاز.</translation>
     </message>
     <message>
@@ -1219,7 +1243,7 @@ To: %4
         <translation>تُرسل الردود إلى المرسلين الموثوقين فقط؛ اقبل هذا المرسل أولًا. تحقق من هذه التفاصيل بمقارنتها بالرسالة.</translation>
     </message>
     <message>
-        <source>This message was not sent by the meeting's organizer, so it cannot be answered from here. Check these details against the message.</source>
+        <source>This message was not sent by the meeting&apos;s organizer, so it cannot be answered from here. Check these details against the message.</source>
         <translation>لم يرسل هذه الرسالة منظّم الاجتماع، لذا لا يمكن الرد عليها من هنا. تحقق من هذه التفاصيل بمقارنتها بالرسالة.</translation>
     </message>
 </context>
@@ -1434,6 +1458,10 @@ To: %4
         <translation>حدث</translation>
     </message>
     <message>
+        <source>This event cannot be moved here. Open it to change it.</source>
+        <translation>لا يمكن نقل هذا الحدث من هنا. افتحه لتعديله.</translation>
+    </message>
+    <message>
         <source>This message cannot be decrypted, or its original is no longer kept.</source>
         <translation>لا يمكن فك تشفير هذه الرسالة، أو لم يعد أصلها محفوظًا.</translation>
     </message>
@@ -1442,7 +1470,7 @@ To: %4
         <translation>لم يعد أصل هذه الرسالة محفوظًا.</translation>
     </message>
     <message>
-        <source>This is not a contact's code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
+        <source>This is not a contact&apos;s code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
         <translation>هذا ليس رمز جهة اتصال. يبدأ رمز التوثيق بـ OPENPGP4FPR: أو https://i.delta.chat/.</translation>
     </message>
     <message numerus="yes">
@@ -2048,9 +2076,32 @@ To: %4
     </message>
 </context>
 <context>
+    <name>ScanView</name>
+    <message>
+        <source>Point the camera at the QR code on the other device.</source>
+        <translation>وجّه الكاميرا نحو رمز QR على الجهاز الآخر.</translation>
+    </message>
+    <message>
+        <source>This device has no camera. Type the code instead.</source>
+        <translation>لا توجد كاميرا في هذا الجهاز. اكتب الرمز بدلًا من ذلك.</translation>
+    </message>
+    <message>
+        <source>e3mail may not use the camera. Allow it in the system settings, or type the code instead.</source>
+        <translation>لا يُسمح لـ e3mail باستخدام الكاميرا. اسمح بذلك في إعدادات النظام، أو اكتب الرمز بدلًا من ذلك.</translation>
+    </message>
+    <message>
+        <source>Asking for the camera…</source>
+        <translation>جارٍ طلب الإذن باستخدام الكاميرا…</translation>
+    </message>
+    <message>
+        <source>Type the code instead</source>
+        <translation>اكتب الرمز بدلًا من ذلك</translation>
+    </message>
+</context>
+<context>
     <name>SecureJoin</name>
     <message>
-        <source>This is your own code. Scan the other person's code instead.</source>
+        <source>This is your own code. Scan the other person&apos;s code instead.</source>
         <translation>هذا رمزك أنت. امسح رمز الشخص الآخر بدلًا منه.</translation>
     </message>
     <message>
@@ -2093,7 +2144,7 @@ To: %4
         <translation>إظهار المُرسِل والموضوع</translation>
     </message>
     <message>
-        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system's notification history, outside e3mail's encryption.</source>
+        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system&apos;s notification history, outside e3mail&apos;s encryption.</source>
         <translation>لهذا الجهاز، حين يكون e3mail مفتوحًا وليس في المقدمة. الموضوع المعروض هنا يُحفظ في سجل إشعارات النظام، خارج تشفير e3mail.</translation>
     </message>
     <message>
@@ -2105,7 +2156,7 @@ To: %4
         <translation>متابعة المزامنة في الخلفية</translation>
     </message>
     <message>
-        <source>Mail and your other devices' changes keep arriving while e3mail is not in front. Android shows a notification for as long as this is on, and it uses more battery. Swiping e3mail away from the recent apps ends it.</source>
+        <source>Mail and your other devices&apos; changes keep arriving while e3mail is not in front. Android shows a notification for as long as this is on, and it uses more battery. Swiping e3mail away from the recent apps ends it.</source>
         <translation>يستمر وصول البريد وتغييرات أجهزتك الأخرى حين لا يكون e3mail في الواجهة. يعرض Android إشعارًا طوال مدة تفعيل هذا، ويستهلك مزيدًا من البطارية. يُنهيه سحب e3mail من التطبيقات الحديثة.</translation>
     </message>
     <message>
@@ -2145,7 +2196,7 @@ To: %4
         <translation>إضافة توقيع…</translation>
     </message>
     <message>
-        <source>The chosen one goes into new mail. The composer's signature button swaps it for another.</source>
+        <source>The chosen one goes into new mail. The composer&apos;s signature button swaps it for another.</source>
         <translation>يُضاف التوقيع المختار إلى الرسائل الجديدة. يستبدله زر التوقيع في نافذة الكتابة بتوقيع آخر.</translation>
     </message>
     <message>
@@ -2285,7 +2336,7 @@ To: %4
         <translation>يوم</translation>
     </message>
     <message>
-        <source>Mail that was on the server before e3mail first connected is never removed. "Never" lets another mail program keep using this mailbox.</source>
+        <source>Mail that was on the server before e3mail first connected is never removed. &quot;Never&quot; lets another mail program keep using this mailbox.</source>
         <translation>البريد الذي كان على الخادم قبل أول اتصال لـ e3mail لا يُحذف أبدًا. خيار «أبدًا» يتيح لبرنامج بريد آخر مواصلة استخدام هذا الصندوق.</translation>
     </message>
     <message>
@@ -2297,15 +2348,15 @@ To: %4
         <translation>ثانية</translation>
     </message>
     <message>
-        <source>The sending server's certificate is not trusted, or is not the one trusted before.</source>
+        <source>The sending server&apos;s certificate is not trusted, or is not the one trusted before.</source>
         <translation>شهادة خادم الإرسال غير موثوقة، أو ليست الشهادة التي وثقتَ بها من قبل.</translation>
     </message>
     <message>
-        <source>The incoming server's certificate is not trusted, or is not the one trusted before.</source>
+        <source>The incoming server&apos;s certificate is not trusted, or is not the one trusted before.</source>
         <translation>شهادة خادم الوارد غير موثوقة، أو ليست الشهادة التي وثقتَ بها من قبل.</translation>
     </message>
     <message>
-        <source>Trust it only if this SHA-256 fingerprint matches the one your server's administrator gave you.</source>
+        <source>Trust it only if this SHA-256 fingerprint matches the one your server&apos;s administrator gave you.</source>
         <translation>لا تثق بها إلا إذا طابقت بصمة SHA-256 هذه البصمةَ التي أعطاك إياها مدير خادمك.</translation>
     </message>
     <message>
@@ -2369,7 +2420,7 @@ To: %4
         <translation>الأصول</translation>
     </message>
     <message>
-        <source>Keep each message's original for</source>
+        <source>Keep each message&apos;s original for</source>
         <translation>حفظ أصل كل رسالة لمدة</translation>
     </message>
     <message>
@@ -2437,7 +2488,7 @@ To: %4
         <translation>المُرحِّل</translation>
     </message>
     <message>
-        <source>n0's public relays</source>
+        <source>n0&apos;s public relays</source>
         <translation>مرحِّلات n0 العامة</translation>
     </message>
     <message>
@@ -2569,7 +2620,7 @@ To: %4
         <translation>إزالة %1؟</translation>
     </message>
     <message>
-        <source>It stops syncing with this account's other devices. What is already on it stays there.</source>
+        <source>It stops syncing with this account&apos;s other devices. What is already on it stays there.</source>
         <translation>سيتوقف عن المزامنة مع أجهزة هذا الحساب الأخرى. ما عليه بالفعل يبقى هناك.</translation>
     </message>
     <message>
@@ -2584,15 +2635,15 @@ To: %4
         <translation>إعدادات الخادم من مزوّد خدمتك.</translation>
     </message>
     <message>
-        <source>Server settings from Thunderbird's provider database.</source>
+        <source>Server settings from Thunderbird&apos;s provider database.</source>
         <translation>إعدادات الخادم من قاعدة بيانات المزوّدين في Thunderbird.</translation>
     </message>
     <message>
-        <source>Server settings of the service that receives your domain's mail. Check them before connecting.</source>
+        <source>Server settings of the service that receives your domain&apos;s mail. Check them before connecting.</source>
         <translation>إعدادات الخادم للخدمة التي تستقبل بريد نطاقك. راجعها قبل الاتصال.</translation>
     </message>
     <message>
-        <source>Server settings from your provider's Autodiscover service.</source>
+        <source>Server settings from your provider&apos;s Autodiscover service.</source>
         <translation>إعدادات الخادم من خدمة Autodiscover لدى مزوّدك.</translation>
     </message>
     <message>
@@ -2703,7 +2754,7 @@ To: %4
         <translation>صادرة لـ %1 من %2، صالحة حتى %3.</translation>
     </message>
     <message>
-        <source>Trust it only if this fingerprint matches the one your server's administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
+        <source>Trust it only if this fingerprint matches the one your server&apos;s administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
         <translation>لا تثق بها إلا إذا طابقت هذه البصمةُ البصمةَ التي أعطاك إياها مدير خادمك. عندها يقبل e3mail هذه الشهادة من هذا الخادم، ولا شهادة غيرها.</translation>
     </message>
     <message>
@@ -2844,7 +2895,7 @@ To: %4
         <translation>استغرق تسجيل الدخول وقتًا طويلًا. حاول مجددًا.</translation>
     </message>
     <message>
-        <source>Cannot listen for the browser's answer on this device.</source>
+        <source>Cannot listen for the browser&apos;s answer on this device.</source>
         <translation>لا يمكن تلقّي ردّ المتصفح على هذا الجهاز.</translation>
     </message>
     <message>

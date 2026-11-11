@@ -19,7 +19,7 @@
         <translation>e3mail se mantiene sincronizado</translation>
     </message>
     <message>
-        <source>New mail and other devices' changes arrive while e3mail is in the background.</source>
+        <source>New mail and other devices&apos; changes arrive while e3mail is in the background.</source>
         <translation>El correo nuevo y los cambios de otros dispositivos llegan mientras e3mail está en segundo plano.</translation>
     </message>
     <message>
@@ -165,15 +165,15 @@
         <translation>Se crea un nuevo dispositivo de la cuenta a partir de la copia más reciente. No se sincroniza con tus otros dispositivos hasta que lo vincules.</translation>
     </message>
     <message>
-        <source>The server's SSH host key has changed. Trust the new one only if the server's administrator says it changed:</source>
+        <source>The server&apos;s SSH host key has changed. Trust the new one only if the server&apos;s administrator says it changed:</source>
         <translation>La clave de host SSH del servidor ha cambiado. Confía en la nueva solo si el administrador del servidor dice que cambió:</translation>
     </message>
     <message>
-        <source>The server's SSH host key is not known yet. Trust it only if it matches what the server's administrator gives you:</source>
+        <source>The server&apos;s SSH host key is not known yet. Trust it only if it matches what the server&apos;s administrator gives you:</source>
         <translation>La clave de host SSH del servidor aún no se conoce. Confía en ella solo si coincide con la que te da el administrador del servidor:</translation>
     </message>
     <message>
-        <source>The server's certificate is not trusted. Trust it only if its fingerprint matches what the server's administrator gives you:</source>
+        <source>The server&apos;s certificate is not trusted. Trust it only if its fingerprint matches what the server&apos;s administrator gives you:</source>
         <translation>No se confía en el certificado del servidor. Confía en él solo si su huella coincide con la que te da el administrador del servidor:</translation>
     </message>
     <message>
@@ -350,16 +350,40 @@
         <translation>Mes anterior</translation>
     </message>
     <message>
+        <source>Earlier</source>
+        <translation>Antes</translation>
+    </message>
+    <message>
         <source>Next month</source>
         <translation>Mes siguiente</translation>
+    </message>
+    <message>
+        <source>Later</source>
+        <translation>Después</translation>
     </message>
     <message>
         <source>Today</source>
         <translation>Hoy</translation>
     </message>
     <message>
+        <source>Month</source>
+        <translation>Mes</translation>
+    </message>
+    <message>
+        <source>Week</source>
+        <translation>Semana</translation>
+    </message>
+    <message>
+        <source>Day</source>
+        <translation>Día</translation>
+    </message>
+    <message>
         <source>New event</source>
         <translation>Nuevo evento</translation>
+    </message>
+    <message>
+        <source>3 days</source>
+        <translation>3 días</translation>
     </message>
     <message numerus="yes">
         <source>+%n more</source>
@@ -823,7 +847,7 @@ Para: %4
         <translation>Termina</translation>
     </message>
     <message>
-        <source>Times are in this device's time zone.</source>
+        <source>Times are in this device&apos;s time zone.</source>
         <translation>Las horas están en la zona horaria de este dispositivo.</translation>
     </message>
     <message>
@@ -1195,7 +1219,7 @@ Para: %4
         <translation>Las respuestas solo van a remitentes de confianza; acepta primero a este remitente. Comprueba estos datos con el mensaje.</translation>
     </message>
     <message>
-        <source>This message was not sent by the meeting's organizer, so it cannot be answered from here. Check these details against the message.</source>
+        <source>This message was not sent by the meeting&apos;s organizer, so it cannot be answered from here. Check these details against the message.</source>
         <translation>Este mensaje no lo envió el organizador de la reunión, así que no se puede responder desde aquí. Comprueba estos datos con el mensaje.</translation>
     </message>
 </context>
@@ -1406,6 +1430,10 @@ Para: %4
         <translation>evento</translation>
     </message>
     <message>
+        <source>This event cannot be moved here. Open it to change it.</source>
+        <translation>Este evento no se puede mover aquí. Ábrelo para cambiarlo.</translation>
+    </message>
+    <message>
         <source>This message cannot be decrypted, or its original is no longer kept.</source>
         <translation>Este mensaje no se puede descifrar o su original ya no se conserva.</translation>
     </message>
@@ -1414,7 +1442,7 @@ Para: %4
         <translation>El original de este mensaje ya no se conserva.</translation>
     </message>
     <message>
-        <source>This is not a contact's code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
+        <source>This is not a contact&apos;s code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
         <translation>Esto no es el código de un contacto. Un código para verificar a alguien empieza por OPENPGP4FPR: o https://i.delta.chat/.</translation>
     </message>
     <message numerus="yes">
@@ -1968,9 +1996,32 @@ Para: %4
     </message>
 </context>
 <context>
+    <name>ScanView</name>
+    <message>
+        <source>Point the camera at the QR code on the other device.</source>
+        <translation>Apunta la cámara al código QR del otro dispositivo.</translation>
+    </message>
+    <message>
+        <source>This device has no camera. Type the code instead.</source>
+        <translation>Este dispositivo no tiene cámara. Escribe el código en su lugar.</translation>
+    </message>
+    <message>
+        <source>e3mail may not use the camera. Allow it in the system settings, or type the code instead.</source>
+        <translation>e3mail no puede usar la cámara. Permítelo en los ajustes del sistema o escribe el código en su lugar.</translation>
+    </message>
+    <message>
+        <source>Asking for the camera…</source>
+        <translation>Pidiendo acceso a la cámara…</translation>
+    </message>
+    <message>
+        <source>Type the code instead</source>
+        <translation>Escribir el código</translation>
+    </message>
+</context>
+<context>
     <name>SecureJoin</name>
     <message>
-        <source>This is your own code. Scan the other person's code instead.</source>
+        <source>This is your own code. Scan the other person&apos;s code instead.</source>
         <translation>Este es tu propio código. Escanea el código de la otra persona.</translation>
     </message>
     <message>
@@ -2013,7 +2064,7 @@ Para: %4
         <translation>Mostrar quién escribe y el asunto</translation>
     </message>
     <message>
-        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system's notification history, outside e3mail's encryption.</source>
+        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system&apos;s notification history, outside e3mail&apos;s encryption.</source>
         <translation>Para este dispositivo, mientras e3mail está abierto y no en primer plano. Un asunto mostrado aquí queda en el historial de notificaciones del sistema, fuera del cifrado de e3mail.</translation>
     </message>
     <message>
@@ -2025,7 +2076,7 @@ Para: %4
         <translation>Seguir sincronizando en segundo plano</translation>
     </message>
     <message>
-        <source>Mail and your other devices' changes keep arriving while e3mail is not in front. Android shows a notification for as long as this is on, and it uses more battery. Swiping e3mail away from the recent apps ends it.</source>
+        <source>Mail and your other devices&apos; changes keep arriving while e3mail is not in front. Android shows a notification for as long as this is on, and it uses more battery. Swiping e3mail away from the recent apps ends it.</source>
         <translation>El correo y los cambios de tus otros dispositivos siguen llegando cuando e3mail no está en primer plano. Android muestra una notificación mientras esté activado, y gasta más batería. Deslizar e3mail fuera de las aplicaciones recientes lo detiene.</translation>
     </message>
     <message>
@@ -2065,7 +2116,7 @@ Para: %4
         <translation>Añadir una firma…</translation>
     </message>
     <message>
-        <source>The chosen one goes into new mail. The composer's signature button swaps it for another.</source>
+        <source>The chosen one goes into new mail. The composer&apos;s signature button swaps it for another.</source>
         <translation>La elegida se pone en los mensajes nuevos. El botón de firma del editor la cambia por otra.</translation>
     </message>
     <message>
@@ -2205,7 +2256,7 @@ Para: %4
         <translation>días</translation>
     </message>
     <message>
-        <source>Mail that was on the server before e3mail first connected is never removed. "Never" lets another mail program keep using this mailbox.</source>
+        <source>Mail that was on the server before e3mail first connected is never removed. &quot;Never&quot; lets another mail program keep using this mailbox.</source>
         <translation>El correo que estaba en el servidor antes de la primera conexión de e3mail nunca se borra. «Nunca» permite que otro programa de correo siga usando este buzón.</translation>
     </message>
     <message>
@@ -2217,15 +2268,15 @@ Para: %4
         <translation>segundos</translation>
     </message>
     <message>
-        <source>The sending server's certificate is not trusted, or is not the one trusted before.</source>
+        <source>The sending server&apos;s certificate is not trusted, or is not the one trusted before.</source>
         <translation>El certificado del servidor de salida no es de confianza o no es el que se aceptó antes.</translation>
     </message>
     <message>
-        <source>The incoming server's certificate is not trusted, or is not the one trusted before.</source>
+        <source>The incoming server&apos;s certificate is not trusted, or is not the one trusted before.</source>
         <translation>El certificado del servidor de entrada no es de confianza o no es el que se aceptó antes.</translation>
     </message>
     <message>
-        <source>Trust it only if this SHA-256 fingerprint matches the one your server's administrator gave you.</source>
+        <source>Trust it only if this SHA-256 fingerprint matches the one your server&apos;s administrator gave you.</source>
         <translation>Confía en él solo si esta huella SHA-256 coincide con la que te dio quien administra tu servidor.</translation>
     </message>
     <message>
@@ -2289,7 +2340,7 @@ Para: %4
         <translation>Originales</translation>
     </message>
     <message>
-        <source>Keep each message's original for</source>
+        <source>Keep each message&apos;s original for</source>
         <translation>Guardar el original de cada mensaje durante</translation>
     </message>
     <message>
@@ -2357,7 +2408,7 @@ Para: %4
         <translation>Retransmisor</translation>
     </message>
     <message>
-        <source>n0's public relays</source>
+        <source>n0&apos;s public relays</source>
         <translation>Retransmisores públicos de n0</translation>
     </message>
     <message>
@@ -2489,7 +2540,7 @@ Para: %4
         <translation>¿Quitar %1?</translation>
     </message>
     <message>
-        <source>It stops syncing with this account's other devices. What is already on it stays there.</source>
+        <source>It stops syncing with this account&apos;s other devices. What is already on it stays there.</source>
         <translation>Deja de sincronizarse con los demás dispositivos de esta cuenta. Lo que ya tiene se queda ahí.</translation>
     </message>
     <message>
@@ -2504,15 +2555,15 @@ Para: %4
         <translation>Ajustes del servidor de tu proveedor.</translation>
     </message>
     <message>
-        <source>Server settings from Thunderbird's provider database.</source>
+        <source>Server settings from Thunderbird&apos;s provider database.</source>
         <translation>Ajustes del servidor de la base de datos de proveedores de Thunderbird.</translation>
     </message>
     <message>
-        <source>Server settings of the service that receives your domain's mail. Check them before connecting.</source>
+        <source>Server settings of the service that receives your domain&apos;s mail. Check them before connecting.</source>
         <translation>Ajustes del servidor del servicio que recibe el correo de tu dominio. Revísalos antes de conectar.</translation>
     </message>
     <message>
-        <source>Server settings from your provider's Autodiscover service.</source>
+        <source>Server settings from your provider&apos;s Autodiscover service.</source>
         <translation>Ajustes del servidor del servicio Autodiscover de tu proveedor.</translation>
     </message>
     <message>
@@ -2623,7 +2674,7 @@ Para: %4
         <translation>Emitido para %1 por %2, válido hasta el %3.</translation>
     </message>
     <message>
-        <source>Trust it only if this fingerprint matches the one your server's administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
+        <source>Trust it only if this fingerprint matches the one your server&apos;s administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
         <translation>Confía en él solo si esta huella coincide con la que te dio quien administra tu servidor. Entonces e3mail aceptará este certificado de este servidor, y ningún otro.</translation>
     </message>
     <message>
@@ -2760,7 +2811,7 @@ Para: %4
         <translation>El inicio de sesión tardó demasiado. Inténtalo de nuevo.</translation>
     </message>
     <message>
-        <source>Cannot listen for the browser's answer on this device.</source>
+        <source>Cannot listen for the browser&apos;s answer on this device.</source>
         <translation>No se puede recibir la respuesta del navegador en este dispositivo.</translation>
     </message>
     <message>

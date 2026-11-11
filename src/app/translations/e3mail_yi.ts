@@ -19,7 +19,7 @@
         <translation>e3mail האַלט זיך סינכראָניזירט</translation>
     </message>
     <message>
-        <source>New mail and other devices' changes arrive while e3mail is in the background.</source>
+        <source>New mail and other devices&apos; changes arrive while e3mail is in the background.</source>
         <translation>נײַע פּאָסט און ענדערונגען פֿון אַנדערע מכשירים קומען אָן בשעת e3mail איז אין הינטערגרונט.</translation>
     </message>
     <message>
@@ -165,15 +165,15 @@
         <translation>פֿון דער נײַסטער זיכערונג דאָרט ווערט אַ נײַער מכשיר פֿונעם חשבון. ער סינכראָניזירט זיך נישט מיט אײַערע אַנדערע מכשירים ביז איר פֿאַרבינדט אים.</translation>
     </message>
     <message>
-        <source>The server's SSH host key has changed. Trust the new one only if the server's administrator says it changed:</source>
+        <source>The server&apos;s SSH host key has changed. Trust the new one only if the server&apos;s administrator says it changed:</source>
         <translation>דעם סערווערס SSH־שליסל האָט זיך געביטן. גלייבט דעם נײַעם נאָר אויב דער סערווער־פֿאַרוואַלטער זאָגט אַז ער האָט זיך געביטן:</translation>
     </message>
     <message>
-        <source>The server's SSH host key is not known yet. Trust it only if it matches what the server's administrator gives you:</source>
+        <source>The server&apos;s SSH host key is not known yet. Trust it only if it matches what the server&apos;s administrator gives you:</source>
         <translation>דעם סערווערס SSH־שליסל איז נאָך נישט באַקאַנט. גלייבט אים נאָר אויב ער שטימט מיט דעם וואָס דער סערווער־פֿאַרוואַלטער גיט אײַך:</translation>
     </message>
     <message>
-        <source>The server's certificate is not trusted. Trust it only if its fingerprint matches what the server's administrator gives you:</source>
+        <source>The server&apos;s certificate is not trusted. Trust it only if its fingerprint matches what the server&apos;s administrator gives you:</source>
         <translation>דעם סערווערס סערטיפֿיקאַט ווערט נישט געגלייבט. גלייבט אים נאָר אויב זײַן פֿינגער־אָפּדרוק שטימט מיט דעם וואָס דער סערווער־פֿאַרוואַלטער גיט אײַך:</translation>
     </message>
     <message>
@@ -350,16 +350,40 @@
         <translation>פֿריִערדיקער חודש</translation>
     </message>
     <message>
+        <source>Earlier</source>
+        <translation>פֿריִער</translation>
+    </message>
+    <message>
         <source>Next month</source>
         <translation>קומענדיקער חודש</translation>
+    </message>
+    <message>
+        <source>Later</source>
+        <translation>שפּעטער</translation>
     </message>
     <message>
         <source>Today</source>
         <translation>הײַנט</translation>
     </message>
     <message>
+        <source>Month</source>
+        <translation>חודש</translation>
+    </message>
+    <message>
+        <source>Week</source>
+        <translation>וואָך</translation>
+    </message>
+    <message>
+        <source>Day</source>
+        <translation>טאָג</translation>
+    </message>
+    <message>
         <source>New event</source>
         <translation>נײַע געשעעניש</translation>
+    </message>
+    <message>
+        <source>3 days</source>
+        <translation>3 טעג</translation>
     </message>
     <message numerus="yes">
         <source>+%n more</source>
@@ -823,7 +847,7 @@ To: %4
         <translation>ענדיקט זיך</translation>
     </message>
     <message>
-        <source>Times are in this device's time zone.</source>
+        <source>Times are in this device&apos;s time zone.</source>
         <translation>די צײַטן זענען לויט דער צײַטזאָנע פֿון דעם מכשיר.</translation>
     </message>
     <message>
@@ -1195,7 +1219,7 @@ To: %4
         <translation>ענטפֿערס גייען בלויז צו שיקערס וואָס איר געטרויט; נעמט קודם אָן דעם שיקער. קאָנטראָלירט די פּרטים קעגן דער מעלדונג.</translation>
     </message>
     <message>
-        <source>This message was not sent by the meeting's organizer, so it cannot be answered from here. Check these details against the message.</source>
+        <source>This message was not sent by the meeting&apos;s organizer, so it cannot be answered from here. Check these details against the message.</source>
         <translation>די מעלדונג איז נישט געשיקט געוואָרן פֿונעם אָרגאַניזאַטאָר פֿון דער זיצונג, דעריבער קען מען נישט ענטפֿערן פֿון דאַנען. קאָנטראָלירט די פּרטים קעגן דער מעלדונג.</translation>
     </message>
 </context>
@@ -1406,6 +1430,10 @@ To: %4
         <translation>געשעעניש</translation>
     </message>
     <message>
+        <source>This event cannot be moved here. Open it to change it.</source>
+        <translation>מע קען די געשעעניש דאָ נישט איבעררוקן. עפֿנט זי כּדי זי צו ענדערן.</translation>
+    </message>
+    <message>
         <source>This message cannot be decrypted, or its original is no longer kept.</source>
         <translation>מע קען נישט אויפֿשליסלען דעם בריוו, אָדער זײַן אָריגינאַל ווערט מער נישט אָפּגעהיט.</translation>
     </message>
@@ -1414,7 +1442,7 @@ To: %4
         <translation>דער אָריגינאַל פֿון דעם בריוו ווערט מער נישט אָפּגעהיט.</translation>
     </message>
     <message>
-        <source>This is not a contact's code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
+        <source>This is not a contact&apos;s code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
         <translation>דאָס איז נישט קיין קאָנטאַקט־קאָד. אַ קאָד צו באַשטעטיקן הייבט זיך אָן מיט OPENPGP4FPR: אָדער https://i.delta.chat/.</translation>
     </message>
     <message numerus="yes">
@@ -1968,9 +1996,32 @@ To: %4
     </message>
 </context>
 <context>
+    <name>ScanView</name>
+    <message>
+        <source>Point the camera at the QR code on the other device.</source>
+        <translation>ווענדט די קאַמערע צום QR־קאָד אויפֿן אַנדערן מכשיר.</translation>
+    </message>
+    <message>
+        <source>This device has no camera. Type the code instead.</source>
+        <translation>דער מכשיר האָט נישט קיין קאַמערע. שרײַבט אַרײַן דעם קאָד אַנשטאָט.</translation>
+    </message>
+    <message>
+        <source>e3mail may not use the camera. Allow it in the system settings, or type the code instead.</source>
+        <translation>e3mail טאָר נישט ניצן די קאַמערע. דערלויבט עס אין די סיסטעם־איינשטעלונגען, אָדער שרײַבט אַרײַן דעם קאָד אַנשטאָט.</translation>
+    </message>
+    <message>
+        <source>Asking for the camera…</source>
+        <translation>מע בעט רשות פֿאַר דער קאַמערע…</translation>
+    </message>
+    <message>
+        <source>Type the code instead</source>
+        <translation>אַרײַנשרײַבן דעם קאָד אַנשטאָט</translation>
+    </message>
+</context>
+<context>
     <name>SecureJoin</name>
     <message>
-        <source>This is your own code. Scan the other person's code instead.</source>
+        <source>This is your own code. Scan the other person&apos;s code instead.</source>
         <translation>דאָס איז דײַן אייגענער קאָד. סקאַנירט אַנשטאָט דעם דעם אַנדערנס קאָד.</translation>
     </message>
     <message>
@@ -2013,7 +2064,7 @@ To: %4
         <translation>ווײַזן ווער האָט געשריבן און די טעמע</translation>
     </message>
     <message>
-        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system's notification history, outside e3mail's encryption.</source>
+        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system&apos;s notification history, outside e3mail&apos;s encryption.</source>
         <translation>פֿאַר דעם מכשיר, ווען e3mail איז אָפֿן און נישט פֿאָרנט. אַ טעמע וואָס ווערט דאָ געוויזן בלײַבט אין דער סיסטעמס מעלדונג־היסטאָריע, אַרויס פֿון e3mail ס פֿאַרשליסלונג.</translation>
     </message>
     <message>
@@ -2025,7 +2076,7 @@ To: %4
         <translation>ווײַטער סינכראָניזירן אין הינטערגרונט</translation>
     </message>
     <message>
-        <source>Mail and your other devices' changes keep arriving while e3mail is not in front. Android shows a notification for as long as this is on, and it uses more battery. Swiping e3mail away from the recent apps ends it.</source>
+        <source>Mail and your other devices&apos; changes keep arriving while e3mail is not in front. Android shows a notification for as long as this is on, and it uses more battery. Swiping e3mail away from the recent apps ends it.</source>
         <translation>פּאָסט און ענדערונגען פֿון אײַערע אַנדערע מכשירים קומען ווײַטער אָן ווען e3mail איז נישט פֿאָרנט. Android ווײַזט אַ מעלדונג אַזוי לאַנג ווי דאָס איז אָן, און עס ניצט מער באַטעריע. אַוועקשלעפּן e3mail פֿון די לעצטע אַפּס ענדיקט עס.</translation>
     </message>
     <message>
@@ -2065,7 +2116,7 @@ To: %4
         <translation>צולייגן אַן אונטערשריפֿט…</translation>
     </message>
     <message>
-        <source>The chosen one goes into new mail. The composer's signature button swaps it for another.</source>
+        <source>The chosen one goes into new mail. The composer&apos;s signature button swaps it for another.</source>
         <translation>די אויסגעקליבענע גייט אַרײַן אין נײַע בריוו. דער אונטערשריפֿט־קנעפּל בײַם שרײַבן בײַט זי אויף אַן אַנדערע.</translation>
     </message>
     <message>
@@ -2205,7 +2256,7 @@ To: %4
         <translation>טעג</translation>
     </message>
     <message>
-        <source>Mail that was on the server before e3mail first connected is never removed. "Never" lets another mail program keep using this mailbox.</source>
+        <source>Mail that was on the server before e3mail first connected is never removed. &quot;Never&quot; lets another mail program keep using this mailbox.</source>
         <translation>פּאָסט וואָס איז געווען אויפֿן סערווער איידער e3mail האָט זיך צום ערשטן מאָל פֿאַרבונדן, ווערט קיינמאָל ניט אויסגעמעקט. „קיינמאָל” לאָזט אַן אַנדער פּאָסט־פּראָגראַם ווײַטער ניצן דעם פּאָסטקאַסטן.</translation>
     </message>
     <message>
@@ -2217,15 +2268,15 @@ To: %4
         <translation>סעקונדעס</translation>
     </message>
     <message>
-        <source>The sending server's certificate is not trusted, or is not the one trusted before.</source>
+        <source>The sending server&apos;s certificate is not trusted, or is not the one trusted before.</source>
         <translation>דער סערטיפֿיקאַט פֿון שיקן־סערווער איז ניט באַגלייבט, אָדער ניט דער וואָס מע האָט פֿריִער באַגלייבט.</translation>
     </message>
     <message>
-        <source>The incoming server's certificate is not trusted, or is not the one trusted before.</source>
+        <source>The incoming server&apos;s certificate is not trusted, or is not the one trusted before.</source>
         <translation>דער סערטיפֿיקאַט פֿון אַרײַנקומענדיקן סערווער איז ניט באַגלייבט, אָדער ניט דער וואָס מע האָט פֿריִער באַגלייבט.</translation>
     </message>
     <message>
-        <source>Trust it only if this SHA-256 fingerprint matches the one your server's administrator gave you.</source>
+        <source>Trust it only if this SHA-256 fingerprint matches the one your server&apos;s administrator gave you.</source>
         <translation>באַגלייבט אים נאָר אויב דער SHA-256 פֿינגערדרוק שטימט מיטן וואָס דער אַדמיניסטראַטאָר פֿון אײַער סערווער האָט אײַך געגעבן.</translation>
     </message>
     <message>
@@ -2289,7 +2340,7 @@ To: %4
         <translation>אָריגינאַלן</translation>
     </message>
     <message>
-        <source>Keep each message's original for</source>
+        <source>Keep each message&apos;s original for</source>
         <translation>האַלטן דעם אָריגינאַל פֿון יעדן בריוו</translation>
     </message>
     <message>
@@ -2357,7 +2408,7 @@ To: %4
         <translation>רעלע</translation>
     </message>
     <message>
-        <source>n0's public relays</source>
+        <source>n0&apos;s public relays</source>
         <translation>די עפֿנטלעכע רעלעס פֿון n0</translation>
     </message>
     <message>
@@ -2489,7 +2540,7 @@ To: %4
         <translation>אַוועקנעמען %1?</translation>
     </message>
     <message>
-        <source>It stops syncing with this account's other devices. What is already on it stays there.</source>
+        <source>It stops syncing with this account&apos;s other devices. What is already on it stays there.</source>
         <translation>ער הערט אויף זיך סינכראָניזירן מיט די אַנדערע מכשירים פֿון דעם חשבון. וואָס איז שוין אויף אים, בלײַבט דאָרט.</translation>
     </message>
     <message>
@@ -2504,15 +2555,15 @@ To: %4
         <translation>סערווער־איינשטעלונגען פֿון אײַער פּראָווײַדער.</translation>
     </message>
     <message>
-        <source>Server settings from Thunderbird's provider database.</source>
+        <source>Server settings from Thunderbird&apos;s provider database.</source>
         <translation>סערווער־איינשטעלונגען פֿון Thunderbird ס פּראָווײַדער־דאַטנבאַזע.</translation>
     </message>
     <message>
-        <source>Server settings of the service that receives your domain's mail. Check them before connecting.</source>
+        <source>Server settings of the service that receives your domain&apos;s mail. Check them before connecting.</source>
         <translation>סערווער־איינשטעלונגען פֿון דער סערוויס וואָס באַקומט די פּאָסט פֿון אײַער דאָמען. קאָנטראָלירט זיי איידער איר פֿאַרבינדט זיך.</translation>
     </message>
     <message>
-        <source>Server settings from your provider's Autodiscover service.</source>
+        <source>Server settings from your provider&apos;s Autodiscover service.</source>
         <translation>סערווער־איינשטעלונגען פֿון אײַער פּראָווײַדערס Autodiscover־סערוויס.</translation>
     </message>
     <message>
@@ -2623,7 +2674,7 @@ To: %4
         <translation>אַרויסגעגעבן פֿאַר %1 פֿון %2, גילטיק ביז %3.</translation>
     </message>
     <message>
-        <source>Trust it only if this fingerprint matches the one your server's administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
+        <source>Trust it only if this fingerprint matches the one your server&apos;s administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
         <translation>באַגלייבט אים נאָר אויב דער פֿינגערדרוק שטימט מיטן וואָס דער אַדמיניסטראַטאָר פֿון אײַער סערווער האָט אײַך געגעבן. דעמאָלט נעמט e3mail אָן פֿון דעם סערווער דעם סערטיפֿיקאַט, און קיין אַנדערן ניט.</translation>
     </message>
     <message>
@@ -2760,7 +2811,7 @@ To: %4
         <translation>דאָס אַרײַנגיין האָט געדויערט צו לאַנג. פּרובירט ווידער.</translation>
     </message>
     <message>
-        <source>Cannot listen for the browser's answer on this device.</source>
+        <source>Cannot listen for the browser&apos;s answer on this device.</source>
         <translation>מע קען נישט באַקומען דעם בלעטערערס ענטפֿער אויף דעם מכשיר.</translation>
     </message>
     <message>

@@ -1402,6 +1402,182 @@ camera off):
 - A recurring event edited on two devices at once (the whole record is
   last-writer-wins, as the ADR says).
 
+## The week and the day as hours (2026-11-10)
+
+[ADR 0025, amendment](adr/0025-local-calendar-and-invitations-by-mail.md).
+The calendar has a Month | Week | Day switch, kept per device.
+
+- **Core:** `mail/CalendarLayout` places events in a grid of hours (bars
+  for all-day and day-long events, blocks split at midnight, columns for
+  overlaps, wall-clock rows). `Calendar::reschedule` and `movable` are
+  what a drag may do. `LocalePatterns::hour` and `dateRange` (CLDR through
+  ICU) write the margin's hours and the title's span.
+- **App:** `TimeGrid.qml` (seven days, three on a phone, or one),
+  `components/Segmented.qml`, `MailApp::calendarGrid`, `rescheduleEvent`,
+  `stretchEvent`, `calendarMode`. A click on an empty half hour starts an
+  event there. With a mouse, an event of one's own that does not repeat is
+  dragged to another time or day, or by its lower edge to another length;
+  a meeting asks "Send the update?" first. A finger scrolls.
+- The header's arrows are chevrons now; "next" used to draw the
+  mail-forward arrow.
+
+**What it found that was already wrong:**
+- **An all-day event sat a day early in the month, west of UTC.** Its days
+  were taken from where its UTC midnights fall on this clock: in Chicago a
+  one-day event on the 20th showed on the 19th and the 20th. The old loop,
+  run under `TZ=America/Chicago` in node, gives exactly that. Occurrences
+  now carry `day` and `lastDay` as dates and the month uses them. The
+  calendar had only ever been looked at on a machine in UTC.
+- **An event given in UTC that repeats drifted with the reader's summer
+  time.** `ICal::Event::zone()` fell back to the system's zone for any
+  timed event without a TZID, so `DTSTART:…Z` with an RRULE kept the
+  reader's clock time, not the instant (RFC 5545). `tst_ical::recurrence`
+  failed on this machine (Chicago) as merged and passed only in UTC. Now
+  no zone means UTC, and a floating time keeps the zone it was read in.
+  `ical_west` runs the suite again under `TZ=America/Los_Angeles`, since
+  CI's machines are all in UTC.
+- **The camera view's translations were gone in all ten languages.** The
+  calendar's `update_translations` ran in a build without the camera,
+  where `ScanView.qml` is not in the module, and lupdate dropped its five
+  strings. The `translations` test cannot see that. Restored from the
+  commit before (trap 54).
+
+**What it taught:**
+- **Opening the calendar as a week hung the app**, forever, at 100% of a
+  core, and nothing in the suite or the screenshots saw it: both switch to
+  the week after the month has been laid out once. It was found by
+  starting with `calendarMode=week` in `app.ini` to look at today's
+  column. gdb showed the window's polish loop going round a positioner's
+  implicit size and a control's implicit width. The month's
+  `DayOfWeekRow` and `MonthGrid`, hidden in the layout from the start,
+  are the controls built that way; they are now made only while the month
+  is shown (a `Loader`), and the hang is gone. Which of the two it was,
+  and whether it is Qt 6.12 alone, is not known. `app_smoke_week` and
+  `app_smoke_day_narrow_rtl` start that way, with a 60 s limit; both
+  timed out before the fix.
+- **`RowLayout`'s `uniformCellSizes` gives each cell the average width,**
+  so "Month" was cut to "Mo…" beside "Day". `Segmented` sizes itself by
+  its widest label.
+- **A flick is measured in time.** Touch moves sent by QtTest with no wait
+  between them cancel the press but scroll nothing; 10 ms between them
+  does.
+- **A test can load the app's own QML without the app.** `tst_timegrid`
+  copies `TimeGrid.qml` and `Theme.qml` into an import path of its own
+  (`tests/CMakeLists.txt` writes the `qmldir`) and clicks and drags the
+  real file. `TimeGrid` takes what to draw as a property and only emits
+  signals, which is what makes that possible. Building the two files as a
+  QML module of the test's (`qt_add_qml_module`) worked here and failed on
+  Windows: files outside the directory put `..` into the generated path
+  (`tests/.rcc/qmlcache/tst_timegrid_../src`), a name Windows will not
+  create (run 42944672771).
+- **A window is not laid out until its first frame.** On CI the same test
+  failed four ways with every time 90 minutes early. A run with the scroll
+  state printed (branch `ci-probe`, since deleted) showed the hours 599 px
+  tall when the drags began and 525 after: the days' names and the all-day
+  band took their 74 px in the middle of a drag, and the hours slid down
+  under the pointer. Here the first frame always came first. The test now
+  waits for the hours to sit below the header. Neither Qt 6.10.3 (fetched
+  with aqt into `~/.cache/e3mail-qt`, the test built alone against it,
+  with and without compiled QML) nor anything else here reproduced it;
+  only printing on CI did.
+- **gdb may not attach here** (`ptrace_scope` 1). Run the program under
+  gdb and interrupt it: `timeout -s INT 25 gdb -batch -ex run -ex
+  "thread 1" -ex bt --args …`.
+- **Two checks looked covered and were not**, until the mutation run: a
+  finger on an event's lower edge, and an edge on an event that may not
+  move. Both tests pressed while the hours were still coasting from the
+  drag before, so the press never reached the event.
+
+**Verified here** (Arch Linux, Qt 6.12, GCC 16, camera on, zone
+America/Chicago):
+- `ctest --preset dev`: 31 tests pass. New:
+  - `tst_callayout` (21): a day alone; the reader's zone deciding the day
+    and the row; two and three at once, a chain of three in two columns,
+    touching events, short events ten minutes apart, a zero-length and a
+    backwards one; across midnight, until midnight, late and short;
+    clipping at the week's edges; all-day bars, their lanes, their dates
+    in Tokyo, Los Angeles and Kiritimati; a 24-hour event as a bar and a
+    23 h 59 one as blocks; Berlin's 29 March and 25 October; the hour and
+    range patterns in English, German and Japanese.
+  - `tst_timegrid` (8): clicks on an event, an empty half hour, a day's
+    name and a bar; a drag to another time (snapped, stopped at midnight)
+    and to another day; taken up and put back; what may not move scrolls
+    instead and has no edge; the lower edge; a finger scrolling and
+    tapping; right to left. Ten runs in a row passed.
+  - `tst_calendar::reschedule`: a note moved with the rest of it kept; a
+    meeting moved with "save only" (no mail, sequence unchanged) and sent
+    (one REQUEST, sequence 1, Bob asked again); dropped where it was;
+    someone else's meeting, a series, an all-day and a cancelled event
+    refused.
+  - `tst_ical::recurrence`: the UTC and the floating case above.
+- **Each rule broken once** (23 changes, by script): nine in the layout,
+  four in `reschedule`, the two zone rules, eight in `TimeGrid.qml` (the
+  finger, the edge, what may not move, mirroring, snapping, put back, a
+  drag not being a click). Every one failed a test, after the two above
+  were fixed.
+- **The drop itself, through the app,** by a temporary hook that emitted
+  the grid's signals on the fixture mailbox (not in the tree), read back
+  with `e3mail-cli calendar`: a note moved to the next day at 14:00
+  (20:00Z here); its end stretched to 13:00; a meeting with attendees
+  unchanged while the question was open, moved with sequence 0 on "Save
+  only", and moved with sequence 1, "Updated invitation: Design review" in
+  Sent and the "Invitation sent." toast on "Send".
+- Screenshots looked at: `calendar-week`, `calendar-day`,
+  `calendar-week-ar`, `phone-calendar-week`, `phone-calendar-day`,
+  `phone-calendar-week-ar`, the month again (`calendar`, `phone-calendar`),
+  and, outside the script, this week opened from the saved setting (today's
+  column, the line at now) and three days in Hebrew on a phone.
+- The translations test: 7 new strings in ten languages, machine-made like
+  the rest, and the 5 restored.
+
+**Verified by CI** (run 42950285025, Qt 6.10.3):
+- Linux and Windows build with warnings as errors and pass all 31 tests;
+  both APKs build.
+- macOS, once, on that run: built, and 30 of 31 passed, every calendar
+  test among them.
+
+**macOS is out of CI and out of the release workflow (2026-11-11), at the
+owner's word.** What led to it:
+- GitHub cancels a `macos-14` job before it starts ("The configuration
+  'macos-14-arm64-us-default' is not supported"). The last one that ran
+  was on 4 November.
+- On `macos-15` the job ran and one test failed, not this work's:
+  `tst_net::pinRefusesATrustedCertificate`. Its first step adds the test
+  certificate as a CA and expects a connection without a pin; macOS 15
+  answers "The root CA certificate is not trusted for this purpose", and
+  the test ends on the uncaught `CertError`. The pinning it goes on to
+  test is never reached.
+- The release workflow's `publish` job needs every package job, so its
+  macOS leg, still on `macos-14`, would have stopped every release.
+
+So nothing builds or tests e3mail on macOS now, and a release carries no
+`.dmg`. The source still has its macOS parts (the frameworks in
+`cmake/E3mailP2p.cmake`, the tray notifier, the bundle settings); they
+will rot unseen. Bringing it back is the matrix entry, the Homebrew step
+and the DragNDrop package step in the two workflows (this commit's
+diff), on an image GitHub still offers, and a decision about that test.
+
+**Not verified:**
+- **Any of it by hand, on a display.** The drag was driven by QtTest's
+  events offscreen: the cursor shapes, how it feels, and whether a real
+  trackpad's press-and-move reaches the event before the hours scroll
+  have not been seen.
+- **The "Send the update?" dialog after a drag** was answered through the
+  hook, not clicked; a popup is not in a grabbed screenshot. Opening it
+  logs "Binding loop detected for property implicitWidth" (Qt's
+  `Dialog.qml`, with `EventDialog`'s `sendAsk`); it is the same dialog
+  Save has always opened, so that warning predates this work. Not looked
+  into.
+- **A phone.** Three days fit 400 px in the screenshot; a tap on an empty
+  half hour opening a new event may be too easy to do by accident while
+  scrolling, and only use will tell. Android was not built.
+- **More than four all-day lanes**: the band shows four and hides the rest
+  without saying so.
+- **Twelve-hour locales** in a seven-day week: "10:00 AM – 11:00 AM" does
+  not fit a narrow column and is cut.
+- The scan view's restored translations on screen (the strings are the
+  ones that were there before).
+
 ## Known gaps
 
 - **Signed-only mail** is checked only for PGP/MIME (`multipart/signed`);
@@ -1436,8 +1612,13 @@ camera off):
   Settings says so. Yiddish is the least certain of them.
 - **The calendar** reads only simple recurrence rules (ADR 0025); others
   are kept as received and give one occurrence. No per-occurrence edits,
-  no counter-proposals, no free/busy, no week view. Invitations from and
-  to other clients have not been tried.
+  so a repeating event cannot be dragged; no counter-proposals, no
+  free/busy. Dragging is the mouse's, and not for all-day events. The
+  all-day band shows four lanes. Invitations from and to other clients
+  have not been tried.
+- **macOS** is not built, tested or packaged by any workflow since
+  2026-11-11. Releases up to v0.4.0 carried a `.dmg`; nothing here records
+  it ever being installed.
 - **Without an OS keyring and without a passphrase**, the database key sits
   beside the mail, so encryption at rest protects nothing there; Settings says
   so (ADR 0012, ADR 0023). Passwords fall back into that database.
@@ -1730,6 +1911,27 @@ gains nothing from the feature anyway. Turned off on 2026-10-14; then the
 same job passed. A failed Play job can be re-run alone (`gh run rerun
 <id> --failed`): the release and the bundle artifact stay.
 
+**54. `update_translations` in a build without the camera drops the scan
+view's strings.** `ScanView.qml` leaves the QML module when
+`E3MAIL_CAMERA` is off, lupdate then finds its five strings nowhere, and
+they vanish from all ten files; the `translations` test only reads what is
+there. Run it in a build with the camera, or check `git diff --stat` on
+the `.ts` files for a context that disappeared.
+
+**55. CI's clocks are all UTC.** Two calendar bugs lived only west or east
+of it (see "The week and the day as hours"). Run the calendar's suites
+under another `TZ` before believing them; `ical_west` does for one.
+
+**56. A control hidden in a layout from the start can spin the window.**
+`DayOfWeekRow` and `MonthGrid` did (same section). A hang at startup with
+no output is a polish loop until shown otherwise; the smoke tests that
+start in another view have a time limit for it.
+
+**57. A Qt Quick test must wait for the first frame.** `qWaitForWindowExposed`
+is not enough: layouts are polished with the first frame, and on a slow
+machine the test's first events arrive before it. Wait for something the
+layout sets (an item's `y`), then send events.
+
 ## Next
 
 1. Release v0.2.2 to internal testers in Play Console (it is a draft
@@ -1753,3 +1955,8 @@ same job passed. A failed Play job can be re-run alone (`gh run rerun
    Connect button, then a real account (receive, send, a notification, the
    Keystore). Setup can now trust `server/compose`'s self-signed certificate
    (ADR 0017); from the emulator the host is `10.0.2.2`.
+9. Decide whether macOS comes back (see "The week and the day as hours"):
+   nothing builds it since 2026-11-11.
+10. The calendar's week on a real display: drag an event with a mouse and
+   with a trackpad, answer "Send the update?", and try three days on a
+   phone (see "The week and the day as hours" above).

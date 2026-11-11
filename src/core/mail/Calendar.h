@@ -66,6 +66,17 @@ public:
     // encryption policy and lands in Sent). The event is saved whether or not
     // the mail goes; `error` says when it did not.
     static SendResult save(MailContext &ctx, Event e, bool notify);
+    // Moves an event to another time and keeps the rest of it, as dragging
+    // it in the week does (ADR 0025, amendment 2026-11-10). Only a timed
+    // event of our own that does not repeat: someone else's meeting is
+    // theirs to move, and one occurrence of a series cannot be changed
+    // alone. Refused, the result has no uid and nothing is changed.
+    // Otherwise it is `save`: a meeting's attendees are asked again when
+    // `notify`.
+    static SendResult reschedule(MailContext &ctx, const QString &uid, const QDateTime &start, const QDateTime &end,
+                                 bool notify);
+    // May `reschedule` move it?
+    static bool movable(MailContext &ctx, const Event &e);
     // Cancels: status cancelled, a CANCEL to every attendee when we organize
     // it and `notify`.
     static SendResult cancel(MailContext &ctx, const QString &uid, bool notify);

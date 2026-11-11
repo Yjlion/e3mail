@@ -19,7 +19,7 @@
         <translation>e3mail は同期を続けています</translation>
     </message>
     <message>
-        <source>New mail and other devices' changes arrive while e3mail is in the background.</source>
+        <source>New mail and other devices&apos; changes arrive while e3mail is in the background.</source>
         <translation>e3mail がバックグラウンドにある間も、新着メールと他のデバイスの変更が届きます。</translation>
     </message>
     <message>
@@ -165,15 +165,15 @@
         <translation>そこにある最新のバックアップから、このアカウントの新しいデバイスが作られます。ペアリングするまで他のデバイスとは同期しません。</translation>
     </message>
     <message>
-        <source>The server's SSH host key has changed. Trust the new one only if the server's administrator says it changed:</source>
+        <source>The server&apos;s SSH host key has changed. Trust the new one only if the server&apos;s administrator says it changed:</source>
         <translation>サーバーの SSH ホスト鍵が変わりました。サーバー管理者が変更したと言う場合にのみ新しい鍵を信頼してください:</translation>
     </message>
     <message>
-        <source>The server's SSH host key is not known yet. Trust it only if it matches what the server's administrator gives you:</source>
+        <source>The server&apos;s SSH host key is not known yet. Trust it only if it matches what the server&apos;s administrator gives you:</source>
         <translation>サーバーの SSH ホスト鍵はまだ不明です。サーバー管理者から伝えられたものと一致する場合にのみ信頼してください:</translation>
     </message>
     <message>
-        <source>The server's certificate is not trusted. Trust it only if its fingerprint matches what the server's administrator gives you:</source>
+        <source>The server&apos;s certificate is not trusted. Trust it only if its fingerprint matches what the server&apos;s administrator gives you:</source>
         <translation>サーバーの証明書は信頼されていません。フィンガープリントがサーバー管理者から伝えられたものと一致する場合にのみ信頼してください:</translation>
     </message>
     <message>
@@ -345,16 +345,40 @@
         <translation>前の月</translation>
     </message>
     <message>
+        <source>Earlier</source>
+        <translation>前へ</translation>
+    </message>
+    <message>
         <source>Next month</source>
         <translation>次の月</translation>
+    </message>
+    <message>
+        <source>Later</source>
+        <translation>次へ</translation>
     </message>
     <message>
         <source>Today</source>
         <translation>今日</translation>
     </message>
     <message>
+        <source>Month</source>
+        <translation>月</translation>
+    </message>
+    <message>
+        <source>Week</source>
+        <translation>週</translation>
+    </message>
+    <message>
+        <source>Day</source>
+        <translation>日</translation>
+    </message>
+    <message>
         <source>New event</source>
         <translation>新しい予定</translation>
+    </message>
+    <message>
+        <source>3 days</source>
+        <translation>3日間</translation>
     </message>
     <message numerus="yes">
         <source>+%n more</source>
@@ -817,7 +841,7 @@ To: %4
         <translation>終了</translation>
     </message>
     <message>
-        <source>Times are in this device's time zone.</source>
+        <source>Times are in this device&apos;s time zone.</source>
         <translation>時刻はこの端末のタイムゾーンです。</translation>
     </message>
     <message>
@@ -1189,7 +1213,7 @@ To: %4
         <translation>返答は信頼する送信者にのみ送れます。まずこの送信者を承認してください。内容はメッセージ本文と照らし合わせてください。</translation>
     </message>
     <message>
-        <source>This message was not sent by the meeting's organizer, so it cannot be answered from here. Check these details against the message.</source>
+        <source>This message was not sent by the meeting&apos;s organizer, so it cannot be answered from here. Check these details against the message.</source>
         <translation>このメッセージは会議の主催者から送られたものではないため、ここから返答できません。内容はメッセージ本文と照らし合わせてください。</translation>
     </message>
 </context>
@@ -1399,6 +1423,10 @@ To: %4
         <translation>予定</translation>
     </message>
     <message>
+        <source>This event cannot be moved here. Open it to change it.</source>
+        <translation>この予定はここでは移動できません。開いて変更してください。</translation>
+    </message>
+    <message>
         <source>This message cannot be decrypted, or its original is no longer kept.</source>
         <translation>このメッセージは復号できないか、原本が保存されていません。</translation>
     </message>
@@ -1407,7 +1435,7 @@ To: %4
         <translation>このメッセージの原本は保存されていません。</translation>
     </message>
     <message>
-        <source>This is not a contact's code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
+        <source>This is not a contact&apos;s code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
         <translation>連絡先のコードではありません。確認用のコードは OPENPGP4FPR: または https://i.delta.chat/ で始まります。</translation>
     </message>
     <message numerus="yes">
@@ -1948,9 +1976,32 @@ To: %4
     </message>
 </context>
 <context>
+    <name>ScanView</name>
+    <message>
+        <source>Point the camera at the QR code on the other device.</source>
+        <translation>もう一方のデバイスの QR コードにカメラを向けてください。</translation>
+    </message>
+    <message>
+        <source>This device has no camera. Type the code instead.</source>
+        <translation>このデバイスにはカメラがありません。代わりにコードを入力してください。</translation>
+    </message>
+    <message>
+        <source>e3mail may not use the camera. Allow it in the system settings, or type the code instead.</source>
+        <translation>e3mail はカメラを使用できません。システム設定で許可するか、代わりにコードを入力してください。</translation>
+    </message>
+    <message>
+        <source>Asking for the camera…</source>
+        <translation>カメラの使用を確認しています…</translation>
+    </message>
+    <message>
+        <source>Type the code instead</source>
+        <translation>コードを入力する</translation>
+    </message>
+</context>
+<context>
     <name>SecureJoin</name>
     <message>
-        <source>This is your own code. Scan the other person's code instead.</source>
+        <source>This is your own code. Scan the other person&apos;s code instead.</source>
         <translation>これはあなた自身のコードです。相手のコードをスキャンしてください。</translation>
     </message>
     <message>
@@ -1993,7 +2044,7 @@ To: %4
         <translation>差出人と件名を表示</translation>
     </message>
     <message>
-        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system's notification history, outside e3mail's encryption.</source>
+        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system&apos;s notification history, outside e3mail&apos;s encryption.</source>
         <translation>このデバイスで、e3mail が開いていて前面にないときに通知します。ここに表示された件名は、e3mail の暗号化の外にあるシステムの通知履歴に残ります。</translation>
     </message>
     <message>
@@ -2005,7 +2056,7 @@ To: %4
         <translation>バックグラウンドで同期を続ける</translation>
     </message>
     <message>
-        <source>Mail and your other devices' changes keep arriving while e3mail is not in front. Android shows a notification for as long as this is on, and it uses more battery. Swiping e3mail away from the recent apps ends it.</source>
+        <source>Mail and your other devices&apos; changes keep arriving while e3mail is not in front. Android shows a notification for as long as this is on, and it uses more battery. Swiping e3mail away from the recent apps ends it.</source>
         <translation>e3mail が前面にないときも、メールと他のデバイスの変更が届き続けます。オンの間は Android が通知を表示し続け、バッテリーの消費が増えます。最近使ったアプリから e3mail をスワイプして閉じると終了します。</translation>
     </message>
     <message>
@@ -2045,7 +2096,7 @@ To: %4
         <translation>署名を追加…</translation>
     </message>
     <message>
-        <source>The chosen one goes into new mail. The composer's signature button swaps it for another.</source>
+        <source>The chosen one goes into new mail. The composer&apos;s signature button swaps it for another.</source>
         <translation>選んだ署名が新しいメールに入ります。作成画面の署名ボタンで別の署名に替えられます。</translation>
     </message>
     <message>
@@ -2185,7 +2236,7 @@ To: %4
         <translation>日</translation>
     </message>
     <message>
-        <source>Mail that was on the server before e3mail first connected is never removed. "Never" lets another mail program keep using this mailbox.</source>
+        <source>Mail that was on the server before e3mail first connected is never removed. &quot;Never&quot; lets another mail program keep using this mailbox.</source>
         <translation>e3mail が最初に接続する前からサーバーにあったメールは削除されません。「削除しない」を選ぶと、ほかのメールソフトでもこのメールボックスを使い続けられます。</translation>
     </message>
     <message>
@@ -2197,15 +2248,15 @@ To: %4
         <translation>秒</translation>
     </message>
     <message>
-        <source>The sending server's certificate is not trusted, or is not the one trusted before.</source>
+        <source>The sending server&apos;s certificate is not trusted, or is not the one trusted before.</source>
         <translation>送信サーバーの証明書は信頼されていないか、以前に信頼したものではありません。</translation>
     </message>
     <message>
-        <source>The incoming server's certificate is not trusted, or is not the one trusted before.</source>
+        <source>The incoming server&apos;s certificate is not trusted, or is not the one trusted before.</source>
         <translation>受信サーバーの証明書は信頼されていないか、以前に信頼したものではありません。</translation>
     </message>
     <message>
-        <source>Trust it only if this SHA-256 fingerprint matches the one your server's administrator gave you.</source>
+        <source>Trust it only if this SHA-256 fingerprint matches the one your server&apos;s administrator gave you.</source>
         <translation>この SHA-256 フィンガープリントがサーバー管理者から受け取ったものと一致する場合にのみ信頼してください。</translation>
     </message>
     <message>
@@ -2269,7 +2320,7 @@ To: %4
         <translation>原本</translation>
     </message>
     <message>
-        <source>Keep each message's original for</source>
+        <source>Keep each message&apos;s original for</source>
         <translation>各メッセージの原本を保存する日数</translation>
     </message>
     <message>
@@ -2337,7 +2388,7 @@ To: %4
         <translation>リレー</translation>
     </message>
     <message>
-        <source>n0's public relays</source>
+        <source>n0&apos;s public relays</source>
         <translation>n0 の公開リレー</translation>
     </message>
     <message>
@@ -2469,7 +2520,7 @@ To: %4
         <translation>%1 を削除しますか?</translation>
     </message>
     <message>
-        <source>It stops syncing with this account's other devices. What is already on it stays there.</source>
+        <source>It stops syncing with this account&apos;s other devices. What is already on it stays there.</source>
         <translation>このアカウントの他のデバイスとの同期を止めます。すでにあるものはそのまま残ります。</translation>
     </message>
     <message>
@@ -2484,15 +2535,15 @@ To: %4
         <translation>プロバイダーから取得したサーバー設定です。</translation>
     </message>
     <message>
-        <source>Server settings from Thunderbird's provider database.</source>
+        <source>Server settings from Thunderbird&apos;s provider database.</source>
         <translation>Thunderbird のプロバイダーデータベースから取得したサーバー設定です。</translation>
     </message>
     <message>
-        <source>Server settings of the service that receives your domain's mail. Check them before connecting.</source>
+        <source>Server settings of the service that receives your domain&apos;s mail. Check them before connecting.</source>
         <translation>ドメインのメールを受信しているサービスのサーバー設定です。接続する前に確認してください。</translation>
     </message>
     <message>
-        <source>Server settings from your provider's Autodiscover service.</source>
+        <source>Server settings from your provider&apos;s Autodiscover service.</source>
         <translation>プロバイダーの Autodiscover サービスから取得したサーバー設定です。</translation>
     </message>
     <message>
@@ -2603,7 +2654,7 @@ To: %4
         <translation>%2 が %1 に発行、有効期限 %3。</translation>
     </message>
     <message>
-        <source>Trust it only if this fingerprint matches the one your server's administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
+        <source>Trust it only if this fingerprint matches the one your server&apos;s administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
         <translation>このフィンガープリントがサーバー管理者から受け取ったものと一致する場合にのみ信頼してください。以後 e3mail はこのサーバーからはこの証明書だけを受け入れます。</translation>
     </message>
     <message>
@@ -2739,7 +2790,7 @@ To: %4
         <translation>サインインに時間がかかりすぎました。もう一度お試しください。</translation>
     </message>
     <message>
-        <source>Cannot listen for the browser's answer on this device.</source>
+        <source>Cannot listen for the browser&apos;s answer on this device.</source>
         <translation>このデバイスではブラウザーからの応答を受け取れません。</translation>
     </message>
     <message>

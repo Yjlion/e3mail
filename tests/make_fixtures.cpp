@@ -277,6 +277,27 @@ int main(int argc, char **argv)
         dentist.tzid = QString::fromLatin1(zone.id());
         dentist.reminderMinutes = 30;
         mail::Calendar::saveLocal(ctx, dentist);
+        // For the week as hours: a call that overlaps the review, an
+        // evening that runs past midnight, and days marked above the hours.
+        mail::Calendar::Event call;
+        call.summary = QStringLiteral("Budget call");
+        call.start = QDateTime(tuesday, QTime(10, 30), zone).toUTC();
+        call.end = QDateTime(tuesday, QTime(11, 30), zone).toUTC();
+        call.tzid = QString::fromLatin1(zone.id());
+        mail::Calendar::saveLocal(ctx, call);
+        mail::Calendar::Event concert;
+        concert.summary = QStringLiteral("Concert");
+        concert.location = QStringLiteral("Old Mill");
+        concert.start = QDateTime(tuesday.addDays(2), QTime(19, 30), zone).toUTC();
+        concert.end = QDateTime(tuesday.addDays(3), QTime(0, 30), zone).toUTC();
+        concert.tzid = QString::fromLatin1(zone.id());
+        mail::Calendar::saveLocal(ctx, concert);
+        mail::Calendar::Event away;
+        away.summary = QStringLiteral("Tomas away");
+        away.allDay = true;
+        away.start = QDateTime(tuesday.addDays(1), QTime(0, 0), QTimeZone::UTC);
+        away.end = QDateTime(tuesday.addDays(4), QTime(0, 0), QTimeZone::UTC);
+        mail::Calendar::saveLocal(ctx, away);
     }
 
     Draft draft;

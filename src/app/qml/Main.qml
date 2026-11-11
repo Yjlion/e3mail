@@ -64,6 +64,9 @@ ApplicationWindow {
     // For screenshots (--page calendar-event, calendar-new).
     function showCalendarEvent() { page = "calendar"; calendarView.showFirst() }
     function showCalendarNew() { page = "calendar"; calendarView.showNew() }
+    // For screenshots (--page calendar-week, calendar-day): a week with events in it.
+    function showCalendarWeek() { page = "calendar"; calendarView.showBusiest("week") }
+    function showCalendarDay() { page = "calendar"; calendarView.showBusiest("day") }
     function showEvent(uid) { page = "calendar"; calendarView.showEvent(uid) }
     onClosing: (close) => { if (narrow && back()) close.accepted = false }
 

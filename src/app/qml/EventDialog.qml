@@ -19,16 +19,43 @@ Dialog {
     readonly property var policy: hasAttendees ? MailApp.attendeePolicy(attendeesField.text) : ({ encrypt: false, missing: [] })
     signal saved(string uid)
 
-    function create(dateIso) {
+    // A meeting dragged in the week (CalendarView): the question a changed
+    // meeting asks, then `apply(send)`.
+    property var moveApply: null
+    function askMove(event, apply) {
+        uid = event.uid
+        e = event
+        moveApply = apply
+        sendAsk.open()
+    }
+    function answer(send) {
+        const apply = moveApply
+        moveApply = null
+        if (apply) apply(send)
+        else save(send)
+    }
+    function hhmm(minutes) { return String(Math.floor(minutes / 60)).padStart(2, "0") + ":" + String(minutes % 60).padStart(2, "0") }
+    // A new event on this day, at nine or at `minutes` into it, an hour long.
+    function create(dateIso, minutes) {
+        moveApply = null
         uid = ""
         e = ({})
         titleField.text = ""
         allDayBox.checked = false
         const d = dateIso || new Date().toISOString().slice(0, 10)
+        const from = minutes === undefined ? 9 * 60 : Math.max(0, Math.min(1439, minutes))
         startDate.date = d
-        endDate.date = d
-        startTime.text = "09:00"
-        endTime.text = "10:00"
+        startTime.text = hhmm(from)
+        if (from + 60 < 1440) {
+            endDate.date = d
+            endTime.text = hhmm(from + 60)
+        } else {
+            // Past midnight: it ends on the next day.
+            const next = new Date(d + "T12:00:00")
+            next.setDate(next.getDate() + 1)
+            endDate.date = next.getFullYear() + "-" + String(next.getMonth() + 1).padStart(2, "0") + "-" + String(next.getDate()).padStart(2, "0")
+            endTime.text = hhmm(from + 60 - 1440)
+        }
         locationField.text = ""
         urlField.text = ""
         descriptionArea.text = ""
@@ -43,6 +70,7 @@ Dialog {
         open()
     }
     function edit(id) {
+        moveApply = null
         uid = id
         e = MailApp.calendarEvent(id)
         titleField.text = e.title || ""
@@ -350,9 +378,9 @@ Dialog {
             Button { text: qsTr("Send"); highlighted: true; DialogButtonBox.buttonRole: DialogButtonBox.AcceptRole }
             Button { text: qsTr("Save only"); flat: true; DialogButtonBox.buttonRole: DialogButtonBox.ApplyRole }
             Button { text: qsTr("Back"); flat: true; DialogButtonBox.buttonRole: DialogButtonBox.RejectRole }
-            onAccepted: { sendAsk.close(); dlg.save(true) }
-            onApplied: { sendAsk.close(); dlg.save(false) }
-            onRejected: sendAsk.close()
+            onAccepted: { sendAsk.close(); dlg.answer(true) }
+            onApplied: { sendAsk.close(); dlg.answer(false) }
+            onRejected: { dlg.moveApply = null; sendAsk.close() }
         }
     }
     Dialog {

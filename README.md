@@ -79,8 +79,8 @@ over TLS in [`scripts/e2e.py`](scripts/e2e.py).
 | Threads, system tags, user tags, Unverified, Trash, blocklist, importance | ✅ |
 | Desktop app: list, threaded reading, composer, setup, contacts, settings | ✅ |
 | Several accounts in one window, all fetching | ✅ |
-| CI builds and tests on Linux, Windows and macOS | ✅ |
-| `.deb`, AppImage, Windows installer + portable zip, macOS `.dmg` | ⏳ release workflow not yet run; AppImage built locally |
+| CI builds and tests on Linux and Windows | ✅ (macOS was taken out on 2026-11-11; it builds from source, untested since) |
+| `.deb`, AppImage, Windows installer + portable zip | ⏳ release workflow not yet run; AppImage built locally. No macOS package since 2026-11-11 |
 | Interop with GnuPG (our PGP/MIME decrypts and verifies) | ✅ |
 | Multi-device sync over Iroh, with a mailbox fallback | ✅ |
 | SecureJoin QR verification (Delta Chat compatible) | ✅ tried against Delta Chat 2.64 |
@@ -89,7 +89,7 @@ over TLS in [`scripts/e2e.py`](scripts/e2e.py).
 | Read receipts (to trusted senders) and disappearing mail | ✅ |
 | Encryption at rest: database and attachments, keyring or passphrase | ✅ |
 | Structured email (bookings, parcels, orders), inert unless trusted and signed | ✅ |
-| Calendar on your devices: meetings by mail (invite, answer, update, cancel), recurrence, reminders; no CalDAV | ✅ |
+| Calendar on your devices, by month, week or day: meetings by mail (invite, answer, update, cancel), recurrence, reminders; no CalDAV | ✅ |
 | Interop with Delta Chat ([`scripts/interop-pass.py`](scripts/interop-pass.py)) | ✅ verification and encrypted mail, both ways |
 | Interop with Thunderbird or a mainstream provider | ❌ |
 | Code signing | ❌ |

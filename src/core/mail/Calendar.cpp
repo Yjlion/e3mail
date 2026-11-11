@@ -815,6 +815,29 @@ Calendar::SendResult Calendar::save(MailContext &ctx, Event e, bool notify)
     return r;
 }
 
+bool Calendar::movable(MailContext &ctx, const Event &e)
+{
+    return !e.allDay && e.rrule.isEmpty() && e.status != ICal::Status::Cancelled
+        && (e.organizer.addr.isEmpty() || organizedByUs(ctx, e));
+}
+
+Calendar::SendResult Calendar::reschedule(MailContext &ctx, const QString &uid, const QDateTime &start,
+                                          const QDateTime &end, bool notify)
+{
+    auto e = get(ctx, uid);
+    if (!e || !movable(ctx, *e) || !start.isValid() || !end.isValid() || end <= start)
+        return {};
+    if (e->start == start.toUTC() && e->end == end.toUTC()) {
+        // Dropped where it was: nothing to save, nobody to tell.
+        SendResult same;
+        same.uid = uid;
+        return same;
+    }
+    e->start = start.toUTC();
+    e->end = end.toUTC();
+    return save(ctx, *e, notify);
+}
+
 Calendar::SendResult Calendar::cancel(MailContext &ctx, const QString &uid, bool notify)
 {
     SendResult r;

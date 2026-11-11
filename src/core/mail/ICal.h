@@ -62,7 +62,7 @@ public:
         QDateTime start; // UTC. All-day: the date at 00:00 UTC.
         QDateTime end;   // UTC, exclusive. All-day: midnight after the last day.
         bool allDay = false;
-        QString tzid;    // IANA zone the times were given in, or empty (UTC, floating)
+        QString tzid;    // IANA zone the times were given in (the reader's, for floating times), or empty (UTC)
         QString rrule;   // the RRULE value as received, or empty
         QList<QDateTime> exdates; // occurrence starts left out
         Attendee organizer;       // addr empty when there is none
@@ -77,7 +77,7 @@ public:
         std::optional<Rule> rule() const { return ICal::parseRule(rrule); }
         // How long one occurrence lasts.
         qint64 durationMs() const { return start.msecsTo(end); }
-        // The zone recurrence and display follow.
+        // The zone recurrence follows: `tzid`, or UTC without one.
         QTimeZone zone() const;
     };
 

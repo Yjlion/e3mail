@@ -175,6 +175,21 @@ private Q_SLOTS:
         QCOMPARE(monthly[1], utc(2026, 3, 31, 12, 0));
         QCOMPARE(monthly[3], utc(2026, 7, 31, 12, 0));
 
+        // That event is given in UTC, so it repeats at noon UTC whatever the
+        // reader's own clock does in March (ctest runs this suite again in
+        // Los Angeles). A floating one is the reader's: it keeps the zone it
+        // was read in, and its clock time there.
+        QVERIFY(doc->events[2].tzid.isEmpty());
+        const auto floating = ICal::parse("BEGIN:VCALENDAR\r\nBEGIN:VEVENT\r\nUID:f\r\nDTSTART:20260301T080000\r\n"
+                                          "RRULE:FREQ=DAILY;COUNT=20\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n");
+        QVERIFY(floating);
+        const QTimeZone here = QTimeZone::systemTimeZone();
+        QCOMPARE(floating->events[0].tzid, QString::fromLatin1(here.id()));
+        const auto mornings = ICal::occurrences(floating->events[0], utc(2026, 2, 28, 0, 0), utc(2026, 4, 1, 0, 0));
+        QCOMPARE(mornings.size(), 20);
+        for (int i = 0; i < mornings.size(); ++i)
+            QCOMPARE(mornings[i], QDateTime(QDate(2026, 3, 1).addDays(i), QTime(8, 0), here).toUTC());
+
         // Daily in New York across its DST change on 8 March.
         const auto daily = ICal::occurrences(doc->events[3], from, utc(2026, 3, 11, 0, 0));
         QCOMPARE(daily.size(), 10);

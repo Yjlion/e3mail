@@ -19,7 +19,7 @@
         <translation>e3mail ממשיך להסתנכרן</translation>
     </message>
     <message>
-        <source>New mail and other devices' changes arrive while e3mail is in the background.</source>
+        <source>New mail and other devices&apos; changes arrive while e3mail is in the background.</source>
         <translation>דואר חדש ושינויים ממכשירים אחרים מגיעים בזמן ש־e3mail ברקע.</translation>
     </message>
     <message>
@@ -165,15 +165,15 @@
         <translation>מהגיבוי החדש ביותר שם נוצר מכשיר חדש של החשבון. הוא לא מסתנכרן עם המכשירים האחרים שלכם עד שתצמדו אותו.</translation>
     </message>
     <message>
-        <source>The server's SSH host key has changed. Trust the new one only if the server's administrator says it changed:</source>
+        <source>The server&apos;s SSH host key has changed. Trust the new one only if the server&apos;s administrator says it changed:</source>
         <translation>מפתח המארח SSH של השרת השתנה. בטחו בחדש רק אם מנהל השרת אומר שהוא השתנה:</translation>
     </message>
     <message>
-        <source>The server's SSH host key is not known yet. Trust it only if it matches what the server's administrator gives you:</source>
+        <source>The server&apos;s SSH host key is not known yet. Trust it only if it matches what the server&apos;s administrator gives you:</source>
         <translation>מפתח המארח SSH של השרת עדיין לא מוכר. בטחו בו רק אם הוא תואם למה שמנהל השרת נותן לכם:</translation>
     </message>
     <message>
-        <source>The server's certificate is not trusted. Trust it only if its fingerprint matches what the server's administrator gives you:</source>
+        <source>The server&apos;s certificate is not trusted. Trust it only if its fingerprint matches what the server&apos;s administrator gives you:</source>
         <translation>האישור של השרת אינו מהימן. בטחו בו רק אם טביעת האצבע שלו תואמת למה שמנהל השרת נותן לכם:</translation>
     </message>
     <message>
@@ -350,16 +350,40 @@
         <translation>החודש הקודם</translation>
     </message>
     <message>
+        <source>Earlier</source>
+        <translation>מוקדם יותר</translation>
+    </message>
+    <message>
         <source>Next month</source>
         <translation>החודש הבא</translation>
+    </message>
+    <message>
+        <source>Later</source>
+        <translation>מאוחר יותר</translation>
     </message>
     <message>
         <source>Today</source>
         <translation>היום</translation>
     </message>
     <message>
+        <source>Month</source>
+        <translation>חודש</translation>
+    </message>
+    <message>
+        <source>Week</source>
+        <translation>שבוע</translation>
+    </message>
+    <message>
+        <source>Day</source>
+        <translation>יום</translation>
+    </message>
+    <message>
         <source>New event</source>
         <translation>אירוע חדש</translation>
+    </message>
+    <message>
+        <source>3 days</source>
+        <translation>3 ימים</translation>
     </message>
     <message numerus="yes">
         <source>+%n more</source>
@@ -823,7 +847,7 @@ To: %4
         <translation>סיום</translation>
     </message>
     <message>
-        <source>Times are in this device's time zone.</source>
+        <source>Times are in this device&apos;s time zone.</source>
         <translation>השעות לפי אזור הזמן של מכשיר זה.</translation>
     </message>
     <message>
@@ -1195,7 +1219,7 @@ To: %4
         <translation>תשובות נשלחות רק לשולחים שסומכים עליהם; תחילה יש לאשר שולח זה. יש לבדוק פרטים אלה מול ההודעה.</translation>
     </message>
     <message>
-        <source>This message was not sent by the meeting's organizer, so it cannot be answered from here. Check these details against the message.</source>
+        <source>This message was not sent by the meeting&apos;s organizer, so it cannot be answered from here. Check these details against the message.</source>
         <translation>הודעה זו לא נשלחה על ידי מארגן הפגישה, ולכן אי אפשר להשיב עליה מכאן. יש לבדוק פרטים אלה מול ההודעה.</translation>
     </message>
 </context>
@@ -1406,6 +1430,10 @@ To: %4
         <translation>אירוע</translation>
     </message>
     <message>
+        <source>This event cannot be moved here. Open it to change it.</source>
+        <translation>אי אפשר להזיז את האירוע הזה מכאן. יש לפתוח אותו כדי לשנות אותו.</translation>
+    </message>
+    <message>
         <source>This message cannot be decrypted, or its original is no longer kept.</source>
         <translation>לא ניתן לפענח הודעה זו, או שהעותק המקורי שלה כבר לא נשמר.</translation>
     </message>
@@ -1414,7 +1442,7 @@ To: %4
         <translation>העותק המקורי של הודעה זו כבר לא נשמר.</translation>
     </message>
     <message>
-        <source>This is not a contact's code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
+        <source>This is not a contact&apos;s code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
         <translation>זה אינו קוד של איש קשר. קוד לאימות מתחיל ב־OPENPGP4FPR: או ב־https://i.delta.chat/.</translation>
     </message>
     <message numerus="yes">
@@ -1968,9 +1996,32 @@ To: %4
     </message>
 </context>
 <context>
+    <name>ScanView</name>
+    <message>
+        <source>Point the camera at the QR code on the other device.</source>
+        <translation>כוונו את המצלמה אל קוד ה־QR במכשיר השני.</translation>
+    </message>
+    <message>
+        <source>This device has no camera. Type the code instead.</source>
+        <translation>אין מצלמה במכשיר הזה. הקלידו את הקוד במקום.</translation>
+    </message>
+    <message>
+        <source>e3mail may not use the camera. Allow it in the system settings, or type the code instead.</source>
+        <translation>ל־e3mail אין הרשאה להשתמש במצלמה. אפשרו זאת בהגדרות המערכת, או הקלידו את הקוד במקום.</translation>
+    </message>
+    <message>
+        <source>Asking for the camera…</source>
+        <translation>מבקשים גישה למצלמה…</translation>
+    </message>
+    <message>
+        <source>Type the code instead</source>
+        <translation>הקלדת הקוד במקום</translation>
+    </message>
+</context>
+<context>
     <name>SecureJoin</name>
     <message>
-        <source>This is your own code. Scan the other person's code instead.</source>
+        <source>This is your own code. Scan the other person&apos;s code instead.</source>
         <translation>זה הקוד שלך. יש לסרוק את הקוד של האדם השני.</translation>
     </message>
     <message>
@@ -2013,7 +2064,7 @@ To: %4
         <translation>להציג מי כתב ואת הנושא</translation>
     </message>
     <message>
-        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system's notification history, outside e3mail's encryption.</source>
+        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system&apos;s notification history, outside e3mail&apos;s encryption.</source>
         <translation>למכשיר הזה, כש־e3mail פתוח ולא בחזית. נושא שמוצג כאן נשמר בהיסטוריית ההתראות של המערכת, מחוץ להצפנה של e3mail.</translation>
     </message>
     <message>
@@ -2025,7 +2076,7 @@ To: %4
         <translation>להמשיך לסנכרן ברקע</translation>
     </message>
     <message>
-        <source>Mail and your other devices' changes keep arriving while e3mail is not in front. Android shows a notification for as long as this is on, and it uses more battery. Swiping e3mail away from the recent apps ends it.</source>
+        <source>Mail and your other devices&apos; changes keep arriving while e3mail is not in front. Android shows a notification for as long as this is on, and it uses more battery. Swiping e3mail away from the recent apps ends it.</source>
         <translation>דואר ושינויים מהמכשירים האחרים שלכם ממשיכים להגיע כש־e3mail לא בחזית. Android מציג התראה כל עוד זה פועל, וזה צורך יותר סוללה. החלקת e3mail מהאפליקציות האחרונות מסיימת את זה.</translation>
     </message>
     <message>
@@ -2065,7 +2116,7 @@ To: %4
         <translation>הוספת חתימה…</translation>
     </message>
     <message>
-        <source>The chosen one goes into new mail. The composer's signature button swaps it for another.</source>
+        <source>The chosen one goes into new mail. The composer&apos;s signature button swaps it for another.</source>
         <translation>החתימה שנבחרה נכנסת להודעות חדשות. כפתור החתימה בעורך מחליף אותה באחרת.</translation>
     </message>
     <message>
@@ -2205,7 +2256,7 @@ To: %4
         <translation>ימים</translation>
     </message>
     <message>
-        <source>Mail that was on the server before e3mail first connected is never removed. "Never" lets another mail program keep using this mailbox.</source>
+        <source>Mail that was on the server before e3mail first connected is never removed. &quot;Never&quot; lets another mail program keep using this mailbox.</source>
         <translation>דואר שהיה בשרת לפני החיבור הראשון של e3mail לעולם לא נמחק. „לעולם לא” מאפשר לתוכנת דואר אחרת להמשיך להשתמש בתיבה הזו.</translation>
     </message>
     <message>
@@ -2217,15 +2268,15 @@ To: %4
         <translation>שניות</translation>
     </message>
     <message>
-        <source>The sending server's certificate is not trusted, or is not the one trusted before.</source>
+        <source>The sending server&apos;s certificate is not trusted, or is not the one trusted before.</source>
         <translation>התעודה של שרת השליחה אינה מהימנה, או שאינה זו שאושרה קודם.</translation>
     </message>
     <message>
-        <source>The incoming server's certificate is not trusted, or is not the one trusted before.</source>
+        <source>The incoming server&apos;s certificate is not trusted, or is not the one trusted before.</source>
         <translation>התעודה של שרת הדואר הנכנס אינה מהימנה, או שאינה זו שאושרה קודם.</translation>
     </message>
     <message>
-        <source>Trust it only if this SHA-256 fingerprint matches the one your server's administrator gave you.</source>
+        <source>Trust it only if this SHA-256 fingerprint matches the one your server&apos;s administrator gave you.</source>
         <translation>יש לסמוך עליה רק אם טביעת ה־SHA-256 הזו תואמת את זו שמנהל השרת מסר לך.</translation>
     </message>
     <message>
@@ -2289,7 +2340,7 @@ To: %4
         <translation>מקורות</translation>
     </message>
     <message>
-        <source>Keep each message's original for</source>
+        <source>Keep each message&apos;s original for</source>
         <translation>שמירת המקור של כל הודעה למשך</translation>
     </message>
     <message>
@@ -2357,7 +2408,7 @@ To: %4
         <translation>ממסר</translation>
     </message>
     <message>
-        <source>n0's public relays</source>
+        <source>n0&apos;s public relays</source>
         <translation>הממסרים הציבוריים של n0</translation>
     </message>
     <message>
@@ -2489,7 +2540,7 @@ To: %4
         <translation>להסיר את %1?</translation>
     </message>
     <message>
-        <source>It stops syncing with this account's other devices. What is already on it stays there.</source>
+        <source>It stops syncing with this account&apos;s other devices. What is already on it stays there.</source>
         <translation>הוא יפסיק להסתנכרן עם שאר מכשירי החשבון. מה שכבר נמצא בו נשאר שם.</translation>
     </message>
     <message>
@@ -2504,15 +2555,15 @@ To: %4
         <translation>הגדרות השרת מספק הדואר שלך.</translation>
     </message>
     <message>
-        <source>Server settings from Thunderbird's provider database.</source>
+        <source>Server settings from Thunderbird&apos;s provider database.</source>
         <translation>הגדרות השרת ממאגר הספקים של Thunderbird.</translation>
     </message>
     <message>
-        <source>Server settings of the service that receives your domain's mail. Check them before connecting.</source>
+        <source>Server settings of the service that receives your domain&apos;s mail. Check them before connecting.</source>
         <translation>הגדרות השרת של השירות שמקבל את הדואר של הדומיין שלך. יש לבדוק אותן לפני ההתחברות.</translation>
     </message>
     <message>
-        <source>Server settings from your provider's Autodiscover service.</source>
+        <source>Server settings from your provider&apos;s Autodiscover service.</source>
         <translation>הגדרות השרת משירות ה־Autodiscover של הספק.</translation>
     </message>
     <message>
@@ -2623,7 +2674,7 @@ To: %4
         <translation>הונפקה ל־%1 על ידי %2, בתוקף עד %3.</translation>
     </message>
     <message>
-        <source>Trust it only if this fingerprint matches the one your server's administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
+        <source>Trust it only if this fingerprint matches the one your server&apos;s administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
         <translation>יש לסמוך עליה רק אם טביעת האצבע הזו תואמת את זו שמנהל השרת מסר לך. אז e3mail יקבל מהשרת הזה את התעודה הזו, ולא שום תעודה אחרת.</translation>
     </message>
     <message>
@@ -2760,7 +2811,7 @@ To: %4
         <translation>ההתחברות ארכה יותר מדי. נסו שוב.</translation>
     </message>
     <message>
-        <source>Cannot listen for the browser's answer on this device.</source>
+        <source>Cannot listen for the browser&apos;s answer on this device.</source>
         <translation>אי אפשר לקבל במכשיר הזה את תשובת הדפדפן.</translation>
     </message>
     <message>
