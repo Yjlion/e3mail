@@ -19,7 +19,7 @@
         <translation>e3mail поддерживает синхронизацию</translation>
     </message>
     <message>
-        <source>New mail and other devices' changes arrive while e3mail is in the background.</source>
+        <source>New mail and other devices&apos; changes arrive while e3mail is in the background.</source>
         <translation>Новая почта и изменения с других устройств приходят, пока e3mail в фоне.</translation>
     </message>
     <message>
@@ -165,15 +165,15 @@
         <translation>Из самой новой резервной копии создаётся новое устройство учётной записи. Оно не синхронизируется с другими вашими устройствами, пока вы его не привяжете.</translation>
     </message>
     <message>
-        <source>The server's SSH host key has changed. Trust the new one only if the server's administrator says it changed:</source>
+        <source>The server&apos;s SSH host key has changed. Trust the new one only if the server&apos;s administrator says it changed:</source>
         <translation>SSH-ключ сервера изменился. Доверяйте новому, только если администратор сервера подтверждает изменение:</translation>
     </message>
     <message>
-        <source>The server's SSH host key is not known yet. Trust it only if it matches what the server's administrator gives you:</source>
+        <source>The server&apos;s SSH host key is not known yet. Trust it only if it matches what the server&apos;s administrator gives you:</source>
         <translation>SSH-ключ сервера ещё не известен. Доверяйте ему, только если он совпадает с тем, что сообщил администратор сервера:</translation>
     </message>
     <message>
-        <source>The server's certificate is not trusted. Trust it only if its fingerprint matches what the server's administrator gives you:</source>
+        <source>The server&apos;s certificate is not trusted. Trust it only if its fingerprint matches what the server&apos;s administrator gives you:</source>
         <translation>Сертификату сервера нет доверия. Доверяйте ему, только если его отпечаток совпадает с тем, что сообщил администратор сервера:</translation>
     </message>
     <message>
@@ -355,16 +355,40 @@
         <translation>Предыдущий месяц</translation>
     </message>
     <message>
+        <source>Earlier</source>
+        <translation>Раньше</translation>
+    </message>
+    <message>
         <source>Next month</source>
         <translation>Следующий месяц</translation>
+    </message>
+    <message>
+        <source>Later</source>
+        <translation>Позже</translation>
     </message>
     <message>
         <source>Today</source>
         <translation>Сегодня</translation>
     </message>
     <message>
+        <source>Month</source>
+        <translation>Месяц</translation>
+    </message>
+    <message>
+        <source>Week</source>
+        <translation>Неделя</translation>
+    </message>
+    <message>
+        <source>Day</source>
+        <translation>День</translation>
+    </message>
+    <message>
         <source>New event</source>
         <translation>Новое событие</translation>
+    </message>
+    <message>
+        <source>3 days</source>
+        <translation>3 дня</translation>
     </message>
     <message numerus="yes">
         <source>+%n more</source>
@@ -829,7 +853,7 @@ To: %4
         <translation>Конец</translation>
     </message>
     <message>
-        <source>Times are in this device's time zone.</source>
+        <source>Times are in this device&apos;s time zone.</source>
         <translation>Время указано в часовом поясе этого устройства.</translation>
     </message>
     <message>
@@ -1201,7 +1225,7 @@ To: %4
         <translation>Отвечать можно только отправителям, которым вы доверяете; сначала примите этого отправителя. Сверьте эти сведения с письмом.</translation>
     </message>
     <message>
-        <source>This message was not sent by the meeting's organizer, so it cannot be answered from here. Check these details against the message.</source>
+        <source>This message was not sent by the meeting&apos;s organizer, so it cannot be answered from here. Check these details against the message.</source>
         <translation>Это письмо отправил не организатор встречи, поэтому ответить отсюда нельзя. Сверьте эти сведения с письмом.</translation>
     </message>
 </context>
@@ -1413,6 +1437,10 @@ To: %4
         <translation>событие</translation>
     </message>
     <message>
+        <source>This event cannot be moved here. Open it to change it.</source>
+        <translation>Это событие нельзя переместить здесь. Откройте его, чтобы изменить.</translation>
+    </message>
+    <message>
         <source>This message cannot be decrypted, or its original is no longer kept.</source>
         <translation>Это сообщение нельзя расшифровать, или его оригинал больше не хранится.</translation>
     </message>
@@ -1421,7 +1449,7 @@ To: %4
         <translation>Оригинал этого сообщения больше не хранится.</translation>
     </message>
     <message>
-        <source>This is not a contact's code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
+        <source>This is not a contact&apos;s code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
         <translation>Это не код контакта. Код для проверки начинается с OPENPGP4FPR: или https://i.delta.chat/.</translation>
     </message>
     <message numerus="yes">
@@ -1988,9 +2016,32 @@ To: %4
     </message>
 </context>
 <context>
+    <name>ScanView</name>
+    <message>
+        <source>Point the camera at the QR code on the other device.</source>
+        <translation>Наведите камеру на QR-код на другом устройстве.</translation>
+    </message>
+    <message>
+        <source>This device has no camera. Type the code instead.</source>
+        <translation>У этого устройства нет камеры. Введите код вручную.</translation>
+    </message>
+    <message>
+        <source>e3mail may not use the camera. Allow it in the system settings, or type the code instead.</source>
+        <translation>e3mail не может использовать камеру. Разрешите это в настройках системы или введите код вручную.</translation>
+    </message>
+    <message>
+        <source>Asking for the camera…</source>
+        <translation>Запрашиваем доступ к камере…</translation>
+    </message>
+    <message>
+        <source>Type the code instead</source>
+        <translation>Ввести код вручную</translation>
+    </message>
+</context>
+<context>
     <name>SecureJoin</name>
     <message>
-        <source>This is your own code. Scan the other person's code instead.</source>
+        <source>This is your own code. Scan the other person&apos;s code instead.</source>
         <translation>Это ваш собственный код. Отсканируйте код другого человека.</translation>
     </message>
     <message>
@@ -2033,7 +2084,7 @@ To: %4
         <translation>Показывать отправителя и тему</translation>
     </message>
     <message>
-        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system's notification history, outside e3mail's encryption.</source>
+        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system&apos;s notification history, outside e3mail&apos;s encryption.</source>
         <translation>На этом устройстве, когда e3mail открыт, но не на переднем плане. Показанная здесь тема остаётся в истории уведомлений системы, вне шифрования e3mail.</translation>
     </message>
     <message>
@@ -2045,7 +2096,7 @@ To: %4
         <translation>Синхронизировать в фоне</translation>
     </message>
     <message>
-        <source>Mail and your other devices' changes keep arriving while e3mail is not in front. Android shows a notification for as long as this is on, and it uses more battery. Swiping e3mail away from the recent apps ends it.</source>
+        <source>Mail and your other devices&apos; changes keep arriving while e3mail is not in front. Android shows a notification for as long as this is on, and it uses more battery. Swiping e3mail away from the recent apps ends it.</source>
         <translation>Почта и изменения с ваших других устройств продолжают приходить, когда e3mail не на переднем плане. Пока это включено, Android показывает уведомление, и расход батареи выше. Если смахнуть e3mail из недавних приложений, это прекратится.</translation>
     </message>
     <message>
@@ -2085,7 +2136,7 @@ To: %4
         <translation>Добавить подпись…</translation>
     </message>
     <message>
-        <source>The chosen one goes into new mail. The composer's signature button swaps it for another.</source>
+        <source>The chosen one goes into new mail. The composer&apos;s signature button swaps it for another.</source>
         <translation>Выбранная подпись добавляется в новые письма. Кнопка подписи в редакторе заменяет её другой.</translation>
     </message>
     <message>
@@ -2225,7 +2276,7 @@ To: %4
         <translation>дн.</translation>
     </message>
     <message>
-        <source>Mail that was on the server before e3mail first connected is never removed. "Never" lets another mail program keep using this mailbox.</source>
+        <source>Mail that was on the server before e3mail first connected is never removed. &quot;Never&quot; lets another mail program keep using this mailbox.</source>
         <translation>Письма, лежавшие на сервере до первого подключения e3mail, никогда не удаляются. «Никогда» позволяет другой почтовой программе продолжать пользоваться этим ящиком.</translation>
     </message>
     <message>
@@ -2237,15 +2288,15 @@ To: %4
         <translation>с</translation>
     </message>
     <message>
-        <source>The sending server's certificate is not trusted, or is not the one trusted before.</source>
+        <source>The sending server&apos;s certificate is not trusted, or is not the one trusted before.</source>
         <translation>Сертификат сервера отправки не доверенный или не тот, которому вы доверяли раньше.</translation>
     </message>
     <message>
-        <source>The incoming server's certificate is not trusted, or is not the one trusted before.</source>
+        <source>The incoming server&apos;s certificate is not trusted, or is not the one trusted before.</source>
         <translation>Сертификат сервера входящей почты не доверенный или не тот, которому вы доверяли раньше.</translation>
     </message>
     <message>
-        <source>Trust it only if this SHA-256 fingerprint matches the one your server's administrator gave you.</source>
+        <source>Trust it only if this SHA-256 fingerprint matches the one your server&apos;s administrator gave you.</source>
         <translation>Доверяйте ему, только если этот отпечаток SHA-256 совпадает с тем, что дал администратор вашего сервера.</translation>
     </message>
     <message>
@@ -2309,7 +2360,7 @@ To: %4
         <translation>Оригиналы</translation>
     </message>
     <message>
-        <source>Keep each message's original for</source>
+        <source>Keep each message&apos;s original for</source>
         <translation>Хранить оригинал каждого письма</translation>
     </message>
     <message>
@@ -2377,7 +2428,7 @@ To: %4
         <translation>Ретранслятор</translation>
     </message>
     <message>
-        <source>n0's public relays</source>
+        <source>n0&apos;s public relays</source>
         <translation>Публичные ретрансляторы n0</translation>
     </message>
     <message>
@@ -2509,7 +2560,7 @@ To: %4
         <translation>Удалить %1?</translation>
     </message>
     <message>
-        <source>It stops syncing with this account's other devices. What is already on it stays there.</source>
+        <source>It stops syncing with this account&apos;s other devices. What is already on it stays there.</source>
         <translation>Оно перестанет синхронизироваться с другими устройствами этой учётной записи. То, что уже на нём, останется.</translation>
     </message>
     <message>
@@ -2524,15 +2575,15 @@ To: %4
         <translation>Настройки сервера от вашего провайдера.</translation>
     </message>
     <message>
-        <source>Server settings from Thunderbird's provider database.</source>
+        <source>Server settings from Thunderbird&apos;s provider database.</source>
         <translation>Настройки сервера из базы провайдеров Thunderbird.</translation>
     </message>
     <message>
-        <source>Server settings of the service that receives your domain's mail. Check them before connecting.</source>
+        <source>Server settings of the service that receives your domain&apos;s mail. Check them before connecting.</source>
         <translation>Настройки сервера службы, которая принимает почту вашего домена. Проверьте их перед подключением.</translation>
     </message>
     <message>
-        <source>Server settings from your provider's Autodiscover service.</source>
+        <source>Server settings from your provider&apos;s Autodiscover service.</source>
         <translation>Настройки сервера из службы Autodiscover вашего провайдера.</translation>
     </message>
     <message>
@@ -2643,7 +2694,7 @@ To: %4
         <translation>Выдан %1, издатель %2, действует до %3.</translation>
     </message>
     <message>
-        <source>Trust it only if this fingerprint matches the one your server's administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
+        <source>Trust it only if this fingerprint matches the one your server&apos;s administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
         <translation>Доверяйте ему, только если этот отпечаток совпадает с тем, что дал администратор вашего сервера. Тогда e3mail будет принимать от этого сервера этот сертификат и никакой другой.</translation>
     </message>
     <message>
@@ -2781,7 +2832,7 @@ To: %4
         <translation>Вход занял слишком много времени. Попробуйте ещё раз.</translation>
     </message>
     <message>
-        <source>Cannot listen for the browser's answer on this device.</source>
+        <source>Cannot listen for the browser&apos;s answer on this device.</source>
         <translation>На этом устройстве не удаётся получить ответ браузера.</translation>
     </message>
     <message>

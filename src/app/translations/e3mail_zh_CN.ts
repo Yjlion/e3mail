@@ -19,7 +19,7 @@
         <translation>e3mail 正在保持同步</translation>
     </message>
     <message>
-        <source>New mail and other devices' changes arrive while e3mail is in the background.</source>
+        <source>New mail and other devices&apos; changes arrive while e3mail is in the background.</source>
         <translation>e3mail 在后台时，新邮件和其他设备的更改仍会到达。</translation>
     </message>
     <message>
@@ -165,15 +165,15 @@
         <translation>将用那里最新的备份创建该账户的一台新设备。在你配对之前，它不会与其他设备同步。</translation>
     </message>
     <message>
-        <source>The server's SSH host key has changed. Trust the new one only if the server's administrator says it changed:</source>
+        <source>The server&apos;s SSH host key has changed. Trust the new one only if the server&apos;s administrator says it changed:</source>
         <translation>服务器的 SSH 主机密钥已更改。只有在服务器管理员确认已更改时才信任新的密钥：</translation>
     </message>
     <message>
-        <source>The server's SSH host key is not known yet. Trust it only if it matches what the server's administrator gives you:</source>
+        <source>The server&apos;s SSH host key is not known yet. Trust it only if it matches what the server&apos;s administrator gives you:</source>
         <translation>服务器的 SSH 主机密钥尚不为人所知。只有在它与服务器管理员提供的一致时才信任它：</translation>
     </message>
     <message>
-        <source>The server's certificate is not trusted. Trust it only if its fingerprint matches what the server's administrator gives you:</source>
+        <source>The server&apos;s certificate is not trusted. Trust it only if its fingerprint matches what the server&apos;s administrator gives you:</source>
         <translation>服务器的证书不受信任。只有在其指纹与服务器管理员提供的一致时才信任它：</translation>
     </message>
     <message>
@@ -345,16 +345,40 @@
         <translation>上个月</translation>
     </message>
     <message>
+        <source>Earlier</source>
+        <translation>更早</translation>
+    </message>
+    <message>
         <source>Next month</source>
         <translation>下个月</translation>
+    </message>
+    <message>
+        <source>Later</source>
+        <translation>更晚</translation>
     </message>
     <message>
         <source>Today</source>
         <translation>今天</translation>
     </message>
     <message>
+        <source>Month</source>
+        <translation>月</translation>
+    </message>
+    <message>
+        <source>Week</source>
+        <translation>周</translation>
+    </message>
+    <message>
+        <source>Day</source>
+        <translation>日</translation>
+    </message>
+    <message>
         <source>New event</source>
         <translation>新建日程</translation>
+    </message>
+    <message>
+        <source>3 days</source>
+        <translation>3 天</translation>
     </message>
     <message numerus="yes">
         <source>+%n more</source>
@@ -817,7 +841,7 @@ To: %4
         <translation>结束</translation>
     </message>
     <message>
-        <source>Times are in this device's time zone.</source>
+        <source>Times are in this device&apos;s time zone.</source>
         <translation>时间按本设备的时区计。</translation>
     </message>
     <message>
@@ -1189,7 +1213,7 @@ To: %4
         <translation>只能回复您信任的发件人；请先接受此发件人。请对照邮件核对这些信息。</translation>
     </message>
     <message>
-        <source>This message was not sent by the meeting's organizer, so it cannot be answered from here. Check these details against the message.</source>
+        <source>This message was not sent by the meeting&apos;s organizer, so it cannot be answered from here. Check these details against the message.</source>
         <translation>此邮件并非由会议组织者发送，因此无法在此回复。请对照邮件核对这些信息。</translation>
     </message>
 </context>
@@ -1399,6 +1423,10 @@ To: %4
         <translation>日程</translation>
     </message>
     <message>
+        <source>This event cannot be moved here. Open it to change it.</source>
+        <translation>此日程无法在这里移动。请打开它进行修改。</translation>
+    </message>
+    <message>
         <source>This message cannot be decrypted, or its original is no longer kept.</source>
         <translation>此邮件无法解密，或其原件已不再保留。</translation>
     </message>
@@ -1407,7 +1435,7 @@ To: %4
         <translation>此邮件的原件已不再保留。</translation>
     </message>
     <message>
-        <source>This is not a contact's code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
+        <source>This is not a contact&apos;s code. A code to verify someone starts with OPENPGP4FPR: or https://i.delta.chat/.</source>
         <translation>这不是联系人的代码。用于验证的代码以 OPENPGP4FPR: 或 https://i.delta.chat/ 开头。</translation>
     </message>
     <message numerus="yes">
@@ -1948,9 +1976,32 @@ To: %4
     </message>
 </context>
 <context>
+    <name>ScanView</name>
+    <message>
+        <source>Point the camera at the QR code on the other device.</source>
+        <translation>将摄像头对准另一台设备上的二维码。</translation>
+    </message>
+    <message>
+        <source>This device has no camera. Type the code instead.</source>
+        <translation>此设备没有摄像头。请改为输入代码。</translation>
+    </message>
+    <message>
+        <source>e3mail may not use the camera. Allow it in the system settings, or type the code instead.</source>
+        <translation>e3mail 无权使用摄像头。请在系统设置中允许，或改为输入代码。</translation>
+    </message>
+    <message>
+        <source>Asking for the camera…</source>
+        <translation>正在请求使用摄像头…</translation>
+    </message>
+    <message>
+        <source>Type the code instead</source>
+        <translation>改为输入代码</translation>
+    </message>
+</context>
+<context>
     <name>SecureJoin</name>
     <message>
-        <source>This is your own code. Scan the other person's code instead.</source>
+        <source>This is your own code. Scan the other person&apos;s code instead.</source>
         <translation>这是你自己的代码。请扫描对方的代码。</translation>
     </message>
     <message>
@@ -1993,7 +2044,7 @@ To: %4
         <translation>显示发件人和主题</translation>
     </message>
     <message>
-        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system's notification history, outside e3mail's encryption.</source>
+        <source>For this device, while e3mail is open and not in front. A subject shown here is kept in the system&apos;s notification history, outside e3mail&apos;s encryption.</source>
         <translation>仅限本设备，在 e3mail 打开但不在前台时通知。此处显示的主题会保留在系统的通知历史中，不受 e3mail 加密保护。</translation>
     </message>
     <message>
@@ -2005,7 +2056,7 @@ To: %4
         <translation>在后台继续同步</translation>
     </message>
     <message>
-        <source>Mail and your other devices' changes keep arriving while e3mail is not in front. Android shows a notification for as long as this is on, and it uses more battery. Swiping e3mail away from the recent apps ends it.</source>
+        <source>Mail and your other devices&apos; changes keep arriving while e3mail is not in front. Android shows a notification for as long as this is on, and it uses more battery. Swiping e3mail away from the recent apps ends it.</source>
         <translation>e3mail 不在前台时，邮件和你其他设备的更改仍会继续到达。开启期间 Android 会一直显示一条通知，并且会更耗电。从最近使用的应用中划掉 e3mail 会结束它。</translation>
     </message>
     <message>
@@ -2045,7 +2096,7 @@ To: %4
         <translation>添加签名…</translation>
     </message>
     <message>
-        <source>The chosen one goes into new mail. The composer's signature button swaps it for another.</source>
+        <source>The chosen one goes into new mail. The composer&apos;s signature button swaps it for another.</source>
         <translation>所选签名会加入新邮件。撰写时可用签名按钮换成另一个。</translation>
     </message>
     <message>
@@ -2185,7 +2236,7 @@ To: %4
         <translation>天</translation>
     </message>
     <message>
-        <source>Mail that was on the server before e3mail first connected is never removed. "Never" lets another mail program keep using this mailbox.</source>
+        <source>Mail that was on the server before e3mail first connected is never removed. &quot;Never&quot; lets another mail program keep using this mailbox.</source>
         <translation>e3mail 首次连接前已在服务器上的邮件永远不会被删除。选择“从不”可让其他邮件程序继续使用此邮箱。</translation>
     </message>
     <message>
@@ -2197,15 +2248,15 @@ To: %4
         <translation>秒</translation>
     </message>
     <message>
-        <source>The sending server's certificate is not trusted, or is not the one trusted before.</source>
+        <source>The sending server&apos;s certificate is not trusted, or is not the one trusted before.</source>
         <translation>发送服务器的证书不受信任，或不是之前信任的那个。</translation>
     </message>
     <message>
-        <source>The incoming server's certificate is not trusted, or is not the one trusted before.</source>
+        <source>The incoming server&apos;s certificate is not trusted, or is not the one trusted before.</source>
         <translation>接收服务器的证书不受信任，或不是之前信任的那个。</translation>
     </message>
     <message>
-        <source>Trust it only if this SHA-256 fingerprint matches the one your server's administrator gave you.</source>
+        <source>Trust it only if this SHA-256 fingerprint matches the one your server&apos;s administrator gave you.</source>
         <translation>仅当此 SHA-256 指纹与服务器管理员提供的一致时才信任它。</translation>
     </message>
     <message>
@@ -2269,7 +2320,7 @@ To: %4
         <translation>原件</translation>
     </message>
     <message>
-        <source>Keep each message's original for</source>
+        <source>Keep each message&apos;s original for</source>
         <translation>每封邮件原件的保留期限</translation>
     </message>
     <message>
@@ -2337,7 +2388,7 @@ To: %4
         <translation>中继</translation>
     </message>
     <message>
-        <source>n0's public relays</source>
+        <source>n0&apos;s public relays</source>
         <translation>n0 的公共中继</translation>
     </message>
     <message>
@@ -2469,7 +2520,7 @@ To: %4
         <translation>移除 %1？</translation>
     </message>
     <message>
-        <source>It stops syncing with this account's other devices. What is already on it stays there.</source>
+        <source>It stops syncing with this account&apos;s other devices. What is already on it stays there.</source>
         <translation>它将不再与此账户的其他设备同步。已在其上的内容会保留。</translation>
     </message>
     <message>
@@ -2484,15 +2535,15 @@ To: %4
         <translation>来自您的服务商的服务器设置。</translation>
     </message>
     <message>
-        <source>Server settings from Thunderbird's provider database.</source>
+        <source>Server settings from Thunderbird&apos;s provider database.</source>
         <translation>来自 Thunderbird 服务商数据库的服务器设置。</translation>
     </message>
     <message>
-        <source>Server settings of the service that receives your domain's mail. Check them before connecting.</source>
+        <source>Server settings of the service that receives your domain&apos;s mail. Check them before connecting.</source>
         <translation>接收您域名邮件的服务的服务器设置。连接前请检查。</translation>
     </message>
     <message>
-        <source>Server settings from your provider's Autodiscover service.</source>
+        <source>Server settings from your provider&apos;s Autodiscover service.</source>
         <translation>来自您的服务商 Autodiscover 服务的服务器设置。</translation>
     </message>
     <message>
@@ -2603,7 +2654,7 @@ To: %4
         <translation>由 %2 颁发给 %1，有效期至 %3。</translation>
     </message>
     <message>
-        <source>Trust it only if this fingerprint matches the one your server's administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
+        <source>Trust it only if this fingerprint matches the one your server&apos;s administrator gave you. Then e3mail accepts this certificate from this server, and no other.</source>
         <translation>仅当此指纹与服务器管理员提供的一致时才信任它。之后 e3mail 只接受该服务器的这一个证书。</translation>
     </message>
     <message>
@@ -2739,7 +2790,7 @@ To: %4
         <translation>登录耗时过长。请重试。</translation>
     </message>
     <message>
-        <source>Cannot listen for the browser's answer on this device.</source>
+        <source>Cannot listen for the browser&apos;s answer on this device.</source>
         <translation>无法在此设备上接收浏览器的回应。</translation>
     </message>
     <message>
