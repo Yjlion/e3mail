@@ -80,6 +80,8 @@ class MailApp : public QObject
     // New-mail notifications on this device: off | sender | full.
     Q_PROPERTY(QString notificationMode READ notificationMode WRITE setNotificationMode NOTIFY notificationsChanged)
     Q_PROPERTY(bool notificationsAvailable READ notificationsAvailable CONSTANT)
+    // How the calendar was last looked at on this device: month | week | day.
+    Q_PROPERTY(QString calendarMode READ calendarMode WRITE setCalendarMode NOTIFY calendarModeChanged)
     // Android: keep syncing while e3mail is not in front, through a
     // foreground service and its notification (ADR 0018). Per device.
     Q_PROPERTY(bool backgroundSync READ backgroundSync WRITE setBackgroundSync NOTIFY backgroundSyncChanged)
@@ -158,7 +160,7 @@ public:
     // The calendar (ADR 0025). Occurrences in [from, to): [{uid, title,
     // start, end, allDay, location, description, url, organizer, organizerName,
     // mine, status, myStatus, recurring, recurrence, attendees:[{addr, name,
-    // status}], reminder, when, day}].
+    // status}], reminder, when, timeText, day, lastDay, movable, sent}].
     Q_INVOKABLE QVariantList calendarEvents(const QDateTime &from, const QDateTime &to) const;
     // One event as the editor holds it: {uid, title, allDay, startDate, startTime,
     // endDate, endTime, location, description, url, attendees (a line), freq,
@@ -181,6 +183,20 @@ public:
     Q_INVOKABLE int calendarReminderDefault() const;
     // An ISO date as the locale writes it in full.
     Q_INVOKABLE QString formatDay(const QString &isoDate) const;
+    // `days` days from `firstDay` (an ISO date) as a grid of hours (ADR 0025,
+    // amendment 2026-11-10): {title, briefTitle, first, hours:[24 labels], days:[{iso,
+    // weekday, number, label, today, blocks:[an occurrence as calendarEvents
+    // gives it, with startMin, endMin, column, columns, before, after]}],
+    // bars:[an occurrence with firstDay, days, lane, before, after], lanes}.
+    Q_INVOKABLE QVariantMap calendarGrid(const QString &firstDay, int days) const;
+    // The first day of the week `isoDate` is in, as the locale counts weeks.
+    Q_INVOKABLE QString weekStart(const QString &isoDate) const;
+    // Dragged in the grid: the event starts at `startMin` minutes into
+    // `day` and lasts as long as before. Returns the uid, or empty when it
+    // may not be moved.
+    Q_INVOKABLE QString rescheduleEvent(const QString &uid, const QString &day, int startMin, bool sendUpdate);
+    // Its lower edge dragged: it ends at `endMin` minutes into `day`.
+    Q_INVOKABLE QString stretchEvent(const QString &uid, const QString &day, int endMin, bool sendUpdate);
     // A message's source for the source dialog: retained, encrypted,
     // original, decrypted, decryptError, subject, and outline/innerOutline
     // ([{depth, type, encoding, filename, size}]).
@@ -272,6 +288,8 @@ public:
 
     QString language() const;
     void setLanguage(const QString &code);
+    QString calendarMode() const;
+    void setCalendarMode(const QString &mode);
     QString notificationMode() const;
     void setNotificationMode(const QString &mode);
     bool notificationsAvailable() const;
@@ -284,6 +302,7 @@ Q_SIGNALS:
     void firstRunChanged();
     // The calendar changed (an event, an answer, another device).
     void calendarChanged();
+    void calendarModeChanged();
     // A reminder was clicked, or a card asked: show this event.
     void showEventRequested(const QString &uid);
     void accountsChanged();
@@ -345,5 +364,6 @@ private:
     QTimer m_reminder;
     void armReminder();
     QVariantMap eventMap(const e3::mail::Calendar::Event &e, const QDateTime &start, const QDateTime &end) const;
+    QString moved(const e3::mail::Calendar::SendResult &r);
     Notifier *m_notifier;
 };

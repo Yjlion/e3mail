@@ -36,6 +36,9 @@ shot structured-inert --open unverified
 shot calendar --page calendar
 shot calendar-event --page calendar-event
 shot calendar-new --page calendar-new
+# The week and the day as hours (ADR 0025, amendment 2026-11-10).
+shot calendar-week --page calendar-week
+shot calendar-day --page calendar-day
 shot invite --open inbox:5
 shot invite-reply --open inbox:4
 shot invite-inert --open unverified:1
@@ -71,6 +74,7 @@ shot structured-ar --open inbox:2 --lang ar
 shot calendar-ar --page calendar --lang ar
 shot invite-ar --open inbox:5 --lang ar
 shot calendar-event-he --page calendar-event --lang he
+shot calendar-week-ar --page calendar-week --lang ar
 # Removed on another device while away.
 "$BUILD/src/cli/e3mail-cli" --data-dir "$DATA" config p2p_removed_by Desktop >/dev/null
 shot devices-removed --page devices
@@ -110,6 +114,9 @@ shot phone-calendar --page calendar "${PHONE[@]}"
 shot phone-calendar-event --page calendar-event "${PHONE[@]}"
 shot phone-invite --open inbox:5 "${PHONE[@]}"
 shot phone-calendar-ar --page calendar --lang ar "${PHONE[@]}"
+shot phone-calendar-week --page calendar-week "${PHONE[@]}"
+shot phone-calendar-day --page calendar-day "${PHONE[@]}"
+shot phone-calendar-week-ar --page calendar-week --lang ar "${PHONE[@]}"
 shot phone-settings --page settings "${PHONE[@]}"
 shot phone-signature --page signature "${PHONE[@]}"
 shot phone-devices --page devices "${PHONE[@]}"

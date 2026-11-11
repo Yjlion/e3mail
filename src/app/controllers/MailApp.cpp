@@ -14,6 +14,7 @@
 #include "engine/AccountManager.h"
 #include "engine/AtRest.h"
 #include "mail/Calendar.h"
+#include "mail/CalendarLayout.h"
 #include "mail/Compose.h"
 #include "mail/Contacts.h"
 #ifdef E3MAIL_HAVE_P2P
@@ -38,6 +39,7 @@
 #include "store/BlobStore.h"
 #include "store/Config.h"
 #include "store/Database.h"
+#include "util/LocalePatterns.h"
 #include "util/Paths.h"
 
 #include <QDesktopServices>
@@ -187,6 +189,21 @@ void MailApp::wireNotifications()
                                     d->subject);
         });
     }
+}
+
+QString MailApp::calendarMode() const
+{
+    const QString mode = appSettings().value(QStringLiteral("calendarMode")).toString();
+    return mode == QLatin1String("week") || mode == QLatin1String("day") ? mode : QStringLiteral("month");
+}
+
+void MailApp::setCalendarMode(const QString &mode)
+{
+    if (mode == calendarMode() || (mode != QLatin1String("month") && mode != QLatin1String("week") && mode != QLatin1String("day")))
+        return;
+    QSettings s = appSettings();
+    s.setValue(QStringLiteral("calendarMode"), mode);
+    Q_EMIT calendarModeChanged();
 }
 
 QString MailApp::notificationMode() const
@@ -1145,7 +1162,15 @@ QVariantMap MailApp::eventMap(const mail::Calendar::Event &e, const QDateTime &s
             {QStringLiteral("timeText"), e.allDay ? tr("All day")
                                                   : QLocale().toString(start.toLocalTime().time(), QLocale::ShortFormat) + QStringLiteral(" – ")
                                                         + QLocale().toString(end.toLocalTime().time(), QLocale::ShortFormat)},
-            {QStringLiteral("day"), (e.allDay ? start.toUTC().date() : start.toLocalTime().date()).toString(Qt::ISODate)}};
+            {QStringLiteral("day"), (e.allDay ? start.toUTC().date() : start.toLocalTime().date()).toString(Qt::ISODate)},
+            // The last day it touches. An all-day event's days are its
+            // dates, not where its UTC midnights fall on this clock.
+            {QStringLiteral("lastDay"),
+             (e.allDay ? qMax(start.toUTC().date(), end.toUTC().date().addDays(-1))
+                       : (end > start ? end.addMSecs(-1) : start).toLocalTime().date())
+                 .toString(Qt::ISODate)},
+            {QStringLiteral("movable"), mail::Calendar::movable(ctx, e)},
+            {QStringLiteral("sent"), mail::Calendar::organizedByUs(ctx, e) && !e.attendees.isEmpty()}};
 }
 
 QVariantList MailApp::calendarEvents(const QDateTime &from, const QDateTime &to) const
@@ -1406,6 +1431,127 @@ QString MailApp::formatDay(const QString &isoDate) const
 {
     const QDate d = QDate::fromString(isoDate, Qt::ISODate);
     return d.isValid() ? QLocale().toString(d, QLocale::LongFormat) : QString();
+}
+
+QString MailApp::weekStart(const QString &isoDate) const
+{
+    const QDate d = QDate::fromString(isoDate, Qt::ISODate);
+    if (!d.isValid())
+        return {};
+    const int back = (d.dayOfWeek() - int(QLocale().firstDayOfWeek()) + 7) % 7;
+    return d.addDays(-back).toString(Qt::ISODate);
+}
+
+QVariantMap MailApp::calendarGrid(const QString &firstDay, int days) const
+{
+    const QDate first = QDate::fromString(firstDay, Qt::ISODate);
+    if (!first.isValid())
+        return {};
+    days = qBound(1, days, 14);
+    const QLocale locale;
+    const QTimeZone zone = QTimeZone::systemTimeZone();
+    // A day more on each side: an all-day event's dates are UTC's, and the
+    // layout leaves out what does not belong.
+    QList<mail::Calendar::Occurrence> occurrences;
+    if (account())
+        occurrences = mail::Calendar::list(account()->ctx(), QDateTime(first.addDays(-1), QTime(0, 0), zone).toUTC(),
+                                           QDateTime(first.addDays(days + 1), QTime(0, 0), zone).toUTC());
+    QList<mail::CalendarLayout::Item> items;
+    items.reserve(occurrences.size());
+    for (const auto &o : occurrences)
+        items.append({o.start, o.end, o.event.allDay});
+    const auto layout = mail::CalendarLayout::layout(items, first, days, zone);
+
+    const QDate today = QDate::currentDate();
+    QVariantList dayList;
+    for (const auto &day : layout.days) {
+        QVariantList blocks;
+        for (const auto &b : day.blocks) {
+            const auto &o = occurrences[b.item];
+            QVariantMap m = eventMap(o.event, o.start, o.end);
+            m.insert(QStringLiteral("startMin"), b.startMin);
+            m.insert(QStringLiteral("endMin"), b.endMin);
+            m.insert(QStringLiteral("column"), b.column);
+            m.insert(QStringLiteral("columns"), b.columns);
+            m.insert(QStringLiteral("before"), b.before);
+            m.insert(QStringLiteral("after"), b.after);
+            blocks.append(m);
+        }
+        dayList.append(QVariantMap{{QStringLiteral("iso"), day.date.toString(Qt::ISODate)},
+                                   {QStringLiteral("weekday"), locale.standaloneDayName(day.date.dayOfWeek(), QLocale::ShortFormat)},
+                                   {QStringLiteral("number"), locale.toString(day.date.day())},
+                                   {QStringLiteral("label"), locale.toString(day.date, QLocale::LongFormat)},
+                                   {QStringLiteral("today"), day.date == today},
+                                   {QStringLiteral("blocks"), blocks}});
+    }
+    QVariantList bars;
+    for (const auto &b : layout.bars) {
+        const auto &o = occurrences[b.item];
+        QVariantMap m = eventMap(o.event, o.start, o.end);
+        m.insert(QStringLiteral("firstDay"), b.firstDay);
+        m.insert(QStringLiteral("days"), b.days);
+        m.insert(QStringLiteral("lane"), b.lane);
+        m.insert(QStringLiteral("before"), b.before);
+        m.insert(QStringLiteral("after"), b.after);
+        bars.append(m);
+    }
+    QVariantList hours;
+    const QString hour = LocalePatterns::hour(locale);
+    for (int h = 0; h < 24; ++h)
+        hours.append(locale.toString(QTime(h, 0), hour));
+    return {{QStringLiteral("title"), days == 1 ? locale.toString(first, QLocale::LongFormat)
+                                                : LocalePatterns::dateRange(locale, first, first.addDays(days - 1))},
+            // For a phone's width.
+            {QStringLiteral("briefTitle"), LocalePatterns::dateRange(locale, first, first.addDays(days - 1), true)},
+            {QStringLiteral("first"), first.toString(Qt::ISODate)},
+            {QStringLiteral("hours"), hours},
+            {QStringLiteral("days"), dayList},
+            {QStringLiteral("bars"), bars},
+            {QStringLiteral("lanes"), layout.lanes}};
+}
+
+QString MailApp::moved(const mail::Calendar::SendResult &r)
+{
+    account()->notifyChanged();
+    if (r.uid.isEmpty())
+        Q_EMIT notify(tr("This event cannot be moved here. Open it to change it."));
+    else if (!r.error.isEmpty())
+        Q_EMIT notify(tr("Saved, but the invitation was not sent: %1").arg(r.error));
+    else if (!r.queued.isEmpty())
+        Q_EMIT notify(tr("Invitation sent."));
+    return r.uid;
+}
+
+QString MailApp::rescheduleEvent(const QString &uid, const QString &day, int startMin, bool sendUpdate)
+{
+    const QDate d = QDate::fromString(day, Qt::ISODate);
+    if (!account() || !d.isValid())
+        return {};
+    auto &ctx = account()->ctx();
+    const auto e = mail::Calendar::get(ctx, uid);
+    if (!e)
+        return {};
+    startMin = qBound(0, startMin, mail::CalendarLayout::kDayMinutes - 1);
+    const QDateTime start = QDateTime(d, QTime(startMin / 60, startMin % 60), QTimeZone::systemTimeZone()).toUTC();
+    return moved(mail::Calendar::reschedule(ctx, uid, start, start.addMSecs(e->durationMs()), sendUpdate));
+}
+
+QString MailApp::stretchEvent(const QString &uid, const QString &day, int endMin, bool sendUpdate)
+{
+    const QDate d = QDate::fromString(day, Qt::ISODate);
+    if (!account() || !d.isValid())
+        return {};
+    auto &ctx = account()->ctx();
+    const auto e = mail::Calendar::get(ctx, uid);
+    if (!e)
+        return {};
+    endMin = qBound(0, endMin, mail::CalendarLayout::kDayMinutes);
+    // Midnight is the start of the next day.
+    const QDateTime end = QDateTime(d.addDays(endMin / mail::CalendarLayout::kDayMinutes),
+                                    QTime((endMin % mail::CalendarLayout::kDayMinutes) / 60, endMin % 60),
+                                    QTimeZone::systemTimeZone())
+                              .toUTC();
+    return moved(mail::Calendar::reschedule(ctx, uid, e->start, end, sendUpdate));
 }
 
 int MailApp::calendarReminderDefault() const

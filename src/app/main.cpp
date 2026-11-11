@@ -156,6 +156,10 @@ int main(int argc, char *argv[])
             QMetaObject::invokeMethod(root, "showCalendarEvent");
         else if (p.value(page) == QLatin1String("calendar-new")) // the calendar, a new event
             QMetaObject::invokeMethod(root, "showCalendarNew");
+        else if (p.value(page) == QLatin1String("calendar-week")) // the calendar, a week of hours
+            QMetaObject::invokeMethod(root, "showCalendarWeek");
+        else if (p.value(page) == QLatin1String("calendar-day")) // the calendar, one day
+            QMetaObject::invokeMethod(root, "showCalendarDay");
         else
             root->setProperty("page", p.value(page));
     }
