@@ -1550,12 +1550,9 @@ owner's word.** What led to it:
 - The release workflow's `publish` job needs every package job, so its
   macOS leg, still on `macos-14`, would have stopped every release.
 
-So nothing builds or tests e3mail on macOS now, and a release carries no
-`.dmg`. The source still has its macOS parts (the frameworks in
-`cmake/E3mailP2p.cmake`, the tray notifier, the bundle settings); they
-will rot unseen. Bringing it back is the matrix entry, the Homebrew step
-and the DragNDrop package step in the two workflows (this commit's
-diff), on an image GitHub still offers, and a decision about that test.
+That left nothing building or testing e3mail on macOS, and v0.4.1's
+workflow without a `.dmg`. It was put back the next day: see "macOS back,
+and what it trusts" below.
 
 **Not verified:**
 - **Any of it by hand, on a display.** The drag was driven by QtTest's
@@ -1577,6 +1574,74 @@ diff), on an image GitHub still offers, and a decision about that test.
   not fit a narrow column and is cut.
 - The scan view's restored translations on screen (the strings are the
   ones that were there before).
+
+## macOS back, and what it trusts (2026-11-12)
+
+macOS is in CI and in the release workflow again, both on `macos-15`.
+
+- **Why the test failed.** `tst_net::pinRefusesATrustedCertificate` first
+  makes the test certificate trusted by adding it as a CA. A probe on CI
+  (a small Qt program and eight certificates, on `macos-15` and
+  `macos-26`; branch `macos-probe`, since deleted) showed the rule:
+  macOS trusts a TLS server certificate only when it is valid for 825
+  days or less, whether it came from a public CA or was added by hand.
+
+  | Certificate | macOS 15 and 26 |
+  |---|---|
+  | the one in `tests/data`: 100 years, CA:TRUE, no EKU | refused |
+  | 100 years, CA:TRUE, serverAuth | refused |
+  | 800 days, CA:TRUE, serverAuth | trusted |
+  | 800 days, CA:FALSE, serverAuth | trusted |
+  | 800-day leaf under a 100-year root | trusted |
+  | 100-year leaf under a 100-year root | refused |
+  | 30 days, made on the runner by `/usr/bin/openssl` (LibreSSL 3.3.6) | trusted |
+
+  Qt there has only the Secure Transport backend (`setActiveBackend
+  ("openssl")` fails, though Homebrew's OpenSSL is installed), and it
+  reports every refusal as "The root CA certificate is not trusted for
+  this purpose". Why the same test passed on `macos-14` is not known;
+  that image is gone.
+- **The fix is in the test.** The committed certificate lasts a hundred
+  years so that it never needs replacing, and nothing that short-lived
+  can be committed. On macOS the test has the system's `openssl` make a
+  certificate for 30 days and uses that; elsewhere it keeps the committed
+  one. The other TLS tests want an untrusted certificate and are
+  unchanged. The test also fails with a message now instead of ending the
+  process on an uncaught `CertError`, and puts the default TLS
+  configuration back whatever happens.
+- **What this says about the app:** nothing new. A person who pins a
+  self-signed server (ADR 0017) is not asking macOS to trust it. Someone
+  who adds their own CA to the macOS keychain and issues a server
+  certificate for more than 825 days will be shown the "not trusted" card
+  and can pin; that is macOS's rule, not e3mail's.
+
+**Verified:**
+- CI run 43049296918 on `macos-back`: macOS 15 builds with warnings as
+  errors and passes all 31 tests, `tst_net` among them; Linux and Windows
+  pass, and both APKs build (the Ubuntu jobs on a re-run, after the
+  mirror came back).
+- The v0.4.1 tag's CI run (43039943941) passes on a re-run of its failed
+  jobs: the tagged source was sound.
+- Here (Linux), with the macOS branch of the test forced on: the
+  certificate made by `openssl` is trusted and the pin refuses it; with
+  the CA step taken out the test fails with its message and does not
+  abort.
+
+**Not verified:**
+- **The release build on `macos-15`.** Running the release workflow by
+  hand on the branch was not permitted in this session, so the `.dmg`
+  step (cpack DragNDrop with Qt's deploy script) has not run on the new
+  image. The first release, or a hand run of the workflow, will show it.
+- macOS 26: only the probe ran there, not the suite.
+
+**v0.4.1 (published 2026-11-11 14:35 UTC) has no packages.** Its release
+run (43039946436) failed on every Ubuntu runner at `apt-get`: "Temporary
+failure resolving 'azure.archive.ubuntu.com'". Windows built. The same
+failure hit the tag's CI run and, three hours later, this branch's first
+run; the name resolved again by 01:20 UTC on the 12th. It was the
+runners' mirror, not the source. Re-running the release run's failed jobs
+(`gh run rerun 43039946436 --failed`) would publish v0.4.1 as tagged,
+which is from before this change: without a `.dmg`.
 
 ## Known gaps
 
@@ -1616,9 +1681,6 @@ diff), on an image GitHub still offers, and a decision about that test.
   free/busy. Dragging is the mouse's, and not for all-day events. The
   all-day band shows four lanes. Invitations from and to other clients
   have not been tried.
-- **macOS** is not built, tested or packaged by any workflow since
-  2026-11-11. Releases up to v0.4.0 carried a `.dmg`; nothing here records
-  it ever being installed.
 - **Without an OS keyring and without a passphrase**, the database key sits
   beside the mail, so encryption at rest protects nothing there; Settings says
   so (ADR 0012, ADR 0023). Passwords fall back into that database.
@@ -1932,6 +1994,17 @@ is not enough: layouts are polished with the first frame, and on a slow
 machine the test's first events arrive before it. Wait for something the
 layout sets (an item's `y`), then send events.
 
+**58. macOS trusts no TLS server certificate valid for more than 825
+days**, not even one added as a CA by hand, and Qt's Secure Transport
+backend says only "not trusted for this purpose". A test that needs a
+trusted certificate on macOS must make a short-lived one when it runs
+(`tst_net`'s `freshCertificate`).
+
+**59. When every Ubuntu job fails at `apt-get` at once, it is the
+runners.** "Temporary failure resolving 'azure.archive.ubuntu.com'" took
+out a release and two CI runs on 2026-11-11 while GitHub's status page
+said all was well. Re-run the failed jobs later before changing anything.
+
 ## Next
 
 1. Release v0.2.2 to internal testers in Play Console (it is a draft
@@ -1955,8 +2028,9 @@ layout sets (an item's `y`), then send events.
    Connect button, then a real account (receive, send, a notification, the
    Keystore). Setup can now trust `server/compose`'s self-signed certificate
    (ADR 0017); from the emulator the host is `10.0.2.2`.
-9. Decide whether macOS comes back (see "The week and the day as hours"):
-   nothing builds it since 2026-11-11.
+9. Run the release workflow once on `macos-15` (by hand with a version,
+   or the next release) and see the `.dmg` built; decide what becomes of
+   v0.4.1, which has no packages (see "macOS back, and what it trusts").
 10. The calendar's week on a real display: drag an event with a mouse and
    with a trackpad, answer "Send the update?", and try three days on a
    phone (see "The week and the day as hours" above).
