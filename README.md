@@ -79,8 +79,8 @@ over TLS in [`scripts/e2e.py`](scripts/e2e.py).
 | Threads, system tags, user tags, Unverified, Trash, blocklist, importance | ✅ |
 | Desktop app: list, threaded reading, composer, setup, contacts, settings | ✅ |
 | Several accounts in one window, all fetching | ✅ |
-| CI builds and tests on Linux and Windows | ✅ (macOS was taken out on 2026-11-11; it builds from source, untested since) |
-| `.deb`, AppImage, Windows installer + portable zip | ⏳ release workflow not yet run; AppImage built locally. No macOS package since 2026-11-11 |
+| CI builds and tests on Linux, Windows and macOS | ✅ |
+| `.deb`, AppImage, Windows installer + portable zip, macOS `.dmg` | ⏳ release workflow not yet run; AppImage built locally |
 | Interop with GnuPG (our PGP/MIME decrypts and verifies) | ✅ |
 | Multi-device sync over Iroh, with a mailbox fallback | ✅ |
 | SecureJoin QR verification (Delta Chat compatible) | ✅ tried against Delta Chat 2.64 |
